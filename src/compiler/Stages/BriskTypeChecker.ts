@@ -2,7 +2,7 @@
 import { RecurseTree, Stack } from '../Helpers/Helpers';
 import * as path from 'path';
 
-const TypeChcker = (filename: path.ParsedPath, Program: any) => {
+const TypeChecker = (filename: path.ParsedPath, Program: any) => {
   // Remove Comments
   // Remove Flags
   // Constant Propagation
@@ -21,4 +21,4 @@ const TypeChcker = (filename: path.ParsedPath, Program: any) => {
   return Program;
 };
 
-export default TypeChcker;
+export default TypeChecker;

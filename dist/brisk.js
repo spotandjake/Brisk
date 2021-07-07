@@ -34,7 +34,7 @@ var fs__namespace = /*#__PURE__*/_interopNamespace(fs);
 var nearley__default = /*#__PURE__*/_interopDefaultLegacy(nearley);
 var moo__namespace = /*#__PURE__*/_interopNamespace(moo);
 
-let tokens = [
+const tokens = [
     {
         type: 'keyword',
         id: 'import',
@@ -144,7 +144,7 @@ let tokens = [
 ];
 
 const Lexer = () => {
-    let mooTokens = {};
+    const mooTokens = {};
     tokens.forEach(({ id, match, lineBreaks, value }) => {
         mooTokens[`Token_${id}`] = { match, lineBreaks, value };
     });
@@ -420,9 +420,9 @@ const Parser = (filename, code, lsp = false) => {
             const lastColumnIndex = table.length - 2;
             const lastColumn = table[lastColumnIndex];
             let tok;
-            let msg = "";
-            let width = process.stdout.columns * 4;
-            let visibleCode = code.slice(Math.max(offset - width / 4, 0), Math.min(offset + width / 4, code.length)).split('\n');
+            let msg = '';
+            const width = process.stdout.columns * 4;
+            const visibleCode = code.slice(Math.max(offset - width / 4, 0), Math.min(offset + width / 4, code.length)).split('\n');
             if (visibleCode.length > 2) {
                 visibleCode.shift();
                 visibleCode.pop();
@@ -432,14 +432,13 @@ const Parser = (filename, code, lsp = false) => {
             for (const line of visibleCode) {
                 msg += `${lineNumber} | ${line}\n`;
                 if (column + line.length >= offset && column <= offset) {
-                    let tokenLength = lastColumn.states[0].dot;
-                    let tokenStart = offset - column - tokenLength;
-                    ;
-                    msg += " ".repeat(tokenStart + `${lineNumber} |`.length + 1);
-                    msg += "\x1b[1m\x1b[31m^\x1b[0m".repeat(tokenLength);
+                    const tokenLength = lastColumn.states[0].dot;
+                    const tokenStart = offset - column - tokenLength;
+                    msg += ' '.repeat(tokenStart + `${lineNumber} |`.length + 1);
+                    msg += '\x1b[1m\x1b[31m^\x1b[0m'.repeat(tokenLength);
                     msg += ` \x1b[1m\x1b[31m expected one of  found '${line.slice(tokenStart, tokenStart + tokenLength)}\x1b[0m'`;
                     tok = line.slice(tokenStart, tokenStart + tokenLength);
-                    msg += "\n";
+                    msg += '\n';
                 }
                 lineNumber++;
                 column += line.length;
@@ -453,7 +452,7 @@ const Parser = (filename, code, lsp = false) => {
                     const stateStack = table[lastColumnIndex].states[i];
                     let trace = `${stateStack.rule.name} → `;
                     stateStack.rule.symbols.forEach((symbol, i) => {
-                        let { literal } = symbol;
+                        const { literal } = symbol;
                         if (literal) {
                             if (literal == tok.charAt(i))
                                 trace += `\x1b[1m\x1b[32m${literal}\x1b[0m`;
@@ -579,20 +578,21 @@ class Stack {
 const Analyzer = (filename, Program) => {
     Program = RecurseTree(Program, (Parent, Node, index, stack, trace) => {
         switch (Node.type) {
-            case 'Program':
-                let ProgramFlags = [];
+            case 'Program': {
+                const programFlags = [];
                 for (const node of Node.body) {
                     if (node.type != 'flagStatement')
                         break;
-                    ProgramFlags.push(node);
+                    programFlags.push(node);
                 }
                 Node = {
                     type: 'Program',
-                    flags: ProgramFlags,
+                    flags: programFlags,
                     variables: stack,
                     body: Node.body
                 };
                 break;
+            }
             case 'importStatement':
                 if (!stack.hasLocal(Node.identifier))
                     stack.setLocal(Node.identifier, true);
@@ -613,7 +613,7 @@ const Analyzer = (filename, Program) => {
             case 'callStatement':
                 if (!stack.has(Node.identifier)) {
                     if (Parent.type == 'functionDeclaration') {
-                        let { type, identifier } = trace[trace.length - 2];
+                        const { type, identifier } = trace[trace.length - 2];
                         if (type == 'declarationStatement' && identifier == Node.identifier)
                             stack.setClosure(Node.identifier, true);
                     }
@@ -625,8 +625,8 @@ const Analyzer = (filename, Program) => {
                 if (!stack.has(Node.identifier))
                     BriskReferenceError(`${Node.identifier} is not defined`, filename, Node.position);
                 break;
-            case 'functionDeclaration':
-                let FunctionFlags = [];
+            case 'functionDeclaration': {
+                const FunctionFlags = [];
                 for (const node of Node.body) {
                     if (node.type != 'flagStatement')
                         break;
@@ -642,6 +642,7 @@ const Analyzer = (filename, Program) => {
                     position: Node.position
                 };
                 break;
+            }
             case 'functionParameter':
                 stack.setLocal(Node.identifier, true);
                 break;
@@ -651,20 +652,29 @@ const Analyzer = (filename, Program) => {
     return Program;
 };
 
-let Verifier = (filename, Program) => {
+const TypeChcker = (filename, Program) => {
+    Program = RecurseTree(Program, (Parent, Node, index, stack, trace) => {
+        console.log(Node);
+        return Node;
+    });
+    return Program;
+};
+
+const Verifier = (filename, Program) => {
     Program = RecurseTree(Program, (Parent, Node, index, stack, trace) => {
         switch (Node.type) {
-            case 'importStatement':
-                let exists = fs__namespace.existsSync(Node.path);
+            case 'importStatement': {
+                const exists = fs__namespace.existsSync(Node.path);
                 if (!exists)
                     BriskError(`cannot find module ${Node.path}`, filename, Node.position);
                 break;
+            }
         }
         return Node;
     });
 };
 
-let Optimizer = (filename, Program) => {
+const Optimizer = (filename, Program) => {
     Program = RecurseTree(Program, (Parent, Node, index, stack, trace) => {
         switch (Node.type) {
             case 'commentStatement':
@@ -676,17 +686,17 @@ let Optimizer = (filename, Program) => {
     return Program;
 };
 
-let briskCompiler = (filename) => tslib.__awaiter(void 0, void 0, void 0, function* () {
-    let exists = fs__namespace.existsSync(filename);
+const briskCompiler = (filename) => tslib.__awaiter(void 0, void 0, void 0, function* () {
+    const exists = fs__namespace.existsSync(filename);
     if (!exists)
         throw new Error(`${filename} does not exist`);
-    let FilePath = filename;
-    let ProgramPath = path__namespace.parse(FilePath);
-    let code = yield fs__namespace.promises.readFile(filename, 'utf-8');
-    let parsed = Parser(filename, code);
-    let analyzed = Analyzer(ProgramPath, parsed);
-    Verifier(ProgramPath, analyzed);
-    let optimized = Optimizer(ProgramPath, analyzed);
+    const ProgramPath = path__namespace.parse(filename);
+    const code = yield fs__namespace.promises.readFile(filename, 'utf-8');
+    const parsed = Parser(filename, code);
+    const analyzed = Analyzer(ProgramPath, parsed);
+    const typeChecked = TypeChcker(ProgramPath, analyzed);
+    Verifier(ProgramPath, typeChecked);
+    const optimized = Optimizer(ProgramPath, typeChecked);
     console.dir(optimized, { depth: null });
 });
 
@@ -695,10 +705,6 @@ program
     .version('0.0.3');
 program
     .option('-v, --version', 'output CLI, Compiler and LSP versions');
-program
-    .on("option:version", () => {
-    console.log('version');
-});
 program
     .command('compile <file')
     .description('compile Brisk Program')
