@@ -4,6 +4,7 @@ import * as path from 'path';
 // Import Components
 import Parser from './Parser/Parser';
 import Analyzer from './Stages/Analyzer';
+import TypeChecker from './Stages/BriskTypeChecker';
 import Verifier from './Stages/BriskVerifier';
 import Optimizer from './Stages/Optimizer';
 
@@ -21,10 +22,13 @@ const briskCompiler = async (filename: string) => {
   const parsed = Parser(filename, code);
   // Analyze the Code
   const analyzed = Analyzer(ProgramPath, parsed);
+  // Perform Module Linking
+  // Perform Type Checking
+  const typeChecked = TypeChecker(ProgramPath, analyzed);
   // Perform Simple Program Verification
-  Verifier(ProgramPath, analyzed);
+  Verifier(ProgramPath, typeChecked);
   // Perform Well Formed Check
-  const optimized = Optimizer(ProgramPath, analyzed);
+  const optimized = Optimizer(ProgramPath, typeChecked);
   console.dir(optimized, { depth: null });
   // // handle gc
   // // compile
