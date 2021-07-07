@@ -1,0 +1,39 @@
+{
+  "name": "brisk-cli",
+  "version": "0.0.2",
+  "description": "Brisk Command Line Interface",
+  "main": "./cli/index.ts",
+  "author": "spotandjake",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spotandjake/Brisk.git"
+  },
+  "scripts": {
+    "lint": "gulp lint",
+    "start": "yarn build && yarn run run",
+    "build": "gulp build",
+    "run": "node --enable-source-maps ./dist/brisk.js",
+    "test": "wat2wasm ./test/code.wat && node --harmony-top-level-await ./test/runner.js"
+  },
+  "dependencies": {
+    "commander": "^8.0.0",
+    "gulp": "^4.0.2",
+    "gulp-eslint": "^6.0.0",
+    "moo": "^0.5.1",
+    "nearley": "^2.20.1",
+    "rollup": "^2.52.8",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/moo": "^0.5.4",
+    "@types/nearley": "^2.11.1",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0",
+    "typescript": "^4.3.5"
+  }
+}
