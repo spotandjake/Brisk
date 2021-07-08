@@ -24,7 +24,7 @@ declare var Token_arrow: any;
 declare var Token_left_bracket: any;
 declare var Token_right_bracket: any;
 
-import Lexer from '../Lexer/Moo-Lexer';
+import Lexer from '../Lexer/Lexer';
 import * as Nodes from './Types';
 const lexer = Lexer();
 
