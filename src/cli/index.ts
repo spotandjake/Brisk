@@ -5,6 +5,7 @@ const program = new Command();
 
 // Import Components
 import compile from '../compiler/index';
+import runner from '../runner/runner';
 // cli info
 program
   .version('0.0.3');
@@ -28,12 +29,13 @@ program
   });
 program
   .command('run <file')
-  .description('run brisk file')
+  .description('run wasm file')
   .action((file: string) => {
-    console.log('run');
-    console.log(file);
+    // Run the runner
+    runner(path.join(process.cwd(), file));
   });
 // default is compiler & run
+// TODO: add flag to compile to wasm instead of wat
 program
   .arguments('<file>')
   .action((file: string) => compile(path.join(process.cwd(), file)));

@@ -1,15 +1,21 @@
-const fs = require('fs');
+import fs from 'fs';
 
 const decoder = new TextDecoder('utf8');
 
-let memoryView = (memory) => {
-  let memArray = new Uint32Array(memory.buffer);
+interface TableRow {
+  state?: string;
+  ptr?: number;
+  size?: number;
+  type?: string;
+  [ key: string ]: any;
+}
+const memoryView = (memory: any) => {
+  const memArray = new Uint32Array(memory.buffer);
   // Generate A Pretty table
-  let tableBody = [];
-  let row = {};
+  const tableBody = [];
+  let row: TableRow = {};
   let rowIndex = 0;
   let dataSize = 0;
-  let data = [];
   memArray.forEach((dat, i) => {
     if (i == 0) {
       row = { state: 'raw', ptr:0, size: 1, type: 'pointer', value0: dat };
@@ -23,7 +29,7 @@ let memoryView = (memory) => {
         // This is the start of the row
         dataSize = dat - 1;
         rowIndex = 0;
-        row = { state: 'raw', ptr: i*4, size: dat }
+        row = { state: 'raw', ptr: i*4, size: dat };
       } else {
         dataSize--;
         rowIndex++;
@@ -59,8 +65,8 @@ let memoryView = (memory) => {
   });
   tableBody.push(row);
   row = {};
-  // Generate Actuals
-  let table = [];
+  // Generate actual values
+  const table: any = [];
   tableBody.forEach((dat) => {
     if (dat.type == 'None') dat.state = 'None';
     table.push({ ...dat });
@@ -77,60 +83,60 @@ let memoryView = (memory) => {
     dat.state = 'actual';
     if (dat.type == 'None') dat.state = 'None';
     table.push(dat);
-  })
+  });
   // console.table(tableBody, [ ...tableHeader, new Array(maxValueLength).fill('value') ]);
   console.table(table);
-}
-const runtime = async (wasm) => {
+};
+const runtime = async (wasmFile: string) => {
+  const wasm = fs.readFileSync(wasmFile);
   const memory = new WebAssembly.Memory({ initial: 10, maximum:100 });
   const result = await WebAssembly.instantiate(wasm, {
     env: {
       memory: memory,
       briskmemory: () => memoryView(memory),
-      print: (pointer) => {
-        let memArray = [...new Uint32Array(memory.buffer)];
-        let ptr = pointer/4;
-        let size = memArray[ptr];
-        let data = memArray.slice(ptr, ptr+size);
+      print: (pointer: number) => {
+        const memArray = [...new Uint32Array(memory.buffer)];
+        const ptr = pointer/4;
+        const size = memArray[ptr];
+        const data = memArray.slice(ptr, ptr+size);
         console.log(pointer);
         console.log(data);
         switch(data[1]) {
-            case 0:
-              // None
-              console.log('none');
-              break;
-            case 1:
-              row.type = 'Function';
-              // Function
-              console.log('Function');
-              break;
-            case 2:
-              // Closure
-              console.log('Closure');
-              break;
-            case 3:
-              // Boolean
-              console.log(!!data[3]);
-              break;
-            case 4:
-              // String
-              console.log(
-                decoder.decode(new Uint8Array(data.slice(2)))
-              );
-              break;
-            case 5:
-              // Number
-              console.log(data[3]);
-              break;
-            case 6:
-              // Array
-              console.log('Array');
-              break;
-            default:
-              console.log('Unknown Type');
-              console.log(data[1]);
-              break;
-          }
+          case 0:
+            // None
+            console.log('none');
+            break;
+          case 1:
+            // Function
+            console.log('Function');
+            break;
+          case 2:
+            // Closure
+            console.log('Closure');
+            break;
+          case 3:
+            // Boolean
+            console.log(!!data[3]);
+            break;
+          case 4:
+            // String
+            console.log(
+              decoder.decode(new Uint8Array(data.slice(2)))
+            );
+            break;
+          case 5:
+            // Number
+            console.log(data[3]);
+            break;
+          case 6:
+            // Array
+            console.log('Array');
+            break;
+          default:
+            console.log('Unknown Type');
+            console.log(data[1]);
+            break;
+        }
       },
       printraw: console.log
     }
@@ -140,8 +146,10 @@ const runtime = async (wasm) => {
     memoryView(result.instance.exports.memory);
   }
   return () => {
+    // @ts-ignore
     result.instance.exports.run();
   };
 };
 // (memory (import "env" "memory") 1)
-runtime(fs.readFileSync('./code.wasm'));
+
+export default runtime;
