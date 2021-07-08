@@ -23,6 +23,16 @@ Compile to web assembly easily, have a minimal number of keywords and functions 
 
 Brisk is a super basic easy to use, and easy to extend the language with only the bare minimum set in stone.
 
+# Getting started
+***
+
+```
+git clone https://github.com/spotandjake/Brisk
+cd Brisk
+yarn install
+yarn lint
+yarn build
+```
 # Yarn Instructions
 ***
 Compiling a Brisk Program
