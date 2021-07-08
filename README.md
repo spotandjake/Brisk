@@ -1,16 +1,18 @@
-# lexer
-================================================================
-+ Keywords
-  + let
-  + import
-  + from
-  + export
-+ Base Literals
-  + String `'test'`
-  + Number `-0.00`
-  + Function `() => {}`
-  + Boolean `true`
-# Parser
-================================================================
-+ Special Functions
-  + return(any) -> Void
+# Instructions For Running
+```
+yarn start <file>
+```
++ Builds the Compiler
++ Compiles the inputed file
+```
+yarn build
+```
++ builds the compiler
+```
+yarn run <file>
+```
++ compiles the file
+```
+yarn lint
+```
++ runs eslint on the file
