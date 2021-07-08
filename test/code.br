@@ -1,4 +1,4 @@
-import print from './print.ts';
+import print from './print.br';
 // Perform Type Checking
 // Verify The Program
 // Write Custom Lexer
