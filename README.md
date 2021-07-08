@@ -9,28 +9,61 @@
     <img alt="Brisk Version" src="https://img.shields.io/github/package-json/v/spotandjake/Brisk?color=%2350E6FF&style=flat-square">
   </a>
 </p>
-================================================================
+---
 # Description
-A language written for the purposes of educating myself on wasm and programming language design. 
-# goals
-Write enough that all math operators, and an stdlib can be implemented along with as much of the language as possible being implemented in itself
-Bootstrap the language
+***
 
-# Instructions For Running
+`Brisk` is a language written with the sole purpose of educating myself on language and compiler design and to get familiar with wasm.
+# Language Goals
+***
+
+Compile to web assembly easily, have a minimal number of keywords and functions implemented at the compiler level possible while being fully bootstrapable and extendable.
+# Language Fundamentals
+***
+
+Brisk is a super basic easy to use, and easy to extend the language with only the bare minimum set in stone.
+
+# Yarn Instructions
+***
+Compiling a Brisk Program
 ```
 yarn start <file>
 ```
-+ Builds the Compiler
-+ Compiles the inputted file
+Compiling the Brisk compiler
 ```
 yarn build
 ```
-+ builds the compiler
+Compiling a Brisk Program without Recompiling the Compiler
 ```
 yarn run <file>
 ```
-+ compiles the file
+Lint the Compiler
 ```
 yarn lint
 ```
-+ runs eslint on the file
+Package the Compiler to an executable
+```
+yarn package
+```
+
+# Compiler Executable Command Line Instructions
+***
+
+General Arguments
+```
+Brisk -v, Brisk --version: Output the current Brisk Compiler Version
+Brisk -h, Brisk --help: Output Help On using the Compiler
+```
+Compile A Program
+```
+Brisk <file>
+Brisk compile <file>
+```
+Run a wasm binary: soon to change
+```
+Brisk run <file>
+```
+# Brisk Package Manager
+***
+
+Not Implemented Yet, Still to come
