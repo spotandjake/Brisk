@@ -47,7 +47,8 @@ export interface ProgramNode {
 }
 export type Statement = 
   ImportStatementNode | ExportStatementNode | DeclarationStatementNode |
-  CallStatementNode   | FlagStatementNode   | CommentStatementNode;
+  CallStatementNode   | FlagStatementNode   | CommentStatementNode     |
+  BlockStatementNode;
 export interface ImportStatementNode {
   type: 'importStatement';
   identifier: string;
@@ -82,7 +83,12 @@ export interface CommentStatementNode {
   value: string;
   position: Position;
 }
-
+export interface BlockStatementNode {
+  type: 'blockStatement';
+  variables?: Stack;
+  body: Statement[];
+  position: Position;
+}
 export type ExpressionNode = 
   LiteralNode | FunctionDeclarationNode | FunctionNode | CallStatementNode | VariableNode;
 

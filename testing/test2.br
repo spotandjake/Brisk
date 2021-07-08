@@ -3,6 +3,8 @@ let b: Number = 1;
 let print: Function = (str: String): Void => {
   let b: Number = 1;
 };
+{
 
+};
 export a;
 export b;

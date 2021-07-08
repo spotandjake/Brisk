@@ -32,6 +32,12 @@ export const RecurseTree = (
             (Statement: any, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
           ).filter((n: any) => n);
           break;
+        case 'blockStatement':
+          stack = new Stack(stack);
+          Node.body = Node.body.map(
+            (Statement: any, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
+          ).filter((n: any) => n);
+          break;
         case 'callStatement':
           Node.arguments = Node.arguments.map(
             (Expression: any, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)

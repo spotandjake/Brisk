@@ -10,7 +10,7 @@ import Analyzer from './Stages/Analyzer';
 import Verifier from './Stages/BriskVerifier';
 import Linker from './Stages/Linker';
 
-const ParseFile = (filename: string, dependencyTree: Map<string, LinkedModule>): Program => {
+const ParseFile = (filename: string, entry: boolean, dependencyTree: Map<string, LinkedModule>): Program => {
   // Check if file exists
   const exists: boolean = fs.existsSync(filename);
   if (!exists) throw new Error(`${filename} does not exist`);
@@ -27,7 +27,7 @@ const ParseFile = (filename: string, dependencyTree: Map<string, LinkedModule>):
   // Verify Tree
   Verifier(analyzed);
   // Perform Code Linking
-  const linked = Linker(analyzed, dependencyTree, ParseFile);
+  const linked = Linker(analyzed, entry, dependencyTree, ParseFile);
   // Perform Module Linking
   return linked;
 };

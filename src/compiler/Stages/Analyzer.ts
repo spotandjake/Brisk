@@ -82,6 +82,16 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         };
         break;
       }
+      case 'blockStatement': {
+        // Generate more detailed Node
+        Node = {
+          type: 'blockStatement',
+          variables: stack,
+          body: Node.body,
+          position: Node.position
+        };
+        break;
+      }
       case 'functionParameter':
         stack.setLocal(Node.identifier, true);
         break;

@@ -5,7 +5,7 @@ import Optimizer from './Stages/Optimizer';
 // import Compiler from './compiler';
 
 const briskCompiler = (filename: string) => {
-  const analyzed = ParseFile(filename, new Map());
+  const analyzed = ParseFile(filename, true, new Map());
   // Perform Type Checking
   const typeChecked = TypeChecker(analyzed);
   // Perform Well Formed Check
