@@ -1,5 +1,5 @@
-// import binaryen from './binaryen/index';
-// import * as types from './types';
+// /* eslint-disable @typescript-eslint/no-unused-vars */
+// import binaryen from 'binaryen';
 
 // const memorydebug = true;
 // const encoder = new TextEncoder();
@@ -32,8 +32,8 @@
 //   get length() {
 //     return Object.keys(this.data).length;
 //   }
-// }``
-// let VariableList = (token: types.ProgramNode, used: string[], defined: string[], locals: string[], local: number) => {
+// }
+// const VariableList = (token: any, used: string[], defined: string[], locals: string[], local: number) => {
 //   // Bug local is true here and false there
 //   switch(token.type) {
 //     case 'BlockStatement':
@@ -49,31 +49,32 @@
 //     case 'VariableDeclaration':
 //       if (local == 0) defined.push(token.id.name);
 //       locals.push(token.id.name);
-//       VariableList(token.init, used, defined, locals, local)
+//       VariableList(token.init, used, defined, locals, local);
 //       break;
 //     case 'ArrowFunctionExpression':
 //       // todo: deal with this
 //       token.params.forEach((param: any) => VariableList(param, used, defined, locals, local - 1));
 //       VariableList(token.body, used, defined, locals, local - 1);
 //       break;
-//     case 'Literal':
-//       const { value:{ Primitive, value } } = token;
+//     case 'Literal': {
+//       const { value:{ Primitive } } = token;
 //       if (Primitive == 'Variable') {
 //         used.push(token.value.value);
 //         locals.push(token.value.value);
 //       }
 //       break;
+//     }
 //     case 'Parameter':
 //       if (local == 0) defined.push(token.id.name);
 //       locals.push(token.id.name);
 //       break;
 //   }
 //   return { used, locals, defined };
-// }
-// let TypeToWasm = (BriskType: string) => BriskType == 'Void' ? binaryen.none : binaryen.i32;
-// let DataBuilder = (Program: binaryen.Module, typeName: string, data: number[]) => {
+// };
+// const TypeToWasm = (BriskType: string) => BriskType == 'Void' ? binaryen.none : binaryen.i32;
+// const DataBuilder = (Program: binaryen.Module, typeName: string, data: number[]) => {
 //   // Get the id
-//   let rtId: number = 0;
+//   let rtId = 0;
 //   switch (typeName) {
 //     case 'Function':
 //       rtId = 1;
@@ -95,11 +96,11 @@
 //       break;
 //   }
 //   // Calculate Size
-//   let rtSize = 2 + data.length; // Data Size + id + sizeValue
+//   const rtSize = 2 + data.length; // Data Size + id + sizeValue
 //   // Get Pointer
-//   let ptr = Program.i32.load(0, 0, Program.i32.const(0));
+//   const ptr = Program.i32.load(0, 0, Program.i32.const(0));
 //   // Put the data into an Array Buffer
-//   let block = [
+//   const block = [
 //     // Call Malloc
 //     // Store Data
 //     Program.i32.store(0, 0, ptr, Program.i32.const(rtSize)),
@@ -108,11 +109,11 @@
 //   data.forEach(
 //     (byte, index) =>
 //       block.push(Program.i32.store(8+index*4, 0, ptr, Program.i32.const(byte)))
-//   )
+//   );
 //   block.push(Program.i32.store(0, 0, Program.i32.const(0), Program.i32.add(ptr, Program.i32.const(rtSize*4))));
 //   if (memorydebug) block.push(Program.call('briskmemory', [Program.i32.const(1)], binaryen.none));
 //   return { code: block, ptr: Program.i32.sub(ptr, Program.i32.const(rtSize*4)) };
-// }
+// };
 // class Compiler {
 //   private Program: binaryen.Module = new binaryen.Module();
 //   private functions: string[] = [];
@@ -121,7 +122,7 @@
 //     // Debug info
 //     this.filename = filename;
 //   }
-//   compile(token: types.Program) {
+//   compile(token: any) {
 //     const { Program, filename } = this;
 //     // Initiate our memory
 //     Program.setMemory(1,-1,'memory',[]);
@@ -136,26 +137,25 @@
 //     Program.addDebugInfoFileName(filename);
 //     return Program.emitText();
 //   }
-//   compileToken(token: types.ProgramNode, stack: Stack): any {
-//     let { Program, functions } = this;
-//     let { type } = token;
+//   compileToken(token: any, stack: Stack): any {
+//     const { Program, functions } = this;
+//     const { type } = token;
 //     switch(type) {
 //       case 'Program': {
 //         const { body } = token;
-//         let _programBody = body.filter((n: any) => n).map((tkn: types.ProgramNode) => this.compileToken(tkn, stack)).flat().filter((n: any) => n);
-//         let start = Program.addFunction("main", binaryen.none, binaryen.none, new Array(stack.length).fill(binaryen.i32), 
+//         const _programBody = body.filter((n: any) => n).map((tkn: any) => this.compileToken(tkn, stack)).flat().filter((n: any) => n);
+//         const start = Program.addFunction('main', binaryen.none, binaryen.none, new Array(stack.length).fill(binaryen.i32), 
 //           Program.block(null, [
-//               Program.i32.store(0, 0, Program.i32.const(0), Program.i32.const(4)),
-//               ..._programBody
-//             ]
-//           )
+//             Program.i32.store(0, 0, Program.i32.const(0), Program.i32.const(4)),
+//             ..._programBody
+//           ])
 //         );
 //         Program.setStart(start);
 //         break;
 //       }
 //       case 'BlockStatement': {
 //         const { body } = token;
-//         return Program.block(null, body.map((tkn: types.ProgramNode) => this.compileToken(tkn, stack)).flat());
+//         return Program.block(null, body.map((tkn: any) => this.compileToken(tkn, stack)).flat());
 //       }
 //       case 'CallExpression': {
 //         // TODO:
@@ -165,32 +165,33 @@
 //           // TODO: add support for multi value returns
 //           case 'return': {
 //             // Determine the parameters
-//             let operands = args.map((argument: types.ProgramNode) => {
-//               let { value: { code, ptr }, type } = this.compileToken(argument, stack);
+//             const operands = args.map((argument: any) => {
+//               const { value: { code, ptr } } = this.compileToken(argument, stack);
 //               return [ ...code, Program.return(ptr) ];
 //             });
 //             return operands[0];
 //           }
 //           case 'call':
 //             break;
-//           case 'print':
-//             let wasm: any[] = [];
-//             let operands = args.map((argument: types.ProgramNode) => {
-//               let opperand = this.compileToken(argument, stack);
+//           case 'print': {
+//             const wasm: any[] = [];
+//             const operands = args.map((argument: any) => {
+//               const opperand = this.compileToken(argument, stack);
 //               if (argument.type == 'CallExpression') {
 //                 return opperand;
 //               } else {
-//                 let { value: { code, ptr }, type } = opperand;
+//                 const { value: { code, ptr } } = opperand;
 //                 wasm.push(...code);
 //                 return ptr;
 //               }
 //             });
 //             return [ ...wasm, Program.call('print', operands, binaryen.none) ];
+//           }
 //           default: {
-//             let wasm = [];
+//             const wasm = [];
 //             // Determine the parameters
-//             let operands = args.map((argument: types.ProgramNode) => {
-//               let { value: { code, ptr }, type } = this.compileToken(argument, stack);
+//             const operands = args.map((argument: any) => {
+//               const { value: { code, ptr } } = this.compileToken(argument, stack);
 //               wasm.push(...code);
 //               return ptr;
 //             });
@@ -222,12 +223,12 @@
 //       case 'VariableDeclaration': {
 //         const { id: { name }, init } = token;
 //         if (init.type == 'CallExpression') {
-//           let ptr = this.compileToken(init, stack);
-//           let VarIndex = stack.set(name, type);
+//           const ptr = this.compileToken(init, stack);
+//           const VarIndex = stack.set(name, type);
 //           return [ Program.local.set(VarIndex, ptr) ];
 //         } else {
-//           let { value: { code, ptr }, type } = this.compileToken(init, stack);
-//           let VarIndex = stack.set(name, type);
+//           const { value: { code, ptr }, type } = this.compileToken(init, stack);
+//           const VarIndex = stack.set(name, type);
 //           return [ 
 //             ...code,
 //             Program.local.set(VarIndex, ptr)
@@ -237,24 +238,23 @@
 //       case 'ArrowFunctionExpression': {
 //         // TODO: implement closure
 //         // make a new stack
-//         let funcStack = new Stack();
+//         const funcStack = new Stack();
 //         // Make Closure
 //         const { returnType, params, body } = token;
-//         let VariableData = VariableList(token, [], [], [], 1);
+//         const VariableData = VariableList(token, [], [], [], 1);
 //         // TODO: deal with vars defined later in the scope that are from the previous scope, not done need to implement
-//         let closure = [];
 //         VariableData.used.forEach((name) => {
 //           // Make Closure
 //           if (!VariableData.defined.includes(name)) {
 //             // Change this so it is a static closure instead
 //             funcStack.setraw(name, stack.get(name));
 //           }
-//         })
+//         });
 //         // parse parameters
-//         let Parameters = params.map((tkn: types.ProgramNode) => this.compileToken(tkn, funcStack));
+//         const Parameters = params.map((tkn: any) => this.compileToken(tkn, funcStack));
 //         // Closure
 //         // Make Function Body
-//         let _functionBody = this.compileToken(body, funcStack);
+//         const _functionBody = this.compileToken(body, funcStack);
 //         // Make Function
 //         Program.addFunction(
 //           `${functions.length}`,
@@ -264,7 +264,7 @@
 //           _functionBody
 //         );
 //         // Store reference
-//         let store = DataBuilder(
+//         const store = DataBuilder(
 //           Program,
 //           'Function',
 //           [
@@ -296,7 +296,7 @@
 //             break;
 //           }
 //           case 'Variable': {
-//             LiteralValue = { code: [], ptr: Program.local.get(stack.get(value).value) }
+//             LiteralValue = { code: [], ptr: Program.local.get(stack.get(value).value) };
 //             break;
 //           }
 //           default: {

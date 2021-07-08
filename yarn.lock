@@ -480,6 +480,11 @@ binary-extensions@^1.0.0:
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-1.13.1.tgz"
   integrity sha512-Un7MIEDdUC5gNpcGDV97op1Ywk748MpHcFTHoYs6qnj1Z3j7I53VG3nwZhKzoBZmbdRNnb6WRdFlwl7tSDuZGw==
 
+binaryen@^101.0.0:
+  version "101.0.0"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-101.0.0.tgz#42a9e4cc7a22e2c1d75a31d28005a9b518b2c555"
+  integrity sha512-FRmVxvrR8jtcf0qcukNAPZDM3dZ2sc9GmA/hKxBI7k3fFzREKh1cAs+ruQi+ITTKz7u/AuFMuVnbJwTh0ef/HQ==
+
 bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
