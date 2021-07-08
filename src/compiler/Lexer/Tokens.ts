@@ -4,114 +4,114 @@ const tokens: Rule[] = [
   // keyword
   {
     type: 'keyword',
-    id: 'import',
+    id: 'Token_import',
     match: /import/
   },
   {
     type: 'keyword',
-    id: 'from',
+    id: 'Token_from',
     match: /from/
   },
   {
     type: 'keyword',
-    id: 'export',
+    id: 'Token_export',
     match: /export/
   },
   {
     type: 'keyword',
-    id: 'let',
+    id: 'Token_let',
     match: /let/
   },
   // separator
   {
     type: 'separator',
-    id: 'left_paren',
+    id: 'Token_left_paren',
     match: /\(/
   },
   {
     type: 'separator',
-    id: 'right_paren',
+    id: 'Token_right_paren',
     match: /\)/
   },
   {
     type: 'separator',
-    id: 'left_bracket',
+    id: 'Token_left_bracket',
     match: /\{/
   },
   {
     type: 'separator',
-    id: 'right_bracket',
+    id: 'Token_right_bracket',
     match: /\}/
   },
   {
     type: 'separator',
-    id: 'comma',
+    id: 'Token_comma',
     match: /,/
   },
   {
     type: 'separator',
-    id: 'colon',
+    id: 'Token_colon',
     match: /:/
   },
   {
     type: 'separator',
-    id: 'semicolon',
+    id: 'Token_semicolon',
     match: /;/
   },
   {
     type: 'separator',
-    id: 'ws',
+    id: 'Token_ws',
     match: /[ \t\s]+/,
     lineBreaks: true
   },
   // operator
   {
     type: 'operator',
-    id: 'arrow',
+    id: 'Token_arrow',
     match: /=>/
   },
   {
     type: 'operator',
-    id: 'equal',
+    id: 'Token_equal',
     match: /=/
   },
   // literal
   {
     type: 'literal',
-    id: 'string',
+    id: 'Token_string',
     match: /'.*'/,
     value: (text: string): string => text.slice(1, text.length-1)
   },
   {
     type: 'literal',
-    id: 'number',
+    id: 'Token_number',
     match: /[-|+]?[0-9]*(?:\.?[0-9]+)/,
     value: (text: string): number => Number(text)
   },
   {
     type: 'literal',
-    id: 'boolean',
+    id: 'Token_boolean',
     match: /(?:true|false)/,
     value: (text: string): boolean => text == 'true'
   },
   // flag
   {
     type: 'flag',
-    id: 'flag',
+    id: 'Token_flag',
     match: /@.*/,
     value: (text: string): string => text.slice(1)
   },
   // comment
   {
     type: 'comment',
-    id: 'comment',
+    id: 'Token_comment',
     match: /\/\/.*/,
     value: (text: string): string => text.slice(2).trim()
   },
   // identifier
   {
     type: 'identifier',
-    id: 'identifier',
+    id: 'Token_identifier',
     match: /[a-zA-Z$_][1-9a-zA-Z$_]*/
   },
 ];

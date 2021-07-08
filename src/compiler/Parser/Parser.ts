@@ -10,7 +10,7 @@ const getSymbolDisplay = (symbol: any, lsp: boolean) => {
   else if (type === 'object' && symbol instanceof RegExp) return `character matching ${symbol}`;
   else if (type === 'object' && symbol.hasOwnProperty('type')) {
     for (const token of Tokens) {
-      if (symbol.type == `Token_${token.id}`)
+      if (symbol.type == token.id)
         return `character matching ${token.match.toString()}`;
     }
     if (!lsp) throw new Error(`Unknown symbol type: ${symbol}`);
