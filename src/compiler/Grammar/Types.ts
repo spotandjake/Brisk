@@ -1,10 +1,13 @@
 // Type Imports
 import { Stack } from '../Helpers/Helpers';
+import * as path from 'path';
 // General Nodes
 export interface Position {
   offset: number;
   line: number;
   col: number;
+
+  file?: path.ParsedPath;
 }
 export interface Token {
   type: string;
@@ -21,10 +24,12 @@ export interface Program {
   flags: FlagStatementNode[];
   variables: Stack;
   body: Statement[];
+  position: Position;
 }
 export interface ProgramNode {
   type: 'Program';
   body: Statement[];
+  position: Position;
 }
 export type Statement = 
   ImportStatementNode | ExportStatementNode | DeclarationStatementNode |

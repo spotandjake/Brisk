@@ -11,7 +11,12 @@ main -> StatementList {%
   (data): Nodes.ProgramNode => {
     return {
       type: 'Program',
-      body: data[0]
+      body: data[0],
+      position: {
+        offset: 0,
+        line: 0,
+        col: 0
+      }
     }
   }
 %}

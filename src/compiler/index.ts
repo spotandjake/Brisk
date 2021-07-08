@@ -9,8 +9,7 @@ import Verifier from './Stages/BriskVerifier';
 import Optimizer from './Stages/Optimizer';
 
 // import Compiler from './compiler';
-
-const briskCompiler = async (filename: string) => {
+export const ParseFile = async (filename: string) => {
   // Check if file exists
   const exists: boolean = fs.existsSync(filename);
   if (!exists) throw new Error(`${filename} does not exist`);
@@ -23,12 +22,16 @@ const briskCompiler = async (filename: string) => {
   // Analyze the Code
   const analyzed = Analyzer(ProgramPath, parsed);
   // Perform Module Linking
+  return [ analyzed ];
+};
+const briskCompiler = async (filename: string) => {
+  const [ analyzed ] = await ParseFile(filename);
   // Perform Type Checking
-  const typeChecked = TypeChecker(ProgramPath, analyzed);
+  const typeChecked = TypeChecker(analyzed);
   // Perform Simple Program Verification
-  Verifier(ProgramPath, typeChecked);
+  Verifier(typeChecked);
   // Perform Well Formed Check
-  const optimized = Optimizer(ProgramPath, typeChecked);
+  const optimized = Optimizer(typeChecked);
   console.dir(optimized, { depth: null });
   // // handle gc
   // // compile

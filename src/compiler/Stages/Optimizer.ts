@@ -1,8 +1,7 @@
 // Helper Imports
 import { RecurseTree, Stack } from '../Helpers/Helpers';
-import * as path from 'path';
 
-const Optimizer = (filename: path.ParsedPath, Program: any) => {
+const Optimizer = (Program: any) => {
   // Remove Comments
   // Remove Flags
   // Constant Propagation

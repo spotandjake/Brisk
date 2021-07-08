@@ -6,7 +6,7 @@ import * as path from 'path';
 // Type Imports
 import { ParseTreeNode, ProgramNode, FlagStatementNode } from '../Grammar/Types';
 
-const Analyzer = (filename: path.ParsedPath, Program: ProgramNode) => {
+const Analyzer = (filePath: path.ParsedPath, Program: ProgramNode) => {
   Program = RecurseTree(Program, (Parent: any, Node: ParseTreeNode, index: number, stack: Stack, trace: any[]): (null | ParseTreeNode) => {
     switch (Node.type) {
       case 'Program': {
@@ -21,25 +21,26 @@ const Analyzer = (filename: path.ParsedPath, Program: ProgramNode) => {
           type: 'Program',
           flags: programFlags,
           variables: stack,
-          body: Node.body
+          body: Node.body,
+          position: Node.position
         };
         break;
       }
       case 'importStatement':
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, true);
-        else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filename, Node.position);
+        else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         // Resolve Module Paths
-        Node.path = path.join(filename.dir, Node.path);
+        Node.path = path.join(filePath.dir, Node.path);
         break;
       case 'exportStatement':
         if (!stack.has(Node.identifier))
-          BriskReferenceError(`${Node.identifier} is not defined`, filename, Node.position);
+          BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         break;
       case 'declarationStatement':
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, true);
-        else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filename, Node.position);
+        else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         break;
       case 'callStatement':
         if (!stack.has(Node.identifier)) {
@@ -48,12 +49,12 @@ const Analyzer = (filename: path.ParsedPath, Program: ProgramNode) => {
             const { type, identifier } = trace[trace.length-2];
             if (type == 'declarationStatement' && identifier == Node.identifier)
               stack.setClosure(Node.identifier, true);
-          } else BriskReferenceError(`${Node.identifier} is not defined`, filename, Node.position);
+          } else BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         }
         break;
       case 'variable':
         if (!stack.has(Node.identifier))
-          BriskReferenceError(`${Node.identifier} is not defined`, filename, Node.position);
+          BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         break;
       case 'functionDeclaration': {
         const FunctionFlags: FlagStatementNode[] = [];
@@ -77,6 +78,8 @@ const Analyzer = (filename: path.ParsedPath, Program: ProgramNode) => {
         stack.setLocal(Node.identifier, true);
         break;
     }
+    // Append data to node
+    if ('position' in Node) Node.position.file = filePath;
     return Node;
   });
   return Program;
