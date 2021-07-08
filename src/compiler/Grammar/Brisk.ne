@@ -1,7 +1,7 @@
 @preprocessor typescript
 # Lexer
 @{%
-import Lexer from '../Lexer/Moo-Lexer';
+import Lexer from '../Lexer/Lexer';
 import * as Nodes from './Types';
 const lexer = Lexer();
 %}

@@ -3,6 +3,7 @@ const gulp = require('gulp');
 const rollup = require('rollup');
 const rollupTypescript = require('@rollup/plugin-typescript');
 const eslint = require('gulp-eslint');
+const pkg = require('pkg');
 const { exec } = require('child_process');
 
 gulp.task('build', async () => {
@@ -35,4 +36,8 @@ gulp.task('lint', () => {
     // To have the process exit with an error code (1) on
     // lint error, return the stream and pipe to failAfterError last.
     .pipe(eslint.failAfterError());
+});
+gulp.task('package', async () => {
+  gulp.series('lint', 'build')();
+  await pkg.exec(['./dist/brisk.js', '--target', 'node16', '--output', 'brisk.exe']);
 });
