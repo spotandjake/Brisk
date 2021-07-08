@@ -9,7 +9,7 @@ const TypeChecker = (Program: any) => {
   // Dead code elimination
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Program = RecurseTree(Program, (Parent: any, Node: any, index: number, stack: Stack, trace: any[]): any => {
-    console.log(Node);
+    // console.log(Node);
     // switch (Node.type) {
     //   case 'commentStatement':
     //     Node = null;

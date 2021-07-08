@@ -19,16 +19,30 @@ export interface Token {
 }
 // ParseTreeTypes
 export type ParseTreeNode = Program | ProgramNode | Statement | ExpressionNode | FunctionParameterNode;
+export interface LinkedModule {
+  type: 'Program';
+  flags: FlagStatementNode[];
+  variables: Stack;
+  body: Statement[];
+  exports: string[];
+  imports: string[];
+  imported: string[];
+  position: Position;
+}
 export interface Program {
   type: 'Program';
   flags: FlagStatementNode[];
   variables: Stack;
   body: Statement[];
+  exports: string[];
+  imports: string[];
   position: Position;
 }
 export interface ProgramNode {
   type: 'Program';
   body: Statement[];
+  exports?: string[];
+  imports?: string[];
   position: Position;
 }
 export type Statement = 

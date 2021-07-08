@@ -1,7 +1,8 @@
-import b from './test2.br';
 let a: Number = 0;
+let b: Number = 1;
 let print: Function = (str: String): Void => {
   let b: Number = 1;
 };
 
-export print;
+export a;
+export b;
