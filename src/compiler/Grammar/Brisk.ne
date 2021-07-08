@@ -160,7 +160,7 @@ Variable -> %Token_identifier {%
 Atom -> (String | Number | Boolean | FunctionDeclaration) {% (data) => data[0][0] %}
 # Literals
 String -> %Token_string {%
-  (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+  (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
@@ -175,7 +175,7 @@ String -> %Token_string {%
   }
 %}
 Number -> %Token_number {%
-  (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+  (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
@@ -190,7 +190,7 @@ Number -> %Token_number {%
   }
 %}
 Boolean -> %Token_boolean {%
-  (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+  (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
@@ -235,7 +235,7 @@ FunctionParameterList ->
   }
 %}
 FunctionParameter -> %Token_identifier wss %Token_colon wss %Token_identifier {%
-  (data: (null | Nodes.mooNode)[]): Nodes.FunctionParameterNode => {
+  (data: (null | Nodes.Token)[]): Nodes.FunctionParameterNode => {
     const [ identifier, _, dataType ] = data.filter(n => n);
     return {
       type: 'functionParameter',

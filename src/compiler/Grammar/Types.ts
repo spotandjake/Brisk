@@ -6,13 +6,11 @@ export interface Position {
   line: number;
   col: number;
 }
-export interface mooNode {
-  type?: string;
+export interface Token {
+  type: string;
   value: string | number | boolean;
   text: string;
-  toString(): string;
   offset: number;
-  lineBreaks: number;
   line: number;
   col: number;
 }

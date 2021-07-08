@@ -213,7 +213,7 @@ const grammar: Grammar = {
     {"name": "Atom$subexpression$1", "symbols": ["FunctionDeclaration"]},
     {"name": "Atom", "symbols": ["Atom$subexpression$1"], "postprocess": (data) => data[0][0]},
     {"name": "String", "symbols": [(lexer.has("Token_string") ? {type: "Token_string"} : Token_string)], "postprocess": 
-        (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+        (data: Nodes.Token[]): Nodes.LiteralNode  => {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
@@ -228,7 +228,7 @@ const grammar: Grammar = {
         }
         },
     {"name": "Number", "symbols": [(lexer.has("Token_number") ? {type: "Token_number"} : Token_number)], "postprocess": 
-        (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+        (data: Nodes.Token[]): Nodes.LiteralNode  => {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
@@ -243,7 +243,7 @@ const grammar: Grammar = {
         }
         },
     {"name": "Boolean", "symbols": [(lexer.has("Token_boolean") ? {type: "Token_boolean"} : Token_boolean)], "postprocess": 
-        (data: Nodes.mooNode[]): Nodes.LiteralNode  => {
+        (data: Nodes.Token[]): Nodes.LiteralNode  => {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
@@ -285,7 +285,7 @@ const grammar: Grammar = {
         }
         },
     {"name": "FunctionParameter", "symbols": [(lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier)], "postprocess": 
-        (data: (null | Nodes.mooNode)[]): Nodes.FunctionParameterNode => {
+        (data: (null | Nodes.Token)[]): Nodes.FunctionParameterNode => {
           const [ identifier, _, dataType ] = data.filter(n => n);
           return {
             type: 'functionParameter',
