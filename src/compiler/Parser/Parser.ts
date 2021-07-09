@@ -86,6 +86,7 @@ const Parser = (filename: string, code: string, lsp = false) => {
           msg += `│  ╰─ ${trace}\n`;
         }
       }
+      msg += `at offset: ${offset}`;
       if (!lsp) console.log(msg);
       if (!lsp) process.exit(1);
     } catch (e) {
