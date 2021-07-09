@@ -1,6 +1,5 @@
 import Parser from '../../compiler/Parser/Parser';
-const data = `
-import print from './print.br';
+const data = `import print from './print.br';
 // Comments
 let main: Function = (param: Number, param2: String, param3: String): Number => {
   @disablegc
