@@ -15,13 +15,30 @@ gulp.task('build', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'commander', 'path', 'fs', 'nearley', 'moo', 'tslib' ]
+    external: [ 'commander', 'path', 'fs', 'nearley', 'tslib' ]
   });
 
   await bundle.write({
     file: './dist/brisk.js',
     format: 'cjs',
     name: 'brisk',
+    sourcemap: true
+  });
+});
+gulp.task('build-tests', async () => {
+  // Compile TypeScript
+  const bundle = await rollup.rollup({
+    input: './src/unit testing/index.ts',
+    plugins: [
+      rollupTypescript()
+    ],
+    external: [ 'path', 'fs', 'tslib' ]
+  });
+
+  await bundle.write({
+    file: './dist/brisk-tests.js',
+    format: 'cjs',
+    name: 'brisk-tests',
     sourcemap: true
   });
 });
