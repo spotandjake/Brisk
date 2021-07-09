@@ -15,11 +15,16 @@
     "outputPath": "/"
   },
   "scripts": {
-    "lint": "gulp lint",
     "start": "yarn build && yarn run run",
     "build": "gulp build",
     "run": "node --enable-source-maps ./dist/brisk.js",
-    "package": "gulp package"
+    "package": "gulp package",
+    
+    "start-tests": "yarn build-tests && yarn run-tests",
+    "build-tests": "gulp build-tests",
+    "run-tests": "node --enable-source-maps ./dist/brisk-tests.js",
+
+    "lint": "gulp lint"
   },
   "dependencies": {
     "binaryen": "^101.0.0",
