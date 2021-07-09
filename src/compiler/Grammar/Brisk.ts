@@ -15,14 +15,14 @@ declare var Token_colon: any;
 declare var Token_equal: any;
 declare var Token_flag: any;
 declare var Token_comment: any;
+declare var Token_left_bracket: any;
+declare var Token_right_bracket: any;
 declare var Token_left_paren: any;
 declare var Token_right_paren: any;
 declare var Token_comma: any;
 declare var Token_number: any;
 declare var Token_boolean: any;
 declare var Token_arrow: any;
-declare var Token_left_bracket: any;
-declare var Token_right_bracket: any;
 
 import Lexer from '../Lexer/Lexer';
 import * as Nodes from './Types';
@@ -87,6 +87,7 @@ const grammar: Grammar = {
     {"name": "StatementCommand$subexpression$1", "symbols": ["ExportStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["DeclarationStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["CallStatement"]},
+    {"name": "StatementCommand$subexpression$1", "symbols": ["BlockStatement"]},
     {"name": "StatementCommand", "symbols": ["StatementCommand$subexpression$1", (lexer.has("Token_semicolon") ? {type: "Token_semicolon"} : Token_semicolon), "wss"], "postprocess":  
         (data): Nodes.Statement => data[0][0]
         },
@@ -175,6 +176,21 @@ const grammar: Grammar = {
           return {
             type: 'commentStatement',
             value: value,
+            position: {
+              offset: offset,
+              line: line,
+              col: col
+            }
+          }
+        }
+        },
+    {"name": "BlockStatement", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess": (data): Nodes.Statement[] => []},
+    {"name": "BlockStatement", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", "StatementList", "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess":  
+        (data): Nodes.BlockStatementNode => {
+          const { value, offset, line, col } = data.filter(n => n)[0].position;
+          return {
+            type: 'blockStatement',
+            body: data.filter(n => n)[1],
             position: {
               offset: offset,
               line: line,

@@ -32,7 +32,7 @@ Statement -> (StatementCommand | StatementInfo) {%
 %}
   
 StatementCommand -> 
-  (ImportStatement | ExportStatement | DeclarationStatement | CallStatement) %Token_semicolon wss {% 
+  (ImportStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Token_semicolon wss {% 
   (data): Nodes.Statement => data[0][0]
 %}
 StatementInfo -> (FlagStatement | CommentStatement) wss {% 
@@ -125,6 +125,22 @@ CommentStatement ->
     return {
       type: 'commentStatement',
       value: value,
+      position: {
+        offset: offset,
+        line: line,
+        col: col
+      }
+    }
+  }
+%}
+BlockStatement -> 
+  %Token_left_bracket wss %Token_right_bracket {% (data): Nodes.Statement[] => [] %} |
+  %Token_left_bracket wss StatementList wss %Token_right_bracket {% 
+  (data): Nodes.BlockStatementNode => {
+    const { value, offset, line, col } = data.filter(n => n)[0].position;
+    return {
+      type: 'blockStatement',
+      body: data.filter(n => n)[1],
       position: {
         offset: offset,
         line: line,
