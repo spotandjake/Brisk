@@ -1,9 +1,9 @@
-import print from './print.br';
-import a from './test2.br';
-// Perform Module Linking
+// import print from './print.br';
 // Perform Type Checking
 // Verify The Program
+// Write Custom Lexer
 // Optimize: Run constant propagation and dead code elimination
+// Perform Module Linking
 // Add gc instructions
 // Convert to simple ast
 // convert ast to binaryen ir
