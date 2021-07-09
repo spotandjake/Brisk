@@ -1,19 +1,19 @@
 // Import Node Types
-import { ParseTreeNode, FunctionParameterNode } from '../Grammar/Types';
+import { ParseTreeNode, FunctionParameterNode, ExpressionNode } from '../Grammar/Types';
 // Recurse the ParseTree
 export const RecurseTree = (
   Node: ParseTreeNode,
-  callback: (Parent: any, Node: ParseTreeNode, index: number, stack: Stack, trace: any[]) => any,
+  callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (ParseTreeNode | null),
   depth = 0
 ): any => {
   const RecurseNodes = (
-    Parent: any,
+    Parent: ParseTreeNode,
     Node: ParseTreeNode,
     index: number,
     stack: Stack,
     trace: ParseTreeNode[],
     depth: number,
-    callback: (Parent: any, Node: ParseTreeNode, index: number, stack: Stack, trace: any[]) => any
+    callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (ParseTreeNode | null)
   ): any => {
     trace = [...trace, Parent];
     if (depth == 0 || trace.length < depth) {
@@ -26,22 +26,22 @@ export const RecurseTree = (
           if (Node.type == 'functionDeclaration') {
             Node.parameters = Node.parameters.map(
               (Param: FunctionParameterNode, i: number) => RecurseNodes(Node, Param, i, stack, trace, depth, callback)
-            ).filter((n: any) => n);
+            ).filter((n: (FunctionParameterNode | null)) => n);
           }
           Node.body = Node.body.map(
-            (Statement: any, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
-          ).filter((n: any) => n);
+            (Statement: ParseTreeNode, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
+          ).filter((n: (ParseTreeNode | null)) => n);
           break;
         case 'blockStatement':
           stack = new Stack(stack);
           Node.body = Node.body.map(
-            (Statement: any, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
-          ).filter((n: any) => n);
+            (Statement: ParseTreeNode, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
+          ).filter((n: (ParseTreeNode | null)) => n);
           break;
         case 'callStatement':
           Node.arguments = Node.arguments.map(
-            (Expression: any, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)
-          ).filter((n: any) => n);
+            (Expression: ExpressionNode, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)
+          ).filter((n: (ExpressionNode | null)) => n);
           break;
         case 'declarationStatement':
           Node.value = RecurseNodes(Node, Node.value, 0, stack, trace, depth, callback);
@@ -50,7 +50,7 @@ export const RecurseTree = (
     }
     return callback(Parent, Node, index, stack, trace);
   };
-  return RecurseNodes([], Node, 0, new Stack(), [], depth, callback);
+  return RecurseNodes(<ParseTreeNode>{}, Node, 0, new Stack(), [], depth, callback);
 };
 // A Stack Data Type
 export class Stack {
@@ -60,7 +60,7 @@ export class Stack {
   constructor(ParentStack?: Stack) {
     this.ParentStack = ParentStack;
   }
-  has(name: string): any {
+  has(name: string): boolean {
     if (this.hasLocal(name)) return true;
     else if (this.hasClosure(name)) return true;
     else if (this.ParentStack && this.ParentStack.has(name)) {
