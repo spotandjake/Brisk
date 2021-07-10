@@ -36,7 +36,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
       }
       case 'importStatement':
         if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, true);
+          stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         // Resolve Module Paths
         Node.path = path.join(filePath.dir, Node.path);
@@ -53,16 +53,16 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         break;
       case 'declarationStatement':
         if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, true);
+          stack.setLocal(Node.identifier, Node.dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         break;
       case 'callStatement':
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions
           if (Parent.type == 'functionDeclaration') {
-            const { type, identifier } = <DeclarationStatementNode>trace[trace.length-2];
+            const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
             if (type == 'declarationStatement' && identifier == Node.identifier)
-              stack.setClosure(Node.identifier, true);
+              stack.setClosure(Node.identifier, dataType);
           } else BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         }
         break;
@@ -99,7 +99,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         break;
       }
       case 'functionParameter':
-        stack.setLocal(Node.identifier, true);
+        stack.setLocal(Node.identifier, Node.dataType);
         break;
     }
     // Append data to node

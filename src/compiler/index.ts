@@ -16,7 +16,8 @@ const briskCompiler = (filename: string) => {
   // code generator
   const compiled = Codegen(optimized);
   // Output File
-  console.dir(compiled, { depth: null });
+  console.log(compiled);
+  // console.dir(compiled, { depth: null });
   // await fs.promises.writeFile(filename.replace(/\.[^\.]+$/, '.wat'), compiled);
 };
 export default briskCompiler;
