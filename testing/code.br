@@ -1,7 +1,6 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// TODO: Add support for function calls as arguments and var values
 // Perform Type Checking
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination
@@ -16,23 +15,21 @@ import wasm print: (String) -> Void from 'env';
 // Comments
 let f: String = 't';
 print(f);
-// let main: (Number, String, String) -> Number = (param: Number, param2: String, param3: String): Number => {
-//   @disablegc
-//   // Test Comment
-//   let str: String = 't';
-//   let num: Number = -1.111;
-//   let boolTrue: Boolean = true;
-//   let boolFalse: Boolean = false;
-//   // main(num);
-//   return(1);
-// };
-// let p: () -> Void = (): Void => {
-//   print(f);
-// };
-// p();
-// let call: Number = main(main(1, 2));
-
-// main((): Void => {
-//   @disablegc
-// });
+let main: (Number) -> Number = (param: Number): Number => {
+  // @disablegc
+  // Test Comment
+  let str: String = 't';
+  let num: Number = -1.111;
+  let boolTrue: Boolean = true;
+  let boolFalse: Boolean = false;
+  print(boolTrue);
+  return(2);
+};
+let p: () -> Void = (): Void => {
+  print(f);
+};
+p();
+let call: Number = main(main(1));
+let num: Number = 3;
+main(num);
 // export main;

@@ -139,9 +139,9 @@ class Compiler {
         } else if (vars.has(Node.identifier)) {
           wasm = module.call_indirect(
             'functions',
-            <number>vars.get(Node.identifier),
+            module.local.get(<number>vars.get(Node.identifier)),
             functionArgs,
-            functionType.params.map((param: any) => param.result == 'Void' ? binaryen.none : binaryen.i32),
+            binaryen.createType(functionType.params.map((param: any) => param.result == 'Void' ? binaryen.none : binaryen.i32)),
             functionType.result == 'Void' ? binaryen.none : binaryen.i32
           );
         } else {
@@ -157,7 +157,7 @@ class Compiler {
         functionBody.push(
           module.local.set(
             vars.size,
-            module.i32.const(this.compileToken(value, functionBody, stack, vars, true))
+            this.compileToken(value, functionBody, stack, vars, true)
           )
         );
         vars.set(identifier, vars.size);
