@@ -15,6 +15,7 @@ import wasm print: (String) -> Void from 'env';
 // Implement incremental building
 // Comments
 let f: String = 't';
+print(f);
 // let main: (Number, String, String) -> Number = (param: Number, param2: String, param3: String): Number => {
 //   @disablegc
 //   // Test Comment
@@ -25,10 +26,10 @@ let f: String = 't';
 //   // main(num);
 //   return(1);
 // };
-let p: () -> Void = (): Void => {
-  print(f);
-};
-p();
+// let p: () -> Void = (): Void => {
+//   print(f);
+// };
+// p();
 // let call: Number = main(main(1, 2));
 
 // main((): Void => {

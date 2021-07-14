@@ -64,7 +64,9 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
             const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
             if (type == 'declarationStatement' && identifier == Node.identifier)
               stack.setClosure(Node.identifier, dataType);
-          } else BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
+              //TODO: add support for globals from imports and stuff
+          } else if (Node.identifier != 'print' && Node.identifier != 'return')
+            BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         }
         break;
       case 'variable':
