@@ -13,6 +13,7 @@ import {
 } from '../Grammar/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
+  // TODO: add support for globals from imports and stuff
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
       case 'Program': {

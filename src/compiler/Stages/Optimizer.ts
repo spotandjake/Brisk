@@ -17,6 +17,8 @@ const Optimizer = (Program: Program) => {
     switch (Node.type) {
       case 'commentStatement':
         return null;
+      case 'flagStatement':
+        return null;
     }
     return Node;
   });

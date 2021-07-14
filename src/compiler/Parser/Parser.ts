@@ -87,6 +87,8 @@ const Parser = (filename: string, code: string, lsp = false) => {
         }
       }
       msg += `at offset: ${offset}`;
+      if (!lsp) console.log(err);
+      if (!lsp) console.log('================================================================');
       if (!lsp) console.log(msg);
       if (!lsp) process.exit(1);
     } catch (e) {

@@ -24,6 +24,7 @@ const Verifier = (Program: Program): void => {
           for (let i = 0; i < index; i++) {
             if (
               (Parent as Program).body[i].type != 'importStatement' && 
+              (Parent as Program).body[i].type != 'importWasmStatement' && 
               (Parent as Program).body[i].type != 'commentStatement' &&
               (Parent as Program).body[i].type != 'flagStatement'
             ) BriskError('imports must be at top of file', <path.ParsedPath>Node.position.file, Node.position);

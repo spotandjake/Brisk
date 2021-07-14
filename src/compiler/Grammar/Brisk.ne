@@ -32,7 +32,7 @@ Statement -> (StatementCommand | StatementInfo) {%
 %}
   
 StatementCommand -> 
-  (ImportStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Token_semicolon wss {% 
+  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Token_semicolon wss {% 
   (data): Nodes.Statement => data[0][0]
 %}
 StatementInfo -> (FlagStatement | CommentStatement) wss {% 
@@ -45,6 +45,23 @@ ImportStatement ->
     const [ _, __, identifier, ___, ____, _____, path ] = data;
     return {
       type: 'importStatement',
+      identifier: identifier.value,
+      path: path.value,
+      position: {
+        offset: identifier.offset,
+        line: identifier.line,
+        col: identifier.col
+      }
+    }
+  }
+%}
+ImportWasmStatement -> 
+  %Token_import %Token_ws %Token_wasm %Token_ws %Token_identifier wss %Token_colon wss Type %Token_ws %Token_from %Token_ws %Token_string {%
+  (data): Nodes.ImportWasmStatementNode => {
+    const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, path ] = data.filter(n => n);
+    return {
+      type: 'importWasmStatement',
+      dataType: dataType.value,
       identifier: identifier.value,
       path: path.value,
       position: {
@@ -71,7 +88,7 @@ ExportStatement ->
   }
 %}
 DeclarationStatement -> 
-  %Token_let %Token_ws %Token_identifier wss %Token_colon wss %Token_identifier wss %Token_equal wss Expression {%
+  %Token_let %Token_ws %Token_identifier wss %Token_colon wss Type wss %Token_equal wss Expression {%
   (data): Nodes.DeclarationStatementNode => {
     const [ start, __, identifier, ___, dataType, ____, value ] = data.filter(n => n);
     return {
@@ -227,7 +244,7 @@ Boolean -> %Token_boolean {%
 %}
 # Function
 FunctionDeclaration -> 
-  FunctionParameters wss %Token_colon wss %Token_identifier wss %Token_arrow wss FunctionBody {%
+  FunctionParameters wss %Token_colon wss Type wss %Token_thick_arrow wss FunctionBody {%
   (data): Nodes.FunctionDeclarationNode => {
     const [ parameters, _, dataType, __, body ] = data.filter(n => n);
     return {
@@ -255,12 +272,12 @@ FunctionParameterList ->
     return [ ...paramList, Param ];
   }
 %}
-FunctionParameter -> %Token_identifier wss %Token_colon wss %Token_identifier {%
-  (data: (null | Nodes.Token)[]): Nodes.FunctionParameterNode => {
+FunctionParameter -> %Token_identifier wss %Token_colon wss Type {%
+  (data): Nodes.FunctionParameterNode => {
     const [ identifier, _, dataType ] = data.filter(n => n);
     return {
       type: 'functionParameter',
-      dataType: <string>dataType!.value,
+      dataType: dataType.value,
       identifier: <string>identifier!.value,
       position: {
         offset: identifier!.offset,
@@ -275,6 +292,34 @@ FunctionBody ->
   %Token_left_bracket wss %Token_right_bracket {% (data): Nodes.Statement[] => [] %} |
   %Token_left_bracket wss StatementList wss %Token_right_bracket {% 
   (data): Nodes.Statement[] => data.filter(n => n)[1]
+%}
+# Types
+TypeList -> Type | TypeList wss %Token_comma wss Type {%
+  (data): Nodes.TypeNode[] => {
+    const [ typeList, _, type ] = data.filter(n => n);
+    return [ ...typeList, type ];
+  }
+%}
+Type -> (FunctionType | %Token_identifier) {% (data) => data[0][0] %}
+FunctionType -> FunctionTypeParam wss %Token_arrow wss Type {%
+  (data): Nodes.FuncTypeNode => {
+    const [ params, _, result ] = data.filter(n => n);
+    return {
+      value: {
+        type: 'functionType',
+        params: params.map((n: any) => n.value),
+        result: result.value
+      }
+    }
+  }
+%}
+FunctionTypeParam -> 
+  %Token_left_paren wss %Token_right_paren {% () => [] %}|
+  %Token_left_paren wss TypeList wss %Token_right_paren {%
+  (data): Nodes.TypeNode[] => {
+    const TypeList = data.filter(n => n)[1];
+    return TypeList;
+  }
 %}
 # Random
 wss  -> %Token_ws:* {% (d) => null %}
