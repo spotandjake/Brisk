@@ -37,6 +37,13 @@ program
     // Run the runner
     runner(path.join(process.cwd(), file).replace(/\.[^.]+$/, '.wasm'));
   });
+program
+  .command('wasmrun <file>')
+  .description('run brisk file')
+  .action(async (file: string) => {
+    // Run the runner
+    runner(path.join(process.cwd(), file));
+  });
 // default is compiler & run
 // TODO: add flag to compile to wasm instead of wat
 program

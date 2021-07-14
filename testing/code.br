@@ -1,13 +1,12 @@
-import wasm print: (Number, String, String) -> Number from 'env';
+import wasm print: (String) -> Void from 'env';
 // import print from 'env';
+
+// TODO: Add support for function calls as arguments and var values
 // Perform Type Checking
 // Verify The Program
-// Write Custom Lexer
 // Optimize: Run constant propagation and dead code elimination
 // Perform Module Linking
 // Add gc instructions
-// Convert to simple ast
-// convert ast to binaryen ir
 // Port lsp to brisk
 // Fix nearley error handler
 // Make nearley use a custom lexer
@@ -16,22 +15,23 @@ import wasm print: (Number, String, String) -> Number from 'env';
 // Implement incremental building
 // Comments
 let f: String = 't';
-let main: (Number, String, String) -> Number = (param: Number, param2: String, param3: String): Number => {
-  @disablegc
-  // Test Comment
-  let str: String = 't';
-  let num: Number = -1.111;
-  let boolTrue: Boolean = true;
-  let boolFalse: Boolean = false;
-  // main(num);
-  return(1);
+// let main: (Number, String, String) -> Number = (param: Number, param2: String, param3: String): Number => {
+//   @disablegc
+//   // Test Comment
+//   let str: String = 't';
+//   let num: Number = -1.111;
+//   let boolTrue: Boolean = true;
+//   let boolFalse: Boolean = false;
+//   // main(num);
+//   return(1);
+// };
+let p: () -> Void = (): Void => {
+  print(f);
 };
-let p: () -> Void = (): Void => print('h');
 p();
-main(1);
-let call: Number = main(main(1, 2));
+// let call: Number = main(main(1, 2));
 
-main((): Void => {
-  @disablegc
-});
+// main((): Void => {
+//   @disablegc
+// });
 // export main;

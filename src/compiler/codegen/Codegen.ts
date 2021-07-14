@@ -73,7 +73,7 @@ class Compiler {
     module.autoDrop();
     return wat ? module.emitText() : module.emitBinary();
   }
-  compileToken(Node: ParseTreeNode, functionBody: any[], stack: Stack, vars: Map<string, number>): any {
+  compileToken(Node: ParseTreeNode, functionBody: any[], stack: Stack, vars: Map<string, number>, expectResult=false): any {
     const { module, functions, globals } = this;
     switch(Node.type) {
       case 'Program': {
@@ -123,20 +123,21 @@ class Compiler {
         return ptr;
       }
       case 'callStatement': {
-        // TODO: add closures and add in support for polymorphic function types, along with builtin functions such as return and a basic print and malloc
+        // TODO: add closures and add in support for polymorphic function types, along with builtin functions such as return and a basic print and malloc, add support to call functions as arguments and variable values
         // Add calls for return
         const functionType = stack.get(Node.identifier);
-        const functionArgs = Node.arguments.map(arg => this.compileToken(arg, functionBody, stack, vars));
+        const functionArgs = Node.arguments.map(arg => this.compileToken(arg, functionBody, stack, vars, true));
+        let wasm: any;
         if (Node.identifier == 'return') {
-          return module.return(functionArgs[0]);
+          wasm = module.return(functionArgs[0]);
         } else if (globals.has(Node.identifier)) {
-          module.call(
+          wasm = module.call(
             Node.identifier,
             functionArgs,
             (globals.get(Node.identifier) as FunctionTypeNode).result == 'Void' ? binaryen.none : binaryen.i32
           );
         } else if (vars.has(Node.identifier)) {
-          return module.call_indirect(
+          wasm = module.call_indirect(
             'functions',
             <number>vars.get(Node.identifier),
             functionArgs,
@@ -147,6 +148,8 @@ class Compiler {
           console.log(vars);
           BriskError(`Unknown Function: ${Node.identifier}`, <path.ParsedPath>Node.position.file, Node.position);
         }
+        if (expectResult) return wasm;
+        else functionBody.push(wasm);
         break;
       }
       case 'declarationStatement': {
@@ -154,7 +157,7 @@ class Compiler {
         functionBody.push(
           module.local.set(
             vars.size,
-            module.i32.const(this.compileToken(value, functionBody, stack, vars))
+            module.i32.const(this.compileToken(value, functionBody, stack, vars, true))
           )
         );
         vars.set(identifier, vars.size);
