@@ -1,35 +1,54 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
-
+// Add closures
+// Add memory instructions
+// Add Malloc in wasm
+// Add a runtime mode that allows us to implement malloc and garbage collection
+// Add Malloc in brisk
+// Add gc instructions
+// Add support for i64 numbers
+// Add support for decimals
 // Perform Type Checking
 // Verify The Program
-// Optimize: Run constant propagation and dead code elimination
+// Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
 // Perform Module Linking
-// Add gc instructions
 // Port lsp to brisk
 // Fix nearley error handler
-// Make nearley use a custom lexer
 // write a custom parser
 // Port lexer and parser to Brisk
 // Implement incremental building
+// Implement checks before compiling, such as if we think we are gonna need i64 pointers warn the user.
+
 // Comments
-let f: String = 't';
-print(f);
-let main: (Number) -> Number = (param: Number): Number => {
-  // @disablegc
-  // Test Comment
-  let str: String = 't';
-  let num: Number = -1.111;
-  let boolTrue: Boolean = true;
-  let boolFalse: Boolean = false;
-  print(boolTrue);
-  return(2);
+// let f: String = 'test';
+// print(f);
+// let main: (Number) -> Number = (param: Number): Number => {
+//   // @disablegc
+//   // Test Comment
+//   let str: String = 'b';
+//   let a: Number = 1;
+//   let b: Number = -1;
+//   let c: Number = 1.1;
+//   let d: Number = -1.1;
+//   let boolTrue: Boolean = true;
+//   let boolFalse: Boolean = false;
+//   print(boolTrue);
+//   return(2);
+// };
+// let p: () -> Void = (): Void => {
+//   print(f);
+// };
+// p();
+// let a: Number = 1;
+// let b: Number = -1;
+// let c: Number = -2;
+// let d: Number = +1;
+// let e: Number= 2147483647;
+// let f: Number= 1.1;
+// print(a);
+let closure: Function = (c: Function): Void => {
+  print(1);
 };
-let p: () -> Void = (): Void => {
-  print(f);
-};
-p();
-let call: Number = main(main(1));
-let num: Number = 3;
-main(num);
+closure(closure);
+// main(num);
 // export main;
