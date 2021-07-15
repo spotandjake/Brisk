@@ -10,35 +10,14 @@ import {
   FunctionTypeNode,
   TypeNode
 } from '../Grammar/Types';
+// Constants
+const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Compiler
 const DataBuilder = (module: binaryen.Module, typeName: string, data: number[], raw=false) => {
   // Get the id
-  let rtId = 0;
-  switch (typeName) {
-    case 'Function':
-      rtId = 1;
-      break;
-    case 'Closure':
-      rtId = 2;
-      break;
-    case 'Boolean':
-      rtId = 3;
-      break;
-    case 'String':
-      rtId = 4;
-      break;
-    case 'Number':
-      rtId = 5;
-      break;
-    case 'Array':
-      rtId = 6;
-      break;
-    case 'Parameters':
-      rtId = 7;
-      break;
-  }
+  const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Calculate Size
-  const rtSize = 3 + data.length; // Data Size + id + sizeValue
+  const rtSize = 3 + data.length; // sizeValue|refs|id|Data
   // Get Pointer
   const ptr = module.i32.load(0, 0, module.i32.const(0));
   // Put the data into an Array Buffer
@@ -72,9 +51,22 @@ class Compiler {
     module.addTable('functions', this.functions.length, -1);
     module.addActiveElementSegment('functions', 'functions', this.functions, module.i32.const(0));
     module.autoDrop();
+    // Debug info
+    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this
+    // Optimization settings
+    binaryen.setFlexibleInlineMaxSize(1);
+    binaryen.setOneCallerInlineMaxSize(1);
     return wat ? module.emitText() : module.emitBinary();
   }
-  compileToken(Node: ParseTreeNode, functionBody: any[], stack: Stack, vars: Map<string, number>, expectResult=false): any {
+  compileToken(
+    Node: ParseTreeNode,
+    functionBody: any[],
+    stack: Stack,
+    vars: Map<string, number>,
+    expectResult = false,
+    functionDeclaration:(boolean | string) = false
+  ): any {
+    // Add malloc function
     const { module, functions, globals } = this;
     switch(Node.type) {
       case 'Program': {
@@ -93,11 +85,12 @@ class Compiler {
         break;
       }
       case 'functionNode': {
-        // TODO: make functions polymorphic
+        // TODO: allow closure to capture itself
         const { dataType, variables, parameters, body } = Node;
         // Make the closure
         const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name)));
-        const { code:closureCode, ptr:closurePtr } = DataBuilder(module, 'Closure', closurePointers, true);
+        const { code:closureCode, ptr:closurePtr } = 
+          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Closure', closurePointers, true);
         functionBody.push(...closureCode);
         // reset the function
         const funcBody: any[] = [];
@@ -136,8 +129,7 @@ class Compiler {
         const name = `${functions.length}`;
         module.addFunction(
           name,
-          binaryen.createType([ binaryen.i32, binaryen.i32 ]),
-          binaryen.i32,
+          paramType, binaryen.i32,
           new Array(variables.length+1).fill(binaryen.i32), 
           module.block(null, funcBody)
         );
@@ -148,7 +140,6 @@ class Compiler {
         return ptr;
       }
       case 'callStatement': {
-        // TODO: add malloc
         // Add calls for return
         const functionArgs = Node.arguments.map(arg => this.compileToken(arg, functionBody, stack, vars, true));
         let wasm: any;
@@ -162,21 +153,18 @@ class Compiler {
           );
         } else if (vars.has(Node.identifier)) {
           // Assemble the Parameter structure
-          const { code:paramCode, ptr:paramPtr } = DataBuilder(module, 'Parameters', functionArgs, true);
+          const { code:paramCode, ptr:paramPtr } = 
+            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Parameters', functionArgs, true);
           functionBody.push(...paramCode);
           // Assemble the Function Call
+          const funcPtr = module.local.get(<number>vars.get(Node.identifier));
           wasm = module.call_indirect(
             'functions',
-            module.i32.load(12, 0, module.local.get(<number>vars.get(Node.identifier))),
-            [
-              module.i32.load(16, 0, module.local.get(<number>vars.get(Node.identifier))),
-              paramPtr
-            ],
-            binaryen.createType([ binaryen.i32, binaryen.i32 ]),
-            binaryen.i32
+            module.i32.load(12, 0, funcPtr),
+            [ module.i32.load(16, 0, funcPtr), paramPtr ],
+            paramType, binaryen.i32
           );
         } else {
-          console.log(vars);
           BriskError(`Unknown Function: ${Node.identifier}`, <path.ParsedPath>Node.position.file, Node.position);
         }
         if (expectResult) return wasm;
@@ -188,7 +176,7 @@ class Compiler {
         functionBody.push(
           module.local.set(
             vars.size,
-            this.compileToken(value, functionBody, stack, vars, true)
+            this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function'?Node.identifier:false)
           )
         );
         vars.set(identifier, vars.size);

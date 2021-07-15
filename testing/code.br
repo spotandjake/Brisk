@@ -12,7 +12,7 @@ import wasm print: (String) -> Void from 'env';
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
 // Perform Module Linking
-// Port lsp to brisk
+// put all known variables and values into memory at innialization
 // Fix nearley error handler
 // write a custom parser
 // Port lexer and parser to Brisk
@@ -46,9 +46,12 @@ import wasm print: (String) -> Void from 'env';
 // let e: Number= 2147483647;
 // let f: Number= 1.1;
 // print(a);
-let closure: Function = (c: Function): Void => {
-  print(1);
+let loop: Function = (body: Function, self: Function): Void => {
+  body();
+  self(body, self);
 };
-closure(closure);
+loop((): Void => {
+  print(1);
+}, loop);
 // main(num);
 // export main;

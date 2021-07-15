@@ -13,6 +13,7 @@ import {
 } from '../Grammar/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
+  const globals: string[] = [ 'return' ];
   // TODO: add support for globals from imports and stuff
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
@@ -45,6 +46,9 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!(trace[1] as Program).imports) (trace[1] as Program).imports = [];
         (trace[1] as Program).imports.push(Node.path);
         break;
+      case 'importWasmStatement':
+        globals.push(Node.identifier);
+        break;
       case 'exportStatement':
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
@@ -62,10 +66,12 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           // Hax to allow recursive functions
           if (Parent.type == 'functionDeclaration') {
             const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
-            if (type == 'declarationStatement' && identifier == Node.identifier)
+            if (type == 'declarationStatement' && identifier == Node.identifier) {
               stack.setClosure(Node.identifier, dataType);
-              //TODO: add support for globals from imports and stuff
-          } else if (Node.identifier != 'print' && Node.identifier != 'return')
+              break;
+            }
+          }
+          if (!globals.includes(Node.identifier))
             BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         }
         break;

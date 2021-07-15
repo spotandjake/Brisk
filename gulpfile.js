@@ -32,7 +32,7 @@ gulp.task('build-tests', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'tslib' ]
+    external: [ 'path', 'fs', 'tslib', 'nearley' ]
   });
 
   await bundle.write({

@@ -34,35 +34,10 @@ const memoryView = (memory: any) => {
       } else {
         dataSize--;
         rowIndex++;
-        if (rowIndex == 1) {
-          row.refs = dat;
-        } else if (rowIndex == 2) { // The data type
-          switch(dat) {
-            case 0:
-              row.type = 'None';
-              break;
-            case 1:
-              row.type = 'Function';
-              break;
-            case 2:
-              row.type = 'Closure';
-              break;
-            case 3:
-              row.type = 'Boolean';
-              break;
-            case 4:
-              row.type = 'String';
-              break;
-            case 5:
-              row.type = 'Number';
-              break;
-            case 6:
-              row.type = 'Array';
-              break;
-          }
-        } else {
-          row[`value${rowIndex-2}`] = dat;
-        }
+        if (rowIndex == 1) row.refs = dat;
+        else if (rowIndex == 2) { // The data type
+          row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][dat];
+        } else row[`value${rowIndex-3}`] = dat;
       }
     }
   });
