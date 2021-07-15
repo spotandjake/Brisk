@@ -1,6 +1,6 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
-// Add closures
+
 // Add memory instructions
 // Add Malloc in wasm
 // Add a runtime mode that allows us to implement malloc and garbage collection
