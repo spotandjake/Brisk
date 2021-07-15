@@ -5,6 +5,7 @@ const decoder = new TextDecoder('utf8');
 interface TableRow {
   state?: string;
   ptr?: number;
+  refs?: number;
   size?: number;
   type?: string;
   [ key: string ]: any;
@@ -18,7 +19,7 @@ const memoryView = (memory: any) => {
   let dataSize = 0;
   memArray.forEach((dat, i) => {
     if (i == 0) {
-      row = { state: 'raw', ptr:0, size: 1, type: 'pointer', value0: dat };
+      row = { state: 'raw', ptr:0, refs: 1, size: 1, type: 'pointer', value0: dat };
     } else {
       // Todo: Find Largest Row
       if (dat == 0 && dataSize == 0 && i != memArray.length) return;
@@ -33,33 +34,10 @@ const memoryView = (memory: any) => {
       } else {
         dataSize--;
         rowIndex++;
-        if (rowIndex == 1) { // The data type
-          switch(dat) {
-            case 0:
-              row.type = 'None';
-              break;
-            case 1:
-              row.type = 'Function';
-              break;
-            case 2:
-              row.type = 'Closure';
-              break;
-            case 3:
-              row.type = 'Boolean';
-              break;
-            case 4:
-              row.type = 'String';
-              break;
-            case 5:
-              row.type = 'Number';
-              break;
-            case 6:
-              row.type = 'Array';
-              break;
-          }
-        } else {
-          row[`value${rowIndex-2}`] = dat;
-        }
+        if (rowIndex == 1) row.refs = dat;
+        else if (rowIndex == 2) { // The data type
+          row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][dat];
+        } else row[`value${rowIndex-3}`] = dat;
       }
     }
   });
@@ -79,12 +57,27 @@ const memoryView = (memory: any) => {
           }
         });
         break;
+      case 'Boolean':
+        Object.keys(dat).forEach((field) => {
+          if (field.startsWith('value')) {
+            dat[field] = dat[field] == 1;
+          }
+        });
+        break;
+      case 'Number':
+        Object.keys(dat).forEach((field) => {
+          if (field.startsWith('value')) {
+            if (dat[field] > 2147483647) {
+              dat[field] = dat[field]-4294967296;
+            }
+          }
+        });
+        break;
     }
     dat.state = 'actual';
     if (dat.type == 'None') dat.state = 'None';
     table.push(dat);
   });
-  // console.table(tableBody, [ ...tableHeader, new Array(maxValueLength).fill('value') ]);
   console.table(table);
 };
 const runtime = async (wasmFile: string) => {
@@ -137,8 +130,7 @@ const runtime = async (wasmFile: string) => {
             console.log(data[1]);
             break;
         }
-      },
-      printraw: console.log
+      }
     }
   });
   if (result.instance.exports.memory) {

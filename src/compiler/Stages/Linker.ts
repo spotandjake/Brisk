@@ -1,8 +1,8 @@
-// Import Errors
-import { BriskError} from '../Helpers/Errors';
 // Import Types
-import { LinkedModule, Program } from '../Grammar/Types';
+import { LinkedModule, Program, ParseTreeNode } from '../Grammar/Types';
+import * as path from 'path';
 // Imports libs
+import { BriskError} from '../Helpers/Errors';
 import { RecurseTree, Stack } from '../Helpers/Helpers';
 
 const Linker = (
@@ -12,7 +12,7 @@ const Linker = (
   ParseFile: (filename: string, entry:boolean, dependencyTree: Map<string, LinkedModule>) => Program
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  program = RecurseTree(program, (Parent: any, Node: any, index: number, stack: Stack, trace: any[]): any => {
+  program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
       case 'importStatement': {
         const { path:importPath, identifier } = Node;
@@ -26,7 +26,7 @@ const Linker = (
         if (!module.exports.includes(identifier))
           BriskError(
             `Module: ${importPath} does not contain export ${identifier}`,
-            Node.position.file,
+            <path.ParsedPath>Node.position.file,
             Node.position
           );
         // Write module
@@ -58,7 +58,7 @@ const Linker = (
     // some sort of thing that allows me to use the functions outside of here
     // }
     // TODO: if a module requires another module then that modules functions wont be in scope necessarily
-    console.log(dependencyTree);
+    // console.log(dependencyTree);
   }
   return program;
 };

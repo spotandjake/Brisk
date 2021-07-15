@@ -46,11 +46,18 @@ export interface ProgramNode {
   position: Position;
 }
 export type Statement = 
-  ImportStatementNode | ExportStatementNode | DeclarationStatementNode |
-  CallStatementNode   | FlagStatementNode   | CommentStatementNode     |
-  BlockStatementNode;
+  ImportStatementNode      | ImportWasmStatementNode | ExportStatementNode |
+  DeclarationStatementNode | CallStatementNode       | FlagStatementNode   |
+  CommentStatementNode     | BlockStatementNode;
 export interface ImportStatementNode {
   type: 'importStatement';
+  identifier: string;
+  path: string;
+  position: Position;
+}
+export interface ImportWasmStatementNode {
+  type: 'importWasmStatement';
+  dataType: TypeNode;
   identifier: string;
   path: string;
   position: Position;
@@ -62,7 +69,7 @@ export interface ExportStatementNode {
 }
 export interface DeclarationStatementNode {
   type: 'declarationStatement';
-  dataType: string;
+  dataType: TypeNode;
   identifier: string;
   value: ExpressionNode;
   position: Position;
@@ -99,13 +106,13 @@ export interface VariableNode {
 }
 export interface LiteralNode {
   type: 'literal';
-  dataType: string;
+  dataType: TypeNode;
   value: string | number | boolean;
   position: Position;
 }
 export interface FunctionNode {
   type: 'functionNode';
-  dataType: string;
+  dataType: TypeNode;
   flags: FlagStatementNode[];
   variables: Stack;
   parameters: FunctionParameterNode[];
@@ -114,14 +121,23 @@ export interface FunctionNode {
 }
 export interface FunctionDeclarationNode {
   type: 'functionDeclaration';
-  dataType: string;
+  dataType: TypeNode;
   parameters: FunctionParameterNode[];
   body: Statement[];
   position: Position;
 }
 export interface FunctionParameterNode {
   type: 'functionParameter';
-  dataType: string;
+  dataType: TypeNode;
   identifier: string;
   position: Position;
+}
+export type TypeNode = FunctionTypeNode | string;
+export interface FuncTypeNode {
+  value: FunctionTypeNode;
+}
+export interface FunctionTypeNode {
+  type: 'functionType';
+  params: TypeNode[];
+  result: TypeNode;
 }

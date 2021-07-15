@@ -4,10 +4,18 @@ import { BriskSyntaxError, BriskReferenceError } from '../Helpers/Errors';
 import { RecurseTree, Stack } from '../Helpers/Helpers';
 import * as path from 'path';
 // Type Imports
-import { ParseTreeNode, Program, ProgramNode, FlagStatementNode } from '../Grammar/Types';
+import {
+  ParseTreeNode,
+  Program,
+  ProgramNode,
+  FlagStatementNode, 
+  DeclarationStatementNode
+} from '../Grammar/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
-  program = RecurseTree(program, (Parent: any, Node: ParseTreeNode, index: number, stack: Stack, trace: any[]): (null | ParseTreeNode) => {
+  const globals: string[] = [ 'return' ];
+  // TODO: add support for globals from imports and stuff
+  program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
       case 'Program': {
         // Determine flags
@@ -30,34 +38,41 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
       }
       case 'importStatement':
         if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, true);
+          stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         // Resolve Module Paths
         Node.path = path.join(filePath.dir, Node.path);
         // Add import to list of imports
-        if (!trace[1].imports) trace[1].imports = [];
-        trace[1].imports.push(Node.path);
+        if (!(trace[1] as Program).imports) (trace[1] as Program).imports = [];
+        (trace[1] as Program).imports.push(Node.path);
+        break;
+      case 'importWasmStatement':
+        globals.push(Node.identifier);
         break;
       case 'exportStatement':
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         // Add export to list of exports
-        if (!trace[1].exports) trace[1].exports = [];
-        trace[1].exports.push(Node.identifier);
+        if (!(trace[1] as Program).exports) (trace[1] as Program).exports = [];
+        (trace[1] as Program).exports.push(Node.identifier);
         break;
       case 'declarationStatement':
         if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, true);
+          stack.setLocal(Node.identifier, Node.dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         break;
       case 'callStatement':
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions
           if (Parent.type == 'functionDeclaration') {
-            const { type, identifier } = trace[trace.length-2];
-            if (type == 'declarationStatement' && identifier == Node.identifier)
-              stack.setClosure(Node.identifier, true);
-          } else BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
+            const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
+            if (type == 'declarationStatement' && identifier == Node.identifier) {
+              stack.setClosure(Node.identifier, dataType);
+              break;
+            }
+          }
+          if (!globals.includes(Node.identifier))
+            BriskReferenceError(`${Node.identifier} is not defined`, filePath, Node.position);
         }
         break;
       case 'variable':
@@ -93,7 +108,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         break;
       }
       case 'functionParameter':
-        stack.setLocal(Node.identifier, true);
+        stack.setLocal(Node.identifier, Node.dataType);
         break;
     }
     // Append data to node

@@ -9,6 +9,11 @@ const tokens: Rule[] = [
   },
   {
     type: 'keyword',
+    id: 'Token_wasm',
+    match: /wasm/
+  },
+  {
+    type: 'keyword',
     id: 'Token_from',
     match: /from/
   },
@@ -68,6 +73,11 @@ const tokens: Rule[] = [
   {
     type: 'operator',
     id: 'Token_arrow',
+    match: /->/
+  },
+  {
+    type: 'operator',
+    id: 'Token_thick_arrow',
     match: /=>/
   },
   {

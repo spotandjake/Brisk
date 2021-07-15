@@ -9,9 +9,10 @@ declare var Token_ws: any;
 declare var Token_identifier: any;
 declare var Token_from: any;
 declare var Token_string: any;
+declare var Token_wasm: any;
+declare var Token_colon: any;
 declare var Token_export: any;
 declare var Token_let: any;
-declare var Token_colon: any;
 declare var Token_equal: any;
 declare var Token_flag: any;
 declare var Token_comment: any;
@@ -22,6 +23,7 @@ declare var Token_right_paren: any;
 declare var Token_comma: any;
 declare var Token_number: any;
 declare var Token_boolean: any;
+declare var Token_thick_arrow: any;
 declare var Token_arrow: any;
 
 import Lexer from '../Lexer/Lexer';
@@ -84,6 +86,7 @@ const grammar: Grammar = {
         (data): Nodes.Statement => data[0][0]
         },
     {"name": "StatementCommand$subexpression$1", "symbols": ["ImportStatement"]},
+    {"name": "StatementCommand$subexpression$1", "symbols": ["ImportWasmStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["ExportStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["DeclarationStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["CallStatement"]},
@@ -111,6 +114,22 @@ const grammar: Grammar = {
           }
         }
         },
+    {"name": "ImportWasmStatement", "symbols": [(lexer.has("Token_import") ? {type: "Token_import"} : Token_import), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_wasm") ? {type: "Token_wasm"} : Token_wasm), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", "Type", (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_from") ? {type: "Token_from"} : Token_from), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_string") ? {type: "Token_string"} : Token_string)], "postprocess": 
+        (data): Nodes.ImportWasmStatementNode => {
+          const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, path ] = data.filter(n => n);
+          return {
+            type: 'importWasmStatement',
+            dataType: dataType.value,
+            identifier: identifier.value,
+            path: path.value,
+            position: {
+              offset: identifier.offset,
+              line: identifier.line,
+              col: identifier.col
+            }
+          }
+        }
+        },
     {"name": "ExportStatement", "symbols": [(lexer.has("Token_export") ? {type: "Token_export"} : Token_export), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier)], "postprocess": 
         (data): Nodes.ExportStatementNode => {
           const [ _, __, identifier ] = data;
@@ -125,7 +144,7 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "DeclarationStatement", "symbols": [(lexer.has("Token_let") ? {type: "Token_let"} : Token_let), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_equal") ? {type: "Token_equal"} : Token_equal), "wss", "Expression"], "postprocess": 
+    {"name": "DeclarationStatement", "symbols": [(lexer.has("Token_let") ? {type: "Token_let"} : Token_let), (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws), (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", "Type", "wss", (lexer.has("Token_equal") ? {type: "Token_equal"} : Token_equal), "wss", "Expression"], "postprocess": 
         (data): Nodes.DeclarationStatementNode => {
           const [ start, __, identifier, ___, dataType, ____, value ] = data.filter(n => n);
           return {
@@ -278,7 +297,7 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "FunctionDeclaration", "symbols": ["FunctionParameters", "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_arrow") ? {type: "Token_arrow"} : Token_arrow), "wss", "FunctionBody"], "postprocess": 
+    {"name": "FunctionDeclaration", "symbols": ["FunctionParameters", "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", "Type", "wss", (lexer.has("Token_thick_arrow") ? {type: "Token_thick_arrow"} : Token_thick_arrow), "wss", "FunctionBody"], "postprocess": 
         (data): Nodes.FunctionDeclarationNode => {
           const [ parameters, _, dataType, __, body ] = data.filter(n => n);
           return {
@@ -305,12 +324,12 @@ const grammar: Grammar = {
           return [ ...paramList, Param ];
         }
         },
-    {"name": "FunctionParameter", "symbols": [(lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", (lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier)], "postprocess": 
-        (data: (null | Nodes.Token)[]): Nodes.FunctionParameterNode => {
+    {"name": "FunctionParameter", "symbols": [(lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier), "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", "Type"], "postprocess": 
+        (data): Nodes.FunctionParameterNode => {
           const [ identifier, _, dataType ] = data.filter(n => n);
           return {
             type: 'functionParameter',
-            dataType: <string>dataType!.value,
+            dataType: dataType.value,
             identifier: <string>identifier!.value,
             position: {
               offset: identifier!.offset,
@@ -324,6 +343,35 @@ const grammar: Grammar = {
     {"name": "FunctionBody", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess": (data): Nodes.Statement[] => []},
     {"name": "FunctionBody", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", "StatementList", "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess":  
         (data): Nodes.Statement[] => data.filter(n => n)[1]
+        },
+    {"name": "TypeList", "symbols": ["Type"]},
+    {"name": "TypeList", "symbols": ["TypeList", "wss", (lexer.has("Token_comma") ? {type: "Token_comma"} : Token_comma), "wss", "Type"], "postprocess": 
+        (data): Nodes.TypeNode[] => {
+          const [ typeList, _, type ] = data.filter(n => n);
+          return [ ...typeList, type ];
+        }
+        },
+    {"name": "Type$subexpression$1", "symbols": ["FunctionType"]},
+    {"name": "Type$subexpression$1", "symbols": [(lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier)]},
+    {"name": "Type", "symbols": ["Type$subexpression$1"], "postprocess": (data) => data[0][0]},
+    {"name": "FunctionType", "symbols": ["FunctionTypeParam", "wss", (lexer.has("Token_arrow") ? {type: "Token_arrow"} : Token_arrow), "wss", "Type"], "postprocess": 
+        (data): Nodes.FuncTypeNode => {
+          const [ params, _, result ] = data.filter(n => n);
+          return {
+            value: {
+              type: 'functionType',
+              params: params.map((n: any) => n.value),
+              result: result.value
+            }
+          }
+        }
+        },
+    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Token_left_paren") ? {type: "Token_left_paren"} : Token_left_paren), "wss", (lexer.has("Token_right_paren") ? {type: "Token_right_paren"} : Token_right_paren)], "postprocess": () => []},
+    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Token_left_paren") ? {type: "Token_left_paren"} : Token_left_paren), "wss", "TypeList", "wss", (lexer.has("Token_right_paren") ? {type: "Token_right_paren"} : Token_right_paren)], "postprocess": 
+        (data): Nodes.TypeNode[] => {
+          const TypeList = data.filter(n => n)[1];
+          return TypeList;
+        }
         },
     {"name": "wss$ebnf$1", "symbols": []},
     {"name": "wss$ebnf$1", "symbols": ["wss$ebnf$1", (lexer.has("Token_ws") ? {type: "Token_ws"} : Token_ws)], "postprocess": (d) => d[0].concat([d[1]])},
