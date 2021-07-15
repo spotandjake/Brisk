@@ -14,27 +14,28 @@ import {
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Compiler
 // Build data for in our heap
-const DataBuilder = (module: binaryen.Module, typeName: string, data: number[], raw=false) => {
+const DataBuilder = (module: binaryen.Module, vars: Map<(string | number), number>, typeName: string, data: number[], raw=false) => {
   // Get the id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Calculate Size
   const rtSize = 3 + data.length; // sizeValue|refs|id|Data
   // Get Pointer
-  const ptr = module.i32.load(0, 0, module.i32.const(0));
+  const ptr = vars.size;
+  vars.set(ptr, 0); // add a var to the stack for the pointer
   // Put the data into an Array Buffer
   const block = [
     // Call Malloc
+    module.local.set(ptr, module.call('_malloc', [ module.i32.const(rtSize*4) ], binaryen.i32)),
     // Store Data
-    module.i32.store(0, 0, ptr, module.i32.const(rtSize)),
-    module.i32.store(4, 0, ptr, module.i32.const(0)),
-    module.i32.store(8, 0, ptr, module.i32.const(rtId))
+    module.i32.store(0, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtSize)),
+    module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0)),
+    module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))
   ];
   data.forEach(
     (byte, index) =>
-      block.push(module.i32.store(12+index*4, 0, ptr, raw ? byte : module.i32.const(byte)))
+      block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)))
   );
-  block.push(module.i32.store(0, 0, module.i32.const(0), module.i32.add(ptr, module.i32.const(rtSize*4))));
-  return { code: block, ptr: module.i32.sub(ptr, module.i32.const(rtSize*4)) };
+  return { code: block, ptr: module.local.get(ptr, binaryen.i32) };
 };
 const encoder = new TextEncoder();
 class Compiler {
@@ -43,9 +44,40 @@ class Compiler {
   private globals: Map<(string | number), TypeNode> = new Map();
   compile(Node: Program, wat: boolean): (string | Uint8Array) {
     const { module } = this;
+    // Add Malloc
+    // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
+    module.addFunction('_malloc', binaryen.i32, binaryen.i32, [ binaryen.i32 ],
+      module.block(null, [
+        // Get Current Pointer
+        module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
+        // Add Size To Current Pointer
+        module.i32.store(
+          0, 0, module.i32.const(0),
+          module.i32.add(
+            module.local.get(1, binaryen.i32),
+            module.local.get(0, binaryen.i32)
+          )
+        ),
+        // grow the memory if necessary
+        module.if(
+          module.i32.ge_u(
+            module.i32.load(0, 0, module.i32.const(0)),
+            module.memory.size()
+          ),
+          module.memory.grow(
+            module.i32.const(1)
+          ), //TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
+        ),
+        // Return Current Pointer
+        module.return(module.local.get(1, binaryen.i32))
+      ])
+    );
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
-    // Add Runtime Linking
+    // Optimization settings
+    binaryen.setShrinkLevel(3);
+    binaryen.setFlexibleInlineMaxSize(3);
+    binaryen.setOneCallerInlineMaxSize(3);
     // Compile
     this.compileToken(Node, [], new Stack(), new Map());
     // Make our Function Table
@@ -53,19 +85,17 @@ class Compiler {
     module.addActiveElementSegment('functions', 'functions', this.functions, module.i32.const(0));
     module.autoDrop();
     // Debug info
-    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this
-    // Optimization settings
-    binaryen.setFlexibleInlineMaxSize(1);
-    binaryen.setOneCallerInlineMaxSize(1);
+    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
+    if (!module.validate()) module.validate();
     return wat ? module.emitText() : module.emitBinary();
   }
   compileToken(
     Node: ParseTreeNode,
     functionBody: any[],
     stack: Stack,
-    vars: Map<string, number>,
+    vars: Map<(string | number), number>,
     expectResult = false,
-    functionDeclaration:(boolean | string) = false
+    functionDeclaration: (boolean | { name: string, ptr: number }) = false
   ): any {
     // Add malloc function
     const { module, functions, globals } = this;
@@ -76,12 +106,13 @@ class Compiler {
         const stack = variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
-        const start = module.addFunction('main', binaryen.none, binaryen.none, new Array(variables.length).fill(binaryen.i32), 
+        const start = module.addFunction('main', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
           module.block(null, [
             module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
             ...functionBody
           ])
         );
+        module.optimizeFunction(start);
         module.setStart(start);
         break;
       }
@@ -89,24 +120,24 @@ class Compiler {
         // TODO: allow closure to capture function it is for
         const { dataType, variables, parameters, body } = Node;
         // Make the closure
-        const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name)));
+        const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name), binaryen.i32));
         const { code:closureCode, ptr:closurePtr } = 
-          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Closure', closurePointers, true);
+          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, vars, 'Closure', closurePointers, true);
         functionBody.push(...closureCode);
         // reset the function
         const funcBody: any[] = [];
         const funcStack = variables;
         const funcVars = new Map();
         // Set the closure parameter as a secret var
-        funcVars.set(0, 0); // add a empty value for closure
-        funcVars.set(1, 0); // add a empty value for parameters
+        funcVars.set(funcVars.size, 0); // add a empty value for closure, we use numbers because all user var names are going to be strings
+        funcVars.set(funcVars.size, 0); // add a empty value for parameters
         // Add closure assignments to the function and variable list
         let closureI = 3;
         for (const varName in variables.closure) {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(closureI*4, 0, module.local.get(0))
+              module.i32.load(closureI*4, 0, module.local.get(0, binaryen.i32))
             )
           );
           funcVars.set(varName, funcVars.size);
@@ -118,7 +149,7 @@ class Compiler {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(parametersI*4, 0, module.local.get(1))
+              module.i32.load(parametersI*4, 0, module.local.get(1, binaryen.i32))
             )
           );
           funcVars.set(param.identifier, funcVars.size);
@@ -128,14 +159,18 @@ class Compiler {
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, funcBody, funcStack, funcVars));
         if (dataType == 'Void') funcBody.push(module.return(module.i32.const(-1)));
         const name = `${functions.length}`;
-        module.addFunction(
+        const func = module.addFunction(
           name,
           paramType, binaryen.i32,
-          new Array(variables.length+1).fill(binaryen.i32), 
+          new Array(funcVars.size).fill(binaryen.i32), 
           module.block(null, funcBody)
         );
+        if (
+          Object.keys(variables.closure).length != 0 &&
+          parameters.length != 0
+        ) module.optimizeFunction(func);
         // Store the function
-        const { code, ptr } = DataBuilder(module, 'Function', [ module.i32.const(functions.length), closurePtr ], true);
+        const { code, ptr } = DataBuilder(module, vars, 'Function', [ module.i32.const(functions.length), closurePtr ], true);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
@@ -155,10 +190,10 @@ class Compiler {
         } else if (vars.has(Node.identifier)) {
           // Assemble the Parameter structure
           const { code:paramCode, ptr:paramPtr } = 
-            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Parameters', functionArgs, true);
+            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, vars, 'Parameters', functionArgs, true);
           functionBody.push(...paramCode);
           // Assemble the Function Call
-          const funcPtr = module.local.get(<number>vars.get(Node.identifier));
+          const funcPtr = module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
           wasm = module.call_indirect(
             'functions',
             module.i32.load(12, 0, funcPtr),
@@ -174,19 +209,22 @@ class Compiler {
       }
       case 'declarationStatement': {
         const { identifier, value } = Node;
+        const name = vars.size;
+        vars.set(identifier, name);
         functionBody.push(
           module.local.set(
-            vars.size,
-            this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function'?Node.identifier:false)
+            name,
+            this.compileToken(
+              value, functionBody, stack, vars, true, Node.dataType=='Function' ? { name: Node.identifier, ptr: name } : false
+            )
           )
         );
-        vars.set(identifier, vars.size);
         break;
       }
       case 'literal': {
         switch(Node.dataType) {
           case 'string': {
-            const { code, ptr } = DataBuilder(module, 'String', [...encoder.encode(<string>Node.value)]);
+            const { code, ptr } = DataBuilder(module, vars, 'String', [...encoder.encode(<string>Node.value)]);
             functionBody.push(...code);
             return ptr;
           }
@@ -195,12 +233,12 @@ class Compiler {
             if (<number>Node.value > 2147483647) {
               BriskError('Numbers cant be bigger then 2147483647 currently', <path.ParsedPath>Node.position.file, Node.position);
             }
-            const { code, ptr } = DataBuilder(module, 'Number', [<number>Node.value]);
+            const { code, ptr } = DataBuilder(module, vars, 'Number', [<number>Node.value]);
             functionBody.push(...code);
             return ptr;
           }
           case 'boolean': {
-            const { code, ptr } = DataBuilder(module, 'Boolean', [ <boolean>Node.value == true ? 1 : 0 ]);
+            const { code, ptr } = DataBuilder(module, vars, 'Boolean', [ <boolean>Node.value == true ? 1 : 0 ]);
             functionBody.push(...code);
             return ptr;
           }
@@ -211,7 +249,7 @@ class Compiler {
         }
       }
       case 'variable': {
-        return module.local.get(<number>vars.get(Node.identifier));
+        return module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
       }
       // case 'ImportDeclaration': {
       //   break;

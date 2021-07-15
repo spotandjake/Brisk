@@ -1,21 +1,23 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Implement fix for parameters that capture themselves failing
-// Implement fix for closures campturing themselves
-// Add memory instructions
-// Add Malloc in wasm
-// Add a runtime mode that allows us to implement malloc and garbage collection
-// Add Malloc in brisk
-// Add gc instructions
-// Add support for i64 numbers
 // Add support for decimals
+// Add wasm instructions
+  // Memory
+  // Math
+  // Control Flow
+// Add a runtime mode that allows us to implement malloc and garbage collection
+// Make a malloc in brisk, limit runtime malloc to a quarter of a page, and use brisk malloc when outside of runtime mode.
+// Add Module Linking
+// Add Malloc in brisk
+// Fix nearley error handler
+// Add gc instructions
+// Implement fix for closures campturing themselves
+// Add support for i64 numbers
 // Perform Type Checking
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
-// Perform Module Linking
 // put all known variables and values into memory at innialization
-// Fix nearley error handler
 // write a custom parser
 // Port lexer and parser to Brisk
 // Implement incremental building
@@ -55,5 +57,12 @@ let loop: Function = (body: Function, self: Function): Void => {
 loop((): Void => {
   print(1);
 }, loop);
+// let loop: Function = (body: Function): Void => {
+//   body();
+//   loop(body);
+// };
+// loop((): Void => {
+//   print(1);
+// });
 // main(num);
 // export main;
