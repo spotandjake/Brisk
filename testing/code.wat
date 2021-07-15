@@ -141,6 +141,7 @@
  )
  (func $main
   (local $0 i32)
+  (local $1 i32)
   (i32.store
    (i32.const 0)
    (i32.const 4)
@@ -231,6 +232,14 @@
     (i32.const 20)
    )
   )
+  (local.set $1
+   (i32.sub
+    (i32.load
+     (i32.const 0)
+    )
+    (i32.const 20)
+   )
+  )
   (i32.store
    (i32.load
     (i32.const 0)
@@ -253,12 +262,7 @@
    (i32.load
     (i32.const 0)
    )
-   (i32.sub
-    (i32.load
-     (i32.const 0)
-    )
-    (i32.const 20)
-   )
+   (local.get $1)
   )
   (i32.store offset=16
    (i32.load

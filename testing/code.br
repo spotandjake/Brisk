@@ -1,6 +1,8 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
+// Implement fix for parameters that capture themselves failing
+// Implement fix for closures campturing themselves
 // Add memory instructions
 // Add Malloc in wasm
 // Add a runtime mode that allows us to implement malloc and garbage collection

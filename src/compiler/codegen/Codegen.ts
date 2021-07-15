@@ -13,6 +13,7 @@ import {
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Compiler
+// Build data for in our heap
 const DataBuilder = (module: binaryen.Module, typeName: string, data: number[], raw=false) => {
   // Get the id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
@@ -39,7 +40,7 @@ const encoder = new TextEncoder();
 class Compiler {
   private module: binaryen.Module = new binaryen.Module();
   private functions: string[] = [];
-  private globals: Map<string, TypeNode> = new Map();
+  private globals: Map<(string | number), TypeNode> = new Map();
   compile(Node: Program, wat: boolean): (string | Uint8Array) {
     const { module } = this;
     // Initiate our memory
@@ -85,7 +86,7 @@ class Compiler {
         break;
       }
       case 'functionNode': {
-        // TODO: allow closure to capture itself
+        // TODO: allow closure to capture function it is for
         const { dataType, variables, parameters, body } = Node;
         // Make the closure
         const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name)));
@@ -97,8 +98,8 @@ class Compiler {
         const funcStack = variables;
         const funcVars = new Map();
         // Set the closure parameter as a secret var
-        funcVars.set(null, 0); // add a empty value for closure
-        funcVars.set(null, 0); // add a empty value for parameters
+        funcVars.set(0, 0); // add a empty value for closure
+        funcVars.set(1, 0); // add a empty value for parameters
         // Add closure assignments to the function and variable list
         let closureI = 3;
         for (const varName in variables.closure) {
