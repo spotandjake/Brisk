@@ -10,85 +10,151 @@ import {
   FunctionTypeNode,
   TypeNode
 } from '../Grammar/Types';
+// Helpers
+const countDecimals = (value: number): number => {
+  if(Math.floor(value) === value) return 0;
+  return value.toString().split('.')[1].length || 0;
+}
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
+// Runtime Functions
+// TODO: Move runtime into brisk, after adding a few stack only values that do not depend on malloc
+const runtime = (module: binaryen.Module) => {
+  // _Malloc(Size: i32) -> i32
+  // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
+  module.addFunction('_malloc', binaryen.i32, binaryen.i32, [ binaryen.i32 ],
+    module.block(null, [
+      // Get Current Pointer
+      module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
+      // Add Size To Current Pointer
+      module.i32.store(
+        0, 0, module.i32.const(0),
+        module.i32.add(
+          module.local.get(1, binaryen.i32),
+          module.local.get(0, binaryen.i32)
+        )
+      ),
+      // grow the memory if necessary
+      module.if(
+        module.i32.ge_u(
+          module.i32.load(0, 0, module.i32.const(0)),
+          module.memory.size()
+        ),
+        module.memory.grow(
+          module.i32.const(1)
+        ), // TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
+      ),
+      // Return Current Pointer
+      module.return(module.local.get(1, binaryen.i32))
+    ])
+  );
+  // Raw Memory Instructions: These should move to stack only types in the future, for now pointers must be standard i32
+  // Briskload(Pointer: Number, offset: Number) -> Number
+  module.addFunction('_Briskload', binaryen.createType([binaryen.i32,binaryen.i32]), binaryen.i32, [ ],
+    module.block(null, [
+      module.return(module.i32.load(module.local.get(1, binaryen.i32), 0, module.local.get(0, binaryen.i32)))
+    ])
+  );
+  // Briskstore(Pointer: i32, offset: i32, data: i32) -> Void
+  // Brisksize() -> i32
+  module.addFunction('_Brisksize', binaryen.none, binaryen.i32, [],
+    module.block(null, [
+      module.return(module.memory.size()) // return pointer to this new value
+    ])
+  );
+  // Briskgrow(pages: i32) -> i32
+  module.addFunction('_Briskgrow', binaryen.i32, binaryen.i32, [ ],
+    module.block(null, [
+      module.return(module.memory.grow(module.local.get(0, binaryen.i32))) // return pointer to this new value
+    ])
+  );
+};
 // Compiler
 // Build data for in our heap
-const DataBuilder = (module: binaryen.Module, typeName: string, data: number[], raw=false) => {
+const DataBuilder = (
+  module: binaryen.Module,
+  vars: Map<(string | number), number>,
+  typeName: string,
+  data: number[],
+  raw=false,
+  types: ('i32' | 'i64' | 'f32' | 'f64')[] =[]
+) => {
   // Get the id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Calculate Size
-  const rtSize = 3 + data.length; // sizeValue|refs|id|Data
+  let rtSize = 3 + data.length; // sizeValue|refs|id|Data
+  types.forEach((Type: string) => {
+    if (Type == 'i64' || Type =='f64') rtSize += 1; //little hack for 64 bit numerics as they take 8 bytes instead of 4
+  });
   // Get Pointer
-  const ptr = module.i32.load(0, 0, module.i32.const(0));
+  const ptr = vars.size;
+  vars.set(ptr, 0); // add a var to the stack for the pointer
   // Put the data into an Array Buffer
   const block = [
     // Call Malloc
+    module.local.set(ptr, module.call('_malloc', [ module.i32.const(rtSize*4) ], binaryen.i32)),
     // Store Data
-    module.i32.store(0, 0, ptr, module.i32.const(rtSize)),
-    module.i32.store(4, 0, ptr, module.i32.const(0)),
-    module.i32.store(8, 0, ptr, module.i32.const(rtId))
+    module.i32.store(0, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtSize)),
+    module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0)),
+    module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))
   ];
-  data.forEach(
-    (byte, index) =>
-      block.push(module.i32.store(12+index*4, 0, ptr, raw ? byte : module.i32.const(byte)))
-  );
-  block.push(module.i32.store(0, 0, module.i32.const(0), module.i32.add(ptr, module.i32.const(rtSize*4))));
-  return { code: block, ptr: module.i32.sub(ptr, module.i32.const(rtSize*4)) };
+  let index = 0;
+  data.forEach((byte) => {
+    if (!types[index])
+      return block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)));
+    switch(types[index]) {
+      case 'i32':
+        block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)));
+        break;
+      case 'f32':
+        block.push(module.f32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f32.const(byte)));
+        break;
+      case 'i64':
+        block.push(module.i64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i64.const(byte, 0)));
+        index += 1;
+        break;
+      case 'f64':
+        block.push(module.f64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f64.const(byte)));
+        index += 1;
+        break;
+    }
+    index += 1;
+  });
+  return { code: block, ptr: module.local.get(ptr, binaryen.i32) };
 };
 const encoder = new TextEncoder();
 class Compiler {
   private module: binaryen.Module = new binaryen.Module();
   private functions: string[] = [];
   private globals: Map<(string | number), TypeNode> = new Map();
-  private file: (number | null) = null;
-  private funcRef: (binaryen.FunctionRef | null) = null;
   compile(Node: Program, wat: boolean): (string | Uint8Array) {
     const { module } = this;
-<<<<<<< Updated upstream
-=======
-    // Debug info
-    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
     // Build Runtime
     runtime(module);
-    // Fake Function Ref for debugging
-    this.funcRef = module.addFunction('_debug', binaryen.none, binaryen.none, [], module.block(null, []));
-    this.file = module.addDebugInfoFileName(
-      path.join((Node.position.file as path.ParsedPath).dir, (Node.position.file as path.ParsedPath).base)
-    );
->>>>>>> Stashed changes
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
-    // Add Runtime Linking
+    // Optimization settings
+    binaryen.setShrinkLevel(3);
+    binaryen.setFlexibleInlineMaxSize(3);
+    binaryen.setOneCallerInlineMaxSize(3);
     // Compile
     this.compileToken(Node, [], new Stack(), new Map());
     // Make our Function Table
     module.addTable('functions', this.functions.length, -1);
     module.addActiveElementSegment('functions', 'functions', this.functions, module.i32.const(0));
     module.autoDrop();
-<<<<<<< Updated upstream
     // Debug info
-    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this
-    // Optimization settings
-    binaryen.setFlexibleInlineMaxSize(1);
-    binaryen.setOneCallerInlineMaxSize(1);
-=======
+    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
     if (!module.validate()) module.validate();
->>>>>>> Stashed changes
     return wat ? module.emitText() : module.emitBinary();
   }
   compileToken(
     Node: ParseTreeNode,
     functionBody: any[],
     stack: Stack,
-    vars: Map<string, number>,
+    vars: Map<(string | number), number>,
     expectResult = false,
-<<<<<<< Updated upstream
-    functionDeclaration:(boolean | string) = false
-=======
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     functionDeclaration: (boolean | { name: string, ptr: number }) = false
->>>>>>> Stashed changes
   ): any {
     // Add malloc function
     const { module, functions, globals } = this;
@@ -99,12 +165,13 @@ class Compiler {
         const stack = variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
-        const start = module.addFunction('main', binaryen.none, binaryen.none, new Array(variables.length).fill(binaryen.i32), 
+        const start = module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
           module.block(null, [
             module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
             ...functionBody
           ])
         );
+        module.optimizeFunction(start);
         module.setStart(start);
         break;
       }
@@ -112,24 +179,24 @@ class Compiler {
         // TODO: allow closure to capture function it is for
         const { dataType, variables, parameters, body } = Node;
         // Make the closure
-        const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name)));
+        const closurePointers = Object.keys(variables.closure).map((name: string) => module.local.get(<number>vars.get(name), binaryen.i32));
         const { code:closureCode, ptr:closurePtr } = 
-          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Closure', closurePointers, true);
+          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, vars, 'Closure', closurePointers, true);
         functionBody.push(...closureCode);
         // reset the function
         const funcBody: any[] = [];
         const funcStack = variables;
         const funcVars = new Map();
         // Set the closure parameter as a secret var
-        funcVars.set(0, 0); // add a empty value for closure
-        funcVars.set(1, 0); // add a empty value for parameters
+        funcVars.set(funcVars.size, 0); // add a empty value for closure, we use numbers because all user var names are going to be strings
+        funcVars.set(funcVars.size, 0); // add a empty value for parameters
         // Add closure assignments to the function and variable list
         let closureI = 3;
         for (const varName in variables.closure) {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(closureI*4, 0, module.local.get(0))
+              module.i32.load(closureI*4, 0, module.local.get(0, binaryen.i32))
             )
           );
           funcVars.set(varName, funcVars.size);
@@ -141,7 +208,7 @@ class Compiler {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(parametersI*4, 0, module.local.get(1))
+              module.i32.load(parametersI*4, 0, module.local.get(1, binaryen.i32))
             )
           );
           funcVars.set(param.identifier, funcVars.size);
@@ -151,14 +218,18 @@ class Compiler {
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, funcBody, funcStack, funcVars));
         if (dataType == 'Void') funcBody.push(module.return(module.i32.const(-1)));
         const name = `${functions.length}`;
-        module.addFunction(
+        const func = module.addFunction(
           name,
           paramType, binaryen.i32,
-          new Array(variables.length+1).fill(binaryen.i32), 
+          new Array(funcVars.size).fill(binaryen.i32), 
           module.block(null, funcBody)
         );
+        if (
+          Object.keys(variables.closure).length != 0 &&
+          parameters.length != 0
+        ) module.optimizeFunction(func);
         // Store the function
-        const { code, ptr } = DataBuilder(module, 'Function', [ module.i32.const(functions.length), closurePtr ], true);
+        const { code, ptr } = DataBuilder(module, vars, 'Function', [ module.i32.const(functions.length), closurePtr ], true);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
@@ -178,10 +249,10 @@ class Compiler {
         } else if (vars.has(Node.identifier)) {
           // Assemble the Parameter structure
           const { code:paramCode, ptr:paramPtr } = 
-            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, 'Parameters', functionArgs, true);
+            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : DataBuilder(module, vars, 'Parameters', functionArgs, true);
           functionBody.push(...paramCode);
           // Assemble the Function Call
-          const funcPtr = module.local.get(<number>vars.get(Node.identifier));
+          const funcPtr = module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
           wasm = module.call_indirect(
             'functions',
             module.i32.load(12, 0, funcPtr),
@@ -191,40 +262,58 @@ class Compiler {
         } else {
           BriskError(`Unknown Function: ${Node.identifier}`, <path.ParsedPath>Node.position.file, Node.position);
         }
-        module.setDebugLocation(<binaryen.FunctionRef>this.funcRef, wasm, <number>this.file, Node.position.line, Node.position.col);
         if (expectResult) return wasm;
         else functionBody.push(wasm);
         break;
       }
       case 'declarationStatement': {
         const { identifier, value } = Node;
+        const name = vars.size;
+        vars.set(identifier, name);
         functionBody.push(
           module.local.set(
-            vars.size,
-            this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function'?Node.identifier:false)
+            name,
+            this.compileToken(
+              value, functionBody, stack, vars, true, Node.dataType=='Function' ? { name: Node.identifier, ptr: name } : false
+            )
           )
         );
-        vars.set(identifier, vars.size);
         break;
       }
       case 'literal': {
         switch(Node.dataType) {
           case 'string': {
-            const { code, ptr } = DataBuilder(module, 'String', [...encoder.encode(<string>Node.value)]);
+            const { code, ptr } = DataBuilder(module, vars, 'String', [...encoder.encode(<string>Node.value)]);
             functionBody.push(...code);
             return ptr;
           }
           case 'number': {
-            // Deal with converting between i64 and i32 and what not
-            if (<number>Node.value > 2147483647) {
-              BriskError('Numbers cant be bigger then 2147483647 currently', <path.ParsedPath>Node.position.file, Node.position);
+            // TODO: Add support for rationals and arbitrary precise numbers
+            // TODO: Consider representing all integers as i64
+            // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
+            const isInt: boolean = Number.isInteger(<number>Node.value);
+            const data: number[] = [];
+            const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
+            if (isInt || typeof Node.value === 'bigint') { //integer
+              if (<number>Node.value < 2147483647 && <number>Node.value > -2147483647) { //i32
+                data.push(module.i32.const(1), module.i32.const(<number>Node.value));
+                types.push('i32', 'i32'); 
+              } else { // i64
+                const lower = <bigint>Node.value & BigInt(0xffffffff), upper = <bigint>Node.value >> 32n;
+                //@ts-ignore
+                data.push(module.i32.const(2), module.i64.const(Number(lower), Number(upper)));
+                types.push('i32', 'i64'); 
+              }
+            } else { //float
+              data.push(module.i32.const(4), module.f64.const(<number>Node.value));
+              types.push('i32', 'f64');
             }
-            const { code, ptr } = DataBuilder(module, 'Number', [<number>Node.value]);
+            const { code, ptr } = DataBuilder(module, vars, 'Number', data, true, types);
             functionBody.push(...code);
             return ptr;
           }
           case 'boolean': {
-            const { code, ptr } = DataBuilder(module, 'Boolean', [ <boolean>Node.value == true ? 1 : 0 ]);
+            const { code, ptr } = DataBuilder(module, vars, 'Boolean', [ <boolean>Node.value == true ? 1 : 0 ]);
             functionBody.push(...code);
             return ptr;
           }
@@ -235,13 +324,7 @@ class Compiler {
         }
       }
       case 'variable': {
-<<<<<<< Updated upstream
-        return module.local.get(<number>vars.get(Node.identifier));
-=======
-        const wasm = module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
-        module.setDebugLocation(<binaryen.FunctionRef>this.funcRef, wasm, <number>this.file, Node.position.line, Node.position.col);
         return module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
->>>>>>> Stashed changes
       }
       // case 'ImportDeclaration': {
       //   break;

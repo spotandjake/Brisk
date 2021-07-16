@@ -21,7 +21,6 @@ const memoryView = (memory: any) => {
     if (i == 0) {
       row = { state: 'raw', ptr:0, refs: 1, size: 1, type: 'pointer', value0: dat };
     } else {
-      // Todo: Find Largest Row
       if (dat == 0 && dataSize == 0 && i != memArray.length) return;
       if (dataSize == 0) {
         // Push the old row to the table and make the new row
@@ -64,15 +63,39 @@ const memoryView = (memory: any) => {
           }
         });
         break;
-      case 'Number':
-        Object.keys(dat).forEach((field) => {
+      case 'Number': {
+        let intType = 'i32';
+        Object.keys(dat).forEach((field, index: number) => {
           if (field.startsWith('value')) {
-            if (dat[field] > 2147483647) {
-              dat[field] = dat[field]-4294967296;
+            if (field == 'value0') {
+              intType = dat[field] = [ 'i32', 'i64', 'f32', 'f64' ][dat[field]-1];
+            } else {
+              switch(intType) {
+                case 'i32':
+                  // Deal with negative value
+                  if (dat[field] > 2147483647) {
+                    dat[field] = dat[field]-4294967296;
+                  }
+                  break;
+                case 'i64': {
+                  if ((index - 6) % 2 == 0) {
+                    const ptr = <number>dat['ptr']/4+index-2;
+                    dat[field] = new BigInt64Array(memArray.slice(ptr, ptr+2).buffer)[0];
+                  } else delete dat[field];
+                  break;
+                }
+                case 'f64':
+                  if ((index - 6) % 2 == 0) {
+                    const ptr = <number>dat['ptr']/4+index-2;
+                    dat[field] = new Float64Array(memArray.slice(ptr, ptr+2).buffer)[0];
+                  } else delete dat[field];
+                  break;
+              }
             }
           }
         });
         break;
+      }
     }
     dat.state = 'actual';
     if (dat.type == 'None') dat.state = 'None';
