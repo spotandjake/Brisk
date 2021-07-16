@@ -48,6 +48,7 @@ import wasm print: (String) -> Void from 'env';
 // let e: Number= 2147483647;
 // let f: Number= 1.1;
 // print(a);
+<<<<<<< Updated upstream
 let loop: Function = (body: Function, self: Function): Void => {
   body();
   self(body, self);
@@ -55,5 +56,36 @@ let loop: Function = (body: Function, self: Function): Void => {
 loop((): Void => {
   print(1);
 }, loop);
+=======
+// let loop: Function = (body: Function, self: Function): Void => {
+//   body();
+//   self(body, self);
+// };
+// loop((): Void => {
+//   print(1);
+// }, loop);
+// let a: String = 'a';
+// print(1); //i32
+// print(-1);
+// print(1.1); //f32
+// print(-1.1);
+print(9223372036854770000); // i64
+print(-9223372036854770000);
+print(-922337203685477.1);
+print(922337203685477.1);
+print(9223.111111); //f32
+print(9223.1111111); //f64
+print(-9223.11111111); //f64
+print(1677.111); //f64
+let a: String = 'a';
+print(a);
+// let loop: Function = (body: Function): Void => {
+//   body();
+//   loop(body);
+// };
+// loop((): Void => {
+//   print(1);
+// });
+>>>>>>> Stashed changes
 // main(num);
 // export main;

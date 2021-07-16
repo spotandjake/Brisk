@@ -41,8 +41,22 @@ class Compiler {
   private module: binaryen.Module = new binaryen.Module();
   private functions: string[] = [];
   private globals: Map<(string | number), TypeNode> = new Map();
+  private file: (number | null) = null;
+  private funcRef: (binaryen.FunctionRef | null) = null;
   compile(Node: Program, wat: boolean): (string | Uint8Array) {
     const { module } = this;
+<<<<<<< Updated upstream
+=======
+    // Debug info
+    binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
+    // Build Runtime
+    runtime(module);
+    // Fake Function Ref for debugging
+    this.funcRef = module.addFunction('_debug', binaryen.none, binaryen.none, [], module.block(null, []));
+    this.file = module.addDebugInfoFileName(
+      path.join((Node.position.file as path.ParsedPath).dir, (Node.position.file as path.ParsedPath).base)
+    );
+>>>>>>> Stashed changes
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
     // Add Runtime Linking
@@ -52,11 +66,15 @@ class Compiler {
     module.addTable('functions', this.functions.length, -1);
     module.addActiveElementSegment('functions', 'functions', this.functions, module.i32.const(0));
     module.autoDrop();
+<<<<<<< Updated upstream
     // Debug info
     binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this
     // Optimization settings
     binaryen.setFlexibleInlineMaxSize(1);
     binaryen.setOneCallerInlineMaxSize(1);
+=======
+    if (!module.validate()) module.validate();
+>>>>>>> Stashed changes
     return wat ? module.emitText() : module.emitBinary();
   }
   compileToken(
@@ -65,7 +83,12 @@ class Compiler {
     stack: Stack,
     vars: Map<string, number>,
     expectResult = false,
+<<<<<<< Updated upstream
     functionDeclaration:(boolean | string) = false
+=======
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    functionDeclaration: (boolean | { name: string, ptr: number }) = false
+>>>>>>> Stashed changes
   ): any {
     // Add malloc function
     const { module, functions, globals } = this;
@@ -168,6 +191,7 @@ class Compiler {
         } else {
           BriskError(`Unknown Function: ${Node.identifier}`, <path.ParsedPath>Node.position.file, Node.position);
         }
+        module.setDebugLocation(<binaryen.FunctionRef>this.funcRef, wasm, <number>this.file, Node.position.line, Node.position.col);
         if (expectResult) return wasm;
         else functionBody.push(wasm);
         break;
@@ -211,7 +235,13 @@ class Compiler {
         }
       }
       case 'variable': {
+<<<<<<< Updated upstream
         return module.local.get(<number>vars.get(Node.identifier));
+=======
+        const wasm = module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
+        module.setDebugLocation(<binaryen.FunctionRef>this.funcRef, wasm, <number>this.file, Node.position.line, Node.position.col);
+        return module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
+>>>>>>> Stashed changes
       }
       // case 'ImportDeclaration': {
       //   break;
