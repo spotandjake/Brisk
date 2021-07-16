@@ -96,7 +96,11 @@ const tokens: Rule[] = [
     type: 'literal',
     id: 'Token_number',
     match: /[-|+]?[0-9]*(?:\.?[0-9]+)/,
-    value: (text: string): number => Number(text)
+    value: (text: string): (number | bigint) => {
+      if (Number(text) < 2147483647 &&  Number(text) > -2147483647 || !Number.isInteger(Number(text))) {
+        return Number(text);
+      } else return BigInt(text);
+    }
   },
   {
     type: 'literal',

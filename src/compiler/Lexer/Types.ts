@@ -1,6 +1,6 @@
 export interface Token {
   type: string;
-  value: string | number | boolean;
+  value: string | number | boolean | bigint;
   text: string;
   offset: number;
   line: number;
@@ -9,7 +9,7 @@ export interface Token {
 export interface Rule {
   type: string;
   id: string;
-  value?: (text: string) => string | number | boolean;
+  value?: (text: string) => string | number | boolean | bigint;
   match: RegExp;
   lineBreaks?: boolean;
 }
