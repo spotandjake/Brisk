@@ -15,7 +15,6 @@ const briskCompiler = async (filename: string, writeFile: boolean, wat: boolean)
   // code generator
   const compiled = Codegen(optimized, wat);
   // Output File
-  // console.log(compiled);
   // console.dir(compiled, { depth: null });
   if (writeFile) await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.wat'), compiled);
   else return compiled;

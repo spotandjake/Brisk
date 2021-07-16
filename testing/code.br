@@ -1,14 +1,13 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Add support for f64 numbers
 // Add debug info to file
 // Fix nearley error handler
 // Perform Type Checking
 // Implement fix for closures campturing themselves
 // Add Module Linking: look into wasm-ld
 // Add support for Rationals
-// Add wasm stack types
+// Add raw wasm types that stay on the stack
 // Add a runtime mode that allows us to implement malloc and garbage collection
 // Add wasm instructions
   // Memory
@@ -26,6 +25,7 @@ import wasm print: (String) -> Void from 'env';
   // Parameters
   // Imports
 // Add gc instructions
+// Instead of splitting strings at codegen time split them during analysis time into brisk memory operations
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
 // put all known variables and values into memory at innialization
@@ -75,6 +75,11 @@ import wasm print: (String) -> Void from 'env';
 print(9223372036854770000); // i64
 print(-9223372036854770000);
 print(-922337203685477.1);
+print(922337203685477.1);
+print(9223.111111); //f32
+print(9223.1111111); //f64
+print(-9223.11111111); //f64
+print(1677.111); //f64
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);

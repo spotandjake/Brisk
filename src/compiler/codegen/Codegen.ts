@@ -10,6 +10,11 @@ import {
   FunctionTypeNode,
   TypeNode
 } from '../Grammar/Types';
+// Helpers
+const countDecimals = (value: number): number => {
+  if(Math.floor(value) === value) return 0;
+  return value.toString().split('.')[1].length || 0;
+}
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
@@ -106,6 +111,10 @@ const DataBuilder = (
         break;
       case 'i64':
         block.push(module.i64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i64.const(byte, 0)));
+        index += 1;
+        break;
+      case 'f64':
+        block.push(module.f64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f64.const(byte)));
         index += 1;
         break;
     }
@@ -279,9 +288,9 @@ class Compiler {
             return ptr;
           }
           case 'number': {
-            // TODO: determine what the high and low values are of an f32 and f64
+            // TODO: Add support for rationals and arbitrary precise numbers
+            // TODO: Consider representing all integers as i64
             // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
-            // TODO: add floats 64
             const isInt: boolean = Number.isInteger(<number>Node.value);
             const data: number[] = [];
             const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
@@ -296,8 +305,6 @@ class Compiler {
                 types.push('i32', 'i64'); 
               }
             } else { //float
-              // data.push(module.i32.const(3), module.f32.const(<number>Node.value));
-              // types.push('i32', 'f32');
               data.push(module.i32.const(4), module.f64.const(<number>Node.value));
               types.push('i32', 'f64');
             }

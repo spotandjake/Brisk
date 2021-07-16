@@ -12,8 +12,6 @@ interface TableRow {
 }
 const memoryView = (memory: any) => {
   const memArray = new Uint32Array(memory.buffer);
-  console.log(new DataView(memory.buffer, 4).getBigUint64(16, true));
-  const f32View = new Float32Array(memory.buffer);
   // Generate A Pretty table
   const tableBody = [];
   let row: TableRow = {};
@@ -81,20 +79,16 @@ const memoryView = (memory: any) => {
                   break;
                 case 'i64': {
                   if ((index - 6) % 2 == 0) {
-                    const ptr = <number>dat['ptr']/4+index-2
+                    const ptr = <number>dat['ptr']/4+index-2;
                     dat[field] = new BigInt64Array(memArray.slice(ptr, ptr+2).buffer)[0];
                   } else delete dat[field];
                   break;
                 }
-                case 'f32':
-                  dat[field] = f32View[<number>dat['ptr']/4+index-2];
-                  break;
                 case 'f64':
-                  console.log(
-                    new Float64Array(
-                      memArray.slice(<number>dat['ptr']/4+index-2, <number>dat['ptr']/4+index-2+4).buffer
-                    )
-                  );
+                  if ((index - 6) % 2 == 0) {
+                    const ptr = <number>dat['ptr']/4+index-2;
+                    dat[field] = new Float64Array(memArray.slice(ptr, ptr+2).buffer)[0];
+                  } else delete dat[field];
                   break;
               }
             }
