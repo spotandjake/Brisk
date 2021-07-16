@@ -11,7 +11,7 @@ export interface Position {
 }
 export interface Token {
   type: string;
-  value: string | number | boolean;
+  value: string | number | boolean | bigint;
   text: string;
   offset: number;
   line: number;
@@ -107,7 +107,7 @@ export interface VariableNode {
 export interface LiteralNode {
   type: 'literal';
   dataType: TypeNode;
-  value: string | number | boolean;
+  value: string | number | boolean | bigint;
   position: Position;
 }
 export interface FunctionNode {

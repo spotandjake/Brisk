@@ -279,24 +279,27 @@ class Compiler {
             return ptr;
           }
           case 'number': {
+            // TODO: determine what the high and low values are of an f32 and f64
             // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
-            // TODO: determine what the high and low values are
             // TODO: add floats 64
             const isInt: boolean = Number.isInteger(<number>Node.value);
             const data: number[] = [];
             const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
-            if (isInt) { //integer
+            if (isInt || typeof Node.value === 'bigint') { //integer
               if (<number>Node.value < 2147483647 && <number>Node.value > -2147483647) { //i32
                 data.push(module.i32.const(1), module.i32.const(<number>Node.value));
                 types.push('i32', 'i32'); 
               } else { // i64
-                console.log(binaryen.emitText(module.i64.const(3, 3)));
-                data.push(module.i32.const(2), module.i64.const(0, <number>Node.value));
+                const lower = <bigint>Node.value & BigInt(0xffffffff), upper = <bigint>Node.value >> 32n;
+                //@ts-ignore
+                data.push(module.i32.const(2), module.i64.const(Number(lower), Number(upper)));
                 types.push('i32', 'i64'); 
               }
             } else { //float
-              data.push(module.i32.const(3), module.f32.const(<number>Node.value));
-              types.push('i32', 'f32');
+              // data.push(module.i32.const(3), module.f32.const(<number>Node.value));
+              // types.push('i32', 'f32');
+              data.push(module.i32.const(4), module.f64.const(<number>Node.value));
+              types.push('i32', 'f64');
             }
             const { code, ptr } = DataBuilder(module, vars, 'Number', data, true, types);
             functionBody.push(...code);
