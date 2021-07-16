@@ -156,7 +156,7 @@ class Compiler {
         const stack = variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
-        const start = module.addFunction('main', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
+        const start = module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
           module.block(null, [
             module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
             ...functionBody
