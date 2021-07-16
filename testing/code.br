@@ -1,27 +1,37 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Add support for decimals
-// Add wasm instructions
-  // Memory
-  // Math
-  // Control Flow
-// Add a runtime mode that allows us to implement malloc and garbage collection
-// Make a malloc in brisk, limit runtime malloc to a quarter of a page, and use brisk malloc when outside of runtime mode.
-// Add Module Linking
-// Add Malloc in brisk
+// Add debug info to file
 // Fix nearley error handler
-// Add gc instructions
+// Perform Type Checking
 // Implement fix for closures campturing themselves
 // Add support for i64 numbers
-// Perform Type Checking
+// Add support for Rationals
+// Add wasm stack types
+// Add a runtime mode that allows us to implement malloc and garbage collection
+// Add wasm instructions
+  // Memory
+    // Briskload(Pointer: i32, offset: i32) -> i32
+    // Briskstore(Pointer: i32, offset: i32, data: i32) -> Void
+    // Brisksize() -> i32
+    // Briskgrow(pages: i32) -> i32
+    // _Malloc(Size: i32) -> i32
+  // Math
+  // Control Flow
+// write a malloc in brisk, limit runtime malloc to a quarter of a page, and use brisk malloc when outside of runtime mode.
+// Write Unit tests for output
+  // Variable representation
+  // Closures
+  // Parameters
+  // Imports
+// Add Module Linking
+// Add gc instructions
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
 // put all known variables and values into memory at innialization
 // write a custom parser
 // Port lexer and parser to Brisk
 // Implement incremental building
-// Implement checks before compiling, such as if we think we are gonna need i64 pointers warn the user.
 
 // Comments
 // let f: String = 'test';
@@ -50,13 +60,18 @@ import wasm print: (String) -> Void from 'env';
 // let e: Number= 2147483647;
 // let f: Number= 1.1;
 // print(a);
-let loop: Function = (body: Function, self: Function): Void => {
-  body();
-  self(body, self);
-};
-loop((): Void => {
-  print(1);
-}, loop);
+// let loop: Function = (body: Function, self: Function): Void => {
+//   body();
+//   self(body, self);
+// };
+// loop((): Void => {
+//   print(1);
+// }, loop);
+// let a: String = 'a';
+print(1); //i32
+print(-1);
+print(1.1); //f32
+print(-1.1);
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);

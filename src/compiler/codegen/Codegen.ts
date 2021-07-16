@@ -12,9 +12,68 @@ import {
 } from '../Grammar/Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
+// Runtime Functions
+// TODO: Move runtime into brisk, after adding a few stack only values that do not depend on malloc
+const runtime = (module: binaryen.Module) => {
+  // _Malloc(Size: i32) -> i32
+  // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
+  module.addFunction('_malloc', binaryen.i32, binaryen.i32, [ binaryen.i32 ],
+    module.block(null, [
+      // Get Current Pointer
+      module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
+      // Add Size To Current Pointer
+      module.i32.store(
+        0, 0, module.i32.const(0),
+        module.i32.add(
+          module.local.get(1, binaryen.i32),
+          module.local.get(0, binaryen.i32)
+        )
+      ),
+      // grow the memory if necessary
+      module.if(
+        module.i32.ge_u(
+          module.i32.load(0, 0, module.i32.const(0)),
+          module.memory.size()
+        ),
+        module.memory.grow(
+          module.i32.const(1)
+        ), // TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
+      ),
+      // Return Current Pointer
+      module.return(module.local.get(1, binaryen.i32))
+    ])
+  );
+  // Raw Memory Instructions: These should move to stack only types in the future, for now pointers must be standard i32
+  // Briskload(Pointer: Number, offset: Number) -> Number
+  module.addFunction('_Briskload', binaryen.createType([binaryen.i32,binaryen.i32]), binaryen.i32, [ ],
+    module.block(null, [
+      module.return(module.i32.load(module.local.get(1, binaryen.i32), 0, module.local.get(0, binaryen.i32)))
+    ])
+  );
+  // Briskstore(Pointer: i32, offset: i32, data: i32) -> Void
+  // Brisksize() -> i32
+  module.addFunction('_Brisksize', binaryen.none, binaryen.i32, [],
+    module.block(null, [
+      module.return(module.memory.size()) // return pointer to this new value
+    ])
+  );
+  // Briskgrow(pages: i32) -> i32
+  module.addFunction('_Briskgrow', binaryen.i32, binaryen.i32, [ ],
+    module.block(null, [
+      module.return(module.memory.grow(module.local.get(0, binaryen.i32))) // return pointer to this new value
+    ])
+  );
+};
 // Compiler
 // Build data for in our heap
-const DataBuilder = (module: binaryen.Module, vars: Map<(string | number), number>, typeName: string, data: number[], raw=false) => {
+const DataBuilder = (
+  module: binaryen.Module,
+  vars: Map<(string | number), number>,
+  typeName: string,
+  data: number[],
+  raw=false,
+  types: ('i32' | 'i64' | 'f32' | 'f64')[] =[]
+) => {
   // Get the id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Calculate Size
@@ -31,10 +90,18 @@ const DataBuilder = (module: binaryen.Module, vars: Map<(string | number), numbe
     module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0)),
     module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))
   ];
-  data.forEach(
-    (byte, index) =>
-      block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)))
-  );
+  data.forEach((byte, index) => {
+    if (!types[index])
+      return block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)));
+    switch(types[index]) {
+      case 'i32':
+        block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)));
+        break;
+      case 'f32':
+        block.push(module.f32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f32.const(byte)));
+        break;
+    }
+  });
   return { code: block, ptr: module.local.get(ptr, binaryen.i32) };
 };
 const encoder = new TextEncoder();
@@ -44,34 +111,8 @@ class Compiler {
   private globals: Map<(string | number), TypeNode> = new Map();
   compile(Node: Program, wat: boolean): (string | Uint8Array) {
     const { module } = this;
-    // Add Malloc
-    // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
-    module.addFunction('_malloc', binaryen.i32, binaryen.i32, [ binaryen.i32 ],
-      module.block(null, [
-        // Get Current Pointer
-        module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
-        // Add Size To Current Pointer
-        module.i32.store(
-          0, 0, module.i32.const(0),
-          module.i32.add(
-            module.local.get(1, binaryen.i32),
-            module.local.get(0, binaryen.i32)
-          )
-        ),
-        // grow the memory if necessary
-        module.if(
-          module.i32.ge_u(
-            module.i32.load(0, 0, module.i32.const(0)),
-            module.memory.size()
-          ),
-          module.memory.grow(
-            module.i32.const(1)
-          ), //TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
-        ),
-        // Return Current Pointer
-        module.return(module.local.get(1, binaryen.i32))
-      ])
-    );
+    // Build Runtime
+    runtime(module);
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
     // Optimization settings
@@ -233,7 +274,17 @@ class Compiler {
             if (<number>Node.value > 2147483647) {
               BriskError('Numbers cant be bigger then 2147483647 currently', <path.ParsedPath>Node.position.file, Node.position);
             }
-            const { code, ptr } = DataBuilder(module, vars, 'Number', [<number>Node.value]);
+            const isInt: boolean = Number.isInteger(<number>Node.value);
+            const data: number[] = [];
+            const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
+            if (isInt) { //integer
+              data.push(module.i32.const(1), module.i32.const(<number>Node.value));
+              types.push('i32', 'i32');
+            } else { //float
+              data.push(module.i32.const(3), module.f32.const(<number>Node.value));
+              types.push('i32', 'f32');
+            }
+            const { code, ptr } = DataBuilder(module, vars, 'Number', data, true, types);
             functionBody.push(...code);
             return ptr;
           }

@@ -12,6 +12,7 @@ interface TableRow {
 }
 const memoryView = (memory: any) => {
   const memArray = new Uint32Array(memory.buffer);
+  const f32View = new Float32Array(memory.buffer);
   // Generate A Pretty table
   const tableBody = [];
   let row: TableRow = {};
@@ -64,15 +65,33 @@ const memoryView = (memory: any) => {
           }
         });
         break;
-      case 'Number':
-        Object.keys(dat).forEach((field) => {
+      case 'Number': {
+        let intType = 'i32';
+        Object.keys(dat).forEach((field, index: number) => {
           if (field.startsWith('value')) {
-            if (dat[field] > 2147483647) {
-              dat[field] = dat[field]-4294967296;
+            if (field == 'value0') {
+              intType = dat[field] = [ 'i32', 'i64', 'f32', 'f64' ][dat[field]-1];
+            } else {
+              switch(intType) {
+                case 'i32':
+                  // Deal with negative value
+                  if (dat[field] > 2147483647) {
+                    dat[field] = dat[field]-4294967296;
+                  }
+                  break;
+                case 'i64':
+                  break;
+                case 'f32':
+                  dat[field] = f32View[<number>dat['ptr']/4+index-2];
+                  break;
+                case 'f64':
+                  break;
+              }
             }
           }
         });
         break;
+      }
     }
     dat.state = 'actual';
     if (dat.type == 'None') dat.state = 'None';
