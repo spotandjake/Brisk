@@ -1,6 +1,7 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
+// Add Module Linking: look into wasm-ld
 // Add support for i64 numbers
 // Add support for f64 numbers
 // Add debug info to file
@@ -25,7 +26,6 @@ import wasm print: (String) -> Void from 'env';
   // Closures
   // Parameters
   // Imports
-// Add Module Linking: look into wasm-ld
 // Add gc instructions
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
