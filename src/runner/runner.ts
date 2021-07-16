@@ -23,7 +23,6 @@ const memoryView = (memory: any) => {
     if (i == 0) {
       row = { state: 'raw', ptr:0, refs: 1, size: 1, type: 'pointer', value0: dat };
     } else {
-      // Todo: Find Largest Row
       if (dat == 0 && dataSize == 0 && i != memArray.length) return;
       if (dataSize == 0) {
         // Push the old row to the table and make the new row

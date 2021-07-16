@@ -105,7 +105,7 @@ const DataBuilder = (
         block.push(module.f32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f32.const(byte)));
         break;
       case 'i64':
-        block.push(module.i64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i64.const(byte)));
+        block.push(module.i64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i64.const(byte, 0)));
         index += 1;
         break;
     }
@@ -280,6 +280,8 @@ class Compiler {
           }
           case 'number': {
             // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
+            // TODO: determine what the high and low values are
+            // TODO: add floats 64
             const isInt: boolean = Number.isInteger(<number>Node.value);
             const data: number[] = [];
             const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
@@ -288,8 +290,8 @@ class Compiler {
                 data.push(module.i32.const(1), module.i32.const(<number>Node.value));
                 types.push('i32', 'i32'); 
               } else { // i64
-                console.log(binaryen.emitText(module.i64.const(<number>Node.value)));
-                data.push(module.i32.const(2), module.i64.const(<number>Node.value));
+                console.log(binaryen.emitText(module.i64.const(3, 3)));
+                data.push(module.i32.const(2), module.i64.const(0, <number>Node.value));
                 types.push('i32', 'i64'); 
               }
             } else { //float

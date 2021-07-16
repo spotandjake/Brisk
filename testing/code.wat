@@ -87,7 +87,7 @@
   )
   (i64.store offset=16
    (local.get $0)
-   (i64.const 4294967295)
+   (i64.const -26388279066624)
   )
   (call $print
    (local.get $0)

@@ -982,7 +982,7 @@ declare module binaryen {
       store8(offset: number, align: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
       store16(offset: number, align: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
       store32(offset: number, align: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
-      const(value: number): ExpressionRef;
+      const(low: number, high: number): ExpressionRef;
       clz(value: ExpressionRef): ExpressionRef;
       ctz(value: ExpressionRef): ExpressionRef;
       popcnt(value: ExpressionRef): ExpressionRef;
