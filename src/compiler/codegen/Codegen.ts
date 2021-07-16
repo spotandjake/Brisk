@@ -77,7 +77,10 @@ const DataBuilder = (
   // Get the id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Calculate Size
-  const rtSize = 3 + data.length; // sizeValue|refs|id|Data
+  let rtSize = 3 + data.length; // sizeValue|refs|id|Data
+  types.forEach((Type: string) => {
+    if (Type == 'i64' || Type =='f64') rtSize += 1; //little hack for 64 bit numerics as they take 8 bytes instead of 4
+  });
   // Get Pointer
   const ptr = vars.size;
   vars.set(ptr, 0); // add a var to the stack for the pointer
@@ -90,7 +93,8 @@ const DataBuilder = (
     module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0)),
     module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))
   ];
-  data.forEach((byte, index) => {
+  let index = 0;
+  data.forEach((byte) => {
     if (!types[index])
       return block.push(module.i32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i32.const(byte)));
     switch(types[index]) {
@@ -100,7 +104,12 @@ const DataBuilder = (
       case 'f32':
         block.push(module.f32.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.f32.const(byte)));
         break;
+      case 'i64':
+        block.push(module.i64.store(12+index*4, 0, module.local.get(ptr, binaryen.i32), raw ? byte : module.i64.const(byte)));
+        index += 1;
+        break;
     }
+    index += 1;
   });
   return { code: block, ptr: module.local.get(ptr, binaryen.i32) };
 };
@@ -270,16 +279,19 @@ class Compiler {
             return ptr;
           }
           case 'number': {
-            // Deal with converting between i64 and i32 and what not
-            if (<number>Node.value > 2147483647) {
-              BriskError('Numbers cant be bigger then 2147483647 currently', <path.ParsedPath>Node.position.file, Node.position);
-            }
+            // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
             const isInt: boolean = Number.isInteger(<number>Node.value);
             const data: number[] = [];
             const types: ('i32' | 'i64' | 'f32' | 'f64')[] = [];
             if (isInt) { //integer
-              data.push(module.i32.const(1), module.i32.const(<number>Node.value));
-              types.push('i32', 'i32');
+              if (<number>Node.value < 2147483647 && <number>Node.value > -2147483647) { //i32
+                data.push(module.i32.const(1), module.i32.const(<number>Node.value));
+                types.push('i32', 'i32'); 
+              } else { // i64
+                console.log(binaryen.emitText(module.i64.const(<number>Node.value)));
+                data.push(module.i32.const(2), module.i64.const(<number>Node.value));
+                types.push('i32', 'i64'); 
+              }
             } else { //float
               data.push(module.i32.const(3), module.f32.const(<number>Node.value));
               types.push('i32', 'f32');

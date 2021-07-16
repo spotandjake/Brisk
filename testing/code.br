@@ -1,11 +1,12 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
+// Add support for i64 numbers
+// Add support for f64 numbers
 // Add debug info to file
 // Fix nearley error handler
 // Perform Type Checking
 // Implement fix for closures campturing themselves
-// Add support for i64 numbers
 // Add support for Rationals
 // Add wasm stack types
 // Add a runtime mode that allows us to implement malloc and garbage collection
@@ -24,7 +25,7 @@ import wasm print: (String) -> Void from 'env';
   // Closures
   // Parameters
   // Imports
-// Add Module Linking
+// Add Module Linking: look into wasm-ld
 // Add gc instructions
 // Verify The Program
 // Optimize: Run constant propagation and dead code elimination, along with convert any heap values that do not need to be tagged or passed into stack values and make functions under those circumstances use local calls
@@ -68,10 +69,12 @@ import wasm print: (String) -> Void from 'env';
 //   print(1);
 // }, loop);
 // let a: String = 'a';
-print(1); //i32
-print(-1);
-print(1.1); //f32
-print(-1.1);
+// print(1); //i32
+// print(-1);
+// print(1.1); //f32
+// print(-1.1);
+print(9223372036854770000); // i64
+// print(-9223372036854770000);
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);
