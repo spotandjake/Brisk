@@ -10,11 +10,6 @@ import {
   FunctionTypeNode,
   TypeNode
 } from '../Grammar/Types';
-// Helpers
-const countDecimals = (value: number): number => {
-  if(Math.floor(value) === value) return 0;
-  return value.toString().split('.')[1].length || 0;
-}
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
@@ -154,6 +149,7 @@ class Compiler {
     stack: Stack,
     vars: Map<(string | number), number>,
     expectResult = false,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     functionDeclaration: (boolean | { name: string, ptr: number }) = false
   ): any {
     // Add malloc function
@@ -235,7 +231,7 @@ class Compiler {
         return ptr;
       }
       case 'callStatement': {
-        // Add calls for return
+        // Add calls for returns
         const functionArgs = Node.arguments.map(arg => this.compileToken(arg, functionBody, stack, vars, true));
         let wasm: any;
         if (Node.identifier == 'return') {

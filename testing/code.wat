@@ -87,7 +87,7 @@
   )
   (i64.store offset=16
    (local.get $0)
-   (i64.const -26388279066624)
+   (i64.const 9223372036854770000)
   )
   (call $print
    (local.get $0)
@@ -110,7 +110,173 @@
   )
   (i32.store offset=12
    (local.get $0)
-   (i32.const 3)
+   (i32.const 2)
+  )
+  (i64.store offset=16
+   (local.get $0)
+   (i64.const -9223372036854770000)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const -922337203685477.1)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const 922337203685477.1)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const 9223.111111)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const 9223.1111111)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const -9223.11111111)
+  )
+  (call $print
+   (local.get $0)
+  )
+  (i32.store
+   (local.tee $0
+    (call $_malloc
+     (i32.const 24)
+    )
+   )
+   (i32.const 6)
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 4)
+  )
+  (f64.store offset=16
+   (local.get $0)
+   (f64.const 1677.111)
   )
   (call $print
    (local.get $0)
