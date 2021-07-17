@@ -55,11 +55,12 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!(trace[1] as Program).exports) (trace[1] as Program).exports = [];
         (trace[1] as Program).exports.push(Node.identifier);
         break;
-      case 'declarationStatement':
+      case 'declarationStatement': {
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, Node.dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, filePath, Node.position);
         break;
+      }
       case 'callStatement':
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions

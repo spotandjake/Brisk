@@ -202,7 +202,7 @@ String -> %Token_string {%
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
-      dataType: 'string',
+      dataType: 'String',
       value: <string>value,
       position: {
         offset: offset,
@@ -217,7 +217,7 @@ Number -> %Token_number {%
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
-      dataType: 'number',
+      dataType: 'Number',
       value: <number>value,
       position: {
         offset: offset,
@@ -232,7 +232,7 @@ Boolean -> %Token_boolean {%
     const { value, offset, line, col } = data[0];
     return {
       type: 'literal',
-      dataType: 'boolean',
+      dataType: 'Boolean',
       value: <boolean>value,
       position: {
         offset: offset,

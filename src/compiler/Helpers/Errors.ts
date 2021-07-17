@@ -18,3 +18,6 @@ export const BriskSyntaxError = (msg: string, file: path.ParsedPath, pos: Positi
 export const BriskReferenceError = (msg: string, file: path.ParsedPath, pos: Position): void => {
   _BriskError('ReferenceError', msg, file, pos);
 };
+export const BriskTypeError = (msg: string, file: path.ParsedPath, pos: Position): void => {
+  _BriskError('TypeError', msg, file, pos);
+};

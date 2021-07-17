@@ -1,10 +1,8 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Implement fix for closures campturing themselves
 // Fix nearley error handler
 // Perform Type Checking
-// Look into downsides of using i64 and f64 for everything over i32
 // Add Module Linking: look into wasm-ld
 // Add support for Rationals
 // Add debug info to file
@@ -21,10 +19,6 @@ import wasm print: (String) -> Void from 'env';
   // Control Flow
 // write a malloc in brisk, limit runtime malloc to a quarter of a page, and use brisk malloc when outside of runtime mode.
 // Write Unit tests for output
-  // Variable representation
-  // Closures
-  // Parameters
-  // Imports
 // Add gc instructions
 // Instead of splitting strings at codegen time split them during analysis time into brisk memory operations
 // Verify The Program
@@ -73,14 +67,16 @@ import wasm print: (String) -> Void from 'env';
 // print(1.1); //f32
 // print(-1.1);
 // let a: String = 'a';
-let b: boolean = false;
-// let c: bolean = true;
-let d: Function = (): Void => {
-  print(1);
-  print(b);
-  d();
+let b: Boolean = false;
+let c: Boolean = true;
+let d: Function = (x: number): Number => {
+  // print(1);
+  // print(b);
+  // d();
+  return(1);
 };
-d();
+let a: Number = d(1);
+let n: Boolean = b;
 // print(9223372036854770000); // i64
 // print(-9223372036854770000);
 // print(-922337203685477.1);

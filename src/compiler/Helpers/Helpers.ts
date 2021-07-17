@@ -21,7 +21,8 @@ export const RecurseTree = (
       switch (Node.type) {
         case 'Program':
         case 'functionDeclaration':
-        case 'functionNode':
+        case 'blockStatement':
+        case 'functionNode': {
           stack = new Stack(stack);
           if (Node.type == 'functionDeclaration') {
             Node.parameters = Node.parameters.map(
@@ -32,12 +33,7 @@ export const RecurseTree = (
             (Statement: ParseTreeNode, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
           ).filter((n: (ParseTreeNode | null)) => n);
           break;
-        case 'blockStatement':
-          stack = new Stack(stack);
-          Node.body = Node.body.map(
-            (Statement: ParseTreeNode, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
-          ).filter((n: (ParseTreeNode | null)) => n);
-          break;
+        }
         case 'callStatement':
           Node.arguments = Node.arguments.map(
             (Expression: ExpressionNode, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)
@@ -59,6 +55,12 @@ export class Stack {
   public ParentStack: Stack | undefined;
   constructor(ParentStack?: Stack) {
     this.ParentStack = ParentStack;
+  }
+  readHas(name: string) {
+    if (this.hasLocal(name)) return true;
+    else if (this.hasClosure(name)) return true;
+    else if (this.ParentStack && this.ParentStack.has(name)) return true;
+    else return false;
   }
   has(name: string): boolean {
     if (this.hasLocal(name)) return true;
@@ -83,12 +85,22 @@ export class Stack {
   setClosure(name: string, value: any): void {
     this.closure[name] = value;
   }
+  readGet(name: string): any {
+    if (this.hasLocal(name)) return this.local[name];
+    else if (this.hasClosure(name)) return this.closure[name];
+    else {
+      if (this.ParentStack && this.ParentStack.has(name)) {
+        return this.ParentStack.get(name);
+      }
+    }
+  }
   get(name: string): any {
     if (this.hasLocal(name)) return this.local[name];
     else if (this.hasClosure(name)) return this.closure[name];
     else {
       if (this.ParentStack && this.ParentStack.has(name)) {
         this.setClosure(name, this.ParentStack.get(name));
+        return this.ParentStack.get(name)
       }
     }
   }

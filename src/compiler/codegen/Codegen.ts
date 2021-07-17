@@ -264,12 +264,12 @@ class Compiler {
       }
       case 'literal': {
         switch(Node.dataType) {
-          case 'string': {
+          case 'String': {
             const { code, ptr } = _Store(module, vars, 'String', [...encoder.encode(<string>Node.value)].map(i => module.i32.const(i)));
             functionBody.push(...code);
             return ptr;
           }
-          case 'number': {
+          case 'Number': {
             // TODO: Add support for rationals and arbitrary precise numbers
             // TODO: Consider representing all integers as i64
             // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
@@ -290,7 +290,7 @@ class Compiler {
             functionBody.push(...code);
             return ptr;
           }
-          case 'boolean': {
+          case 'Boolean': {
             const { code, ptr } = _Store(module, vars, 'Boolean', [ module.i32.const(<boolean>Node.value == true ? 1 : 0) ]);
             functionBody.push(...code);
             return ptr;
