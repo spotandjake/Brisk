@@ -60,6 +60,12 @@ export class Stack {
   constructor(ParentStack?: Stack) {
     this.ParentStack = ParentStack;
   }
+  readHas(name: string) {
+    if (this.hasLocal(name)) return true;
+    else if (this.hasClosure(name)) return true;
+    else if (this.ParentStack && this.ParentStack.has(name)) return true;
+    else return false;
+  }
   has(name: string): boolean {
     if (this.hasLocal(name)) return true;
     else if (this.hasClosure(name)) return true;

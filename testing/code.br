@@ -1,7 +1,6 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Implement fix for closures campturing themselves
 // Fix nearley error handler
 // Perform Type Checking
 // Add Module Linking: look into wasm-ld
@@ -20,10 +19,6 @@ import wasm print: (String) -> Void from 'env';
   // Control Flow
 // write a malloc in brisk, limit runtime malloc to a quarter of a page, and use brisk malloc when outside of runtime mode.
 // Write Unit tests for output
-  // Variable representation
-  // Closures
-  // Parameters
-  // Imports
 // Add gc instructions
 // Instead of splitting strings at codegen time split them during analysis time into brisk memory operations
 // Verify The Program
@@ -71,6 +66,7 @@ import wasm print: (String) -> Void from 'env';
 // print(-1);
 // print(1.1); //f32
 // print(-1.1);
+<<<<<<< Updated upstream
 print(9223372036854770000); // i64
 print(-9223372036854770000);
 print(-922337203685477.1);
@@ -79,6 +75,26 @@ print(9223.111111); //f64
 print(9223.1111111); //f64
 print(-9223.11111111); //f64
 print(1677.111); //f64
+=======
+// let a: String = 'a';
+let b: boolean = false;
+// let c: bolean = true;
+// let d: Function = (): Number => {
+//   // print(1);
+//   // print(b);
+//   // d();
+// };
+// let a: Number = d();
+let n: Number = b;
+// print(9223372036854770000); // i64
+// print(-9223372036854770000);
+// print(-922337203685477.1);
+// print(922337203685477.1);
+// print(9223.111111); //f64
+// print(9223.1111111); //f64
+// print(-9223.11111111); //f64
+// print(1677.111); //f64
+>>>>>>> Stashed changes
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);
