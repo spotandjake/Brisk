@@ -1,5 +1,7 @@
+import * as path from 'path';
 // Helper Imports
 import { RecurseTree, Stack } from '../Helpers/Helpers';
+import { BriskTypeError } from '../Helpers/Errors';
 // Type Imports
 import {
   ParseTreeNode,
@@ -47,8 +49,8 @@ const TypeChecker = (Program: Program) => {
             console.log(Node.value);
             break;
         }
-        if (wanted == 'Void' || got == 'Void') console.log('Type Void Not Allowed');
-        if (got != wanted) console.log('unexpected Type');
+        if (wanted == 'Void' || got == 'Void') BriskTypeError('you may not use Void as a type for a var or value', (Node.position.file as path.ParsedPath), Node.position);
+        if (got != wanted) BriskTypeError(`expecting type ${wanted} got ${got}.`, (Node.position.file as path.ParsedPath), Node.position);
         if (wanted == 'Void' || got == 'Void' || got != wanted) process.exit(1);
         break;
       }

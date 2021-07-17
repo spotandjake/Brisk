@@ -73,6 +73,7 @@ let d: Function = (x: number): Number => {
   // print(1);
   // print(b);
   // d();
+  return(1);
 };
 let a: Number = d(1);
 let n: Boolean = b;
