@@ -32,10 +32,12 @@ const TypeChecker = (Program: Program) => {
             got = 'Function';
             break;
           case 'callStatement':
-            console.log('/////////');
-            console.log(Node.value);
+            // console.log('/////////');
+            // console.log(Node.value);
             //@ts-ignore
-            console.log(Parent.variables.readGet(Node.value.identifier));
+            // console.log(Parent.variables.readGet(Node.value.identifier));
+            // TODO: add checks to make sure this type is proper
+            if (Parent.variables.readGet(Node.value.identifier) == 'Function') got = wanted;
             break;
           case 'variable':
             //@ts-ignore
@@ -45,7 +47,9 @@ const TypeChecker = (Program: Program) => {
             console.log(Node.value);
             break;
         }
+        if (wanted == 'Void' || got == 'Void') console.log('Type Void Not Allowed');
         if (got != wanted) console.log('unexpected Type');
+        if (wanted == 'Void' || got == 'Void' || got != wanted) process.exit(1);
         break;
       }
       // Log These

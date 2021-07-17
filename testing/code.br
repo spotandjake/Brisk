@@ -69,12 +69,12 @@ import wasm print: (String) -> Void from 'env';
 // let a: String = 'a';
 let b: Boolean = false;
 let c: Boolean = true;
-let d: Function = (): Number => {
+let d: Function = (x: number): Number => {
   // print(1);
   // print(b);
   // d();
 };
-let a: Number = d();
+let a: Number = d(1);
 let n: Boolean = b;
 // print(9223372036854770000); // i64
 // print(-9223372036854770000);
