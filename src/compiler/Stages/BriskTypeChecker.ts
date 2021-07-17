@@ -17,7 +17,7 @@ const TypeChecker = (Program: Program) => {
       case 'Program':
       case 'literal':
       case 'variable':
-      case 'callStatement':
+      case 'callStatement': 
       case 'importWasmStatement':
       case 'functionNode':
       case 'commentStatement':

@@ -63,6 +63,13 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           const returnType = Node.value.dataType;
           const paramType = Node.value.parameters.map(param => param.dataType);
           dataType = { type: Node.dataType, params: paramType, result: returnType };
+        } else if ([ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType)) {
+          // Hack: Add wasm stack Types
+          //@ts-ignore
+          if (Node.value.dataType == 'Number') {
+            //@ts-ignore
+            Node.value.dataType = Node.dataType;
+          }
         } else dataType = Node.dataType;
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, dataType);
