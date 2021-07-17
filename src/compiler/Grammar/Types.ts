@@ -39,6 +39,7 @@ export interface Program {
   type: 'Program';
   flags: FlagStatementNode[];
   variables: Stack;
+  globals: any[];
   body: Statement[];
   exports: string[];
   imports: string[];

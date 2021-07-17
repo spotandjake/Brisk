@@ -1,5 +1,5 @@
-import wasm printraw: (String) -> Void from 'env';
-// import wasm fd_write: (Number, Number, Number, Number) -> Number from 'wasi_unstable';
+// import wasm printraw: (String) -> Void from 'env';
+import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
 
 // Add support for Rationals
@@ -26,8 +26,10 @@ import wasm printraw: (String) -> Void from 'env';
 // put all known variables and values into memory at innialization
 // write a custom parser
 // Port lexer and parser to Brisk
-
-let a: i32 = 1;
+let b: String = 'test';
+let c: i32 = 8;
+let d: i32 = 20;
+fd_write(1, b, c, d);
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);

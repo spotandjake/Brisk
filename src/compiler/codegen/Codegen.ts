@@ -294,6 +294,17 @@ class Compiler {
             functionBody.push(...code);
             return ptr;
           }
+          case 'i32':
+            return module.i32.const(<number>Node.value);
+          case 'i64': {
+            const lower = <bigint>Node.value & BigInt(0xffffffff), upper = <bigint>Node.value >> 32n;
+            //@ts-ignore
+            return module.i64.const(Number(lower), Number(upper));
+          }
+          case 'f32':
+            return module.f32.const(<number>Node.value);
+          case 'f64':
+            return module.f64.const(<number>Node.value);
           default: {
             console.log('Unknown Var Type');
             return module.i32.const(0);
