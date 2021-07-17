@@ -1,6 +1,5 @@
 // Import Types
 import { LinkedModule, Program, ParseTreeNode } from '../Grammar/Types';
-import * as path from 'path';
 // Imports libs
 import { BriskError} from '../Helpers/Errors';
 import { RecurseTree, Stack } from '../Helpers/Helpers';
@@ -24,11 +23,7 @@ const Linker = (
         );
         // Verify the module contains the import
         if (!module.exports.includes(identifier))
-          BriskError(
-            `Module: ${importPath} does not contain export ${identifier}`,
-            <path.ParsedPath>Node.position.file,
-            Node.position
-          );
+          BriskError(`Module: ${importPath} does not contain export ${identifier}`, Node.position);
         // Write module
         dependencyTree.set(
           importPath,

@@ -44,12 +44,40 @@
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
+  (local $5 i32)
   (local.set $2
    (i32.load offset=12
     (local.get $1)
    )
   )
-  (unreachable)
+  (local.set $3
+   (call $_malloc
+    (i32.const 20)
+   )
+  )
+  (i32.store
+   (local.get $3)
+   (i32.const 5)
+  )
+  (i32.store offset=4
+   (local.get $3)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $3)
+   (i32.const 5)
+  )
+  (i32.store offset=12
+   (local.get $3)
+   (i32.const 1)
+  )
+  (i32.store offset=16
+   (local.get $3)
+   (i32.const 1)
+  )
+  (return
+   (local.get $3)
+  )
  )
  (func $_start
   (local $0 i32)

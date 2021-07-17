@@ -21,7 +21,7 @@ const ParseFile = (filename: string, entry: boolean, dependencyTree: Map<string,
   // Parse the Code
   const parsed: ProgramNode = Parser(filename, code);
   if (parsed == undefined)
-    BriskError('program is empty', ProgramPath, { offset: 0, line: 0, col: 0 });
+    BriskError('program is empty', { offset: 0, line: 0, col: 0, file: ProgramPath });
   // Analyze the Code
   const analyzed: Program = Analyzer(ProgramPath, parsed);
   // Verify Tree

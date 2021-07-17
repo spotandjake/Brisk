@@ -1,6 +1,5 @@
 // dependency's
 import binaryen from 'binaryen';
-import * as path from 'path';
 import { Stack } from '../Helpers/Helpers';
 import { BriskError } from '../Helpers/Errors';
 // type's
@@ -164,7 +163,7 @@ class Compiler {
           if (!vars.has(name)) {
             if (functionDeclaration == name) return module.local.get(AllocationPtr, binaryen.i32);
             else {
-              BriskError('Closure is capturing an unknown value', <path.ParsedPath>Node.position.file, Node.position);
+              BriskError('Closure is capturing an unknown value', Node.position);
               return 0;
             }
           } else return module.local.get(<number>vars.get(name), binaryen.i32);
@@ -249,7 +248,7 @@ class Compiler {
             paramType, binaryen.i32
           );
         } else {
-          BriskError(`Unknown Function: ${Node.identifier}`, <path.ParsedPath>Node.position.file, Node.position);
+          BriskError(`Unknown Function: ${Node.identifier}`, Node.position);
         }
         if (expectResult) return wasm;
         else functionBody.push(wasm);
@@ -310,7 +309,7 @@ class Compiler {
       case 'importWasmStatement': {
         //@ts-ignore
         if (!Node.dataType?.params)
-          BriskError('Wasm Import Type Must be a Function', <path.ParsedPath>Node.position.file, Node.position);
+          BriskError('Wasm Import Type Must be a Function', Node.position);
         module.addFunctionImport(
           Node.identifier,
           Node.path,

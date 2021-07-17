@@ -4,7 +4,6 @@ import { BriskError} from '../Helpers/Errors';
 import { RecurseTree, Stack } from '../Helpers/Helpers';
 // Imports libs
 import * as fs from 'fs';
-import * as path from 'path';
 // Type import's
 import {
   ParseTreeNode,
@@ -18,7 +17,7 @@ const Verifier = (Program: Program): void => {
       case 'importStatement': {
         // Make sure all imports are in the main scope
         if (Parent.type != 'Program')
-          BriskError('imports are not allowed outside the main scope', <path.ParsedPath>Node.position.file, Node.position);
+          BriskError('imports are not allowed outside the main scope', Node.position);
         // Make sure imports come before any code
         if (index != 0) {
           for (let i = 0; i < index; i++) {
@@ -27,19 +26,19 @@ const Verifier = (Program: Program): void => {
               (Parent as Program).body[i].type != 'importWasmStatement' && 
               (Parent as Program).body[i].type != 'commentStatement' &&
               (Parent as Program).body[i].type != 'flagStatement'
-            ) BriskError('imports must be at top of file', <path.ParsedPath>Node.position.file, Node.position);
+            ) BriskError('imports must be at top of file', Node.position);
           }
         }
         // Verify import paths
         const exists: boolean = fs.existsSync(Node.path);
         if (!exists)
-          BriskError(`cannot find module ${Node.path}`, <path.ParsedPath>Node.position.file, Node.position);
+          BriskError(`cannot find module ${Node.path}`, Node.position);
         break;
       }
       case 'exportStatement': {
         // Make sure all imports are in the main scope
         if (Parent.type != 'Program')
-          BriskError('exports are not allowed outside the main scope', <path.ParsedPath>Node.position.file, Node.position);
+          BriskError('exports are not allowed outside the main scope', Node.position);
       }
     }
     return Node;
