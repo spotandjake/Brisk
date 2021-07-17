@@ -28,6 +28,15 @@ In general, things we find useful when reviewing suggestions are:
   * Code examples showing the generated wasm (if applicable)
 * If relevant, precedent in other languages can be useful for establishing context and expected behavior
 
+# Naming Issues
+
+## Naming Guidelines
+When making a new issue name it using the following spec:
++ if it is related to the standard libary name it as such `stdlib(<module>): <topic>`
++ if it is related a fix `fix(<stage>): <topic>`
++ if it is related a new feature `feat(<stage>): <topic>`
++ if it is related to the runtime `runtime(<stage>): <topic>`
+
 # Instructions for Contributing Code
 
 ## What You'll Need
