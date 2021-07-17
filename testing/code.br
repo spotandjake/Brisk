@@ -1,13 +1,12 @@
 import wasm print: (String) -> Void from 'env';
 // import print from 'env';
 
-// Fix nearley error handler
-// Perform Type Checking
-// Add Module Linking: look into wasm-ld
 // Add support for Rationals
-// Add debug info to file
 // Add raw wasm types that stay on the stack
+// Investigate downsides of using i64 over i32 for addresses, and lower integers. the size of i64 isnt much larger, alternativly look into using a single byte to represent the var type, and number type
+// Add debug info to file
 // Add a runtime mode that allows us to implement malloc and garbage collection
+// Add Module Linking
 // Add wasm instructions
   // Memory
     // Briskload(Pointer: i32, offset: i32) -> i32
