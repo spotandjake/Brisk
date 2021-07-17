@@ -9,6 +9,7 @@ import {
 } from '../Grammar/Types';
 
 const TypeChecker = (Program: Program) => {
+  // TODO: type check with imports, TypeCheck Function Calls
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
@@ -33,12 +34,18 @@ const TypeChecker = (Program: Program) => {
             got = 'Function';
             break;
           case 'callStatement': {
-            const value = (Parent as Program).variables.readGet(Node.value.identifier);
+            //@ts-ignore
+            const value = Parent.variables.readGet(Node.value.identifier);
             if (value.type && value.type == 'Function') {
               if (value.result != wanted) BriskTypeError(`expected ${wanted} got ${value.result}`, Node.position);
               Node.value.arguments.forEach((arg, index: number) => {
-                //@ts-ignore
-                if (arg.dataType != value.params[index]) BriskTypeError(`expected ${value.params[index]} got ${arg.dataType}`, Node.position);
+                if (
+                  //@ts-ignore
+                  arg.dataType != value.params[index] &&
+                  //@ts-ignore
+                  (arg.type == 'callStatement' && value.params[index] != Parent.variables.readGet(Node.value.identifier).result)
+                  //@ts-ignore
+                ) BriskTypeError(`expected ${value.params[index]} got ${arg.dataType||Parent.variables.readGet(Node.value.identifier).result}`, Node.position);
               });
               if (Node.value.arguments.length != value.params.length)
                 BriskTypeError(`Function ${Node.value.identifier} expected ${value.params.length} params but got ${Node.value.arguments.length}`, Node.position);
