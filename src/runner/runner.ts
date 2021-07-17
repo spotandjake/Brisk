@@ -110,6 +110,7 @@ const runtime = async (wasmFile: string) => {
     env: {
       memory: memory,
       briskmemory: () => memoryView(memory),
+      printraw: (pointer: number) => console.log(pointer),
       print: (pointer: number) => {
         const memArray = [...new Uint32Array(memory.buffer)];
         const ptr = pointer/4;

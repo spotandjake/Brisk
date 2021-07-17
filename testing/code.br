@@ -1,4 +1,5 @@
-import wasm print: (String) -> Void from 'env';
+import wasm printraw: (String) -> Void from 'env';
+// import wasm fd_write: (Number, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
 
 // Add support for Rationals
@@ -26,70 +27,12 @@ import wasm print: (String) -> Void from 'env';
 // write a custom parser
 // Port lexer and parser to Brisk
 
-// Comments
-// let f: String = 'test';
-// print(f);
-// let main: (Number) -> Number = (param: Number): Number => {
-//   // @disablegc
-//   // Test Comment
-//   let str: String = 'b';
-//   let a: Number = 1;
-//   let b: Number = -1;
-//   let c: Number = 1.1;
-//   let d: Number = -1.1;
-//   let boolTrue: Boolean = true;
-//   let boolFalse: Boolean = false;
-//   print(boolTrue);
-//   return(2);
-// };
-// let p: () -> Void = (): Void => {
-//   print(f);
-// };
-// p();
-// let a: Number = 1;
-// let b: Number = -1;
-// let c: Number = -2;
-// let d: Number = +1;
-// let e: Number= 2147483647;
-// let f: Number= 1.1;
-// print(a);
-// let loop: Function = (body: Function, self: Function): Void => {
-//   body();
-//   self(body, self);
-// };
-// loop((): Void => {
-//   print(1);
-// }, loop);
-// let a: String = 'a';
-// print(1); //i32
-// print(-1);
-// print(1.1); //f32
-// print(-1.1);
-// let a: String = 'a';
-let b: Boolean = false;
-let c: Boolean = true;
-let d: Function = (x: Number): Number => {
-  // print(1);
-  // print(b);
-  // d();
-  return(1);
-};
-let a: Number = d(1);
-let n: Boolean = b;
-// print(9223372036854770000); // i64
-// print(-9223372036854770000);
-// print(-922337203685477.1);
-// print(922337203685477.1);
-// print(9223.111111); //f64
-// print(9223.1111111); //f64
-// print(-9223.11111111); //f64
-// print(1677.111); //f64
+let a: i32 = 1;
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);
 // };
 // loop((): Void => {
-//   print(1);
+//   printraw(1);
 // });
-// main(num);
 // export main;

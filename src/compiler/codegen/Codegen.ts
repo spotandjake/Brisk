@@ -243,8 +243,8 @@ class Compiler {
           const funcPtr = module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
           wasm = module.call_indirect(
             'functions',
-            module.i32.load(12, 0, funcPtr),
-            [ module.i32.load(16, 0, funcPtr), paramPtr ],
+            module.i32.load(12, 0, module.copyExpression(funcPtr)),
+            [ module.i32.load(16, 0, module.copyExpression(funcPtr)), paramPtr ],
             paramType, binaryen.i32
           );
         } else {
