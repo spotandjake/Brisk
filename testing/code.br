@@ -4,6 +4,7 @@ import wasm print: (String) -> Void from 'env';
 // Implement fix for closures campturing themselves
 // Fix nearley error handler
 // Perform Type Checking
+// Look into downsides of using i64 and f64 for everything over i32
 // Add Module Linking: look into wasm-ld
 // Add support for Rationals
 // Add debug info to file
@@ -71,14 +72,23 @@ import wasm print: (String) -> Void from 'env';
 // print(-1);
 // print(1.1); //f32
 // print(-1.1);
-print(9223372036854770000); // i64
-print(-9223372036854770000);
-print(-922337203685477.1);
-print(922337203685477.1);
-print(9223.111111); //f64
-print(9223.1111111); //f64
-print(-9223.11111111); //f64
-print(1677.111); //f64
+// let a: String = 'a';
+let b: boolean = false;
+// let c: bolean = true;
+let d: Function = (): Void => {
+  print(1);
+  print(b);
+  d();
+};
+d();
+// print(9223372036854770000); // i64
+// print(-9223372036854770000);
+// print(-922337203685477.1);
+// print(922337203685477.1);
+// print(9223.111111); //f64
+// print(9223.1111111); //f64
+// print(-9223.11111111); //f64
+// print(1677.111); //f64
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);

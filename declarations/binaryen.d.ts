@@ -1,4 +1,4 @@
-declare module binaryen {
+declare namespace binaryen {
 
   const isReady: boolean;
   const ready: Promise<typeof binaryen>;
