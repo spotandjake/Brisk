@@ -68,7 +68,7 @@ import wasm print: (String) -> Void from 'env';
 // let a: String = 'a';
 let b: Boolean = false;
 let c: Boolean = true;
-let d: Function = (x: number): Number => {
+let d: Function = (x: Number): Number => {
   // print(1);
   // print(b);
   // d();

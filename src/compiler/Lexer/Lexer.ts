@@ -1,6 +1,6 @@
 import Tokens from './Tokens';
 // Import Types
-import { Token, Rule } from './Types';
+import { Token, Rule } from '../Grammar/Types';
 class Lexer {
   private regex: RegExp;
   private rules: Rule[];
@@ -69,9 +69,9 @@ class Lexer {
   }
   reset(chunk: string, info?: { offset: number, line: number, col: number }) {
     this.dataset = chunk;
-    this.offset = info ? info.offset : 0;
-    this.line = info ? info.line : 1;
-    this.col = info ? info.col : 1;
+    this.offset = info?.offset || 0;
+    this.line = info?.line || 1;
+    this.col = info?.col || 1;
   }
   formatError(token: Token) {
     if (token == null) return 'parseError: at end of file';

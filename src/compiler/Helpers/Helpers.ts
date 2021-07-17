@@ -100,7 +100,7 @@ export class Stack {
     else {
       if (this.ParentStack && this.ParentStack.has(name)) {
         this.setClosure(name, this.ParentStack.get(name));
-        return this.ParentStack.get(name)
+        return this.ParentStack.get(name);
       }
     }
   }

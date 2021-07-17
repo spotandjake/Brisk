@@ -2,13 +2,6 @@
 import { Stack } from '../Helpers/Helpers';
 import * as path from 'path';
 // General Nodes
-export interface Position {
-  offset: number;
-  line: number;
-  col: number;
-
-  file?: path.ParsedPath;
-}
 export interface Token {
   type: string;
   value: string | number | boolean | bigint;
@@ -16,6 +9,19 @@ export interface Token {
   offset: number;
   line: number;
   col: number;
+}
+export interface Rule {
+  type: string;
+  id: string;
+  value?: (text: string) => string | number | boolean | bigint;
+  match: RegExp;
+  lineBreaks?: boolean;
+}
+export interface Position {
+  offset: number;
+  line: number;
+  col: number;
+  file?: path.ParsedPath;
 }
 // ParseTreeTypes
 export type ParseTreeNode = Program | ProgramNode | Statement | ExpressionNode | FunctionParameterNode;
