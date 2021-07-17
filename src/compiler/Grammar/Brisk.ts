@@ -257,7 +257,7 @@ const grammar: Grammar = {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
-            dataType: 'string',
+            dataType: 'String',
             value: <string>value,
             position: {
               offset: offset,
@@ -272,7 +272,7 @@ const grammar: Grammar = {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
-            dataType: 'number',
+            dataType: 'Number',
             value: <number>value,
             position: {
               offset: offset,
@@ -287,7 +287,7 @@ const grammar: Grammar = {
           const { value, offset, line, col } = data[0];
           return {
             type: 'literal',
-            dataType: 'boolean',
+            dataType: 'Boolean',
             value: <boolean>value,
             position: {
               offset: offset,

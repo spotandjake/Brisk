@@ -33,13 +33,13 @@ const TypeChecker = (Program: Program) => {
             break;
           case 'callStatement':
             console.log('/////////');
-            console.log(stack);
             console.log(Node.value);
+            //@ts-ignore
+            console.log(Parent.variables.readGet(Node.value.identifier));
             break;
           case 'variable':
-            console.log('///');
-            console.log(stack);
-            console.log(Node.value);
+            //@ts-ignore
+            got = Parent.variables.readGet(Node.value.identifier);
             break;
           default:
             console.log(Node.value);
