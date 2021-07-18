@@ -1,7 +1,7 @@
 // Modules
 import * as path from 'path';
 import * as fs from 'fs';
-import { Command } from 'commander';
+import { Command } from './command/index';
 const program = new Command();
 
 // Import Components

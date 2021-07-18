@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "binaryen": "^101.0.0",
-    "commander": "^8.0.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
     "nearley": "^2.20.1",
