@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 const decoder = new TextDecoder('utf8');
 
 interface TableRow {
@@ -105,11 +104,8 @@ const memoryView = (memory: any) => {
 };
 const runtime = async (wasmFile: string) => {
   const wasm = fs.readFileSync(wasmFile);
-  const memory = new WebAssembly.Memory({ initial: 10, maximum:100 });
   const result = await WebAssembly.instantiate(wasm, {
     env: {
-      memory: memory,
-      briskmemory: () => memoryView(memory),
       print: (pointer: number) => console.log(pointer)
     }
   });

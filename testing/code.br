@@ -1,7 +1,6 @@
 import wasm print: (String) -> Void from 'env';
 // import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
-
 // Add support for Rationals
 // Add raw wasm types that stay on the stack
 // Investigate downsides of using i64 over i32 for addresses, and lower integers. the size of i64 isnt much larger, alternativly look into using a single byte to represent the var type, and number type
