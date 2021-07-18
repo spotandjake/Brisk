@@ -25,19 +25,15 @@ import wasm print: (String) -> Void from 'env';
 // put all known variables and values into memory at innialization
 // write a custom parser
 // Port lexer and parser to Brisk
-// let print: Function = (text: String, length: String): Void => {
-//   let a: i32 = 1;
-//   let b: i32 = 20;
-//   fd_write(a, text, length, b);
-// };
-print('test');
-
-
-// let loop: Function = (body: Function): Void => {
-//   body();
-//   loop(body);
-// };
-// loop((): Void => {
-//   printraw(1);
-// });
+// let b: String = 'test';
+// let c: i32 = 8;
+// let d: i32 = 20;
+// fd_write(1, b, c, d);
+let loop: Function = (body: Function): Void => {
+  body();
+  loop(body);
+};
+loop((): Void => {
+  print(1);
+});
 // export main;
