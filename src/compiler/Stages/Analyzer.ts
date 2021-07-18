@@ -13,7 +13,7 @@ import {
 } from '../Grammar/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
-  const globals: string[] = [ 'return', 'BriskStore', 'BriskLoad' ];
+  const globals: string[] = [ 'return' ];
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     // Append data to node
     if ('position' in Node) Node.position.file = filePath;
