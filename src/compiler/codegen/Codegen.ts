@@ -150,6 +150,7 @@ class Compiler {
         );
         // module.optimizeFunction(start);
         module.setStart(start);
+        module.addFunctionExport('_start', '_start');
         break;
       }
       case 'functionNode': {

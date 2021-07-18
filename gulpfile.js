@@ -15,7 +15,7 @@ gulp.task('build', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'commander', 'path', 'fs', 'nearley', 'tslib', 'binaryen' ]
+    external: [ 'commander', 'path', 'fs', 'nearley', 'tslib', 'binaryen', 'wasi' ]
   });
 
   await bundle.write({
@@ -32,7 +32,7 @@ gulp.task('build-tests', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'tslib', 'nearley' ]
+    external: [ 'path', 'fs', 'tslib', 'nearley', 'wasi' ]
   });
 
   await bundle.write({

@@ -11,7 +11,9 @@
   },
   "pkg": {
     "scripts": "./dist/brisk.js",
-    "targets": [ "node15" ],
+    "targets": [
+      "node15"
+    ],
     "outputPath": "/"
   },
   "scripts": {
@@ -19,11 +21,9 @@
     "build": "gulp build",
     "run": "node --enable-source-maps ./dist/brisk.js",
     "package": "gulp package",
-    
     "start-tests": "yarn build-tests && yarn run-tests",
     "build-tests": "gulp build-tests",
     "run-tests": "node --enable-source-maps ./dist/brisk-tests.js",
-
     "lint": "gulp lint"
   },
   "dependencies": {

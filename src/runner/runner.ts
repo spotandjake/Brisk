@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 const decoder = new TextDecoder('utf8');
 
 interface TableRow {
@@ -105,56 +104,9 @@ const memoryView = (memory: any) => {
 };
 const runtime = async (wasmFile: string) => {
   const wasm = fs.readFileSync(wasmFile);
-  const memory = new WebAssembly.Memory({ initial: 10, maximum:100 });
   const result = await WebAssembly.instantiate(wasm, {
     env: {
-      memory: memory,
-      briskmemory: () => memoryView(memory),
-      printraw: (pointer: number) => console.log(pointer),
-      print: (pointer: number) => {
-        const memArray = [...new Uint32Array(memory.buffer)];
-        const ptr = pointer/4;
-        const size = memArray[ptr];
-        const data = memArray.slice(ptr, ptr+size);
-        console.log(pointer);
-        console.log(data);
-        switch(data[1]) {
-          case 0:
-            // None
-            console.log('none');
-            break;
-          case 1:
-            // Function
-            console.log('Function');
-            break;
-          case 2:
-            // Closure
-            console.log('Closure');
-            break;
-          case 3:
-            // Boolean
-            console.log(!!data[3]);
-            break;
-          case 4:
-            // String
-            console.log(
-              decoder.decode(new Uint8Array(data.slice(2)))
-            );
-            break;
-          case 5:
-            // Number
-            console.log(data[3]);
-            break;
-          case 6:
-            // Array
-            console.log('Array');
-            break;
-          default:
-            console.log('Unknown Type');
-            console.log(data[1]);
-            break;
-        }
-      }
+      print: (pointer: number) => console.log(pointer)
     }
   });
   if (result.instance.exports.memory) {

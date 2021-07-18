@@ -1,7 +1,6 @@
-// import wasm printraw: (String) -> Void from 'env';
-import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
+import wasm print: (String) -> Void from 'env';
+// import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
-
 // Add support for Rationals
 // Add raw wasm types that stay on the stack
 // Investigate downsides of using i64 over i32 for addresses, and lower integers. the size of i64 isnt much larger, alternativly look into using a single byte to represent the var type, and number type
@@ -26,10 +25,14 @@ import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstabl
 // put all known variables and values into memory at innialization
 // write a custom parser
 // Port lexer and parser to Brisk
-let b: String = 'test';
-let c: i32 = 8;
-let d: i32 = 20;
-fd_write(1, b, c, d);
+// let print: Function = (text: String, length: String): Void => {
+//   let a: i32 = 1;
+//   let b: i32 = 20;
+//   fd_write(a, text, length, b);
+// };
+print('test');
+
+
 // let loop: Function = (body: Function): Void => {
 //   body();
 //   loop(body);
