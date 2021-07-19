@@ -18,7 +18,8 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
   const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([
     [ 'return', { type: 'Function', params: [ 'any' ], result: 'Void' } ],
     [ 'memStore', { type: 'Function', params: [ 'i32', 'i32', 'i32' ], result: 'Void' } ],
-    [ 'memLoad', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
+    [ 'memLoad', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ],
+    [ 'i32Add', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
   ]);
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     // Append data to node

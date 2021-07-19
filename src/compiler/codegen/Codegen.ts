@@ -123,6 +123,7 @@ class Compiler {
     // Debug info
     binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
     if (!module.validate()) module.validate();
+    console.log(module.getFeatures());
     return wat ? module.emitText() : module.emitBinary();
   }
   compileToken(
@@ -232,6 +233,8 @@ class Compiler {
           wasm = module.i32.store(0, 0, module.i32.add(functionArgs[0], functionArgs[1]), functionArgs[2]);
         } else if (Node.identifier == 'memLoad') {
           wasm = module.i32.load(0, 0, module.i32.add(functionArgs[0], functionArgs[1]));
+        } else if (Node.identifier == 'i32Add') {
+          wasm = module.i32.add(functionArgs[0], functionArgs[1]);
         } else if (globals.has(Node.identifier)) {
           wasm = module.call(
             Node.identifier,
