@@ -1,4 +1,4 @@
-import wasm print: (String) -> Void from 'env';
+import wasm print: (i32) -> Void from 'env';
 // import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
 // Add support for Rationals
@@ -29,11 +29,16 @@ import wasm print: (String) -> Void from 'env';
 // let c: i32 = 8;
 // let d: i32 = 20;
 // fd_write(1, b, c, d);
-let loop: Function = (body: Function): Void => {
-  body();
-  loop(body);
-};
-loop((): Void => {
-  print(1);
-});
+memStore(4, 0, 4);
+memStore(4, 4, 0);
+memStore(4, 8, 3);
+memStore(4, 12, 1);
+print(memLoad(64, 0));
+// let loop: Function = (body: Function): Void => {
+//   body();
+//   loop(body);
+// };
+// loop((): Void => {
+//   print(1);
+// });
 // export main;

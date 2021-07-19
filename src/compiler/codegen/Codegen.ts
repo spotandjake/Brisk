@@ -72,7 +72,7 @@ const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, t
     size += (ValueType == 3 || ValueType == 5) ? 2 : 1;
   });
   // Allocate some space
-  const { code, ptr } = pointer ? { code: [], ptr: pointer } : _Allocate(module, vars, size);
+  const { code, ptr } = pointer != undefined ? { code: [], ptr: pointer } : _Allocate(module, vars, size);
   // Get type id
   const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Store Data
@@ -154,7 +154,6 @@ class Compiler {
         break;
       }
       case 'functionNode': {
-        // TODO: allow closure to capture function it is for
         const { dataType, variables, parameters, body } = Node;
         // Allocate Space for our data
         const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 3);
@@ -171,7 +170,7 @@ class Compiler {
         });
         const { code:closureCode, ptr:closurePtr } = 
           Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, 'Closure', closurePointers);
-        functionBody.push(...closureCode);
+        if (closureCode) functionBody.push(...closureCode);
         // reset the function
         const funcBody: any[] = [];
         const funcStack = variables;
@@ -229,6 +228,10 @@ class Compiler {
         let wasm: any;
         if (Node.identifier == 'return') {
           wasm = module.return(functionArgs[0]);
+        } else if (Node.identifier == 'memStore') {
+          wasm = module.i32.store(0, 0, module.i32.add(functionArgs[0], functionArgs[1]), functionArgs[2]);
+        } else if (Node.identifier == 'memLoad') {
+          wasm = module.i32.load(0, 0, module.i32.add(functionArgs[0], functionArgs[1]));
         } else if (globals.has(Node.identifier)) {
           wasm = module.call(
             Node.identifier,

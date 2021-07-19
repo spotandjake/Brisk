@@ -9,11 +9,17 @@ import {
   Program,
   ProgramNode,
   FlagStatementNode, 
-  DeclarationStatementNode
+  DeclarationStatementNode,
+  LiteralNode,
+  FunctionTypeNode
 } from '../Grammar/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
-  const globals: string[] = [ 'return' ];
+  const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([
+    [ 'return', { type: 'Function', params: [ 'any' ], result: 'Void' } ],
+    [ 'memStore', { type: 'Function', params: [ 'i32', 'i32', 'i32' ], result: 'Void' } ],
+    [ 'memLoad', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
+  ]);
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     // Append data to node
     if ('position' in Node) Node.position.file = filePath;
@@ -48,7 +54,8 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         (trace[1] as Program).imports.push(Node.path);
         break;
       case 'importWasmStatement':
-        globals.push(Node.identifier);
+        //@ts-ignore
+        program_globals.set(Node.identifier, <FunctionTypeNode>Node.dataType);
         break;
       case 'exportStatement':
         if (!stack.has(Node.identifier))
@@ -86,8 +93,25 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
               break;
             }
           }
-          if (!globals.includes(Node.identifier))
+          if (!program_globals.has(Node.identifier))
             BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
+        }
+        // TODO: add check for globals
+        // hax for wasm stack value
+        if (stack.readHas(Node.identifier) || program_globals.has(Node.identifier)) {
+          let func = stack.readGet(Node.identifier) || program_globals.get(Node.identifier);
+          if (Node.identifier == 'return') {
+            func = {
+              type: 'Function',
+              params: [ (Parent as DeclarationStatementNode).dataType ],
+              result: 'Void'
+            };
+          }
+          Node.arguments = Node.arguments.map((argument, index) => { 
+            if (argument.type == 'literal' && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
+              (argument as LiteralNode).dataType = func.params[index];
+            return argument;
+          });
         }
         break;
       case 'variable':
