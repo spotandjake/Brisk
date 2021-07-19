@@ -26,7 +26,7 @@ const memoryView = (memory: any) => {
         tableBody.push(row);
         row = {};
         // This is the start of the row
-        dataSize = dat - 1;
+        dataSize = dat/4 - 1;
         rowIndex = 0;
         row = { state: 'raw', ptr: i*4, size: dat };
       } else {

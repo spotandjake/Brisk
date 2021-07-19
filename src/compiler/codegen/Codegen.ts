@@ -38,6 +38,8 @@ const runtime = (module: binaryen.Module) => {
           module.i32.const(1)
         ), // TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
       ),
+      // Store the pointer
+      module.i32.store(0, 0, module.local.get(1, binaryen.i32), module.local.get(0, binaryen.i32)),
       // Return Current Pointer
       module.return(module.local.get(1, binaryen.i32))
     ])
@@ -50,16 +52,13 @@ const _Allocate = (
   vars: Map<(string | number), number>,
   size: number
 ) => {
-  size += 3;
   // Get the local Variable Index
   const ptrIndex = vars.size; //size|refs|type|value
   vars.set(ptrIndex, 0); // add a var to the stack for the pointer
   // Put the data into an Array Buffer
   const block = [
     // Call Malloc
-    module.local.set(ptrIndex, module.call('_malloc', [ module.i32.const(size*4) ], binaryen.i32)),
-    // Store Data
-    module.i32.store(0, 0, module.local.get(ptrIndex, binaryen.i32), module.i32.const(size))
+    module.local.set(ptrIndex, module.call('_malloc', [ module.i32.const((size+3)*4) ], binaryen.i32))
   ];
   return { code: block, ptr: ptrIndex };
 };
@@ -123,7 +122,6 @@ class Compiler {
     // Debug info
     binaryen.setDebugInfo(true); //TODO: add a command line arg to enable this, add debug info to binary
     if (!module.validate()) module.validate();
-    console.log(module.getFeatures());
     return wat ? module.emitText() : module.emitBinary();
   }
   compileToken(

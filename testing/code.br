@@ -35,13 +35,20 @@ import wasm print: (i32) -> Void from 'env';
 // let printNumber: Function = (numb: Number): Void => {
 //   print(memLoad(numb, 16));
 // };
-let loop: Function = (body: Function, index: i32): Void => {
-  body(index);
-  // i32Add is a builtin instruction for now, but it takes (i32, i32) => i32 and a 1 would normally be a Number so i am infering the type to be i32 there
-  loop(body, i32Add(index, 1));
-};
-loop((index: i32): Void => {
-  // printNumber(index);
-  print(index);
-}, 0);
+// let loop: Function = (body: Function, index: i32): Void => {
+//   body(index);
+//   // i32Add is a builtin instruction for now, but it takes (i32, i32) => i32 and a 1 would normally be a Number so i am infering the type to be i32 there
+//   loop(body, i32Add(index, 1));
+// };
+// loop((index: i32): Void => {
+//   // printNumber(index);
+//   print(index);
+// }, 0);
+let a: String = 'a';
+let b: String = 'b';
+let c: String = 'c';
+let d: String = 'd';
+let e: String = 'e';
+let f: String = 'f';
+let g: String = 'g';
 // export main;
