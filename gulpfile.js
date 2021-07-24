@@ -15,7 +15,7 @@ gulp.task('build', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'nearley', 'tslib', 'binaryen' ]
+    external: [ 'path', 'fs', 'nearley', 'tslib', 'binaryen', '@webassemblyjs/wasm-parser' ]
   });
 
   await bundle.write({
@@ -32,7 +32,7 @@ gulp.task('build-tests', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'tslib', 'nearley' ]
+    external: [ 'path', 'fs', 'nearley', 'tslib', 'binaryen', '@webassemblyjs/wasm-parser' ]
   });
 
   await bundle.write({

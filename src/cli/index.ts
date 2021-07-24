@@ -14,19 +14,20 @@ const commands: Command[] = [
     ],
     description: 'display help for command',
     action: (commands: Command[]) => {
-      console.log('Usage: brisk [options] [command] <file>');
-      console.log('');
-      console.log('Options:');
-      console.log('  -h, --help     display help for command');
-      console.log('  -h, --version  displays the current compiler version');
-      console.log('');
-      console.log('Commands:');
-      console.log('');
       const max_size = Math.max(...commands.map((cmd) => (Array.isArray(cmd.syntax) ? cmd.syntax.join(','): cmd.syntax).length));
-      commands.forEach((command: Command) => {
-        const prefix = Array.isArray(command.syntax) ? command.syntax.join(','): command.syntax;
-        console.log(`  ${prefix}${' '.repeat(max_size - prefix.length)}  ${command.description}`);
-      });
+      console.log([
+        'Usage: brisk [options] [command] <file>',
+        '',
+        'Options:',
+        '  -h, --help     display help for command',
+        '  -v, --version  displays the current compiler version',
+        '',
+        'Commands:',
+        ...commands.map((command: Command) => {
+          const prefix = Array.isArray(command.syntax) ? command.syntax.join(',') : command.syntax;
+          return `  ${prefix}${' '.repeat(max_size - prefix.length)}  ${command.description}`;
+        })
+      ].join('\n'));
     }
   },
   {
@@ -47,7 +48,7 @@ const commands: Command[] = [
     name: 'compile',
     syntax: 'compile <file> [f]',
     description: 'compile brisk file',
-    action: (commands: Command[], options: string[], { file }: { file: string }) => console.log(`compile: ${file}`)
+    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), true, true)
   },
   {
     name: 'run',

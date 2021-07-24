@@ -25,16 +25,7 @@ export interface Position {
 }
 // ParseTreeTypes
 export type ParseTreeNode = Program | ProgramNode | Statement | ExpressionNode | FunctionParameterNode;
-export interface LinkedModule {
-  type: 'Program';
-  flags: FlagStatementNode[];
-  variables: Stack;
-  body: Statement[];
-  exports: string[];
-  imports: string[];
-  imported: string[];
-  position: Position;
-}
+type Import = (boolean|string[]);
 export interface Program {
   type: 'Program';
   flags: FlagStatementNode[];
@@ -42,14 +33,14 @@ export interface Program {
   globals: any[];
   body: Statement[];
   exports: string[];
-  imports: string[];
+  imports: { path: string; identifiers: Import; }[];
   position: Position;
 }
 export interface ProgramNode {
   type: 'Program';
   body: Statement[];
   exports?: string[];
-  imports?: string[];
+  imports?: { path: string; identifiers: Import; }[];
   position: Position;
 }
 export type Statement = 

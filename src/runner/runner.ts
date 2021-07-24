@@ -110,7 +110,7 @@ const runtime = async (wasmFile: string) => {
     }
   });
   if (result.instance.exports.memory) {
-    console.log('==============');
+    console.log('================================================================');
     memoryView(result.instance.exports.memory);
   }
   return () => {

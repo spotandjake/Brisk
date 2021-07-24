@@ -1,5 +1,5 @@
 // Import Errors
-import { BriskSyntaxError, BriskReferenceError } from '../Helpers/Errors';
+import { BriskSyntaxError, BriskReferenceError, BriskError } from '../Helpers/Errors';
 // Helper Imports
 import { RecurseTree, Stack } from '../Helpers/Helpers';
 import * as path from 'path';
@@ -48,11 +48,14 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
-        // Resolve Module Paths
-        Node.path = path.join(filePath.dir, Node.path);
         // Add import to list of imports
         if (!(trace[1] as Program).imports) (trace[1] as Program).imports = [];
-        (trace[1] as Program).imports.push(Node.path);
+        // Resolve Module Paths
+        (trace[1] as Program).imports.push({
+          path: Node.path,
+          identifiers: [ Node.identifier ]
+        });
+        Node.path = path.join(filePath.dir, Node.path);
         break;
       case 'importWasmStatement':
         //@ts-ignore
@@ -63,6 +66,8 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         // Add export to list of exports
         if (!(trace[1] as Program).exports) (trace[1] as Program).exports = [];
+        if ((trace[1] as Program).exports.includes(Node.identifier))
+          BriskError(`Export by name ${Node.identifier} already exported, you may only export a value once`, Node.position);
         (trace[1] as Program).exports.push(Node.identifier);
         break;
       case 'declarationStatement': {

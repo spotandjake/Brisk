@@ -19,8 +19,10 @@ const TypeChecker = (Program: Program) => {
       case 'variable':
       case 'callStatement': 
       case 'importWasmStatement':
+      case 'importStatement':
       case 'functionNode':
       case 'commentStatement':
+      case 'exportStatement':
         break;
       // Type Check These
       case 'declarationStatement': {
@@ -68,6 +70,7 @@ const TypeChecker = (Program: Program) => {
       }
       // Log These
       default:
+        console.log('Unknown Node TypeChecker');
         console.log(Node);
         break;
     }

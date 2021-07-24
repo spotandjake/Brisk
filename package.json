@@ -27,6 +27,7 @@
     "lint": "gulp lint"
   },
   "dependencies": {
+    "@webassemblyjs/wasm-parser": "^1.11.1",
     "binaryen": "^101.0.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
