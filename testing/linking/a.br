@@ -1,0 +1,6 @@
+import wasm print: (i32) -> Void from 'env';
+import c from './c.br';
+import b from './b.br';
+
+print(b);
+print(c);

@@ -1,0 +1,5 @@
+import wasm print: (i32) -> Void from 'env';
+import c from './c.br';
+print(c);
+let b: Number = 1;
+export b;

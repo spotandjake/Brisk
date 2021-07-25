@@ -17,7 +17,7 @@ const briskCompiler = async (filename: string, writeFile: boolean, wat: boolean)
   // Linking
   // TODO: make sure to compile dependency's to wasm before linking
   const linked = Linker(analyzed.position.file, compiled);
-  await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.wat'), linked.emitText());
+  await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.linked.wat'), linked.emitText());
   // Output File
   const output = wat ? compiled.emitText() : compiled.emitBinary();
   // await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.wasm'), compiled.emitBinary());
