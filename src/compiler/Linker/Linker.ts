@@ -156,6 +156,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           );
         case 'GlobalGet': // TODO: namespace Global
           console.log(expressionInfo);
+          // TODO: determine if the global is external or internal, and namespace it accordingly
           return expression;
         // Map Children
         case 'Block':
