@@ -5,6 +5,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { BriskError } from '../Helpers/Errors';
 // Type Imports
+interface foreignImport {
+  internalName: string;
+  externalModuleName: string;
+  externalBaseName: string;
+  params: binaryen.Type;
+  results: binaryen.Type;
+}
 interface dependency {
   entry: boolean;
   importance: number;
@@ -122,25 +129,108 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   const dependencyGraph = analyzeFile(<path.ParsedPath>location, mainModule, new Map(), true);
   // Sort the dependencyGraph
   const sortedGraph = new Map([...dependencyGraph.entries()].sort((a, b) => b[1].importance - a[1].importance));
-  console.log(sortedGraph);
+  // console.log(sortedGraph);
   // TODO: Loop through all dependency's start making a list of globals, and functions, map imports and exports across files, merge the main functions
   let moduleIndex = 0;
   const moduleEntryList: string[] = [];
+  const foreignImports: foreignImport[] = [];
   for (const [ key, value ] of sortedGraph) {
     // Get This Module
     const dependencyModule = <binaryen.Module>value.binaryen_module;
-    // TODO: Readd Functions
+    // Namespace Variables
+    const namespace = (variableMap: Map<string, string>,  expression: binaryen.ExpressionRef): binaryen.ExpressionRef => {
+      const namespaceChild = (expression: binaryen.ExpressionRef) => namespace(variableMap, expression);
+      // Parse Expression
+      const expressionId = binaryen.getExpressionId(expression);
+      // @ts-ignore
+      const expressionIdName = Object.keys(binaryen.ExpressionIds)[expressionId];
+      const expressionInfo = binaryen.getExpressionInfo(expression);
+      switch(expressionIdName) {
+        // TODO: map which values need to be namespaced
+        // Actually Namespace
+        case 'Call':
+          return module.call(
+            (<binaryen.CallInfo>expressionInfo).target, // namespace the name
+            (<binaryen.CallInfo>expressionInfo).operands.map((exp) => namespaceChild(exp)),
+            (<binaryen.CallInfo>expressionInfo).type
+          );
+        case 'GlobalGet': // TODO: namespace Global
+          console.log(expressionInfo);
+          return expression;
+        // Map Children
+        case 'Block':
+          return module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map((exp) => namespaceChild(exp)));
+        case 'Drop':
+          return module.drop(namespaceChild((<binaryen.DropInfo>expressionInfo).value));
+        // Return Old Value
+        case 'LocalSet':
+        case 'Store': // TODO: Figure a way to transform the function index
+        case 'CallIndirect': // TODO: unknown but i think i need to map something on it
+          return expression;
+        default:
+          BriskError(`Unknown Statement Type ${expressionIdName}`);
+          return expression;
+      }
+    };
+    // Read Functions
+    console.log('--------------');
+    for (let i = 0; i < dependencyModule.getNumFunctions(); i++) {
+      const func = dependencyModule.getFunctionByIndex(i);
+      const funcInfo = binaryen.getFunctionInfo(func);
+      switch(funcInfo.name) {
+        // Add Module Entry Function
+        case '_start': {
+          const name = `${moduleIndex}_entry`;
+          moduleEntryList.push(name);
+          module.addFunction(name, funcInfo.params, funcInfo.results, funcInfo.vars, namespace(new Map(), funcInfo.body));
+          break;
+        }
+        // TODO: Make malloc a brisk module called normally like other functions
+        case '_malloc': {
+          if (module.getFunction('_malloc') == 0) {
+            module.addFunction('_malloc', funcInfo.params, funcInfo.results, funcInfo.vars, funcInfo.body);
+          }
+          break;
+        }
+        // Add other functions
+        default: {
+          if (funcInfo.module != '') { // external import
+            if (
+              foreignImports.some(
+                ({ internalName, externalModuleName, externalBaseName, params, results }) => (
+                  internalName == funcInfo.name &&
+                  externalModuleName == funcInfo.module &&
+                  externalBaseName == funcInfo.base &&
+                  params == funcInfo.params &&
+                  results == funcInfo.results
+                )
+              )
+            ) break;
+            // TODO: Namespace foreign import name and call.
+            foreignImports.push({
+              internalName: funcInfo.name,
+              externalModuleName: <string>funcInfo.module,
+              externalBaseName: <string>funcInfo.base,
+              params: funcInfo.params,
+              results: funcInfo.results
+            });
+          } else { // user defined function
+            console.log(funcInfo.name);
+          }
+          break;
+        }
+      }
+    }
     // TODO: Remap (Function Indexes, function table, call_indirect)
     // TODO: Perform Linking
     // TODO: Renumber Globals
-    // Add Module Entry Function
-    const _start = binaryen.getFunctionInfo(dependencyModule.getFunction('_start'));
-    const name = `${moduleIndex}_entry`;
-    moduleEntryList.push(name);
-    module.addFunction(name, _start.params, _start.results, _start.vars, _start.body);
     // Increment Module Count
     moduleIndex++;
   }
+  // Merge And Add Foreign Imports
+  foreignImports.forEach(({ internalName, externalModuleName, externalBaseName, params, results }) => 
+    module.addFunctionImport(internalName, externalModuleName, externalBaseName, params, results)
+  );
   // Add Main Start Function
   module.addFunction(
     '_start', binaryen.none, binaryen.none, [], module.block(null, moduleEntryList.map((name) => module.call(name, [], binaryen.none)))

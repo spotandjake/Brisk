@@ -1,6 +1,10 @@
 import wasm print: (i32) -> Void from 'env';
+import wasm printraw: (i32) -> Void from 'env';
 import c from './c.br';
 import b from './b.br';
-
+let a: Function = (): Void => {
+  print(1);
+};
+a();
 print(b);
 print(c);

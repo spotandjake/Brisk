@@ -322,6 +322,7 @@ class Compiler {
         break;
       }
       case 'importWasmStatement': {
+        // TODO: add support in both linker and here for importing foreign globals
         //@ts-ignore
         if (!Node.dataType?.params)
           BriskError('Wasm Import Type Must be a Function', Node.position);
@@ -339,7 +340,7 @@ class Compiler {
       }
       case 'exportStatement': {
         if (!globals.has(Node.identifier)) {
-          module.addGlobal(`${globals.size}`, binaryen.i32, true, module.i32.const(<number>vars.get(Node.identifier)));
+          module.addGlobal(`${globals.size}`, binaryen.i32, true, module.local.get(<number>vars.get(Node.identifier)));
           globals.set(Node.identifier, globals.size);
         }
         module.addGlobalExport(`${globals.get(Node.identifier)}`, `BRISK$EXPORT$${Node.identifier}`);
