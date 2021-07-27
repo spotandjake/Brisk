@@ -340,7 +340,8 @@ class Compiler {
       }
       case 'exportStatement': {
         if (!globals.has(Node.identifier)) {
-          module.addGlobal(`${globals.size}`, binaryen.i32, true, module.local.get(<number>vars.get(Node.identifier)));
+          module.addGlobal(`${globals.size}`, binaryen.i32, true, module.i32.const(0));
+          functionBody.push(module.global.set(`${globals.size}`,  module.local.get(<number>vars.get(Node.identifier), binaryen.i32)));
           globals.set(Node.identifier, globals.size);
         }
         module.addGlobalExport(`${globals.get(Node.identifier)}`, `BRISK$EXPORT$${Node.identifier}`);

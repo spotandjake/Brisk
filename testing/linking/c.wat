@@ -1,7 +1,7 @@
 (module
  (type $none_=>_none (func))
  (type $i32_=>_i32 (func (param i32) (result i32)))
- (global $0 (mut i32) (i32.const 1))
+ (global $0 (mut i32) (local.get $1))
  (memory $0 1)
  (table $functions 0 funcref)
  (export "memory" (memory $0))

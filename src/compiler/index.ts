@@ -19,8 +19,8 @@ const briskCompiler = async (filename: string, writeFile: boolean, wat: boolean)
   const linked = Linker(analyzed.position.file, compiled);
   await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.linked.wat'), linked.emitText());
   // Output File
-  const output = wat ? compiled.emitText() : compiled.emitBinary();
   // await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.wasm'), compiled.emitBinary());
+  const output = wat ? compiled.emitText() : compiled.emitBinary();
   if (writeFile) await fs.promises.writeFile(filename.replace(/\.[^.]+$/, '.wat'), output);
   else return output;
 };
