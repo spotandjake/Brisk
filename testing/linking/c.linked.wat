@@ -2,12 +2,11 @@
  (type $none_=>_none (func))
  (type $i32_=>_i32 (func (param i32) (result i32)))
  (global $0 (mut i32) (i32.const 0))
+ (global $1 (mut i32) (i32.const 0))
  (memory $0 1)
  (table $functions 0 funcref)
  (export "memory" (memory $0))
- (export "BRISK$EXPORT$c" (global $0))
  (export "_start" (func $_start))
- (start $_start)
  (func $_malloc (param $0 i32) (result i32)
   (local $1 i32)
   (local.set $1
@@ -43,7 +42,7 @@
    (local.get $1)
   )
  )
- (func $_start
+ (func $entry_0
   (local $0 i32)
   (local $1 i32)
   (i32.store
@@ -74,8 +73,11 @@
   (local.set $1
    (local.get $0)
   )
-  (global.set $0
+  (global.set $1
    (local.get $1)
   )
+ )
+ (func $_start
+  (call $entry_0)
  )
 )

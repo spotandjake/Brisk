@@ -1,9 +1,9 @@
 import wasm print: (i32) -> Void from 'env';
 import c from './c.br';
 print(c);
-let b: Number = 1;
+let b: Number = 2;
 let a: Function = (): Void => {
-  print(1);
+  print(3);
 };
 a();
 export b;

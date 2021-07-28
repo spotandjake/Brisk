@@ -38,7 +38,7 @@ const TypeChecker = (Program: Program) => {
           case 'callStatement': {
             //@ts-ignore
             const value = Parent.variables.readGet(Node.value.identifier);
-            if (value.type && value.type == 'Function') {
+            if (value && value.type && value.type == 'Function') {
               if (value.result != wanted) BriskTypeError(`expected ${wanted} got ${value.result}`, Node.position);
               Node.value.arguments.forEach((arg, index: number) => {
                 if (

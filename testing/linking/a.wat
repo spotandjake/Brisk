@@ -3,8 +3,8 @@
  (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
  (type $none_=>_none (func))
  (type $i32_=>_i32 (func (param i32) (result i32)))
- (import "GRAIN$MODULE$c" "BRISK$EXPORTc" (global $0 i32))
- (import "GRAIN$MODULE$b" "BRISK$EXPORTb" (global $1 i32))
+ (import "GRAIN$MODULE$c" "BRISK$EXPORT$c" (global $0 i32))
+ (import "GRAIN$MODULE$b" "BRISK$EXPORT$b" (global $1 i32))
  (import "env" "print" (func $print (param i32)))
  (import "env" "printraw" (func $printraw (param i32)))
  (memory $0 1)
@@ -52,7 +52,7 @@
   (local $2 i32)
   (local $3 i32)
   (call $print
-   (i32.const 1)
+   (i32.const 5)
   )
   (return
    (i32.const -1)
@@ -89,6 +89,15 @@
   (local.set $1
    (local.get $0)
   )
+  (call $print
+   (i32.const 4)
+  )
+  (call $print
+   (global.get $1)
+  )
+  (call $print
+   (global.get $0)
+  )
   (drop
    (call_indirect (type $i32_i32_=>_i32)
     (i32.load offset=16
@@ -99,12 +108,6 @@
      (local.get $1)
     )
    )
-  )
-  (call $print
-   (global.get $1)
-  )
-  (call $print
-   (global.get $0)
   )
  )
 )

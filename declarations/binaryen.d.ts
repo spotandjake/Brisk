@@ -1407,6 +1407,8 @@ declare namespace binaryen {
     removeFunction(name: string): void;
     getNumFunctions(): number;
     getFunctionByIndex(index: number): FunctionRef;
+    getNumGlobals(): number;
+    getGlobalByIndex(index: number): GlobalRef;
     addGlobal(name: string, type: Type, mutable: boolean, init: ExpressionRef): GlobalRef;
     getGlobal(name: string): GlobalRef;
     removeGlobal(name: string): void;
@@ -1524,6 +1526,7 @@ declare namespace binaryen {
   interface CallIndirectInfo extends ExpressionInfo {
     isReturn: boolean;
     target: ExpressionRef;
+    table: TableRef;
     operands: ExpressionRef[];
   }
 
@@ -1759,6 +1762,15 @@ declare namespace binaryen {
     type: Type;
     mutable: boolean;
     init: ExpressionRef;
+  }
+
+  function getTableInfo(table: TableRef): TableInfo;
+  interface TableInfo {
+    name: string;
+    module: string;
+    base: string;
+    initial: string;
+    max: number|null;
   }
 
   function getExportInfo(export_: ExportRef): ExportInfo;

@@ -113,7 +113,7 @@ class Compiler {
         const directory = path.normalize(_modulePath.dir);
         const importPath = (directory == '.' ? _modulePath.name : `${directory}/${_modulePath.name}`);
         identifiers.forEach((name: string) => {
-          module.addGlobalImport(`${globals.size}`, `GRAIN$MODULE$${importPath}`, `BRISK$EXPORT${name}`, binaryen.i32),
+          module.addGlobalImport(`${globals.size}`, `GRAIN$MODULE$${importPath}`, `BRISK$EXPORT$${name}`, binaryen.i32),
           globals.set(name, globals.size);
         });
       } else console.log('Import all: Codegen not implemented yet');
