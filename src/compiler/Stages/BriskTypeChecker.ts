@@ -9,7 +9,7 @@ import {
 } from '../Grammar/Types';
 
 const TypeChecker = (Program: Program) => {
-  // TODO: type check with imports, TypeCheck Function Calls
+  // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {

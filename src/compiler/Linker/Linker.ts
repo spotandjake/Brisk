@@ -312,9 +312,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   // TODO: Merge wasmImports of the same type
   // TODO: inline all entry functions into one start function
   // TODO: Rewrite this over again so it is simpler
-  // TODO: Rewrite analyzer so it doesn't require an external parser
-  // TODO: Analyze the file and generate a map then apply the map on the code while generating new code for merging
-  // TODO: Add Type Checking
   // Initialize the new binaryen module
   const module = new binaryen.Module();
   // Enable Features
@@ -324,7 +321,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   // Optimization settings
   binaryen.setShrinkLevel(3);
   binaryen.setFlexibleInlineMaxSize(3);
-  binaryen.setOneCallerInlineMaxSize(3);
+  binaryen.setOneCallerInlineMaxSize(100);
   // Analyze Files
   const dependencyGraph = analyzeFile(<path.ParsedPath>location, mainModule, new Map(), true);
   // Sort the dependencyGraph
@@ -401,7 +398,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
       const funcInfo = binaryen.getFunctionInfo(depModule.getFunctionByIndex(i));
       // Determine what todo with the function
       if (funcInfo.name == '_start') {
-        // Map Function Locals
         // Extend Start Function
         entry = {
           name: `entry_${modules.length}`,
@@ -411,7 +407,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           body: funcInfo.body
         };
       } else if (funcInfo.name == '_malloc') {
-        // TODO: Make malloc a brisk module called normally like other functions
         if (module.getFunction('_malloc') == 0)
           module.addFunction('_malloc', funcInfo.params, funcInfo.results, funcInfo.vars, funcInfo.body);
       } else if (funcInfo.base == '') {
@@ -468,7 +463,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
       case 'GlobalImport':
         module.addGlobalImport(Import.internalName, Import.externalModuleName, Import.externalBaseName, Import.globalType);
         break;
-      // Add support for other kinds of imports and merging imports
+      // TODO: Add support for other kinds of imports and merging imports
       default:
         BriskLinkerError(`Unknown Import Type ${(<wasmImport>Import).type}`);
         break;
@@ -487,7 +482,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   module.addActiveElementSegment('functions', 'functions', functions.map((func) => func.name), module.i32.const(0));
   // Add entry functions
   for (const { name, params, results, vars, body } of modules) {
-    // TODO: only generate one module, note locals will need to be remapped
     module.addFunction(name, params, results, vars, body);
   }
   // Add the start function

@@ -1,6 +1,6 @@
 (module
- (type $none_=>_none (func))
  (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
+ (type $none_=>_none (func))
  (type $i32_=>_none (func (param i32)))
  (type $i32_=>_i32 (func (param i32) (result i32)))
  (import "env" "print" (func $print (param i32)))
@@ -73,8 +73,9 @@
   )
   (i32.const -1)
  )
- (func $entry_0
+ (func $_start
   (local $0 i32)
+  (local $1 i32)
   (i32.store offset=4
    (local.tee $0
     (call $_malloc
@@ -98,10 +99,6 @@
   (global.set $0
    (local.get $0)
   )
- )
- (func $entry_1
-  (local $0 i32)
-  (local $1 i32)
   (call $print
    (global.get $0)
   )
@@ -162,9 +159,6 @@
   (global.set $2
    (local.get $0)
   )
- )
- (func $entry_2
-  (local $0 i32)
   (i32.store offset=4
    (local.tee $0
     (call $_malloc
@@ -205,10 +199,5 @@
     )
    )
   )
- )
- (func $_start
-  (call $entry_0)
-  (call $entry_1)
-  (call $entry_2)
  )
 )

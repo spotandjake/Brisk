@@ -102,7 +102,6 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           if (!program_globals.has(Node.identifier))
             BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         }
-        // TODO: add check for globals
         // hax for wasm stack value
         if (stack.readHas(Node.identifier) || program_globals.has(Node.identifier)) {
           let func = stack.readGet(Node.identifier) || program_globals.get(Node.identifier);
