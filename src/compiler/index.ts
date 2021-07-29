@@ -47,6 +47,7 @@ const compileFile = async (filename: string) => {
 };
 const compile = async (filename: string, options: CompilerOptions) => {
   const filePath = path.parse(filename);
+  const date = new Date().toDateString();
   // Generate wasm for Self
   const { analyzed, module:entry, deps, raw } = await compileFile(filename);
   // Link or return the non linked module
@@ -61,14 +62,16 @@ const compile = async (filename: string, options: CompilerOptions) => {
       await fs.promises.writeFile(dep.replace(/\.[^.]+$/, '.wasm'), module.emitBinary());
     }
     // Make The File For Incremental Build
-    const ProgramInfo: { [key: string]: { signature: string; } } = {};
+    const ProgramInfo: { [key: string]: { signature: string; LatestCompileDate: string; } } = {};
     for (const [ fileName, fileContent ] of files) {
       ProgramInfo[path.relative(filePath.dir, fileName)] = {
-        signature: crypto.createHash('md5').update(fileContent, 'utf8').digest('hex')
+        signature: crypto.createHash('md5').update(fileContent, 'utf8').digest('hex'),
+        LatestCompileDate: date
       };
     }
     await fs.promises.writeFile(path.join(filePath.dir, 'BriskBuildInfo.yaml'), YAML.stringify({
-      SpecVersion: '1.0.0',
+      SpecVersion: '1.1.0',
+      LatestCompileDate: date,
       ProgramInfo: ProgramInfo
     }));
     // Return Linked

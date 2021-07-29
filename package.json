@@ -1,6 +1,6 @@
 {
   "name": "brisk-cli",
-  "version": "0.0.2",
+  "version": "0.1.2",
   "description": "Brisk Command Line Interface",
   "main": "./cli/index.ts",
   "author": "spotandjake",
