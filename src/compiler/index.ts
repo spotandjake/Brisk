@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import YAML from 'yaml';
+import TOML from '@iarna/toml';
 import { ProgramNode } from './Grammar/Types';
 import { BriskError } from './Helpers/Errors';
 import Parser from './Parser/Parser';
@@ -69,7 +69,7 @@ const compile = async (filename: string, options: CompilerOptions) => {
         LatestCompileDate: date
       };
     }
-    await fs.promises.writeFile(path.join(filePath.dir, 'BriskBuildInfo.yaml'), YAML.stringify({
+    await fs.promises.writeFile(path.join(filePath.dir, 'BriskBuildInfo.toml'), TOML.stringify({
       SpecVersion: '1.1.0',
       LatestCompileDate: date,
       ProgramInfo: ProgramInfo

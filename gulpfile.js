@@ -6,7 +6,7 @@ import eslint from 'gulp-eslint';
 import pkg from 'pkg';
 import { exec } from 'child_process';
 const rollup_input_options = {
-  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', 'yaml' ],
+  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml' ],
 };
 const rollup_output_options = {
   format: 'es',

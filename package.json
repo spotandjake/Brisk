@@ -28,14 +28,14 @@
     "lint": "gulp lint"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "binaryen": "^101.0.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
     "nearley": "^2.20.1",
     "pkg": "^5.3.0",
     "rollup": "^2.52.8",
-    "tslib": "^2.3.0",
-    "yaml": "^1.10.2"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.0",
