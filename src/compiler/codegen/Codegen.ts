@@ -1,6 +1,6 @@
 // dependency's
 import binaryen from 'binaryen';
-import * as path from 'path';
+import path from 'path';
 import { Stack } from '../Helpers/Helpers';
 import { BriskError } from '../Helpers/Errors';
 // type's
@@ -21,6 +21,14 @@ const runtime = (module: binaryen.Module) => {
     module.block(null, [
       // Get Current Pointer
       module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
+      // TEST: The Smallest Pointer We Want to Allow is 4 so if it is less then this we should set it to 4
+      module.if(
+        module.i32.le_u(module.local.get(1, binaryen.i32), module.i32.const(4)),
+        module.block(null, [
+          module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
+          module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
+        ])
+      ),
       // Add Size To Current Pointer
       module.i32.store(
         0, 0, module.i32.const(0),
@@ -147,10 +155,7 @@ class Compiler {
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
         const start = module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
-          module.block(null, [
-            module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
-            ...functionBody
-          ])
+          module.block(null, functionBody)
         );
         // module.optimizeFunction(start);
         module.setStart(start);

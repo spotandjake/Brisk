@@ -2,8 +2,6 @@
 import { BriskError} from '../Helpers/Errors';
 // Helper Imports
 import { RecurseTree, Stack } from '../Helpers/Helpers';
-// Imports libs
-import * as fs from 'fs';
 // Type import's
 import {
   ParseTreeNode,
@@ -29,10 +27,6 @@ const Verifier = (Program: Program): void => {
             ) BriskError('imports must be at top of file', Node.position);
           }
         }
-        // Verify import paths
-        const exists: boolean = fs.existsSync(Node.path);
-        if (!exists)
-          BriskError(`cannot find module ${Node.path}`, Node.position);
         break;
       }
       case 'exportStatement': {

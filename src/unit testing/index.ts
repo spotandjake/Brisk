@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 // Import tests
 import test_lexer from './tests/test_lexer';
 import test_parser from './tests/test_parser';

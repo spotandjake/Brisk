@@ -6,4 +6,5 @@ let a: Function = (): Void => {
   print(3);
 };
 a();
+print(b);
 export b;

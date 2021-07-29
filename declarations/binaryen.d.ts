@@ -1702,6 +1702,10 @@ declare namespace binaryen {
     size: ExpressionRef;
   }
 
+  interface MemoryGrowInfo extends ExpressionInfo {
+    delta: ExpressionRef;
+  }
+
   interface RefNullInfo extends ExpressionInfo {
   }
 
@@ -1739,6 +1743,10 @@ declare namespace binaryen {
   interface PushInfo extends ExpressionInfo {
     type: never; // ?
     value: ExpressionRef;
+  }
+
+  interface TupleMakeInfo extends ExpressionInfo {
+    operands: ExpressionRef[];
   }
 
   function getFunctionInfo(func: FunctionRef): FunctionInfo;

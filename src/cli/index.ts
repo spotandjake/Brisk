@@ -1,6 +1,5 @@
 // Modules
-import * as path from 'path';
-import * as fs from 'fs';
+import path from 'path';
 import { Commander, Command } from './command/index';
 // Import Components
 import compile from '../compiler/index';
@@ -42,23 +41,21 @@ const commands: Command[] = [
     name: 'main',
     syntax: '<file>',
     description: 'compiles the main brisk file',
-    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), true, true)
+    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), {})
   },
   {
     name: 'compile',
     syntax: 'compile <file> [f]',
     description: 'compile brisk file',
-    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), true, true)
+    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), {})
   },
   {
     name: 'run',
     syntax: 'run <file>',
     description: 'compile & run brisk file',
     action: async (commands: Command[], options: string[], { file }: { file: string }) => {
-      const compiled = await compile(path.join(process.cwd(), file), false, false);
-      await fs.promises.writeFile(path.join(process.cwd(), file).replace(/\.[^.]+$/, '.wasm'), <Uint8Array>compiled);
       // Run the runner
-      runner(path.join(process.cwd(), file).replace(/\.[^.]+$/, '.wasm'));
+      runner(await compile(path.join(process.cwd(), file), { wat: false }));
     }
   },
   {

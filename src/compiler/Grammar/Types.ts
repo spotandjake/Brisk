@@ -1,6 +1,6 @@
 // Type Imports
 import { Stack } from '../Helpers/Helpers';
-import * as path from 'path';
+import path from 'path';
 // General Nodes
 export interface Token {
   type: string;

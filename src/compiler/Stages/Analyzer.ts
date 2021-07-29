@@ -2,7 +2,7 @@
 import { BriskSyntaxError, BriskReferenceError, BriskError } from '../Helpers/Errors';
 // Helper Imports
 import { RecurseTree, Stack } from '../Helpers/Helpers';
-import * as path from 'path';
+import path from 'path';
 // Type Imports
 import {
   ParseTreeNode,

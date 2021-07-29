@@ -103,7 +103,7 @@ const memoryView = (memory: any) => {
   console.table(table);
 };
 const runtime = async (wasmFile: string) => {
-  const wasm = fs.readFileSync(wasmFile);
+  const wasm = await fs.promises.readFile(wasmFile);
   const result = await WebAssembly.instantiate(wasm, {
     env: {
       print: (pointer: number) => console.log(pointer)

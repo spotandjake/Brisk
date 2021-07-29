@@ -1,9 +1,8 @@
 // Imports
 import binaryen from 'binaryen';
-import { decode, Module, ModuleImport, ModuleExport } from '@webassemblyjs/wasm-parser';
-import * as path from 'path';
-import * as fs from 'fs';
-import { BriskError } from '../Helpers/Errors';
+import path from 'path';
+import fs from 'fs';
+import { BriskLinkerError } from '../Helpers/Errors';
 // Type Imports
 interface Dependency {
   entry: boolean;
@@ -11,10 +10,6 @@ interface Dependency {
   found: boolean;
   file: string;
   location: path.ParsedPath;
-  imported: Set<string>;
-  exports: Map<string, number>;
-  imports: Map<string, string>;
-  ast_body?: Module;
   binaryen_module?: binaryen.Module;
 }
 interface localMap {
@@ -53,17 +48,13 @@ interface wasmGlobalImport {
 }
 // Helpers
 const analyzeFile = (location: path.ParsedPath, subModule: binaryen.Module, dependencyGraph: Map<string, Dependency>, entry: boolean) => {
-  // TODO: rewrite this so it is a lot simpler and does not depend on an external parser
+  // TODO: rewrite this so it is a lot simpler
   // Parse file
   const modulePath = path.resolve(path.join(location.dir, `${location.name}.wasm`));
-  const raw = subModule.emitBinary();
-  const decoderOpts = {};
-  const ast = decode(raw, decoderOpts);
-  const imports = (<Module>ast.body[0]).fields.filter(n => n.type == 'ModuleImport');
-  imports.forEach((moduleNode) => {
-    if ((<ModuleImport>moduleNode).module.startsWith('GRAIN$MODULE$')) {
-      const { module:moduleFile, name:exportName } = <ModuleImport>moduleNode;
-      const absolutePath = path.resolve(path.join(location.dir, `${moduleFile.slice('GRAIN$MODULE$'.length)}.wasm`));
+  const self = <Dependency>dependencyGraph.get(modulePath);
+  const findImports = (base: string) => {
+    if (base.startsWith('GRAIN$MODULE$')) {
+      const absolutePath = path.resolve(path.join(location.dir, `${base.slice('GRAIN$MODULE$'.length)}.wasm`));
       // If we do not include this already then add it to our graph
       if (!dependencyGraph.has(absolutePath)) {
         dependencyGraph.set(absolutePath, {
@@ -71,60 +62,39 @@ const analyzeFile = (location: path.ParsedPath, subModule: binaryen.Module, depe
           found: false,
           file: absolutePath,
           location: location,
-          imported: new Set(),
-          exports: new Map(),
-          imports: new Map(),
           importance: 1
         });
       }
       // Add the imports to the graph
-      const dep = <Dependency>dependencyGraph.get(absolutePath);
-      dep.imported.add(exportName); //TODO: add the an array of pointers to the globals in each file for resolution, or globalize names
       // Deal with sorting
-      const self = <Dependency>dependencyGraph.get(modulePath);
+      const dep = <Dependency>dependencyGraph.get(absolutePath);
       if (!entry && self.importance > dep.importance-1) dep.importance = self.importance+1;
       dependencyGraph.set(absolutePath, dep);
     }
-  });
+  };
+  // Loop over all globals
+  for (let i = 0; i < subModule.getNumGlobals(); i++) {
+    const globalInfo = binaryen.getGlobalInfo(subModule.getGlobalByIndex(i));
+    findImports(<string>globalInfo.module);
+  }
+  // Loop through the modules functions
+  for (let i = 0; i < subModule.getNumFunctions(); i++) {
+    const funcInfo = binaryen.getFunctionInfo(subModule.getFunctionByIndex(i));
+    findImports(<string>funcInfo.module);
+  }
   // Mark this file as found
   if (!entry) {
     const dep = <Dependency>dependencyGraph.get(modulePath);
     dep.found = true;
-    dep.ast_body = <Module>ast.body[0];
     dep.binaryen_module = subModule;
-    // Map Exports to there global values
-    const exports = (<Module>ast.body[0]).fields.filter(n => n.type == 'ModuleExport');
-    exports.forEach((exportNode) => {
-      const { name:exportName, descr } = <ModuleExport>exportNode;
-      if (!exportName.startsWith('BRISK$EXPORT$')) return;
-      dep.exports.set(exportName, descr.id.value);
-    });
-    imports.forEach((moduleNode) => {
-      const { name:importName, module:moduleName } = <ModuleImport>moduleNode;
-      if (!moduleName.startsWith('GRAIN$MODULE$')) return;
-      const absolutePath = path.resolve(path.join(location.dir, `${moduleName.slice('GRAIN$MODULE$'.length)}.wasm`));
-      dep.imports.set(importName, absolutePath);
-    });
-    // TODO: set the files this depends on
     dependencyGraph.set(modulePath, dep);
   } else {
-    const moduleImports: Map<string, string> = new Map();
-    imports.forEach((moduleNode) => {
-      const { name:importName, module:moduleName } = <ModuleImport>moduleNode;
-      if (!moduleName.startsWith('GRAIN$MODULE$')) return;
-      const absolutePath = path.resolve(path.join(location.dir, `${moduleName.slice('GRAIN$MODULE$'.length)}.wasm`));
-      moduleImports.set(importName, absolutePath);
-    });
     dependencyGraph.set(modulePath, {
       entry: true,
       found: true,
       file: modulePath,
       location: location,
-      imported: new Set(),
-      exports: new Map(),
-      imports: moduleImports,
       importance: 0,
-      ast_body: <Module>ast.body[0],
       binaryen_module: subModule
     });
   }
@@ -133,7 +103,7 @@ const analyzeFile = (location: path.ParsedPath, subModule: binaryen.Module, depe
     [...dependencyGraph.values()].forEach((depImport) => {
       if (depImport.found) return;
       if (!fs.existsSync(depImport.file))
-        BriskError(`File: ${depImport.file}, not found when linking`);
+        BriskLinkerError(`could not resolve ${depImport.file}`);
       // Load the file
       const wasm = fs.readFileSync(depImport.file);
       // Analyze the file
@@ -149,33 +119,49 @@ const namespaceBody = (
   dependency: Dependency,
   linked: { [key: string]: localMap },
   locals: localMap,
-  expression: binaryen.ExpressionRef
+  expression: binaryen.ExpressionRef,
+  exports: localMap
 ): binaryen.ExpressionRef => {
   const depModule = <binaryen.Module>dependency.binaryen_module;
-  const namespace = (module: binaryen.Module, linked: { [key: string]: localMap }, locals: localMap, expression: binaryen.ExpressionRef): binaryen.ExpressionRef => {
+  const namespace = (expression: binaryen.ExpressionRef): binaryen.ExpressionRef => {
     const expressionInfo = binaryen.getExpressionInfo(expression);
     // @ts-ignore
     const expressionIdName = Object.keys(binaryen.ExpressionIds)[expressionInfo.id];
     switch(expressionIdName) {
       case 'Invalid':
-        BriskError('Invalid expression');
+        BriskLinkerError('Invalid wasm expression');
         break;
       case 'Block':
-        return module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map((exp) => namespace(module, linked, locals, exp)));
+        return module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map(namespace));
       case 'If':
-        break;
+        return module.if(
+          namespace((<binaryen.IfInfo>expressionInfo).condition),
+          namespace((<binaryen.IfInfo>expressionInfo).ifTrue),
+          namespace((<binaryen.IfInfo>expressionInfo).ifFalse),
+        );
       case 'Loop':
-        break;
+        return module.loop(
+          (<binaryen.LoopInfo>expressionInfo).name, //TODO: map name
+          namespace((<binaryen.LoopInfo>expressionInfo).body)
+        );
       case 'Break':
-        break;
+        return module.br(
+          (<binaryen.BreakInfo>expressionInfo).name, //TODO: map name
+          namespace((<binaryen.BreakInfo>expressionInfo).condition),
+          namespace((<binaryen.BreakInfo>expressionInfo).value)
+        );
       case 'Switch':
-        break;
+        return module.switch(
+          (<binaryen.SwitchInfo>expressionInfo).names, //TODO: map name
+          <string>(<binaryen.SwitchInfo>expressionInfo).defaultName,
+          namespace((<binaryen.SwitchInfo>expressionInfo).condition),
+          namespace((<binaryen.SwitchInfo>expressionInfo).value)
+        );
       case 'Call': {
-        // TODO: Map the call name
         const callInfo = <binaryen.CallInfo>expressionInfo;
         return module.call(
-          callInfo.target,
-          callInfo.operands.map((exp) => namespace(module, linked, locals, exp)),
+          callInfo.target, //TODO: map call name
+          callInfo.operands.map(namespace),
           callInfo.type
         );
       }
@@ -184,25 +170,26 @@ const namespaceBody = (
         const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
         return module.call_indirect(
           'functions', //TODO: make this dynamic
-          namespace(module, linked, locals, callInfo.target), //TODO: map the target
-          callInfo.operands.map((exp) => namespace(module, linked, locals, exp)),
+          namespace(callInfo.target), //TODO: map the target
+          callInfo.operands.map((exp) => namespace(exp)),
           binaryen.createType(callInfo.operands.map((exp) => binaryen.getExpressionType(exp))), //TODO: find a more direct way to determine this
           callInfo.type
         );
       }
       case 'LocalSet':
-        // Add support for tee sets
-        return module.local.set((<binaryen.LocalSetInfo>expressionInfo).index, namespace(module, linked, locals, (<binaryen.LocalSetInfo>expressionInfo).value));
+        if ((<binaryen.LocalSetInfo>expressionInfo).isTee) {
+          return module.local.tee((<binaryen.LocalSetInfo>expressionInfo).index, namespace((<binaryen.LocalSetInfo>expressionInfo).value), (<binaryen.LocalSetInfo>expressionInfo).type);
+        } else {
+          return module.local.set((<binaryen.LocalSetInfo>expressionInfo).index, namespace((<binaryen.LocalSetInfo>expressionInfo).value));
+        }
       case 'GlobalGet': {
-        // TODO: Debug this
         const globalInfo = <binaryen.GlobalGetInfo>expressionInfo;
         const _globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(globalInfo.name));
         if (_globalInfo.module == '') {
-          // TODO: test local mapping
           // add local mapping
           if (locals.globals.has(globalInfo.name)) {
             return module.global.get(<string>locals.globals.get(globalInfo.name), globalInfo.type);
-          } else BriskError(`Unknown Local Global: ${globalInfo.name}, Linker`);
+          } else BriskLinkerError(`Unknown Local Global: ${globalInfo.name}`);
         } else {
           // add linking
           const absolutePath = path.resolve(
@@ -210,28 +197,28 @@ const namespaceBody = (
           );
           if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
             return module.global.get(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), globalInfo.type);
-          } else BriskError(`module: ${absolutePath} could not be resolved, Linker`);
+          } else BriskLinkerError(`could not resolve global ${_globalInfo.base} in ${absolutePath}`); //TODO: add linking error
         }
         break;
       }
       case 'GlobalSet': {
-        // TODO: Add Mapping, testing, make sure this part works
         const globalInfo = <binaryen.GlobalSetInfo>expressionInfo;
         const _globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(globalInfo.name));
-        if (_globalInfo.module == '') {
-          // TODO: test local mapping
+        if (exports.globals.has(_globalInfo.name)) {
+          return module.global.set(<string>exports.globals.get(_globalInfo.name), namespace(globalInfo.value));
+        } if (_globalInfo.module == '') {
           // add local mapping
           if (locals.globals.has(globalInfo.name)) {
-            return module.global.set(<string>locals.globals.get(globalInfo.name), namespace(module, linked, locals, globalInfo.value));
-          } else BriskError(`Unknown Local Global: ${globalInfo.name}, Linker`);
+            return module.global.set(<string>locals.globals.get(globalInfo.name), namespace(globalInfo.value));
+          } else BriskLinkerError(`Unknown Local Global: ${globalInfo.name}`);
         } else {
           // add linking
           const absolutePath = path.resolve(
             path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('GRAIN$MODULE$'.length)}.wasm`)
           );
           if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
-            return module.global.set(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), namespace(module, linked, locals, globalInfo.value));
-          } else BriskError(`module: ${absolutePath} could not be resolved, Linker`);
+            return module.global.set(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), namespace(globalInfo.value));
+          } else BriskLinkerError(`could not resolve module ${absolutePath}`);
         }
         break;
       }
@@ -242,16 +229,16 @@ const namespaceBody = (
           return module.i32.load(
             loadInfo.offset,
             loadInfo.align,
-            namespace(module, linked, locals, loadInfo.ptr)
+            namespace(loadInfo.ptr)
           );
         } else if (loadInfo.bytes == 8 && !loadInfo.isAtomic) {
           return module.i64.load(
             loadInfo.offset,
             loadInfo.align,
-            namespace(module, linked, locals, loadInfo.ptr)
+            namespace(loadInfo.ptr)
           );
         } else {
-          BriskError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+          BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
         }
         break;
       }
@@ -262,42 +249,45 @@ const namespaceBody = (
           return module.i32.store(
             storeInfo.offset,
             storeInfo.align,
-            namespace(module, linked, locals, storeInfo.ptr),
-            namespace(module, linked, locals, storeInfo.value)
+            namespace(storeInfo.ptr),
+            namespace(storeInfo.value)
           );
         } else if (storeInfo.bytes == 8 && !storeInfo.isAtomic) {
           return module.i64.store(
             storeInfo.offset,
             storeInfo.align,
-            namespace(module, linked, locals, storeInfo.ptr),
-            namespace(module, linked, locals, storeInfo.value)
+            namespace(storeInfo.ptr),
+            namespace(storeInfo.value)
           );
         } else {
-          BriskError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+          BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
         }
         break;
       }
-      // TODO:
       case 'MemoryCopy':
-        break;
+        return module.memory.copy(
+          namespace((<binaryen.MemoryCopyInfo>expressionInfo).dest),
+          namespace((<binaryen.MemoryCopyInfo>expressionInfo).source),
+          namespace((<binaryen.MemoryCopyInfo>expressionInfo).size)
+        );
       case 'MemoryFill':
-        break;
-      case 'Unary':
-        break;
-      case 'Binary':
-        break;
+        return module.memory.fill(
+          namespace((<binaryen.MemoryFillInfo>expressionInfo).dest),
+          namespace((<binaryen.MemoryFillInfo>expressionInfo).value),
+          namespace((<binaryen.MemoryFillInfo>expressionInfo).size)
+        );
       case 'Select':
-        break;
+        return module.select(
+          namespace((<binaryen.SelectInfo>expressionInfo).condition),
+          namespace((<binaryen.SelectInfo>expressionInfo).ifTrue),
+          namespace((<binaryen.SelectInfo>expressionInfo).ifFalse)
+        );
       case 'Drop':
-        return module.drop(namespace(module, linked, locals, (<binaryen.DropInfo>expressionInfo).value));
+        return module.drop(namespace((<binaryen.DropInfo>expressionInfo).value));
       case 'Return':
-        return module.return(namespace(module, linked, locals, (<binaryen.ReturnInfo>expressionInfo).value));
+        return module.return(namespace((<binaryen.ReturnInfo>expressionInfo).value));
       case 'MemoryGrow':
-        break;
-      case 'TupleMake':
-        break;
-      case 'TupleExtract':
-        break;
+        return module.memory.grow(namespace((<binaryen.MemoryGrowInfo>expressionInfo).delta));
       // Ignore these
       case 'Nop':
       case 'MemorySize':
@@ -305,58 +295,19 @@ const namespaceBody = (
       case 'Const':
       case 'LocalGet':
         return expression;
-      // Fail if we find these
-      // case 'AtomicRMW':
-      // case 'AtomicCmpxchg':
-      // case 'AtomicWait':
-      // case 'AtomicNotify':
-      // case 'AtomicFence':
-      // case 'SIMDExtract':
-      // case 'SIMDReplace':
-      // case 'SIMDShuffle':
-      // case 'SIMDTernary':
-      // case 'SIMDShift':
-      // case 'SIMDLoad':
-      // case 'MemoryInit':
-      // case 'DataDrop':
-      // case 'Pop':
-      // case 'RefNull':
-      // case 'RefIsNull':
-      // case 'RefFunc':
-      // case 'RefEq':
-      // case 'Try':
-      // case 'Throw':
-      // case 'Rethrow':
-      // case 'I31New':
-      // case 'I31Get':
-      // case 'CallRef':
-      // case 'RefTest':
-      // case 'RefCast':
-      // case 'BrOnCast':
-      // case 'BrOnExn':
-      // case 'RttCanon':
-      // case 'RttSub':
-      // case 'StructNew':
-      // case 'StructGet':
-      // case 'StructSet':
-      // case 'ArrayNew':
-      // case 'ArrayGet':
-      // case 'ArraySet':
-      // case 'ArrayLen':
+      // Fail if we find anything we do not recognize
       default:
-        BriskError(`Linking is not yet implemented for wasm instruction: ${expressionIdName}`);
+        BriskLinkerError(`Linking is not yet implemented for wasm instruction: ${expressionIdName}`);
         break;
     }
-    console.log(expressionIdName);
+    BriskLinkerError(`Linking for wasm instruction ${expressionIdName} not yet implemented`, undefined, false);
     // Return the expression
     return expression;
   };
-  return namespace(module, linked, locals, expression);
+  return namespace(expression);
 };
 // Linker
 const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Module): binaryen.Module => {
-  // TODO: ----------------------------------------------------------------
-  // TODO: Perform Linking Step
   // TODO: Perform Mapping of function indexes
   // TODO: Merge wasmImports of the same type
   // TODO: inline all entry functions into one start function
@@ -364,7 +315,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   // TODO: Rewrite analyzer so it doesn't require an external parser
   // TODO: Analyze the file and generate a map then apply the map on the code while generating new code for merging
   // TODO: Add Type Checking
-  // TODO: ----------------------------------------------------------------
   // Initialize the new binaryen module
   const module = new binaryen.Module();
   // Enable Features
@@ -386,24 +336,23 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   const globals: wasmGlobal[] = [];
   const wasmImports: wasmImport[] = [];
   const linked: { [key: string]: localMap } = {};
-  for (const [ file, dependency ] of sortedGraph) {
+  for (const [ , dependency ] of sortedGraph) {
     linked[dependency.file] = { globals: new Map(), functions: new Map() };
     // Vars
     const locals: localMap = { globals: new Map(), functions: new Map() };
+    const exports: localMap = { globals: new Map(), functions: new Map() };
     // Analyze Files
-    console.log('=============================================================');
-    console.log(file);
-    console.log('v===========================================================v');
     const depModule = <binaryen.Module>dependency.binaryen_module;
     // Loop over exports
     for (let i = 0; i < depModule.getNumExports(); i++) {
       const exportInfo = binaryen.getExportInfo(depModule.getExportByIndex(i));
       switch(exportInfo.kind) {
-        case 3: {//Global
+        case 3: { //Global
           // Get Global Info
           const globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(exportInfo.value));
           // Add Linking
           linked[dependency.file].globals.set(exportInfo.name, `${globals.length}`);
+          exports.globals.set(globalInfo.name, `${globals.length}`);
           // Add Global
           globals.push({
             name: `${globals.length}`,
@@ -419,7 +368,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
         case 4: //Event
         default:
           // TODO: deal with the other types
-          // console.log(`Unkown Export Kind: ${exportInfo.kind}, Linker`);
           break;
       }
     }
@@ -503,11 +451,11 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
     // Map all the function body contents
     for (let index = OffsetStart; index < functions.length-OffsetStart; index++) {
       // Set The function Body
-      functions[index].body = namespaceBody(module, dependency, linked, locals, functions[index].body);
+      functions[index].body = namespaceBody(module, dependency, linked, locals, functions[index].body, exports);
     }
     // Map the entry function
     if (entry) {
-      entry.body = namespaceBody(module, dependency, linked, locals, entry.body);
+      entry.body = namespaceBody(module, dependency, linked, locals, entry.body, exports);
       modules.push(entry);
     }
   }
@@ -522,7 +470,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
         break;
       // Add support for other kinds of imports and merging imports
       default:
-        console.log('unknown import type');
+        BriskLinkerError(`Unknown Import Type ${(<wasmImport>Import).type}`);
         break;
     }
   }
@@ -539,7 +487,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   module.addActiveElementSegment('functions', 'functions', functions.map((func) => func.name), module.i32.const(0));
   // Add entry functions
   for (const { name, params, results, vars, body } of modules) {
-    // TODO: convert this into codegen for one module note that locals will need to be remapped completely
+    // TODO: only generate one module, note locals will need to be remapped
     module.addFunction(name, params, results, vars, body);
   }
   // Add the start function
@@ -548,11 +496,8 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   );
   module.addFunctionExport('_start', '_start');
   module.setStart(start);
-  // TODO: Optimize, and verify
   if (!module.validate()) module.validate();
   module.optimize();
-  // TODO: Type Check
-  // TODO: Optimize
   module.autoDrop();
   return module;
 };

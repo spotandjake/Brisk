@@ -2,12 +2,11 @@
 import gulp from 'gulp';
 import * as rollup from 'rollup';
 import rollupTypescript from '@rollup/plugin-typescript';
-import eslint from 'eslint';
+import eslint from 'gulp-eslint';
 import pkg from 'pkg';
 import { exec } from 'child_process';
-
 const rollup_input_options = {
-  external: [ 'path', 'fs', 'nearley', 'tslib', 'binaryen', '@webassemblyjs/wasm-parser' ],
+  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', 'yaml' ],
 };
 const rollup_output_options = {
   format: 'es',
