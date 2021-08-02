@@ -1,6 +1,6 @@
 // SpecVersion: 1.1.0
 interface BuildInfo {
-  SpecVersion: string;
+  SpecVersion: '1.1.0';
   LatestCompileDate: string;
   ProgramInfo: {
     [file: string]: {

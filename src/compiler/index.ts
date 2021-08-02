@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import TOML from '@iarna/toml';
-import { ProgramNode } from './Grammar/Types';
 import { BriskError } from './Helpers/Errors';
 import Parser from './Parser/Parser';
 import Analyzer from './Stages/Analyzer';
@@ -11,6 +10,9 @@ import TypeChecker from './Stages/BriskTypeChecker';
 import Optimizer from './Stages/Optimizer';
 import Codegen from './codegen/Codegen';
 import Linker from './Linker/Linker';
+// Type Imports
+import BuildInfoSchema from '../Schemas/BuildInfo';
+import { ProgramNode } from './Grammar/Types';
 
 interface CompilerOptions {
   wat?: boolean;
@@ -52,28 +54,50 @@ const compile = async (filename: string, options: CompilerOptions) => {
   const { analyzed, module:entry, deps, raw } = await compileFile(filename);
   // Link or return the non linked module
   if (options.link) {
-    // TODO: compare incremental build data with new data when generating
-    // TODO: add support for incremental building even within files, such as recompiling only a specific function instead of the entire file`
-    const files: Map<string, string> = new Map();
+    // Read Old Build Info If It Exists
+    const BuildInfo: BuildInfoSchema = <BuildInfoSchema><unknown>TOML.parse(
+      await fs.promises.readFile(path.join(filePath.dir, 'BriskBuildInfo.toml'), 'utf-8')
+    );
+    // Make The File For Incremental Build
+    const ProgramBuildInfo: BuildInfoSchema = {
+      SpecVersion: '1.1.0',
+      LatestCompileDate: date,
+      ProgramInfo: {}
+    };
+    // TODO: add support for deeper incremental building
     // Generate Wasm For Dependencies
     for (const dep of deps) {
+      // Set Props
+      const relativePath = path.relative(filePath.dir, dep);
+      // Check if the file is already compiled
+      if (ProgramBuildInfo.ProgramInfo[relativePath]) continue;
+      if (
+        BuildInfo.ProgramInfo.hasOwnProperty(relativePath) &&
+        fs.existsSync(dep.replace(/\.[^.]+$/, '.wasm'))
+      ) {
+        const rawContent = crypto.createHash('md5').update(await fs.promises.readFile(dep, 'utf-8'), 'utf8').digest('hex');
+        if (BuildInfo.ProgramInfo[relativePath].signature == rawContent) {
+          // Add the file to the BuildInfo
+          ProgramBuildInfo.ProgramInfo[relativePath] = {
+            signature: BuildInfo.ProgramInfo[relativePath].signature,
+            LatestCompileDate: BuildInfo.ProgramInfo[relativePath].LatestCompileDate
+          };
+          continue;
+        }
+      }
+      // Otherwise We Recompile it
       const { module, raw } = await compile(dep, { ...options, link: false });
-      files.set(raw.name, raw.content);
       await fs.promises.writeFile(dep.replace(/\.[^.]+$/, '.wasm'), module.emitBinary());
-    }
-    // Make The File For Incremental Build
-    const ProgramInfo: { [key: string]: { signature: string; LatestCompileDate: string; } } = {};
-    for (const [ fileName, fileContent ] of files) {
-      ProgramInfo[path.relative(filePath.dir, fileName)] = {
-        signature: crypto.createHash('md5').update(fileContent, 'utf8').digest('hex'),
+      // Add the file to the BuildInfo
+      ProgramBuildInfo.ProgramInfo[relativePath] = {
+        signature: crypto.createHash('md5').update(raw.content, 'utf8').digest('hex'),
         LatestCompileDate: date
       };
     }
-    await fs.promises.writeFile(path.join(filePath.dir, 'BriskBuildInfo.toml'), TOML.stringify({
-      SpecVersion: '1.1.0',
-      LatestCompileDate: date,
-      ProgramInfo: ProgramInfo
-    }));
+    await fs.promises.writeFile(
+      path.join(filePath.dir, 'BriskBuildInfo.toml'),
+      TOML.stringify(<TOML.JsonMap><unknown>ProgramBuildInfo)
+    );
     // Return Linked
     return { module: Linker(analyzed.position.file, entry), raw: raw };
   } else return { module: entry, raw: raw };
