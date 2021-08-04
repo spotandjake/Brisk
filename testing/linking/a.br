@@ -5,11 +5,27 @@ import b from './b.br';
 import b_function from './b.br';
 import b_function_2 from './b.br';
 let a: Function = (): Void => {
-  print(01);
+  print(12345);
 };
-print(4);
-print(b);
-print(c);
+// print(4);
+// print(b);
+// print(c);
 a();
 b_function();
 b_function_2();
+
+// 12 -> b1 -> 0
+// 12345 -> b3 -> 1
+// 123 -> b2 -> 2
+// 1234 -> a1 -> 3
+
+
+// Determine why my function calls are still not lining up
+// When i import c in b it breaks
+
+// C
+// 0
+// B
+// 3
+// A
+// 1

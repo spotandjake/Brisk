@@ -264,6 +264,19 @@ const namespaceBody = (
         }
         break;
       }
+      case 'Binary': {
+        const binaryInfo = (<binaryen.BinaryInfo>expressionInfo);
+        //@ts-ignore
+        const operationType = Object.keys(binaryen.Operations)[binaryInfo.op+60];
+        switch(operationType) {
+          case 'AddInt32':
+            return module.i32.add(binaryInfo.left, binaryInfo.right);
+          default:
+            BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
+            break;
+        }
+        break;
+      }
       case 'MemoryCopy':
         return module.memory.copy(
           namespace((<binaryen.MemoryCopyInfo>expressionInfo).dest),
@@ -321,7 +334,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   // Optimization settings
   binaryen.setShrinkLevel(3);
   binaryen.setFlexibleInlineMaxSize(3);
-  binaryen.setOneCallerInlineMaxSize(100);
+  // binaryen.setOneCallerInlineMaxSize(100);
   // Analyze Files
   const dependencyGraph = analyzeFile(<path.ParsedPath>location, mainModule, new Map(), true);
   // Sort the dependencyGraph
@@ -333,6 +346,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   const globals: wasmGlobal[] = [];
   const wasmImports: wasmImport[] = [];
   const linked: { [key: string]: localMap } = {};
+  let functionTableOffset = 0;
   for (const [ , dependency ] of sortedGraph) {
     linked[dependency.file] = { globals: new Map(), functions: new Map() };
     // Vars
@@ -379,7 +393,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           name: `${globals.length}`,
           type: globalInfo.type,
           mutable: globalInfo.mutable,
-          init: globalInfo.init
+          init: globalInfo.name == 'moduleId' ? module.i32.const(functionTableOffset) : globalInfo.init
         });
       } else if (!(<string>globalInfo.module).startsWith('GRAIN$MODULE$')){
         wasmImports.push({
@@ -453,6 +467,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
       entry.body = namespaceBody(module, dependency, linked, locals, entry.body, exports);
       modules.push(entry);
     }
+    functionTableOffset += functions.length;
   }
   // Add Imports
   for (const Import of wasmImports) {

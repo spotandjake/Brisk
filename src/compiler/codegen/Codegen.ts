@@ -109,6 +109,8 @@ class Compiler {
     module.setFeatures(binaryen.Features.MutableGlobals);
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
+    // Add our module id global
+    module.addGlobal('moduleId', binaryen.i32, false, module.i32.const(0));
     // Optimization settings
     binaryen.setShrinkLevel(3);
     binaryen.setFlexibleInlineMaxSize(3);
@@ -165,7 +167,7 @@ class Compiler {
       case 'functionNode': {
         const { dataType, variables, parameters, body } = Node;
         // Allocate Space for our data
-        const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 3);
+        const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 4);
         functionBody.push(...AllocationCode);
         // Make the closure
         const closurePointers = Object.keys(variables.closure).map((name: string) => {
@@ -226,7 +228,7 @@ class Compiler {
           parameters.length != 0
         ) module.optimizeFunction(func);
         // Store the function
-        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), closurePtr ], AllocationPtr);
+        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('moduleId', binaryen.i32), closurePtr ], AllocationPtr);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
@@ -254,8 +256,11 @@ class Compiler {
           const funcPtr = vars.has(Node.identifier) ? module.local.get(<number>vars.get(Node.identifier), binaryen.i32) : module.global.get(`${globals.get(Node.identifier)}`, binaryen.i32);
           wasm = module.call_indirect(
             'functions',
-            module.i32.load(12, 0, module.copyExpression(funcPtr)),
-            [ module.i32.load(16, 0, module.copyExpression(funcPtr)), paramPtr ],
+            module.i32.add(
+              module.i32.load(12, 0, module.copyExpression(funcPtr)),
+              module.i32.load(16, 0, module.copyExpression(funcPtr))
+            ),
+            [ module.i32.load(20, 0, module.copyExpression(funcPtr)), paramPtr ],
             paramType, binaryen.i32
           );
         } else BriskError(`Unknown Function: ${Node.identifier}`, Node.position);
