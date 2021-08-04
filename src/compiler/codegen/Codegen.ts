@@ -110,7 +110,7 @@ class Compiler {
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
     // Add our module id global
-    module.addGlobal('moduleId', binaryen.i32, false, module.i32.const(0));
+    module.addGlobal('FunctionTableOffset', binaryen.i32, true, module.i32.const(0));
     // Optimization settings
     binaryen.setShrinkLevel(3);
     binaryen.setFlexibleInlineMaxSize(3);
@@ -156,11 +156,10 @@ class Compiler {
         const stack = variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
-        const start = module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
+        module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
           module.block(null, functionBody)
         );
         // module.optimizeFunction(start);
-        module.setStart(start);
         module.addFunctionExport('_start', '_start');
         break;
       }
@@ -228,7 +227,7 @@ class Compiler {
           parameters.length != 0
         ) module.optimizeFunction(func);
         // Store the function
-        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('moduleId', binaryen.i32), closurePtr ], AllocationPtr);
+        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
         functions.push(name);
         functionBody.push(...code);
         return ptr;

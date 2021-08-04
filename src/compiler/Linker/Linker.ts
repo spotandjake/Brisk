@@ -166,11 +166,10 @@ const namespaceBody = (
         );
       }
       case 'CallIndirect': {
-        // TODO: Map the index
         const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
         return module.call_indirect(
-          'functions', //TODO: make this dynamic
-          namespace(callInfo.target), //TODO: map the target
+          'functions',
+          namespace(callInfo.target),
           callInfo.operands.map((exp) => namespace(exp)),
           binaryen.createType(callInfo.operands.map((exp) => binaryen.getExpressionType(exp))), //TODO: find a more direct way to determine this
           callInfo.type
@@ -270,7 +269,7 @@ const namespaceBody = (
         const operationType = Object.keys(binaryen.Operations)[binaryInfo.op+60];
         switch(operationType) {
           case 'AddInt32':
-            return module.i32.add(binaryInfo.left, binaryInfo.right);
+            return module.i32.add(namespace(binaryInfo.left), namespace(binaryInfo.right));
           default:
             BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
             break;
@@ -321,7 +320,6 @@ const namespaceBody = (
 };
 // Linker
 const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Module): binaryen.Module => {
-  // TODO: Perform Mapping of function indexes
   // TODO: Merge wasmImports of the same type
   // TODO: inline all entry functions into one start function
   // TODO: Rewrite this over again so it is simpler
@@ -393,7 +391,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           name: `${globals.length}`,
           type: globalInfo.type,
           mutable: globalInfo.mutable,
-          init: globalInfo.name == 'moduleId' ? module.i32.const(functionTableOffset) : globalInfo.init
+          init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(functionTableOffset) : globalInfo.init
         });
       } else if (!(<string>globalInfo.module).startsWith('GRAIN$MODULE$')){
         wasmImports.push({
@@ -500,11 +498,10 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
     module.addFunction(name, params, results, vars, body);
   }
   // Add the start function
-  const start = module.addFunction('_start', binaryen.none, binaryen.none, [], 
+  module.addFunction('_start', binaryen.none, binaryen.none, [], 
     module.block(null, modules.map(({ name }) => module.call(name, [], binaryen.none)))
   );
   module.addFunctionExport('_start', '_start');
-  module.setStart(start);
   if (!module.validate()) module.validate();
   module.optimize();
   module.autoDrop();

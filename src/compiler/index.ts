@@ -55,9 +55,9 @@ const compile = async (filename: string, options: CompilerOptions) => {
   // Link or return the non linked module
   if (options.link) {
     // Read Old Build Info If It Exists
-    const BuildInfo: BuildInfoSchema = <BuildInfoSchema><unknown>TOML.parse(
+    const BuildInfo: BuildInfoSchema = fs.existsSync(path.join(filePath.dir, 'BriskBuildInfo.toml')) ? <BuildInfoSchema><unknown>TOML.parse(
       await fs.promises.readFile(path.join(filePath.dir, 'BriskBuildInfo.toml'), 'utf-8')
-    );
+    ) :  { SpecVersion: '1.1.0', LatestCompileDate: '', ProgramInfo: {} };
     // Make The File For Incremental Build
     const ProgramBuildInfo: BuildInfoSchema = {
       SpecVersion: '1.1.0',
