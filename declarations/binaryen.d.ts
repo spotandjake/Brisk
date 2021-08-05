@@ -1475,13 +1475,30 @@ declare namespace binaryen {
 
   function getExpressionId(expression: ExpressionRef): number;
   function getExpressionType(expression: ExpressionRef): Type;
-  function getExpressionInfo(expression: ExpressionRef): ExpressionInfo;
+  function getExpressionInfo(expression: ExpressionRef): ExprInfo;
 
   interface MemorySegmentInfo {
     offset: ExpressionRef;
     data: Uint8Array;
     passive: boolean;
   }
+  type ExprInfo =
+    BlockInfo          | IfInfo              | LoopInfo          |
+    BreakInfo          | SwitchInfo          | CallInfo          |
+    CallIndirectInfo   | LocalGetInfo        | LocalSetInfo      |
+    GlobalGetInfo      | GlobalSetInfo       | LoadInfo          |
+    StoreInfo          | ConstInfo           | UnaryInfo         |
+    BinaryInfo         | SelectInfo          | ReturnInfo        |
+    DropInfo           | NopInfo             | UnreachableInfo   |
+    HostInfo           | AtomicRMWInfo       | AtomicCmpxchgInfo |
+    AtomicWaitInfo     | AtomicNotifyInfo    | SIMDExtractInfo   |
+    AtomicFenceInfo    | SIMDReplaceInfo     | SIMDShuffleInfo   |
+    SIMDTernaryInfo    | SIMDShiftInfo       | SIMDLoadInfo      |
+    MemoryInitInfo     | MemoryDropInfo      | MemoryFillInfo    |
+    RefNullInfo        | RefIsNullInfo       | MemoryGrowInfo    |
+    RefFuncInfo        | TryInfo             | ThrowInfo         |
+    RethrowInfo        | BrOnExnInfo         | PopInfo           |
+    PushInfo           | TupleMakeInfo
 
   interface ExpressionInfo {
     id: ExpressionIds;

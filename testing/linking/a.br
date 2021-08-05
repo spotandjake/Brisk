@@ -1,10 +1,10 @@
 import wasm print: (i32) -> Void from 'env';
 // import wasm ShowMemory: () -> Void from 'env';
 // import wasm printraw: (i32) -> Void from 'env';
-import c from './c.br';
-import b from './b.br';
-import b_function from './b.br';
-import b_function_2 from './b.br';
+// import c from './c.br';
+// import b from './b.br';
+// import b_function from './b.br';
+// import b_function_2 from './b.br';
 let a: Function = (): Void => {
   print(12345);
 };
@@ -19,8 +19,8 @@ let a: Function = (): Void => {
 // print(memLoad(a, 12));
 // print(memLoad(a, 16));
 a();
-b_function();
-b_function_2();
+// b_function();
+// b_function_2();
 
 // 12 -> b1 -> 0
 // 12345 -> b3 -> 1
