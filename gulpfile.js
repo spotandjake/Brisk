@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import fs from 'fs';
+import crypto from 'crypto';
 import gulp from 'gulp';
 import * as rollup from 'rollup';
 import rollupTypescript from '@rollup/plugin-typescript';
+import { visualizer } from 'rollup-plugin-visualizer';
+import progress from 'rollup-plugin-progress';
 import eslint from 'gulp-eslint';
 import pkg from 'pkg';
 import { exec } from 'child_process';
+const rollup_plugins = [
+  rollupTypescript(),
+  progress(),
+  visualizer(),
+];
 const rollup_input_options = {
   external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml' ],
 };
@@ -21,33 +30,38 @@ gulp.task('build', async () => {
   // Compile TypeScript
   const bundle = await rollup.rollup({
     input: './src/cli/index.ts',
-    plugins: [
-      rollupTypescript()
-    ],
+    plugins: rollup_plugins,
     ...rollup_input_options
   });
-
-  await bundle.write({
+  // Generate Checksum
+  const { output:[outputCode] }= await bundle.generate({
     file: './dist/brisk.js',
     name: 'brisk',
     ...rollup_output_options
   });
+  let code = outputCode.code;
+  // Replace Compile Time Values
+  code = code.replaceAll('BRISK$CHECKSUM', crypto.createHash('md5').update(code, 'utf8').digest('hex'));
+  code = code.replaceAll('BRISK$COMPILEDATE', new Date().toDateString());
+  // Write File
+  await fs.promises.writeFile('./dist/brisk.js', code);
+  // Write Source Map
+  await fs.promises.writeFile('./dist/brisk.js.map', JSON.stringify(outputCode.map));
 });
 gulp.task('build-tests', async () => {
   // Compile TypeScript
   const bundle = await rollup.rollup({
     input: './src/unit testing/index.ts',
-    plugins: [
-      rollupTypescript()
-    ],
+    plugins: rollup_plugins,
     ...rollup_input_options
   });
-
   await bundle.write({
     file: './dist/brisk-tests.js',
     name: 'brisk-tests',
     ...rollup_output_options
   });
+  // Make Checksum
+  // Write File
 });
 gulp.task('lint', () => {
   return gulp.src(['src/**/*.{js,ts,json}'])

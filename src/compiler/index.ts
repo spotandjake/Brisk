@@ -3,6 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 import TOML from '@iarna/toml';
 import { BriskError } from './Helpers/Errors';
+import Brisk from '../Brisk_Globals';
 import Parser from './Parser/Parser';
 import Analyzer from './Stages/Analyzer';
 import Verifier from './Stages/BriskVerifier';
@@ -11,7 +12,7 @@ import Optimizer from './Stages/Optimizer';
 import Codegen from './codegen/Codegen';
 import Linker from './Linker/Linker';
 // Type Imports
-import BuildInfoSchema from '../Schemas/BuildInfo';
+import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Schemas/BuildInfo';
 import { ProgramNode } from './Grammar/Types';
 
 interface CompilerOptions {
@@ -55,12 +56,17 @@ const compile = async (filename: string, options: CompilerOptions) => {
   // Link or return the non linked module
   if (options.link) {
     // Read Old Build Info If It Exists
-    const BuildInfo: BuildInfoSchema = fs.existsSync(path.join(filePath.dir, 'BriskBuildInfo.toml')) ? <BuildInfoSchema><unknown>TOML.parse(
+    let BuildInfo: BuildInfoSchema = fs.existsSync(path.join(filePath.dir, 'BriskBuildInfo.toml')) ? <BuildInfoSchema><unknown>TOML.parse(
       await fs.promises.readFile(path.join(filePath.dir, 'BriskBuildInfo.toml'), 'utf-8')
-    ) :  { SpecVersion: '1.1.0', LatestCompileDate: '', ProgramInfo: {} };
+    ) : BuildInfoTemplate;
+    if (BuildInfo.SpecVersion != BuildInfoSpecVersion) BuildInfo = BuildInfoTemplate;
     // Make The File For Incremental Build
     const ProgramBuildInfo: BuildInfoSchema = {
-      SpecVersion: '1.1.0',
+      SpecVersion: BuildInfoSpecVersion,
+      CompilerVersion: {
+        CheckSum: Brisk.Checksum,
+        CompiledDate: Brisk.CompileDate
+      },
       LatestCompileDate: date,
       ProgramInfo: {}
     };
@@ -73,6 +79,7 @@ const compile = async (filename: string, options: CompilerOptions) => {
       if (ProgramBuildInfo.ProgramInfo[relativePath]) continue;
       if (
         BuildInfo.ProgramInfo.hasOwnProperty(relativePath) &&
+        BuildInfo.CompilerVersion.CheckSum == Brisk.Checksum &&
         fs.existsSync(dep.replace(/\.[^.]+$/, '.wasm'))
       ) {
         const rawContent = crypto.createHash('md5').update(await fs.promises.readFile(dep, 'utf-8'), 'utf8').digest('hex');

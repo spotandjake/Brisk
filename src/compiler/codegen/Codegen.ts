@@ -331,18 +331,16 @@ class Compiler {
         break;
       }
       case 'importWasmStatement': {
-        // TODO: add support in both linker and here for importing foreign globals
-        //@ts-ignore
-        if (!Node.dataType?.params)
+        if (!(<FunctionTypeNode>Node.dataType)?.params)
           BriskError('Wasm Import Type Must be a Function', Node.position);
         module.addFunctionImport(
           Node.identifier,
           Node.path,
           Node.identifier,
           binaryen.createType(
-            (Node.dataType as FunctionTypeNode).params.map((param: any) => param.result == 'Void' ? binaryen.none : binaryen.i32)
+            (<FunctionTypeNode>Node.dataType).params.map(param => (<FunctionTypeNode>param).result == 'Void' ? binaryen.none : binaryen.i32)
           ),
-          (Node.dataType as FunctionTypeNode).result == 'Void' ? binaryen.none : binaryen.i32
+          (<FunctionTypeNode>Node.dataType).result == 'Void' ? binaryen.none : binaryen.i32
         );
         nativeImports.set(Node.identifier, Node.dataType);
         break;
