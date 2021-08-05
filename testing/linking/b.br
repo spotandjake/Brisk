@@ -1,0 +1,18 @@
+import wasm print: (i32) -> Void from 'env';
+import c from './c.br';
+// print(c);
+let b: Number = 2;
+let a: Function = (): Void => {
+  print(12);
+};
+a();
+// print(b);
+let b_function: Function = (): Void => {
+  print(123);
+};
+let b_function_2: Function = (): Void => {
+  print(1234);
+};
+export b;
+export b_function;
+export b_function_2;

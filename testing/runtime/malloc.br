@@ -1,0 +1,4 @@
+let malloc: Function = (size: Number): Number => {
+  return(1);
+};
+export malloc;

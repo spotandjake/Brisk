@@ -9,7 +9,7 @@ import {
 } from '../Grammar/Types';
 
 const TypeChecker = (Program: Program) => {
-  // TODO: type check with imports, TypeCheck Function Calls
+  // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
@@ -19,8 +19,10 @@ const TypeChecker = (Program: Program) => {
       case 'variable':
       case 'callStatement': 
       case 'importWasmStatement':
+      case 'importStatement':
       case 'functionNode':
       case 'commentStatement':
+      case 'exportStatement':
         break;
       // Type Check These
       case 'declarationStatement': {
@@ -36,7 +38,7 @@ const TypeChecker = (Program: Program) => {
           case 'callStatement': {
             //@ts-ignore
             const value = Parent.variables.readGet(Node.value.identifier);
-            if (value.type && value.type == 'Function') {
+            if (value && value.type && value.type == 'Function') {
               if (value.result != wanted) BriskTypeError(`expected ${wanted} got ${value.result}`, Node.position);
               Node.value.arguments.forEach((arg, index: number) => {
                 if (
@@ -68,6 +70,7 @@ const TypeChecker = (Program: Program) => {
       }
       // Log These
       default:
+        console.log('Unknown Node TypeChecker');
         console.log(Node);
         break;
     }

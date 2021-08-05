@@ -1,4 +1,6 @@
+import a from './print.br';
 import wasm print: (i32) -> Void from 'env';
+print(a);
 // import wasm fd_write: (i32, Number, Number, Number) -> Number from 'wasi_unstable';
 // import print from 'env';
 // Add support for Rationals
@@ -44,11 +46,13 @@ import wasm print: (i32) -> Void from 'env';
 //   // printNumber(index);
 //   print(index);
 // }, 0);
-let a: String = 'a';
-let b: String = 'b';
-let c: String = 'c';
-let d: String = 'd';
-let e: String = 'e';
-let f: String = 'f';
-let g: String = 'g';
-// export main;
+// let a: String = 'a';
+// let b: String = 'b';
+// let c: String = 'c';
+// let d: String = 'd';
+// let e: String = 'e';
+// let f: String = 'f';
+// let g: String = 'g';
+let b: String = 'String';
+print(b);
+export b;

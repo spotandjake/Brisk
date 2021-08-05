@@ -9,7 +9,8 @@ interface TableRow {
   type?: string;
   [ key: string ]: any;
 }
-const memoryView = (memory: any) => {
+let mem: WebAssembly.Memory;
+const memoryView = (memory: WebAssembly.Memory) => {
   const memArray = new Uint32Array(memory.buffer);
   // Generate A Pretty table
   const tableBody = [];
@@ -103,20 +104,25 @@ const memoryView = (memory: any) => {
   console.table(table);
 };
 const runtime = async (wasmFile: string) => {
-  const wasm = fs.readFileSync(wasmFile);
+  const wasm = await fs.promises.readFile(wasmFile);
   const result = await WebAssembly.instantiate(wasm, {
     env: {
-      print: (pointer: number) => console.log(pointer)
+      print: (pointer: number) => console.log(pointer),
+      ShowMemory: () => {
+        if (mem) {
+          console.log('================================================================');
+          memoryView(mem);
+        } else console.log('no memory export found');
+      }
     }
   });
+  mem = <WebAssembly.Memory>result.instance.exports.memory;
+  (<() => void>result.instance.exports._start)();
   if (result.instance.exports.memory) {
-    console.log('==============');
-    memoryView(result.instance.exports.memory);
+    console.log('================================================================');
+    memoryView(<WebAssembly.Memory>result.instance.exports.memory);
   }
-  return () => {
-    // @ts-ignore
-    result.instance.exports.run();
-  };
+  return;
 };
 // (memory (import "env" "memory") 1)
 

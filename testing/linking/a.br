@@ -1,0 +1,58 @@
+import wasm print: (i32) -> Void from 'env';
+// import wasm ShowMemory: () -> Void from 'env';
+// import wasm printraw: (i32) -> Void from 'env';
+import c from './c.br';
+import b from './b.br';
+import b_function from './b.br';
+import b_function_2 from './b.br';
+let a: Function = (): Void => {
+  print(12345);
+};
+// print(4);
+// print(b);
+// print(c);
+// print(b_function);
+// print(memLoad(b_function, 16));
+// print(memLoad(b_function, 20));
+// ShowMemory();
+// print(a);
+// print(memLoad(a, 12));
+// print(memLoad(a, 16));
+a();
+b_function();
+b_function_2();
+
+// 12 -> b1 -> 0
+// 12345 -> b3 -> 1
+// 123 -> b2 -> 2
+// 1234 -> a1 -> 3
+
+
+// Determine why my function calls are still not lining up
+// When i import c in b it breaks
+
+// C
+// 0
+// B
+// 3
+// A
+// 1
+
+// ================================ Working ================================
+// Table
+//  $0 $1 $2 $3
+// Memory
+// Module | Func            | index | offset
+// b      | a               | 0     | 0
+// b      | b_function      | 1     | 0
+// b      | b_function_2    | 2     | 0
+// a      | a               | 0     | 3
+// ============================== Not Working ==============================
+// Table
+// $0 $1 $2 $3
+// Memory
+// Module | Func            | index | offset
+// b      | a               | 0     | 0
+// b      | b_function      | 1     | 0
+// b      | b_function_2    | 2     | 0
+// a      | a               | 0     | 3

@@ -23,7 +23,7 @@ declare namespace binaryen {
   function createType(types: Type[]): Type;
   function expandType(type: Type): Type[];
 
-  const enum ExpressionIds {
+  enum ExpressionIds {
     Invalid,
     Block,
     If,
@@ -1407,6 +1407,8 @@ declare namespace binaryen {
     removeFunction(name: string): void;
     getNumFunctions(): number;
     getFunctionByIndex(index: number): FunctionRef;
+    getNumGlobals(): number;
+    getGlobalByIndex(index: number): GlobalRef;
     addGlobal(name: string, type: Type, mutable: boolean, init: ExpressionRef): GlobalRef;
     getGlobal(name: string): GlobalRef;
     removeGlobal(name: string): void;
@@ -1524,6 +1526,7 @@ declare namespace binaryen {
   interface CallIndirectInfo extends ExpressionInfo {
     isReturn: boolean;
     target: ExpressionRef;
+    table: TableRef;
     operands: ExpressionRef[];
   }
 
@@ -1699,6 +1702,10 @@ declare namespace binaryen {
     size: ExpressionRef;
   }
 
+  interface MemoryGrowInfo extends ExpressionInfo {
+    delta: ExpressionRef;
+  }
+
   interface RefNullInfo extends ExpressionInfo {
   }
 
@@ -1738,6 +1745,10 @@ declare namespace binaryen {
     value: ExpressionRef;
   }
 
+  interface TupleMakeInfo extends ExpressionInfo {
+    operands: ExpressionRef[];
+  }
+
   function getFunctionInfo(func: FunctionRef): FunctionInfo;
 
   interface FunctionInfo {
@@ -1759,6 +1770,15 @@ declare namespace binaryen {
     type: Type;
     mutable: boolean;
     init: ExpressionRef;
+  }
+
+  function getTableInfo(table: TableRef): TableInfo;
+  interface TableInfo {
+    name: string;
+    module: string;
+    base: string;
+    initial: string;
+    max: number|null;
   }
 
   function getExportInfo(export_: ExportRef): ExportInfo;

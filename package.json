@@ -1,10 +1,11 @@
 {
   "name": "brisk-cli",
-  "version": "0.0.2",
+  "version": "0.1.2",
   "description": "Brisk Command Line Interface",
   "main": "./cli/index.ts",
   "author": "spotandjake",
   "license": "Apache-2.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/spotandjake/Brisk.git"
@@ -27,6 +28,7 @@
     "lint": "gulp lint"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "binaryen": "^101.0.0",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",

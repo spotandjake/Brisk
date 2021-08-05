@@ -1,0 +1,2 @@
+let c: Number = 1;
+export c;

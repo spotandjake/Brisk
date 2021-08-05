@@ -1,11 +1,20 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const gulp = require('gulp');
-const rollup = require('rollup');
-const rollupTypescript = require('@rollup/plugin-typescript');
-const eslint = require('gulp-eslint');
-const pkg = require('pkg');
-const { exec } = require('child_process');
-
+import gulp from 'gulp';
+import * as rollup from 'rollup';
+import rollupTypescript from '@rollup/plugin-typescript';
+import eslint from 'gulp-eslint';
+import pkg from 'pkg';
+import { exec } from 'child_process';
+const rollup_input_options = {
+  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml' ],
+};
+const rollup_output_options = {
+  format: 'es',
+  compact: false,
+  sourcemap: true,
+  indent: '  ',
+  preferConst: true,
+};
 gulp.task('build', async () => {
   // Compile Nearley
   exec('nearleyc ./src/compiler/Grammar/Brisk.ne -o ./src/compiler/Grammar/Brisk.ts');
@@ -15,14 +24,13 @@ gulp.task('build', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'nearley', 'tslib', 'binaryen' ]
+    ...rollup_input_options
   });
 
   await bundle.write({
     file: './dist/brisk.js',
-    format: 'cjs',
     name: 'brisk',
-    sourcemap: true
+    ...rollup_output_options
   });
 });
 gulp.task('build-tests', async () => {
@@ -32,14 +40,13 @@ gulp.task('build-tests', async () => {
     plugins: [
       rollupTypescript()
     ],
-    external: [ 'path', 'fs', 'tslib', 'nearley' ]
+    ...rollup_input_options
   });
 
   await bundle.write({
     file: './dist/brisk-tests.js',
-    format: 'cjs',
     name: 'brisk-tests',
-    sourcemap: true
+    ...rollup_output_options
   });
 });
 gulp.task('lint', () => {
