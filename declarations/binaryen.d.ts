@@ -23,7 +23,7 @@ declare namespace binaryen {
   function createType(types: Type[]): Type;
   function expandType(type: Type): Type[];
 
-  const enum ExpressionIds {
+  enum ExpressionIds {
     Invalid,
     Block,
     If,

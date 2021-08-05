@@ -53,8 +53,8 @@ const analyzeFile = (location: path.ParsedPath, subModule: binaryen.Module, depe
   const modulePath = path.resolve(path.join(location.dir, `${location.name}.wasm`));
   const self = <Dependency>dependencyGraph.get(modulePath);
   const findImports = (base: string) => {
-    if (base.startsWith('GRAIN$MODULE$')) {
-      const absolutePath = path.resolve(path.join(location.dir, `${base.slice('GRAIN$MODULE$'.length)}.wasm`));
+    if (base.startsWith('BRISK$MODULE$')) {
+      const absolutePath = path.resolve(path.join(location.dir, `${base.slice('BRISK$MODULE$'.length)}.wasm`));
       // If we do not include this already then add it to our graph
       if (!dependencyGraph.has(absolutePath)) {
         dependencyGraph.set(absolutePath, {
@@ -125,7 +125,6 @@ const namespaceBody = (
   const depModule = <binaryen.Module>dependency.binaryen_module;
   const namespace = (expression: binaryen.ExpressionRef): binaryen.ExpressionRef => {
     const expressionInfo = binaryen.getExpressionInfo(expression);
-    // @ts-ignore
     const expressionIdName = Object.keys(binaryen.ExpressionIds)[expressionInfo.id];
     switch(expressionIdName) {
       case 'Invalid':
@@ -160,7 +159,7 @@ const namespaceBody = (
       case 'Call': {
         const callInfo = <binaryen.CallInfo>expressionInfo;
         return module.call(
-          callInfo.target, //TODO: map call name
+          locals.functions.has(callInfo.target) ? <string>locals.functions.get(callInfo.target) : callInfo.target,
           callInfo.operands.map(namespace),
           callInfo.type
         );
@@ -171,7 +170,7 @@ const namespaceBody = (
           'functions',
           namespace(callInfo.target),
           callInfo.operands.map((exp) => namespace(exp)),
-          binaryen.createType(callInfo.operands.map((exp) => binaryen.getExpressionType(exp))), //TODO: find a more direct way to determine this
+          binaryen.createType(callInfo.operands.map((exp) => binaryen.getExpressionType(exp))),
           callInfo.type
         );
       }
@@ -192,11 +191,11 @@ const namespaceBody = (
         } else {
           // add linking
           const absolutePath = path.resolve(
-            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('GRAIN$MODULE$'.length)}.wasm`)
+            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('BRISK$MODULE$'.length)}.wasm`)
           );
           if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
             return module.global.get(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), globalInfo.type);
-          } else BriskLinkerError(`could not resolve global ${_globalInfo.base} in ${absolutePath}`); //TODO: add linking error
+          } else BriskLinkerError(`could not resolve global ${_globalInfo.base} in ${absolutePath}`);
         }
         break;
       }
@@ -213,7 +212,7 @@ const namespaceBody = (
         } else {
           // add linking
           const absolutePath = path.resolve(
-            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('GRAIN$MODULE$'.length)}.wasm`)
+            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('BRISK$MODULE$'.length)}.wasm`)
           );
           if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
             return module.global.set(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), namespace(globalInfo.value));
@@ -321,7 +320,6 @@ const namespaceBody = (
 // Linker
 const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Module): binaryen.Module => {
   // TODO: Merge wasmImports of the same type
-  // TODO: inline all entry functions into one start function
   // TODO: Rewrite this over again so it is simpler
   // Initialize the new binaryen module
   const module = new binaryen.Module();
@@ -332,13 +330,11 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   // Optimization settings
   binaryen.setShrinkLevel(3);
   binaryen.setFlexibleInlineMaxSize(3);
-  // binaryen.setOneCallerInlineMaxSize(100);
+  binaryen.setOneCallerInlineMaxSize(100);
   // Analyze Files
   const dependencyGraph = analyzeFile(<path.ParsedPath>location, mainModule, new Map(), true);
   // Sort the dependencyGraph
   const sortedGraph = new Map([...dependencyGraph.entries()].sort((a, b) => b[1].importance - a[1].importance));
-  // TODO: Analyze files so we can create a map of everything, and then generate code
-  // TODO: Loop through all dependency's start making a list of globals, map imports and exports across files
   const functions: wasmFunction[] = [];
   const modules: wasmFunction[] = [];
   const globals: wasmGlobal[] = [];
@@ -393,7 +389,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           mutable: globalInfo.mutable,
           init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(functionTableOffset) : globalInfo.init
         });
-      } else if (!(<string>globalInfo.module).startsWith('GRAIN$MODULE$')){
+      } else if (!(<string>globalInfo.module).startsWith('BRISK$MODULE$')){
         wasmImports.push({
           type: 'GlobalImport',
           internalName: globalInfo.name, // TODO: remap the internal name
@@ -432,8 +428,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           vars: funcInfo.vars,
           body: funcInfo.body
         });
-      } else if ((<string>funcInfo.module).startsWith('GRAIN$MODULE$')) {
-        // TODO: Add to linking table
       } else {
         const importDefinition: wasmImport = {
           type: 'FunctionImport',
@@ -476,7 +470,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
       case 'GlobalImport':
         module.addGlobalImport(Import.internalName, Import.externalModuleName, Import.externalBaseName, Import.globalType);
         break;
-      // TODO: Add support for other kinds of imports and merging imports
       default:
         BriskLinkerError(`Unknown Import Type ${(<wasmImport>Import).type}`);
         break;
@@ -504,7 +497,6 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   module.addFunctionExport('_start', '_start');
   if (!module.validate()) module.validate();
   module.optimize();
-  module.autoDrop();
   return module;
 };
 export default Linker;
