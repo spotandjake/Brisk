@@ -13,7 +13,7 @@ import {
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
-// TODO: Move runtime into brisk, after adding a few stack only values that do not depend on malloc
+// TODO: Move runtime into brisk
 const runtime = (module: binaryen.Module) => {
   // _Malloc(Size: i32) -> i32
   // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
