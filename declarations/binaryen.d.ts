@@ -1520,33 +1520,28 @@ declare namespace binaryen {
     name: string;
     body: ExpressionRef;
   }
-
   interface BreakInfo extends ExpressionInfo {
     name: string;
     condition: ExpressionRef;
     value: ExpressionRef;
   }
-
   interface SwitchInfo extends ExpressionInfo {
     names: string[];
     defaultName: string | null;
     condition: ExpressionRef;
     value: ExpressionRef;
   }
-
   interface CallInfo extends ExpressionInfo {
     isReturn: boolean;
     target: string;
     operands: ExpressionRef[];
   }
-
   interface CallIndirectInfo extends ExpressionInfo {
     isReturn: boolean;
     target: ExpressionRef;
     table: TableRef;
     operands: ExpressionRef[];
   }
-
   interface LocalGetInfo extends ExpressionInfo {
     index: number;
   }

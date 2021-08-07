@@ -10,7 +10,7 @@ import Verifier from './Stages/BriskVerifier';
 import TypeChecker from './Stages/BriskTypeChecker';
 import Optimizer from './Stages/Optimizer';
 import Codegen from './codegen/Codegen';
-import Linker from './Linker/Linker';
+import Linker from './Linker/Linker-2'; // TODO: change name after finished rewriting
 // Type Imports
 import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Schemas/BuildInfo';
 import { ProgramNode } from './Grammar/Types';
@@ -93,7 +93,8 @@ const compile = async (filename: string, options: CompilerOptions) => {
         }
       }
       // Otherwise We Recompile it
-      const { module, raw } = await compile(dep, { ...options, link: false });
+      const { module, raw, deps:subDebs } = await compile(dep, { ...options, link: false });
+      deps.push(...subDebs);
       await fs.promises.writeFile(dep.replace(/\.[^.]+$/, '.wasm'), module.emitBinary());
       // Add the file to the BuildInfo
       ProgramBuildInfo.ProgramInfo[relativePath] = {
@@ -106,8 +107,8 @@ const compile = async (filename: string, options: CompilerOptions) => {
       TOML.stringify(<TOML.JsonMap><unknown>ProgramBuildInfo)
     );
     // Return Linked
-    return { module: Linker(analyzed.position.file, entry), raw: raw };
-  } else return { module: entry, raw: raw };
+    return { module: Linker(<path.ParsedPath>analyzed.position.file, entry), raw: raw, deps: deps };
+  } else return { module: entry, raw: raw, deps: deps };
 };
 const briskCompiler = async (filename: string, options: CompilerOptions) => {
   // Generate Actual Options

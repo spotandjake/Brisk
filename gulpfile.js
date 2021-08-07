@@ -43,6 +43,7 @@ gulp.task('build', async () => {
   // Replace Compile Time Values
   code = code.replaceAll('BRISK$CHECKSUM', crypto.createHash('md5').update(code, 'utf8').digest('hex'));
   code = code.replaceAll('BRISK$COMPILEDATE', new Date().toDateString());
+  code += '\n//# sourceMappingURL=brisk.js.map';
   // Write File
   await fs.promises.writeFile('./dist/brisk.js', code);
   // Write Source Map

@@ -136,7 +136,7 @@ const namespaceBody = (
         return module.if(
           namespace((<binaryen.IfInfo>expressionInfo).condition),
           namespace((<binaryen.IfInfo>expressionInfo).ifTrue),
-          namespace((<binaryen.IfInfo>expressionInfo).ifFalse),
+          (<binaryen.IfInfo>expressionInfo).ifFalse == 0 ? undefined : namespace((<binaryen.IfInfo>expressionInfo).ifFalse)
         );
       case 'Loop':
         return module.loop(
@@ -158,11 +158,23 @@ const namespaceBody = (
         );
       case 'Call': {
         const callInfo = <binaryen.CallInfo>expressionInfo;
-        return module.call(
-          locals.functions.has(callInfo.target) ? <string>locals.functions.get(callInfo.target) : callInfo.target,
-          callInfo.operands.map(namespace),
-          callInfo.type
-        );
+        const _callInfo = binaryen.getFunctionInfo(depModule.getFunction(callInfo.target));
+        let callName = callInfo.target;
+        if (_callInfo.module == '') {
+          if (locals.functions.has(callInfo.target))
+            callName = <string>locals.functions.get(callInfo.target);
+        } else {
+          const absolutePath = path.resolve(
+            path.join(
+              dependency.location.dir,
+              `${(<string>_callInfo.module).slice('BRISK$MODULE$'.length)}.wasm`
+            )
+          );
+          if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].functions.has(<string>_callInfo.base)) {
+            callName = <string>linked[absolutePath].functions.get(<string>_callInfo.base);
+          } else BriskLinkerError(`could not resolve function ${_callInfo.base} in ${absolutePath}`);
+        }
+        return module.call(callName, callInfo.operands.map(namespace), callInfo.type);
       }
       case 'CallIndirect': {
         const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
@@ -174,27 +186,26 @@ const namespaceBody = (
           callInfo.type
         );
       }
-      case 'LocalSet':
-        if ((<binaryen.LocalSetInfo>expressionInfo).isTee) {
-          return module.local.tee((<binaryen.LocalSetInfo>expressionInfo).index, namespace((<binaryen.LocalSetInfo>expressionInfo).value), (<binaryen.LocalSetInfo>expressionInfo).type);
-        } else {
-          return module.local.set((<binaryen.LocalSetInfo>expressionInfo).index, namespace((<binaryen.LocalSetInfo>expressionInfo).value));
-        }
+      case 'LocalSet': {
+        const { isTee, index:i, value:v, type } = <binaryen.LocalSetInfo>expressionInfo;
+        return isTee ? module.local.tee(i, namespace(v), type) : module.local.set(i, namespace(v));
+      }
       case 'GlobalGet': {
         const globalInfo = <binaryen.GlobalGetInfo>expressionInfo;
         const _globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(globalInfo.name));
         if (_globalInfo.module == '') {
           // add local mapping
-          if (locals.globals.has(globalInfo.name)) {
-            return module.global.get(<string>locals.globals.get(globalInfo.name), globalInfo.type);
-          } else BriskLinkerError(`Unknown Local Global: ${globalInfo.name}`);
+          if (!locals.globals.has(globalInfo.name))
+            BriskLinkerError(`Unknown Global: ${globalInfo.name}`);
+          const GlobalName = <string>locals.globals.get(globalInfo.name);
+          return module.global.get(GlobalName, globalInfo.type);
         } else {
-          // add linking
           const absolutePath = path.resolve(
             path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('BRISK$MODULE$'.length)}.wasm`)
           );
           if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
-            return module.global.get(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), globalInfo.type);
+            const GlobalName = <string>linked[absolutePath].globals.get(<string>_globalInfo.base);
+            return module.global.get(GlobalName, globalInfo.type);
           } else BriskLinkerError(`could not resolve global ${_globalInfo.base} in ${absolutePath}`);
         }
         break;
@@ -269,9 +280,12 @@ const namespaceBody = (
         switch(operationType) {
           case 'AddInt32':
             return module.i32.add(namespace(binaryInfo.left), namespace(binaryInfo.right));
+          case 'LeUInt32':
+            return module.i32.le_u(namespace(binaryInfo.left), namespace(binaryInfo.right));
+          case 'GeUInt32':
+            return module.i32.ge_u(namespace(binaryInfo.left), namespace(binaryInfo.right));
           default:
             BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
-            break;
         }
         break;
       }
@@ -311,7 +325,7 @@ const namespaceBody = (
         BriskLinkerError(`Linking is not yet implemented for wasm instruction: ${expressionIdName}`);
         break;
     }
-    BriskLinkerError(`Linking for wasm instruction ${expressionIdName} not yet implemented`, undefined, false);
+    BriskLinkerError(`Linking for wasm instruction ${expressionIdName} not yet fully implemented`, undefined, false);
     // Return the expression
     return expression;
   };
@@ -367,7 +381,24 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           });
           break;
         }
-        case 0: //Function
+        case 0: {
+          // Function
+          if (exportInfo.name == '_start') break;
+          // Get Function Info
+          const funcInfo = binaryen.getFunctionInfo(depModule.getFunction(exportInfo.value));
+          // Add Linking
+          linked[dependency.file].functions.set(exportInfo.name, `${functions.length}`);
+          exports.functions.set(funcInfo.name, `${functions.length}`); // TODO: i don't think this is correct
+          // Add Function
+          functions.push({
+            name: `${functions.length}`,
+            params: funcInfo.params,
+            results: funcInfo.results,
+            vars: funcInfo.vars,
+            body: namespaceBody(module, dependency, linked, locals, funcInfo.body, exports)
+          });
+          break;
+        }
         case 1: //Table
         case 2: //Memory
         case 4: //Event
@@ -389,7 +420,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           mutable: globalInfo.mutable,
           init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(functionTableOffset) : globalInfo.init
         });
-      } else if (!(<string>globalInfo.module).startsWith('BRISK$MODULE$')){
+      } else if (!(<string>globalInfo.module).startsWith('BRISK$MODULE$')) {
         wasmImports.push({
           type: 'GlobalImport',
           internalName: globalInfo.name, // TODO: remap the internal name
@@ -414,10 +445,16 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           vars: funcInfo.vars,
           body: funcInfo.body
         };
-      } else if (funcInfo.name == '_malloc') {
-        if (module.getFunction('_malloc') == 0)
-          module.addFunction('_malloc', funcInfo.params, funcInfo.results, funcInfo.vars, funcInfo.body);
-      } else if (funcInfo.base == '') {
+      } 
+      // else if (funcInfo.name == '_malloc') {
+      //   if (module.getFunction('_malloc') == 0)
+      //     module.addFunction('_malloc', funcInfo.params, funcInfo.results, funcInfo.vars, funcInfo.body);
+      // }
+      else if (funcInfo.base == '') {
+        // TODO: figure out why malloc is being duplicated
+        console.log(dependency);
+        console.log(funcInfo);
+        console.log(exports);
         // Map the old index to the new one
         locals.functions.set(funcInfo.name, `${functions.length}`);
         // User Defined Module
@@ -428,7 +465,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
           vars: funcInfo.vars,
           body: funcInfo.body
         });
-      } else {
+      } else if (!(<string>funcInfo.module).startsWith('BRISK$MODULE$')) {
         const importDefinition: wasmImport = {
           type: 'FunctionImport',
           internalName: funcInfo.name, // TODO: remap the name 
@@ -496,7 +533,7 @@ const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Modu
   );
   module.addFunctionExport('_start', '_start');
   if (!module.validate()) module.validate();
-  module.optimize();
+  // module.optimize();
   return module;
 };
 export default Linker;
