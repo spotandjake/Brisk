@@ -17,42 +17,6 @@ const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 const runtime = (module: binaryen.Module) => {
   // _Malloc(Size: i32) -> i32
   // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
-  // module.addFunction('_malloc', binaryen.i32, binaryen.i32, [ binaryen.i32 ],
-  //   module.block(null, [
-  //     // Get Current Pointer
-  //     module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
-  //     // TEST: The Smallest Pointer We Want to Allow is 4 so if it is less then this we should set it to 4
-  //     module.if(
-  //       module.i32.le_u(module.local.get(1, binaryen.i32), module.i32.const(4)),
-  //       module.block(null, [
-  //         module.i32.store(0, 0, module.i32.const(0), module.i32.const(4)),
-  //         module.local.set(1, module.i32.load(0, 0, module.i32.const(0))),
-  //       ])
-  //     ),
-  //     // Add Size To Current Pointer
-  //     module.i32.store(
-  //       0, 0, module.i32.const(0),
-  //       module.i32.add(
-  //         module.local.get(1, binaryen.i32),
-  //         module.local.get(0, binaryen.i32)
-  //       )
-  //     ),
-  //     // grow the memory if necessary
-  //     module.if(
-  //       module.i32.ge_u(
-  //         module.i32.load(0, 0, module.i32.const(0)),
-  //         module.memory.size()
-  //       ),
-  //       module.memory.grow(
-  //         module.i32.const(1)
-  //       ), // TODO: add support for when we have values bigger then 64kb calculate how many pages to grow
-  //     ),
-  //     // Store the pointer
-  //     module.i32.store(0, 0, module.local.get(1, binaryen.i32), module.local.get(0, binaryen.i32)),
-  //     // Return Current Pointer
-  //     module.return(module.local.get(1, binaryen.i32))
-  //   ])
-  // );
   module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/runtime/dist/memory', '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
