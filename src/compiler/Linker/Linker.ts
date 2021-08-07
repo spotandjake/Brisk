@@ -501,10 +501,10 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
   // add verifier
   if (!module.validate()) module.validate();
   // add optimizer
-  // binaryen.setShrinkLevel(3);
-  // binaryen.setFlexibleInlineMaxSize(3);
-  // binaryen.setOneCallerInlineMaxSize(100);
-  // module.optimize();
+  binaryen.setShrinkLevel(3);
+  binaryen.setFlexibleInlineMaxSize(3);
+  binaryen.setOneCallerInlineMaxSize(100);
+  module.optimize();
   // Return Source
   return module;
 };
