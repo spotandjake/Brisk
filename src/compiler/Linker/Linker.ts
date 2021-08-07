@@ -3,537 +3,510 @@ import binaryen from 'binaryen';
 import path from 'path';
 import fs from 'fs';
 import { BriskLinkerError } from '../Helpers/Errors';
-// Type Imports
-interface Dependency {
-  entry: boolean;
-  importance: number;
-  found: boolean;
-  file: string;
-  location: path.ParsedPath;
-  binaryen_module?: binaryen.Module;
-}
-interface localMap {
-  globals: Map<string, string>;
-  functions: Map<string, string>;
-}
-interface wasmFunction {
-  name: string;
-  params: binaryen.Type;
-  results: binaryen.Type;
-  vars: binaryen.Type[];
-  body: binaryen.ExpressionRef;
-}
-interface wasmGlobal {
-  name: string;
-  type: binaryen.Type;
-  mutable: boolean;
-  init: binaryen.ExpressionRef;
-}
-// WasmImport Type
-type wasmImport = wasmFunctionImport | wasmGlobalImport;
-interface wasmFunctionImport {
-  type: 'FunctionImport';
-  internalName: string;
-  externalModuleName: string;
-  externalBaseName: string;
-  params: binaryen.Type;
-  results: binaryen.Type;
-}
-interface wasmGlobalImport {
-  type: 'GlobalImport';
-  internalName: string;
-  externalModuleName: string;
-  externalBaseName: string;
-  globalType: binaryen.Type;
-}
+// Types
+import { Pool, Dependency, ModuleType, CountPool, MergePool, FunctionImport } from './LinkerTypes';
+// Constants
+const BriskIdentifier = 'BRISK$MODULE$';
 // Helpers
-const analyzeFile = (location: path.ParsedPath, subModule: binaryen.Module, dependencyGraph: Map<string, Dependency>, entry: boolean) => {
-  // TODO: rewrite this so it is a lot simpler
-  // Parse file
+const namespace = (
+  module: binaryen.Module,
+  expression: binaryen.ExpressionRef,
+  dependency: Dependency,
+  modulePool: Pool
+): binaryen.ExpressionRef  => {
+  // Make a simpler function for use inside this function
+  const _namespace = (exp: binaryen.ExpressionRef) => namespace(module, exp, dependency, modulePool);
+  // Get ExpressionInfo
+  const expressionInfo = binaryen.getExpressionInfo(expression);
+  // NameSpace Expression
+  // TODO: would be preferable to find a way i do not need to code functionality for every piece and only need to code for things that require mapping, and then all sub expressions map
+  // TODO: change the types so i can use type guards over type casts
+  let outExpression = expression;
+  switch (expressionInfo.id) {
+    case binaryen.ExpressionIds.Invalid:
+      BriskLinkerError('Invalid wasm expression');
+      break;
+    case binaryen.ExpressionIds.Block:
+      outExpression = module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map(_namespace));
+      break;
+    case binaryen.ExpressionIds.If:
+      outExpression = module.if(
+        _namespace((<binaryen.IfInfo>expressionInfo).condition),
+        _namespace((<binaryen.IfInfo>expressionInfo).ifTrue),
+        (<binaryen.IfInfo>expressionInfo).ifFalse == 0 ? undefined : _namespace((<binaryen.IfInfo>expressionInfo).ifFalse)
+      );
+      break;
+    case binaryen.ExpressionIds.Loop:
+      outExpression = module.loop(
+        (<binaryen.LoopInfo>expressionInfo).name, //TODO: map name
+        _namespace((<binaryen.LoopInfo>expressionInfo).body)
+      );
+      break;
+    case binaryen.ExpressionIds.Break:
+      outExpression = module.br(
+        (<binaryen.BreakInfo>expressionInfo).name, //TODO: map name
+        _namespace((<binaryen.BreakInfo>expressionInfo).condition),
+        _namespace((<binaryen.BreakInfo>expressionInfo).value)
+      );
+      break;
+    case binaryen.ExpressionIds.Switch:
+      outExpression = module.switch(
+        (<binaryen.SwitchInfo>expressionInfo).names, //TODO: map name
+        <string>(<binaryen.SwitchInfo>expressionInfo).defaultName,
+        _namespace((<binaryen.SwitchInfo>expressionInfo).condition),
+        _namespace((<binaryen.SwitchInfo>expressionInfo).value)
+      );
+      break;
+    case binaryen.ExpressionIds.Call:
+      outExpression = module.call(
+        <string>modulePool.functions.get((<binaryen.CallInfo>expressionInfo).target),
+        (<binaryen.CallInfo>expressionInfo).operands.map(_namespace),
+        expressionInfo.type
+      );
+      break;
+    case binaryen.ExpressionIds.CallIndirect: {
+      const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
+      return module.call_indirect(
+        'functions',
+        _namespace(callInfo.target),
+        callInfo.operands.map(_namespace),
+        binaryen.createType(callInfo.operands.map(binaryen.getExpressionType)),
+        callInfo.type
+      );
+    }
+    case binaryen.ExpressionIds.LocalSet: {
+      const { isTee, index:i, value:v, type } = <binaryen.LocalSetInfo>expressionInfo;
+      outExpression = isTee ? module.local.tee(i, _namespace(v), type) : module.local.set(i, _namespace(v));
+      break;
+    }
+    case binaryen.ExpressionIds.GlobalGet:
+      if (!modulePool.globals.has((<binaryen.GlobalGetInfo>expressionInfo).name))
+        BriskLinkerError(`Unknown Global: ${(<binaryen.GlobalGetInfo>expressionInfo).name}`);
+      outExpression = module.global.get(
+        <string>modulePool.globals.get((<binaryen.GlobalGetInfo>expressionInfo).name),
+        (<binaryen.GlobalGetInfo>expressionInfo).type
+      );
+      break;
+    case binaryen.ExpressionIds.GlobalSet:
+      if (!modulePool.globals.has((<binaryen.GlobalSetInfo>expressionInfo).name))
+        BriskLinkerError(`Unknown Global: ${(<binaryen.GlobalSetInfo>expressionInfo).name}`);
+      outExpression = module.global.set(
+        <string>modulePool.globals.get((<binaryen.GlobalSetInfo>expressionInfo).name),
+        _namespace((<binaryen.GlobalSetInfo>expressionInfo).value)
+      );
+      break;
+    case binaryen.ExpressionIds.Load: {
+      // TODO: handle float stores, and other types of store, determine how to map function index
+      const loadInfo = <binaryen.LoadInfo>expressionInfo;
+      if (loadInfo.bytes == 4 && !loadInfo.isAtomic) {
+        outExpression = module.i32.load(
+          loadInfo.offset,
+          loadInfo.align,
+          _namespace(loadInfo.ptr)
+        );
+      } else if (loadInfo.bytes == 8 && !loadInfo.isAtomic) {
+        outExpression = module.i64.load(
+          loadInfo.offset,
+          loadInfo.align,
+          _namespace(loadInfo.ptr)
+        );
+      } else {
+        BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+      }
+      break;
+    }
+    case binaryen.ExpressionIds.Store: {
+      // TODO: handle float stores, and other types of store, determine how to map function index
+      const storeInfo = <binaryen.StoreInfo>expressionInfo;
+      if (storeInfo.bytes == 4 && !storeInfo.isAtomic) {
+        outExpression = module.i32.store(
+          storeInfo.offset,
+          storeInfo.align,
+          _namespace(storeInfo.ptr),
+          _namespace(storeInfo.value)
+        );
+      } else if (storeInfo.bytes == 8 && !storeInfo.isAtomic) {
+        outExpression = module.i64.store(
+          storeInfo.offset,
+          storeInfo.align,
+          _namespace(storeInfo.ptr),
+          _namespace(storeInfo.value)
+        );
+      } else {
+        BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+      }
+      break;
+    }
+    case binaryen.ExpressionIds.Binary: {
+      const binaryInfo = (<binaryen.BinaryInfo>expressionInfo);
+      //@ts-ignore
+      const operationType = Object.keys(binaryen.Operations)[binaryInfo.op+60];
+      switch(operationType) {
+        case 'AddInt32':
+          outExpression = module.i32.add(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+          break;
+        case 'LeUInt32':
+          outExpression = module.i32.le_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+          break;
+        case 'GeUInt32':
+          outExpression = module.i32.ge_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+          break;
+        default:
+          BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
+      }
+      break;
+    }
+    case binaryen.ExpressionIds.MemoryCopy:
+      outExpression = module.memory.copy(
+        _namespace((<binaryen.MemoryCopyInfo>expressionInfo).dest),
+        _namespace((<binaryen.MemoryCopyInfo>expressionInfo).source),
+        _namespace((<binaryen.MemoryCopyInfo>expressionInfo).size)
+      );
+      break;
+    case binaryen.ExpressionIds.MemoryFill:
+      outExpression = module.memory.fill(
+        _namespace((<binaryen.MemoryFillInfo>expressionInfo).dest),
+        _namespace((<binaryen.MemoryFillInfo>expressionInfo).value),
+        _namespace((<binaryen.MemoryFillInfo>expressionInfo).size)
+      );
+      break;
+    case binaryen.ExpressionIds.Select:
+      outExpression = module.select(
+        _namespace((<binaryen.SelectInfo>expressionInfo).condition),
+        _namespace((<binaryen.SelectInfo>expressionInfo).ifTrue),
+        _namespace((<binaryen.SelectInfo>expressionInfo).ifFalse)
+      );
+      break;
+    case binaryen.ExpressionIds.Drop:
+      outExpression = module.drop(_namespace((<binaryen.DropInfo>expressionInfo).value));
+      break;
+    case binaryen.ExpressionIds.Return:
+      outExpression = module.return(_namespace((<binaryen.ReturnInfo>expressionInfo).value));
+      break;
+    case binaryen.ExpressionIds.MemoryGrow:
+      outExpression = module.memory.grow(_namespace((<binaryen.MemoryGrowInfo>expressionInfo).delta));
+      break;
+    // Ignore these
+    case binaryen.ExpressionIds.Nop:
+    case binaryen.ExpressionIds.MemorySize:
+    case binaryen.ExpressionIds.Unreachable:
+    case binaryen.ExpressionIds.Const:
+    case binaryen.ExpressionIds.LocalGet:
+      break;
+    default:
+      BriskLinkerError(`Linking For ExpressionType: ${Object.keys(binaryen.ExpressionIds)[expressionInfo.id]}, not yet implemented`, undefined, false);
+  }
+  // Return Expression
+  return outExpression;
+};
+// TODO: add support for linking files that are not just brisk modules, such as grain or rust files
+// TODO: i think i parse the locations many times i should just parse them once
+// TODO: this can be made many times simpler, also check that there are no cyclic dependencies
+const analyzeFile = (
+  location: path.ParsedPath,
+  module: binaryen.Module,
+  dependencyGraph: Map<string, Dependency>,
+  entry=true
+): Map<string, Dependency> => {
+  // Determine File Information
   const modulePath = path.resolve(path.join(location.dir, `${location.name}.wasm`));
   const self = <Dependency>dependencyGraph.get(modulePath);
-  const findImports = (base: string) => {
-    if (base.startsWith('BRISK$MODULE$')) {
-      const absolutePath = path.resolve(path.join(location.dir, `${base.slice('BRISK$MODULE$'.length)}.wasm`));
+  // Function To Determine Import Type and Modify Importance
+  const _analyzeExpression = (base: string) => {
+    if (base.startsWith(BriskIdentifier)) {
+      // Modify Importance
+      const absolutePath = resolveModuleLocation(location.dir, base);
       // If we do not include this already then add it to our graph
       if (!dependencyGraph.has(absolutePath)) {
         dependencyGraph.set(absolutePath, {
           entry: false,
+          importance: 1,
           found: false,
-          file: absolutePath,
-          location: location,
-          importance: 1
+          location: absolutePath
         });
       }
-      // Add the imports to the graph
       // Deal with sorting
       const dep = <Dependency>dependencyGraph.get(absolutePath);
       if (!entry && self.importance > dep.importance-1) dep.importance = self.importance+1;
       dependencyGraph.set(absolutePath, dep);
     }
   };
-  // Loop over all globals
-  for (let i = 0; i < subModule.getNumGlobals(); i++) {
-    const globalInfo = binaryen.getGlobalInfo(subModule.getGlobalByIndex(i));
-    findImports(<string>globalInfo.module);
+  // Determine File Data
+  for (let i = 0; i < module.getNumGlobals(); i++) {
+    const globalInfo = binaryen.getGlobalInfo(module.getGlobalByIndex(i));
+    _analyzeExpression(<string>globalInfo.module);
   }
-  // Loop through the modules functions
-  for (let i = 0; i < subModule.getNumFunctions(); i++) {
-    const funcInfo = binaryen.getFunctionInfo(subModule.getFunctionByIndex(i));
-    findImports(<string>funcInfo.module);
+  for (let i = 0; i < module.getNumFunctions(); i++) {
+    const funcInfo = binaryen.getFunctionInfo(module.getFunctionByIndex(i));
+    _analyzeExpression(<string>funcInfo.module);
   }
   // Mark this file as found
   if (!entry) {
     const dep = <Dependency>dependencyGraph.get(modulePath);
     dep.found = true;
-    dep.binaryen_module = subModule;
+    dep.binaryen_module = module;
     dependencyGraph.set(modulePath, dep);
   } else {
     dependencyGraph.set(modulePath, {
       entry: true,
       found: true,
-      file: modulePath,
-      location: location,
+      location: modulePath,
       importance: 0,
-      binaryen_module: subModule
+      binaryen_module: module
     });
   }
   // Go through the current map and call the ones that are not yet found
   while ([...dependencyGraph.values()].some((dep) => !dep.found)) {
     [...dependencyGraph.values()].forEach((depImport) => {
       if (depImport.found) return;
-      if (!fs.existsSync(depImport.file))
-        BriskLinkerError(`could not resolve ${depImport.file}`);
-      // Load the file
-      const wasm = fs.readFileSync(depImport.file);
+      if (!fs.existsSync(depImport.location))
+        BriskLinkerError(`could not resolve ${depImport.location}`);
       // Analyze the file
-      analyzeFile(path.parse(depImport.file), binaryen.readBinary(wasm), dependencyGraph, false);
+      analyzeFile(path.parse(depImport.location), binaryen.readBinary(fs.readFileSync(depImport.location)), dependencyGraph, false);
     });
   }
   // Return the current graph
   return dependencyGraph;
 };
-// Namespace the expressions in the codegen
-const namespaceBody = (
-  module: binaryen.Module,
-  dependency: Dependency,
-  linked: { [key: string]: localMap },
-  locals: localMap,
-  expression: binaryen.ExpressionRef,
-  exports: localMap
-): binaryen.ExpressionRef => {
-  const depModule = <binaryen.Module>dependency.binaryen_module;
-  const namespace = (expression: binaryen.ExpressionRef): binaryen.ExpressionRef => {
-    const expressionInfo = binaryen.getExpressionInfo(expression);
-    const expressionIdName = Object.keys(binaryen.ExpressionIds)[expressionInfo.id];
-    switch(expressionIdName) {
-      case 'Invalid':
-        BriskLinkerError('Invalid wasm expression');
-        break;
-      case 'Block':
-        return module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map(namespace));
-      case 'If':
-        return module.if(
-          namespace((<binaryen.IfInfo>expressionInfo).condition),
-          namespace((<binaryen.IfInfo>expressionInfo).ifTrue),
-          (<binaryen.IfInfo>expressionInfo).ifFalse == 0 ? undefined : namespace((<binaryen.IfInfo>expressionInfo).ifFalse)
-        );
-      case 'Loop':
-        return module.loop(
-          (<binaryen.LoopInfo>expressionInfo).name, //TODO: map name
-          namespace((<binaryen.LoopInfo>expressionInfo).body)
-        );
-      case 'Break':
-        return module.br(
-          (<binaryen.BreakInfo>expressionInfo).name, //TODO: map name
-          namespace((<binaryen.BreakInfo>expressionInfo).condition),
-          namespace((<binaryen.BreakInfo>expressionInfo).value)
-        );
-      case 'Switch':
-        return module.switch(
-          (<binaryen.SwitchInfo>expressionInfo).names, //TODO: map name
-          <string>(<binaryen.SwitchInfo>expressionInfo).defaultName,
-          namespace((<binaryen.SwitchInfo>expressionInfo).condition),
-          namespace((<binaryen.SwitchInfo>expressionInfo).value)
-        );
-      case 'Call': {
-        const callInfo = <binaryen.CallInfo>expressionInfo;
-        const _callInfo = binaryen.getFunctionInfo(depModule.getFunction(callInfo.target));
-        let callName = callInfo.target;
-        if (_callInfo.module == '') {
-          if (locals.functions.has(callInfo.target))
-            callName = <string>locals.functions.get(callInfo.target);
-        } else {
-          const absolutePath = path.resolve(
-            path.join(
-              dependency.location.dir,
-              `${(<string>_callInfo.module).slice('BRISK$MODULE$'.length)}.wasm`
+const serializeExportName = (file: string, name: string) => `${file}||${name}`;
+const resolveModuleLocation = (dir: string, base: string) =>
+  path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}.wasm`));
+const resolveModuleType = (base: string): ModuleType => {
+  if (base.startsWith(BriskIdentifier)) return ModuleType.BriskModule;
+  else if (base == '') return ModuleType.LocalModule;
+  else return ModuleType.WasmModule;
+};
+// Main
+const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binaryen.Module => {
+  // Initialize variables
+  const LinkPool: Pool = {
+    globals: new Map(),
+    functions: new Map(),
+    imports: new Map(),
+    exports: new Map()
+  };
+  const mergePool: MergePool = {
+    globals: [],
+    functions: [],
+    functionTable: [],
+    imports: [],
+    exports: []
+  };
+  const countPool: CountPool = {
+    globals: 0,
+    functions: 0,
+    functionTable: 0,
+    imports: 0,
+    exports: 0
+  };
+  const entryFunctions: string[] = [];
+  // Initialize Binaryen Module
+  const module = new binaryen.Module();
+  // Make Dependency Graph
+  const dependencyGraph = analyzeFile(location, mainModule, new Map());
+  // Merge Files
+  const sortedGraph = [...dependencyGraph.values()].sort((a, b) => b.importance - a.importance);
+  for (const dependency of sortedGraph) {
+    // Interpret the dependency
+    const depModule = <binaryen.Module>dependency.binaryen_module;
+    // Make variables
+    const modulePool: Pool = {
+      globals: new Map(),
+      functions: new Map(),
+      imports: new Map(),
+      exports: new Map()
+    };
+    const moduleFunctionOffset = mergePool.functions.length;
+    const tableOffset = mergePool.functionTable.length;
+    // Go Over Globals
+    for (let i = 0; i < depModule.getNumGlobals(); i++) {
+      const globalInfo = binaryen.getGlobalInfo(depModule.getGlobalByIndex(i));
+      switch (resolveModuleType(<string>globalInfo.module)) {
+        case ModuleType.BriskModule:
+          modulePool.globals.set(
+            globalInfo.name,
+            <string>LinkPool.globals.get(
+              serializeExportName(
+                resolveModuleLocation(
+                  path.parse(dependency.location).dir,
+                  <string>globalInfo.module
+                ),
+                <string>globalInfo.base
+              )
             )
           );
-          if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].functions.has(<string>_callInfo.base)) {
-            callName = <string>linked[absolutePath].functions.get(<string>_callInfo.base);
-          } else BriskLinkerError(`could not resolve function ${_callInfo.base} in ${absolutePath}`);
-        }
-        return module.call(callName, callInfo.operands.map(namespace), callInfo.type);
-      }
-      case 'CallIndirect': {
-        const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
-        return module.call_indirect(
-          'functions',
-          namespace(callInfo.target),
-          callInfo.operands.map((exp) => namespace(exp)),
-          binaryen.createType(callInfo.operands.map((exp) => binaryen.getExpressionType(exp))),
-          callInfo.type
-        );
-      }
-      case 'LocalSet': {
-        const { isTee, index:i, value:v, type } = <binaryen.LocalSetInfo>expressionInfo;
-        return isTee ? module.local.tee(i, namespace(v), type) : module.local.set(i, namespace(v));
-      }
-      case 'GlobalGet': {
-        const globalInfo = <binaryen.GlobalGetInfo>expressionInfo;
-        const _globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(globalInfo.name));
-        if (_globalInfo.module == '') {
-          // add local mapping
-          if (!locals.globals.has(globalInfo.name))
-            BriskLinkerError(`Unknown Global: ${globalInfo.name}`);
-          const GlobalName = <string>locals.globals.get(globalInfo.name);
-          return module.global.get(GlobalName, globalInfo.type);
-        } else {
-          const absolutePath = path.resolve(
-            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('BRISK$MODULE$'.length)}.wasm`)
+          break;
+        case ModuleType.WasmModule: {
+          const previousImport = mergePool.imports.find(
+            (imp) =>
+              imp.type == 'GlobalImport' &&
+              imp.value.externalModuleName == <string>globalInfo.module &&
+              imp.value.externalBaseName == <string>globalInfo.base &&
+              imp.value.globalType == globalInfo.type
           );
-          if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
-            const GlobalName = <string>linked[absolutePath].globals.get(<string>_globalInfo.base);
-            return module.global.get(GlobalName, globalInfo.type);
-          } else BriskLinkerError(`could not resolve global ${_globalInfo.base} in ${absolutePath}`);
-        }
-        break;
-      }
-      case 'GlobalSet': {
-        const globalInfo = <binaryen.GlobalSetInfo>expressionInfo;
-        const _globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(globalInfo.name));
-        if (exports.globals.has(_globalInfo.name)) {
-          return module.global.set(<string>exports.globals.get(_globalInfo.name), namespace(globalInfo.value));
-        } if (_globalInfo.module == '') {
-          // add local mapping
-          if (locals.globals.has(globalInfo.name)) {
-            return module.global.set(<string>locals.globals.get(globalInfo.name), namespace(globalInfo.value));
-          } else BriskLinkerError(`Unknown Local Global: ${globalInfo.name}`);
-        } else {
-          // add linking
-          const absolutePath = path.resolve(
-            path.join(dependency.location.dir, `${(<string>_globalInfo.module).slice('BRISK$MODULE$'.length)}.wasm`)
-          );
-          if (linked.hasOwnProperty(absolutePath) && linked[absolutePath].globals.has(<string>_globalInfo.base)) {
-            return module.global.set(<string>linked[absolutePath].globals.get(<string>_globalInfo.base), namespace(globalInfo.value));
-          } else BriskLinkerError(`could not resolve module ${absolutePath}`);
-        }
-        break;
-      }
-      case 'Load': {
-        // TODO: handle float stores, and other types of store, determine how to map function index
-        const loadInfo = <binaryen.LoadInfo>expressionInfo;
-        if (loadInfo.bytes == 4 && !loadInfo.isAtomic) {
-          return module.i32.load(
-            loadInfo.offset,
-            loadInfo.align,
-            namespace(loadInfo.ptr)
-          );
-        } else if (loadInfo.bytes == 8 && !loadInfo.isAtomic) {
-          return module.i64.load(
-            loadInfo.offset,
-            loadInfo.align,
-            namespace(loadInfo.ptr)
-          );
-        } else {
-          BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
-        }
-        break;
-      }
-      case 'Store': {
-        // TODO: handle float stores, and other types of store, determine how to map function index
-        const storeInfo = <binaryen.StoreInfo>expressionInfo;
-        if (storeInfo.bytes == 4 && !storeInfo.isAtomic) {
-          return module.i32.store(
-            storeInfo.offset,
-            storeInfo.align,
-            namespace(storeInfo.ptr),
-            namespace(storeInfo.value)
-          );
-        } else if (storeInfo.bytes == 8 && !storeInfo.isAtomic) {
-          return module.i64.store(
-            storeInfo.offset,
-            storeInfo.align,
-            namespace(storeInfo.ptr),
-            namespace(storeInfo.value)
-          );
-        } else {
-          BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
-        }
-        break;
-      }
-      case 'Binary': {
-        const binaryInfo = (<binaryen.BinaryInfo>expressionInfo);
-        //@ts-ignore
-        const operationType = Object.keys(binaryen.Operations)[binaryInfo.op+60];
-        switch(operationType) {
-          case 'AddInt32':
-            return module.i32.add(namespace(binaryInfo.left), namespace(binaryInfo.right));
-          case 'LeUInt32':
-            return module.i32.le_u(namespace(binaryInfo.left), namespace(binaryInfo.right));
-          case 'GeUInt32':
-            return module.i32.ge_u(namespace(binaryInfo.left), namespace(binaryInfo.right));
-          default:
-            BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
-        }
-        break;
-      }
-      case 'MemoryCopy':
-        return module.memory.copy(
-          namespace((<binaryen.MemoryCopyInfo>expressionInfo).dest),
-          namespace((<binaryen.MemoryCopyInfo>expressionInfo).source),
-          namespace((<binaryen.MemoryCopyInfo>expressionInfo).size)
-        );
-      case 'MemoryFill':
-        return module.memory.fill(
-          namespace((<binaryen.MemoryFillInfo>expressionInfo).dest),
-          namespace((<binaryen.MemoryFillInfo>expressionInfo).value),
-          namespace((<binaryen.MemoryFillInfo>expressionInfo).size)
-        );
-      case 'Select':
-        return module.select(
-          namespace((<binaryen.SelectInfo>expressionInfo).condition),
-          namespace((<binaryen.SelectInfo>expressionInfo).ifTrue),
-          namespace((<binaryen.SelectInfo>expressionInfo).ifFalse)
-        );
-      case 'Drop':
-        return module.drop(namespace((<binaryen.DropInfo>expressionInfo).value));
-      case 'Return':
-        return module.return(namespace((<binaryen.ReturnInfo>expressionInfo).value));
-      case 'MemoryGrow':
-        return module.memory.grow(namespace((<binaryen.MemoryGrowInfo>expressionInfo).delta));
-      // Ignore these
-      case 'Nop':
-      case 'MemorySize':
-      case 'Unreachable':
-      case 'Const':
-      case 'LocalGet':
-        return expression;
-      // Fail if we find anything we do not recognize
-      default:
-        BriskLinkerError(`Linking is not yet implemented for wasm instruction: ${expressionIdName}`);
-        break;
-    }
-    BriskLinkerError(`Linking for wasm instruction ${expressionIdName} not yet fully implemented`, undefined, false);
-    // Return the expression
-    return expression;
-  };
-  return namespace(expression);
-};
-// Linker
-const Linker = (location: (path.ParsedPath|undefined), mainModule: binaryen.Module): binaryen.Module => {
-  // TODO: Merge wasmImports of the same type
-  // TODO: Rewrite this over again so it is simpler
-  // Initialize the new binaryen module
-  const module = new binaryen.Module();
-  // Enable Features
-  module.setFeatures(binaryen.Features.MutableGlobals);
-  // Initiate our memory
-  module.setMemory(1,-1,'memory',[]);
-  // Optimization settings
-  binaryen.setShrinkLevel(3);
-  binaryen.setFlexibleInlineMaxSize(3);
-  binaryen.setOneCallerInlineMaxSize(100);
-  // Analyze Files
-  const dependencyGraph = analyzeFile(<path.ParsedPath>location, mainModule, new Map(), true);
-  // Sort the dependencyGraph
-  const sortedGraph = new Map([...dependencyGraph.entries()].sort((a, b) => b[1].importance - a[1].importance));
-  const functions: wasmFunction[] = [];
-  const modules: wasmFunction[] = [];
-  const globals: wasmGlobal[] = [];
-  const wasmImports: wasmImport[] = [];
-  const linked: { [key: string]: localMap } = {};
-  let functionTableOffset = 0;
-  for (const [ , dependency ] of sortedGraph) {
-    linked[dependency.file] = { globals: new Map(), functions: new Map() };
-    // Vars
-    const locals: localMap = { globals: new Map(), functions: new Map() };
-    const exports: localMap = { globals: new Map(), functions: new Map() };
-    // Analyze Files
-    const depModule = <binaryen.Module>dependency.binaryen_module;
-    // Loop over exports
-    for (let i = 0; i < depModule.getNumExports(); i++) {
-      const exportInfo = binaryen.getExportInfo(depModule.getExportByIndex(i));
-      switch(exportInfo.kind) {
-        case 3: { //Global
-          // Get Global Info
-          const globalInfo = binaryen.getGlobalInfo(depModule.getGlobal(exportInfo.value));
-          // Add Linking
-          linked[dependency.file].globals.set(exportInfo.name, `${globals.length}`);
-          exports.globals.set(globalInfo.name, `${globals.length}`);
-          // Add Global
-          globals.push({
-            name: `${globals.length}`,
-            type: globalInfo.type,
-            mutable: globalInfo.mutable,
-            init: globalInfo.init
-          });
+          // TODO: make sure there is no duplicate import of the same time already in the MergedPool
+          if (!previousImport)  {
+            mergePool.imports.push({
+              type: 'GlobalImport',
+              value: {
+                internalName: `${countPool.globals}`,
+                externalModuleName: <string>globalInfo.module,
+                externalBaseName: <string>globalInfo.base,
+                globalType: globalInfo.type
+              }
+            });
+          }
+          modulePool.globals.set(globalInfo.name, previousImport ? previousImport.value.internalName : `${countPool.globals}`);
+          countPool.imports++;
           break;
         }
-        case 0: {
-          // Function
-          if (exportInfo.name == '_start') break;
-          // Get Function Info
-          const funcInfo = binaryen.getFunctionInfo(depModule.getFunction(exportInfo.value));
-          // Add Linking
-          linked[dependency.file].functions.set(exportInfo.name, `${functions.length}`);
-          exports.functions.set(funcInfo.name, `${functions.length}`); // TODO: i don't think this is correct
-          // Add Function
-          functions.push({
-            name: `${functions.length}`,
+        case ModuleType.LocalModule:
+          mergePool.globals.push({
+            name: `${countPool.globals}`,
+            module: '',
+            base: '',
+            type: globalInfo.type,
+            mutable: globalInfo.mutable,
+            init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(tableOffset) : globalInfo.init
+          });
+          modulePool.globals.set(globalInfo.name, `${countPool.globals}`);
+          countPool.globals++;
+          break;
+      }
+    }
+    // Go Over Functions
+    for (let i = 0; i < depModule.getNumFunctions(); i++) {
+      const funcInfo = binaryen.getFunctionInfo(depModule.getFunctionByIndex(i));
+      switch (resolveModuleType(<string>funcInfo.module)) {
+        case ModuleType.BriskModule:
+          modulePool.functions.set(
+            funcInfo.name,
+            <string>LinkPool.functions.get(
+              serializeExportName(
+                resolveModuleLocation(
+                  path.parse(dependency.location).dir,
+                  <string>funcInfo.module
+                ),
+                <string>funcInfo.base
+              )
+            )
+          );
+          break;
+        case ModuleType.WasmModule: {
+          const previousImport = mergePool.imports.find(
+            (imp) =>
+              imp.type == 'FunctionImport' &&
+              imp.value.externalModuleName == <string>funcInfo.module &&
+              imp.value.externalBaseName == <string>funcInfo.base &&
+              imp.value.params == funcInfo.params &&
+              imp.value.results == funcInfo.results
+          );
+          modulePool.functions.set(funcInfo.name, previousImport ? previousImport.value.internalName : `${countPool.functions}`);
+          if (!previousImport)  {
+            mergePool.imports.push({
+              type: 'FunctionImport',
+              value: {
+                internalName: `${countPool.functions}`,
+                externalModuleName: <string>funcInfo.module,
+                externalBaseName: <string>funcInfo.base,
+                params: funcInfo.params,
+                results: funcInfo.results
+              }
+            });
+            countPool.imports++;
+            countPool.functions++;
+          }
+          break;
+        }
+        case ModuleType.LocalModule:
+          mergePool.functions.push({
+            name: `${countPool.functions}`,
             params: funcInfo.params,
             results: funcInfo.results,
             vars: funcInfo.vars,
-            body: namespaceBody(module, dependency, linked, locals, funcInfo.body, exports)
+            body: funcInfo.body
           });
+          modulePool.functions.set(funcInfo.name, `${countPool.functions}`);
+          if (funcInfo.name == '_start')
+            entryFunctions.push(`${countPool.functions}`);
+          else {
+            mergePool.functionTable.push(`${countPool.functions}`);
+            countPool.functionTable++;
+          }
+          countPool.functions++;
           break;
-        }
-        case 1: //Table
-        case 2: //Memory
-        case 4: //Event
+      }
+    }
+    // Go Over Exports
+    for (let i = 0; i < depModule.getNumExports(); i++) {
+      const exportInfo = binaryen.getExportInfo(depModule.getExportByIndex(i));
+      // TODO: add support for exporting things that are imported
+      switch (exportInfo.kind) {
+        case binaryen.ExternalKinds.Function:
+          LinkPool.functions.set(
+            serializeExportName(dependency.location, exportInfo.name),
+            <string>modulePool.functions.get(exportInfo.value)
+          );
+          break;
+        case binaryen.ExternalKinds.Memory: // ignore this
+          break;
+        case binaryen.ExternalKinds.Global:
+          LinkPool.globals.set(
+            serializeExportName(dependency.location, exportInfo.name),
+            <string>modulePool.globals.get(exportInfo.value)
+          );
+          break;
+        case binaryen.ExternalKinds.Table:
+        case binaryen.ExternalKinds.Event:
         default:
-          // TODO: deal with the other types
+          BriskLinkerError(`have not yet implemented linking for exports of type ${exportInfo.kind}`, undefined, false);
           break;
       }
     }
-    // Loop over all globals
-    for (let i = 0; i < depModule.getNumGlobals(); i++) {
-      const globalInfo = binaryen.getGlobalInfo(depModule.getGlobalByIndex(i));
-      if (globalInfo.base == '') {
-        // Map the old global index to the new global index
-        locals.globals.set(globalInfo.name, `${globals.length}`);
-        // Renumber global
-        globals.push({
-          name: `${globals.length}`,
-          type: globalInfo.type,
-          mutable: globalInfo.mutable,
-          init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(functionTableOffset) : globalInfo.init
-        });
-      } else if (!(<string>globalInfo.module).startsWith('BRISK$MODULE$')) {
-        wasmImports.push({
-          type: 'GlobalImport',
-          internalName: globalInfo.name, // TODO: remap the internal name
-          externalModuleName: <string>globalInfo.module,
-          externalBaseName: <string>globalInfo.base,
-          globalType: globalInfo.type
-        });
-      }
-    }
-    // Loop through the modules functions
-    const OffsetStart = functions.length;
-    let entry: (wasmFunction|undefined);
-    for (let i = 0; i < depModule.getNumFunctions(); i++) {
-      const funcInfo = binaryen.getFunctionInfo(depModule.getFunctionByIndex(i));
-      // Determine what todo with the function
-      if (funcInfo.name == '_start') {
-        // Extend Start Function
-        entry = {
-          name: `entry_${modules.length}`,
-          params: funcInfo.params,
-          results: funcInfo.results,
-          vars: funcInfo.vars,
-          body: funcInfo.body
-        };
-      } 
-      // else if (funcInfo.name == '_malloc') {
-      //   if (module.getFunction('_malloc') == 0)
-      //     module.addFunction('_malloc', funcInfo.params, funcInfo.results, funcInfo.vars, funcInfo.body);
-      // }
-      else if (funcInfo.base == '') {
-        // TODO: figure out why malloc is being duplicated
-        console.log(dependency);
-        console.log(funcInfo);
-        console.log(exports);
-        // Map the old index to the new one
-        locals.functions.set(funcInfo.name, `${functions.length}`);
-        // User Defined Module
-        functions.push({
-          name: `${functions.length}`,
-          params: funcInfo.params,
-          results: funcInfo.results,
-          vars: funcInfo.vars,
-          body: funcInfo.body
-        });
-      } else if (!(<string>funcInfo.module).startsWith('BRISK$MODULE$')) {
-        const importDefinition: wasmImport = {
-          type: 'FunctionImport',
-          internalName: funcInfo.name, // TODO: remap the name 
-          externalModuleName: <string>funcInfo.module,
-          externalBaseName: <string>funcInfo.base,
-          params: funcInfo.params,
-          results: funcInfo.results
-        };
-        if (!wasmImports.some((oldImportDefinition) => 
-          (
-            importDefinition.type == oldImportDefinition.type &&
-            importDefinition.internalName == oldImportDefinition.internalName &&
-            importDefinition.externalModuleName == oldImportDefinition.externalModuleName &&
-            importDefinition.externalBaseName == oldImportDefinition.externalBaseName &&
-            importDefinition.params == oldImportDefinition.params &&
-            importDefinition.results == oldImportDefinition.results
-          )
-        )) wasmImports.push(importDefinition);
-      }
-    }
-    // Map all the function body contents
-    for (let index = OffsetStart; index < functions.length-OffsetStart; index++) {
-      // Set The function Body
-      functions[index].body = namespaceBody(module, dependency, linked, locals, functions[index].body, exports);
-    }
-    // Map the entry function
-    if (entry) {
-      entry.body = namespaceBody(module, dependency, linked, locals, entry.body, exports);
-      modules.push(entry);
-    }
-    functionTableOffset += functions.length;
-  }
-  // Add Imports
-  for (const Import of wasmImports) {
-    switch (Import.type) {
-      case 'FunctionImport':
-        module.addFunctionImport(Import.internalName, Import.externalModuleName, Import.externalBaseName, Import.params, Import.results);
-        break;
-      case 'GlobalImport':
-        module.addGlobalImport(Import.internalName, Import.externalModuleName, Import.externalBaseName, Import.globalType);
-        break;
-      default:
-        BriskLinkerError(`Unknown Import Type ${(<wasmImport>Import).type}`);
-        break;
+    // Namespace Function Bodies
+    for (let i = moduleFunctionOffset; i < mergePool.functions.length; i++) {
+      mergePool.functions[i].body = namespace(module, mergePool.functions[i].body, dependency, modulePool);
     }
   }
-  // Add Globals
-  for (const { name, type, mutable, init } of globals) {
+  // Generate Source
+  for (const { name, type, mutable, init } of mergePool.globals) {
     module.addGlobal(name, type, mutable, init);
   }
-  // Add User Defined Functions
-  for (const { name, params, results, vars, body } of functions) {
+  for (const { name, params, results, vars, body } of mergePool.functions) {
     module.addFunction(name, params, results, vars, body);
   }
-  // Create function table
-  module.addTable('functions', functions.length, -1);
-  module.addActiveElementSegment('functions', 'functions', functions.map((func) => func.name), module.i32.const(0));
-  // Add entry functions
-  for (const { name, params, results, vars, body } of modules) {
-    module.addFunction(name, params, results, vars, body);
+  // add wasm imports
+  for (const value of mergePool.imports) {
+    // TODO: add support for importing other types then just functions, i think my naming scheme for global import is wrong look at function scheme for correct
+    if (value.type == 'FunctionImport') {
+      const { internalName, externalModuleName, externalBaseName, params, results } = (<FunctionImport>value).value;
+      module.addFunctionImport(internalName, externalModuleName, externalBaseName, params, results);
+    } else {
+      BriskLinkerError(`Unknown Wasm Import Type ${value.type}`);
+    }
   }
-  // Add the start function
-  module.addFunction('_start', binaryen.none, binaryen.none, [], 
-    module.block(null, modules.map(({ name }) => module.call(name, [], binaryen.none)))
+  // Add Start Function
+  module.addFunction('_start', binaryen.none, binaryen.none, [],
+    module.block(null, entryFunctions.map((name) => module.call(name, [], binaryen.none)))
   );
   module.addFunctionExport('_start', '_start');
+  // TODO: Export all exports from the entry along with all non brisk exports
+  // Add Function Table
+  module.addTable('functions', mergePool.functionTable.length, -1);
+  module.addActiveElementSegment('functions', 'functions', mergePool.functionTable.map((func) => func), module.i32.const(0));
+  // Setup our wasm Module
+  module.setFeatures(binaryen.Features.MutableGlobals);
+  // Initiate our memory
+  module.setMemory(1,-1,'memory',[]);
+  // add verifier
   if (!module.validate()) module.validate();
+  // add optimizer
+  // binaryen.setShrinkLevel(3);
+  // binaryen.setFlexibleInlineMaxSize(3);
+  // binaryen.setOneCallerInlineMaxSize(100);
   // module.optimize();
+  // Return Source
   return module;
 };
+// Exports
 export default Linker;

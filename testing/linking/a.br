@@ -1,7 +1,7 @@
 import wasm print: (i32) -> Void from 'env';
 import b from 'b.br';
 import c from 'c.br';
-// let str: String = 'test';
+let str: String = 'test';
 print(b);
 print(c);
-// print(str);
+print(str);

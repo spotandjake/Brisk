@@ -4,19 +4,18 @@
  (type $i32_=>_none (func (param i32)))
  (type $i32_=>_i32 (func (param i32) (result i32)))
  (import "env" "print" (func $2 (param i32)))
- (import "env" "print" (func $7 (param i32)))
  (global $0 (mut i32) (i32.const 1))
  (global $1 (mut i32) (i32.const 0))
- (global $2 (mut i32) (i32.const 2))
+ (global $2 (mut i32) (i32.const 1))
  (global $3 (mut i32) (i32.const 0))
  (global $4 (mut i32) (i32.const 0))
  (global $5 (mut i32) (i32.const 0))
- (global $6 (mut i32) (i32.const 6))
+ (global $6 (mut i32) (i32.const 4))
  (memory $0 1)
  (table $functions 4 funcref)
  (elem $functions (i32.const 0) $0 $3 $4 $5)
- (export "memory" (memory $0))
  (export "_start" (func $_start))
+ (export "memory" (memory $0))
  (func $0 (param $0 i32) (result i32)
   (local $1 i32)
   (local.set $1
@@ -139,6 +138,9 @@
   (local $5 i32)
   (local $6 i32)
   (local $7 i32)
+  (call $2
+   (global.get $1)
+  )
   (local.set $0
    (call $0
     (i32.const 20)
@@ -273,17 +275,54 @@
    (local.get $7)
   )
  )
- (func $8
-  (call $7
+ (func $7
+  (local $0 i32)
+  (local $1 i32)
+  (local.set $0
+   (call $0
+    (i32.const 28)
+   )
+  )
+  (i32.store offset=4
+   (local.get $0)
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 4)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 116)
+  )
+  (i32.store offset=16
+   (local.get $0)
+   (i32.const 101)
+  )
+  (i32.store offset=20
+   (local.get $0)
+   (i32.const 115)
+  )
+  (i32.store offset=24
+   (local.get $0)
+   (i32.const 116)
+  )
+  (local.set $1
+   (local.get $0)
+  )
+  (call $2
    (global.get $3)
   )
-  (call $7
+  (call $2
    (global.get $1)
+  )
+  (call $2
+   (local.get $1)
   )
  )
  (func $_start
   (call $1)
   (call $6)
-  (call $8)
+  (call $7)
  )
 )

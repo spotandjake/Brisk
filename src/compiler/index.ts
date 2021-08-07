@@ -10,7 +10,7 @@ import Verifier from './Stages/BriskVerifier';
 import TypeChecker from './Stages/BriskTypeChecker';
 import Optimizer from './Stages/Optimizer';
 import Codegen from './codegen/Codegen';
-import Linker from './Linker/Linker-2'; // TODO: change name after finished rewriting
+import Linker from './Linker/Linker'; // TODO: change name after finished rewriting
 // Type Imports
 import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Schemas/BuildInfo';
 import { ProgramNode } from './Grammar/Types';
