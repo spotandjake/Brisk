@@ -23,7 +23,7 @@ declare namespace binaryen {
   function createType(types: Type[]): Type;
   function expandType(type: Type): Type[];
 
-  enum ExpressionIds {
+  const enum ExpressionIds {
     Invalid,
     Block,
     If,
@@ -171,7 +171,7 @@ declare namespace binaryen {
   const ExternalGlobal: ExternalKinds;
   const ExternalEvent: ExternalKinds;
 
-  enum Features {
+  const enum Features {
     MVP,
     Atomics,
     BulkMemory,

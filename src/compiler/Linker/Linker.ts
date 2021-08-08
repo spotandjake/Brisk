@@ -21,49 +21,42 @@ const namespace = (
   // NameSpace Expression
   // TODO: would be preferable to find a way i do not need to code functionality for every piece and only need to code for things that require mapping, and then all sub expressions map
   // TODO: change the types so i can use type guards over type casts
-  let outExpression = expression;
   switch (expressionInfo.id) {
     case binaryen.ExpressionIds.Invalid:
       BriskLinkerError('Invalid wasm expression');
-      break;
+      return expression; // Code never gets here
     case binaryen.ExpressionIds.Block:
-      outExpression = module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map(_namespace));
-      break;
+      return module.block(null, (<binaryen.BlockInfo>expressionInfo).children.map(_namespace));
     case binaryen.ExpressionIds.If:
-      outExpression = module.if(
+      return module.if(
         _namespace((<binaryen.IfInfo>expressionInfo).condition),
         _namespace((<binaryen.IfInfo>expressionInfo).ifTrue),
         (<binaryen.IfInfo>expressionInfo).ifFalse == 0 ? undefined : _namespace((<binaryen.IfInfo>expressionInfo).ifFalse)
       );
-      break;
     case binaryen.ExpressionIds.Loop:
-      outExpression = module.loop(
+      return module.loop(
         (<binaryen.LoopInfo>expressionInfo).name, //TODO: map name
         _namespace((<binaryen.LoopInfo>expressionInfo).body)
       );
-      break;
     case binaryen.ExpressionIds.Break:
-      outExpression = module.br(
+      return module.br(
         (<binaryen.BreakInfo>expressionInfo).name, //TODO: map name
         _namespace((<binaryen.BreakInfo>expressionInfo).condition),
         _namespace((<binaryen.BreakInfo>expressionInfo).value)
       );
-      break;
     case binaryen.ExpressionIds.Switch:
-      outExpression = module.switch(
+      return module.switch(
         (<binaryen.SwitchInfo>expressionInfo).names, //TODO: map name
         <string>(<binaryen.SwitchInfo>expressionInfo).defaultName,
         _namespace((<binaryen.SwitchInfo>expressionInfo).condition),
         _namespace((<binaryen.SwitchInfo>expressionInfo).value)
       );
-      break;
     case binaryen.ExpressionIds.Call:
-      outExpression = module.call(
+      return module.call(
         <string>modulePool.functions.get((<binaryen.CallInfo>expressionInfo).target),
         (<binaryen.CallInfo>expressionInfo).operands.map(_namespace),
         expressionInfo.type
       );
-      break;
     case binaryen.ExpressionIds.CallIndirect: {
       const callInfo = <binaryen.CallIndirectInfo>expressionInfo;
       return module.call_indirect(
@@ -76,57 +69,54 @@ const namespace = (
     }
     case binaryen.ExpressionIds.LocalSet: {
       const { isTee, index:i, value:v, type } = <binaryen.LocalSetInfo>expressionInfo;
-      outExpression = isTee ? module.local.tee(i, _namespace(v), type) : module.local.set(i, _namespace(v));
-      break;
+      return isTee ? module.local.tee(i, _namespace(v), type) : module.local.set(i, _namespace(v));
     }
     case binaryen.ExpressionIds.GlobalGet:
       if (!modulePool.globals.has((<binaryen.GlobalGetInfo>expressionInfo).name))
         BriskLinkerError(`Unknown Global: ${(<binaryen.GlobalGetInfo>expressionInfo).name}`);
-      outExpression = module.global.get(
+      return module.global.get(
         <string>modulePool.globals.get((<binaryen.GlobalGetInfo>expressionInfo).name),
         (<binaryen.GlobalGetInfo>expressionInfo).type
       );
-      break;
     case binaryen.ExpressionIds.GlobalSet:
       if (!modulePool.globals.has((<binaryen.GlobalSetInfo>expressionInfo).name))
         BriskLinkerError(`Unknown Global: ${(<binaryen.GlobalSetInfo>expressionInfo).name}`);
-      outExpression = module.global.set(
+      return module.global.set(
         <string>modulePool.globals.get((<binaryen.GlobalSetInfo>expressionInfo).name),
         _namespace((<binaryen.GlobalSetInfo>expressionInfo).value)
       );
-      break;
     case binaryen.ExpressionIds.Load: {
       // TODO: handle float stores, and other types of store, determine how to map function index
       const loadInfo = <binaryen.LoadInfo>expressionInfo;
       if (loadInfo.bytes == 4 && !loadInfo.isAtomic) {
-        outExpression = module.i32.load(
+        return module.i32.load(
           loadInfo.offset,
           loadInfo.align,
           _namespace(loadInfo.ptr)
         );
       } else if (loadInfo.bytes == 8 && !loadInfo.isAtomic) {
-        outExpression = module.i64.load(
+        return module.i64.load(
           loadInfo.offset,
           loadInfo.align,
           _namespace(loadInfo.ptr)
         );
       } else {
         BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+        return expression; // Program Never Gets Here
       }
-      break;
     }
     case binaryen.ExpressionIds.Store: {
       // TODO: handle float stores, and other types of store, determine how to map function index
       const storeInfo = <binaryen.StoreInfo>expressionInfo;
       if (storeInfo.bytes == 4 && !storeInfo.isAtomic) {
-        outExpression = module.i32.store(
+        return module.i32.store(
           storeInfo.offset,
           storeInfo.align,
           _namespace(storeInfo.ptr),
           _namespace(storeInfo.value)
         );
       } else if (storeInfo.bytes == 8 && !storeInfo.isAtomic) {
-        outExpression = module.i64.store(
+        return module.i64.store(
           storeInfo.offset,
           storeInfo.align,
           _namespace(storeInfo.ptr),
@@ -134,72 +124,59 @@ const namespace = (
         );
       } else {
         BriskLinkerError(`Unknown Store Type with Bytes Count: ${(<binaryen.StoreInfo>expressionInfo).bytes}`);
+        return expression; // Program Never Gets Here
       }
-      break;
     }
     case binaryen.ExpressionIds.Binary: {
       const binaryInfo = (<binaryen.BinaryInfo>expressionInfo);
-      //@ts-ignore
-      const operationType = Object.keys(binaryen.Operations)[binaryInfo.op+60];
-      switch(operationType) {
-        case 'AddInt32':
-          outExpression = module.i32.add(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
-          break;
-        case 'LeUInt32':
-          outExpression = module.i32.le_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
-          break;
-        case 'GeUInt32':
-          outExpression = module.i32.ge_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
-          break;
+      switch(<binaryen.Operations>(binaryInfo.op+60)) {
+        case binaryen.Operations.AddInt32:
+          return module.i32.add(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+        case binaryen.Operations.LeUInt32:
+          return module.i32.le_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+        case binaryen.Operations.GeUInt32:
+          return module.i32.ge_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         default:
-          BriskLinkerError(`Unknown Binary Operation: ${operationType}`);
+          BriskLinkerError(`Unknown Binary Operation: ${binaryInfo.op+60}`);
+          return expression; // The Program Never Reaches This Line
       }
-      break;
     }
     case binaryen.ExpressionIds.MemoryCopy:
-      outExpression = module.memory.copy(
+      return module.memory.copy(
         _namespace((<binaryen.MemoryCopyInfo>expressionInfo).dest),
         _namespace((<binaryen.MemoryCopyInfo>expressionInfo).source),
         _namespace((<binaryen.MemoryCopyInfo>expressionInfo).size)
       );
-      break;
     case binaryen.ExpressionIds.MemoryFill:
-      outExpression = module.memory.fill(
+      return module.memory.fill(
         _namespace((<binaryen.MemoryFillInfo>expressionInfo).dest),
         _namespace((<binaryen.MemoryFillInfo>expressionInfo).value),
         _namespace((<binaryen.MemoryFillInfo>expressionInfo).size)
       );
-      break;
     case binaryen.ExpressionIds.Select:
-      outExpression = module.select(
+      return module.select(
         _namespace((<binaryen.SelectInfo>expressionInfo).condition),
         _namespace((<binaryen.SelectInfo>expressionInfo).ifTrue),
         _namespace((<binaryen.SelectInfo>expressionInfo).ifFalse)
       );
-      break;
     case binaryen.ExpressionIds.Drop:
-      outExpression = module.drop(_namespace((<binaryen.DropInfo>expressionInfo).value));
-      break;
+      return module.drop(_namespace((<binaryen.DropInfo>expressionInfo).value));
     case binaryen.ExpressionIds.Return:
-      outExpression = module.return(_namespace((<binaryen.ReturnInfo>expressionInfo).value));
-      break;
+      return module.return(_namespace((<binaryen.ReturnInfo>expressionInfo).value));
     case binaryen.ExpressionIds.MemoryGrow:
-      outExpression = module.memory.grow(_namespace((<binaryen.MemoryGrowInfo>expressionInfo).delta));
-      break;
+      return module.memory.grow(_namespace((<binaryen.MemoryGrowInfo>expressionInfo).delta));
     // Ignore these
     case binaryen.ExpressionIds.Nop:
     case binaryen.ExpressionIds.MemorySize:
     case binaryen.ExpressionIds.Unreachable:
     case binaryen.ExpressionIds.Const:
     case binaryen.ExpressionIds.LocalGet:
-      break;
+      return expression;
     default:
-      BriskLinkerError(`Linking For ExpressionType: ${Object.keys(binaryen.ExpressionIds)[expressionInfo.id]}, not yet implemented`, undefined, false);
+      BriskLinkerError(`Linking For ExpressionType: ${expressionInfo.id}, not yet implemented`);
+      return expression; // The Program Never Gets Here
   }
-  // Return Expression
-  return outExpression;
 };
-// TODO: add support for linking files that are not just brisk modules, such as grain or rust files
 // TODO: i think i parse the locations many times i should just parse them once
 // TODO: this can be made many times simpler, also check that there are no cyclic dependencies
 const analyzeFile = (

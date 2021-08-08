@@ -1,4 +1,5 @@
 import wasm print: (i32) -> Void from 'env';
+// import wasm test: i32 from 'env';
 import b from 'b.br';
 import c from 'c.br';
 let str: String = 'test';

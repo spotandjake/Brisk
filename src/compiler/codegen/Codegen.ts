@@ -12,11 +12,11 @@ import {
 } from '../Grammar/Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
+// TODO: make better use of enums
 // Runtime Functions
-// TODO: Move runtime into brisk
 const runtime = (module: binaryen.Module) => {
   // _Malloc(Size: i32) -> i32
-  // TODO: allow malloc to be able to deal with fragmentation and reuse blocks
+  // TODO: allow malloc to be able to deal with fragmentation and reuse blocks, Port Runtime To Brisk
   module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/runtime/dist/memory', '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
@@ -296,17 +296,28 @@ class Compiler {
         break;
       }
       case 'importWasmStatement': {
-        if (!(<FunctionTypeNode>Node.dataType)?.params)
-          BriskError('Wasm Import Type Must be a Function', Node.position);
-        module.addFunctionImport(
-          Node.identifier,
-          Node.path,
-          Node.identifier,
-          binaryen.createType(
-            (<FunctionTypeNode>Node.dataType).params.map(param => (<FunctionTypeNode>param).result == 'Void' ? binaryen.none : binaryen.i32)
-          ),
-          (<FunctionTypeNode>Node.dataType).result == 'Void' ? binaryen.none : binaryen.i32
-        );
+        // TODO: finish implementing global imports
+        if (!(<FunctionTypeNode>Node.dataType)?.params) {
+          if (![ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType))
+            BriskError('Wasm Import Type Must be a Function, i32, i64, f32, f64', Node.position);
+          module.addGlobalImport(
+            Node.identifier,
+            Node.path,
+            Node.identifier,
+            //@ts-ignore
+            { i32: binaryen.i32, i64: binaryen.i64, f32: binaryen.f32, f64: binaryen.i64 }[<string>Node.dataType]
+          );
+        } else {
+          module.addFunctionImport(
+            Node.identifier,
+            Node.path,
+            Node.identifier,
+            binaryen.createType(
+              (<FunctionTypeNode>Node.dataType).params.map(param => (<FunctionTypeNode>param).result == 'Void' ? binaryen.none : binaryen.i32)
+            ),
+            (<FunctionTypeNode>Node.dataType).result == 'Void' ? binaryen.none : binaryen.i32
+          );
+        }
         nativeImports.set(Node.identifier, Node.dataType);
         break;
       }
