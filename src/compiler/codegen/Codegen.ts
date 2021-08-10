@@ -12,12 +12,9 @@ import {
 } from '../Grammar/Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
-// TODO: make better use of enums
 // Runtime Functions
 const runtime = (module: binaryen.Module) => {
-  // _Malloc(Size: i32) -> i32
-  // TODO: allow malloc to be able to deal with fragmentation and reuse blocks, Port Runtime To Brisk
-  module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/runtime/dist/memory', '_malloc', binaryen.i32, binaryen.i32);
+  module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
 // Allocate Space
@@ -30,16 +27,16 @@ const _Allocate = (
   const ptrIndex = vars.size; //size|refs|type|value
   vars.set(ptrIndex, 0); // add a var to the stack for the pointer
   // Put the data into an Array Buffer
-  const block = [
-    module.local.set(ptrIndex, module.call('_malloc', [ module.i32.const((size+3)*4) ], binaryen.i32))
-  ];
-  return { code: block, ptr: ptrIndex };
+  return {
+    code: [ module.local.set(ptrIndex, module.call('_malloc', [ module.i32.const((size+3)*4) ], binaryen.i32)) ],
+    ptr: ptrIndex
+  };
 };
 // Store A Value
 const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, typeName: string, data: number[], pointer?: number) => {
   // Calculate Size
   let size = 0;
-  data.forEach((value: number) => {
+  data.forEach((value) => {
     const ValueType = binaryen.getExpressionType(value);
     size += (ValueType == 3 || ValueType == 5) ? 2 : 1;
   });
@@ -51,7 +48,7 @@ const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, t
   code.push(module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0))); // gc refs
   code.push(module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))); // value type
   let index = 3;
-  data.forEach((value: number) => {
+  data.forEach((value, i) => {
     const ValueType = binaryen.getExpressionType(value);
     const pointer = module.local.get(ptr, binaryen.i32);
     const NumericType = [ module.i32, module.i64, module.f32, module.f64 ][ValueType-2];
@@ -75,18 +72,15 @@ class Compiler {
     // Initiate our memory
     module.setMemory(1,-1,'memory',[]);
     // Add our module id global
-    module.addGlobal('FunctionTableOffset', binaryen.i32, true, module.i32.const(0));
-    // Optimization settings
-    binaryen.setShrinkLevel(3);
-    binaryen.setFlexibleInlineMaxSize(3);
-    binaryen.setOneCallerInlineMaxSize(3);
+    module.addGlobal('_FunctionTableOffset', binaryen.i32, true, module.i32.const(0));
+    module.addGlobal('_MemoryPointer', binaryen.i32, true, module.i32.const(0));
     // Deal with imports
     Node.imports.forEach(({ path:modulePath, identifiers }) => {
       // TODO: add import all, add type checking for imports
       if (Array.isArray(identifiers)) {
         const _modulePath = path.parse(modulePath);
         const directory = path.normalize(_modulePath.dir);
-        const importPath = (directory == '.' ? _modulePath.name : `${directory}/${_modulePath.name}`);
+        const importPath = `${(directory == '.' ? _modulePath.name : `${directory}/${_modulePath.name}`)}${(_modulePath.ext == '.br') ? '.wasm' : _modulePath.ext}`;
         identifiers.forEach((name: string) => {
           module.addGlobalImport(`${globals.size}`, `BRISK$MODULE$${importPath}`, `BRISK$EXPORT$${name}`, binaryen.i32),
           globals.set(name, globals.size);
@@ -111,8 +105,7 @@ class Compiler {
     vars: Map<(string | number), number>,
     expectResult = false,
     functionDeclaration: (boolean | string) = false
-  ): any {
-    // Add malloc function
+  ): (binaryen.ExpressionRef | undefined) {
     const { module, functions, nativeImports, globals } = this;
     switch(Node.type) {
       case 'Program': {
@@ -124,7 +117,6 @@ class Compiler {
         module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
           module.block(null, functionBody)
         );
-        // module.optimizeFunction(start);
         module.addFunctionExport('_start', '_start');
         break;
       }
@@ -149,10 +141,11 @@ class Compiler {
         // reset the function
         const funcBody: binaryen.ExpressionRef[] = [];
         const funcStack = variables;
-        const funcVars = new Map();
-        // Set the closure parameter as a secret var
-        funcVars.set(funcVars.size, 0); // add a empty value for closure, we use numbers because all user var names are going to be strings
-        funcVars.set(funcVars.size, 0); // add a empty value for parameters
+        const funcVars: Map<(string|number), number> = new Map([
+          // Set the closure parameter as a secret var
+          [ 0, 0 ], // add a empty value for closure, we use numbers because all user var names are going to be strings
+          [ 1, 0 ] // add a empty value for parameters
+        ]);
         // Add closure assignments to the function and variable list
         let closureI = 3;
         for (const varName in variables.closure) {
@@ -181,26 +174,22 @@ class Compiler {
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, funcBody, funcStack, funcVars));
         if (dataType == 'Void') funcBody.push(module.return(module.i32.const(-1)));
         const name = `${functions.length}`;
-        const func = module.addFunction(
+        module.addFunction(
           name,
           paramType, binaryen.i32,
           new Array(funcVars.size).fill(binaryen.i32), 
           module.block(null, funcBody)
         );
-        if (
-          Object.keys(variables.closure).length != 0 &&
-          parameters.length != 0
-        ) module.optimizeFunction(func);
         // Store the function
-        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
+        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('_FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
       }
       case 'callStatement': {
         // Add calls for returns
-        const functionArgs = Node.arguments.map(arg => this.compileToken(arg, functionBody, stack, vars, true));
-        let wasm: any;
+        const functionArgs = Node.arguments.map(arg => <binaryen.ExpressionRef>this.compileToken(arg, functionBody, stack, vars, true));
+        let wasm: (binaryen.ExpressionRef | undefined);
         if (Node.identifier == 'return') wasm = module.return(functionArgs[0]);
         else if (Node.identifier == 'memStore') wasm = module.i32.store(0, 0, module.i32.add(functionArgs[0], functionArgs[1]), functionArgs[2]);
         else if (Node.identifier == 'memLoad') wasm = module.i32.load(0, 0, module.i32.add(functionArgs[0], functionArgs[1]));
@@ -209,7 +198,7 @@ class Compiler {
           wasm = module.call(
             Node.identifier,
             functionArgs,
-            (nativeImports.get(Node.identifier) as FunctionTypeNode).result == 'Void' ? binaryen.none : binaryen.i32
+            (<FunctionTypeNode>nativeImports.get(Node.identifier)).result == 'Void' ? binaryen.none : binaryen.i32
           );
         } else if (vars.has(Node.identifier) || globals.has(Node.identifier)) {
           // Assemble the Parameter structure
@@ -228,14 +217,14 @@ class Compiler {
             paramType, binaryen.i32
           );
         } else BriskError(`Unknown Function: ${Node.identifier}`, Node.position);
-        if (expectResult) return wasm;
-        else functionBody.push(wasm);
+        if (expectResult) return <binaryen.ExpressionRef>wasm;
+        else functionBody.push(<binaryen.ExpressionRef>wasm);
         break;
       }
       case 'declarationStatement': {
         const { identifier, value } = Node;
         const wasm = this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function' ? Node.identifier : false);
-        functionBody.push(module.local.set(vars.size, wasm));
+        functionBody.push(module.local.set(vars.size, <binaryen.ExpressionRef>wasm));
         vars.set(identifier, vars.size);
         break;
       }
@@ -247,18 +236,17 @@ class Compiler {
             return ptr;
           }
           case 'Number': {
-            // TODO: Add support for rationals and arbitrary precise numbers
+            // TODO: Add support for rationals and arbitrary precision numbers
             // TODO: Consider representing all integers as i64
-            // TODO: i64, f64, throw an error if you use a number bigger than i64 or f64 supported range
             const isInt: boolean = Number.isInteger(<number>Node.value);
             const data: number[] = [];
             if (isInt || typeof Node.value === 'bigint') { //integer
               if (<number>Node.value < 2147483647 && <number>Node.value > -2147483647) { //i32
                 data.push(module.i32.const(1), module.i32.const(<number>Node.value));
               } else { // i64
-                const lower = <bigint>Node.value & BigInt(0xffffffff), upper = <bigint>Node.value >> 32n;
-                //@ts-ignore
-                data.push(module.i32.const(2), module.i64.const(Number(lower), Number(upper))); 
+                data.push(
+                  module.i32.const(2), module.i64.const(Number(<bigint>Node.value & BigInt(0xffffffff)), Number(<bigint>Node.value >> 32n))
+                ); 
               }
             } else { //float
               data.push(module.i32.const(4), module.f64.const(<number>Node.value));
@@ -274,11 +262,8 @@ class Compiler {
           }
           case 'i32':
             return module.i32.const(<number>Node.value);
-          case 'i64': {
-            const lower = <bigint>Node.value & BigInt(0xffffffff), upper = <bigint>Node.value >> 32n;
-            //@ts-ignore
-            return module.i64.const(Number(lower), Number(upper));
-          }
+          case 'i64':
+            return module.i64.const(Number(<bigint>Node.value & BigInt(0xffffffff)), Number(<bigint>Node.value >> 32n));
           case 'f32':
             return module.f32.const(<number>Node.value);
           case 'f64':
@@ -301,17 +286,13 @@ class Compiler {
           if (![ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType))
             BriskError('Wasm Import Type Must be a Function, i32, i64, f32, f64', Node.position);
           module.addGlobalImport(
-            Node.identifier,
-            Node.path,
-            Node.identifier,
+            Node.identifier, Node.path, Node.identifier,
             //@ts-ignore
             { i32: binaryen.i32, i64: binaryen.i64, f32: binaryen.f32, f64: binaryen.i64 }[<string>Node.dataType]
           );
         } else {
           module.addFunctionImport(
-            Node.identifier,
-            Node.path,
-            Node.identifier,
+            Node.identifier, Node.path, Node.identifier,
             binaryen.createType(
               (<FunctionTypeNode>Node.dataType).params.map(param => (<FunctionTypeNode>param).result == 'Void' ? binaryen.none : binaryen.i32)
             ),
@@ -331,6 +312,7 @@ class Compiler {
         break;
       }
       // Ignore
+      case 'commentStatement':
       case 'importStatement':
         break;
       default: 
@@ -340,11 +322,6 @@ class Compiler {
     }
   }
 }
-// codeGen
-const CodeGen = (program: Program): binaryen.Module => {
-  const compiler = new Compiler();
-  const compiled = compiler.compile(program);
-  // Code gen
-  return compiled;
-};
+// CodeGen
+const CodeGen = (program: Program): binaryen.Module => new Compiler().compile(program);
 export default CodeGen;

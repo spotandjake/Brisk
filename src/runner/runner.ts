@@ -18,26 +18,24 @@ const memoryView = (memory: WebAssembly.Memory) => {
   let rowIndex = 0;
   let dataSize = 0;
   memArray.forEach((dat, i) => {
-    if (i == 0) {
-      row = { state: 'raw', ptr:0, refs: 1, size: 1, type: 'pointer', value0: dat };
-    } else {
-      if (dat == 0 && dataSize == 0 && i != memArray.length) return;
-      if (dataSize == 0) {
+    if (dat == 0 && dataSize == 0 && i != memArray.length) return;
+    if (dataSize == 0) {
+      if (i != 0) {
         // Push the old row to the table and make the new row
         tableBody.push(row);
         row = {};
-        // This is the start of the row
-        dataSize = dat/4 - 1;
-        rowIndex = 0;
-        row = { state: 'raw', ptr: i*4, size: dat };
-      } else {
-        dataSize--;
-        rowIndex++;
-        if (rowIndex == 1) row.refs = dat;
-        else if (rowIndex == 2) { // The data type
-          row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][dat];
-        } else row[`value${rowIndex-3}`] = dat;
       }
+      // This is the start of the row
+      dataSize = dat/4 - 1;
+      rowIndex = 0;
+      row = { state: 'raw', ptr: i*4, size: dat };
+    } else {
+      dataSize--;
+      rowIndex++;
+      if (rowIndex == 1) row.refs = dat;
+      else if (rowIndex == 2) { // The data type
+        row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][dat];
+      } else row[`value${rowIndex-3}`] = dat;
     }
   });
   tableBody.push(row);
@@ -73,9 +71,7 @@ const memoryView = (memory: WebAssembly.Memory) => {
               switch(intType) {
                 case 'i32':
                   // Deal with negative value
-                  if (dat[field] > 2147483647) {
-                    dat[field] = dat[field]-4294967296;
-                  }
+                  if (dat[field] > 2147483647) dat[field] = dat[field]-4294967296;
                   break;
                 case 'i64': {
                   if ((index - 6) % 2 == 0) {

@@ -6,6 +6,7 @@
  (import "env" "print" (func $2 (param i32)))
  (global $1 (mut i32) (i32.const 0))
  (global $3 (mut i32) (i32.const 0))
+ (global $_MemoryPointer (mut i32) (i32.const 0))
  (memory $0 1)
  (table $functions 4 funcref)
  (elem $functions (i32.const 0) $0 $3 $4 $5)
@@ -13,39 +14,17 @@
  (export "memory" (memory $0))
  (func $0 (; has Stack IR ;) (param $0 i32) (result i32)
   (local $1 i32)
-  (if
-   (i32.le_u
-    (local.tee $1
-     (i32.load
-      (i32.const 0)
-     )
-    )
-    (i32.const 4)
-   )
-   (block
-    (i32.store
-     (i32.const 0)
-     (i32.const 4)
-    )
-    (local.set $1
-     (i32.load
-      (i32.const 0)
-     )
-    )
-   )
-  )
-  (i32.store
-   (i32.const 0)
+  (global.set $_MemoryPointer
    (i32.add
+    (local.tee $1
+     (global.get $_MemoryPointer)
+    )
     (local.get $0)
-    (local.get $1)
    )
   )
   (if
    (i32.ge_u
-    (i32.load
-     (i32.const 0)
-    )
+    (global.get $_MemoryPointer)
     (memory.size)
    )
    (drop

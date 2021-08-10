@@ -5,7 +5,7 @@ const _BriskError = (type: string, message: string, pos?: Position, exit = true)
   const color = exit ? '\x1b[31m' : '\x1b[33m';
   console.log(`${color}\x1b[1m${type}: ${message}\x1b[0m`);
   if (pos)
-    console.log(`${color}\x1b[1mat ${path.join((pos.file as path.ParsedPath).dir, (pos.file as path.ParsedPath).base)}:${pos.line}:${pos.col}\x1b[0m`);
+    console.log(`${color}\x1b[1mat ${path.join((<path.ParsedPath>pos.file).dir, (<path.ParsedPath>pos.file).base)}:${pos.line}:${pos.col}\x1b[0m`);
   if (exit) process.exit(1);
 };
 // TODO: add error codes and information for fixing

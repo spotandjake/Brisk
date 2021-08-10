@@ -30,7 +30,7 @@ const TypeChecker = (Program: Program) => {
         let got = '';
         switch(Node.value.type) {
           case 'literal':
-            got = <string>(Node.value as LiteralNode).dataType;
+            got = <string>(<LiteralNode>Node.value).dataType;
             break;
           case 'functionNode':
             got = 'Function';

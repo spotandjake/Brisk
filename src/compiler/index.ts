@@ -8,9 +8,9 @@ import Parser from './Parser/Parser';
 import Analyzer from './Stages/Analyzer';
 import Verifier from './Stages/BriskVerifier';
 import TypeChecker from './Stages/BriskTypeChecker';
-import Optimizer from './Stages/Optimizer';
 import Codegen from './codegen/Codegen';
-import Linker from './Linker/Linker'; // TODO: change name after finished rewriting
+import Linker from './Linker/Linker';
+import Optimizer from './Stages/Optimizer';
 // Type Imports
 import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Schemas/BuildInfo';
 import { ProgramNode } from './Grammar/Types';
@@ -41,10 +41,9 @@ const compileFile = async (filename: string) => {
   // Perform Type Checking
   const typeChecked = TypeChecker(analyzed);
   // Perform Well Formed Check
-  const optimized = Optimizer(typeChecked);
   // TODO: handle gc
   // code generator
-  const compiled = Codegen(optimized);
+  const compiled = Codegen(typeChecked);
   // Return File
   return { analyzed: analyzed, module: compiled, deps: deps, raw: { name: filename, content: raw } };
 };
@@ -115,7 +114,8 @@ const briskCompiler = async (filename: string, options: CompilerOptions) => {
   const compileOptions: CompilerOptions = { ...defaultOptions, ...options };
   // Compile
   const { module } = await compile(filename, compileOptions);
-  const output = compileOptions.wat ? module.emitText() : module.emitBinary();
+  const outputModule = Optimizer(module);
+  const output = compileOptions.wat ? outputModule.emitText() : outputModule.emitBinary();
   const outputName = filename.replace(/\.[^.]+$/, compileOptions.wat ? '.wat' : '.wasm');
   await fs.promises.writeFile(outputName, output);
   return outputName;

@@ -186,7 +186,7 @@ const analyzeFile = (
   entry=true
 ): Map<string, Dependency> => {
   // Determine File Information
-  const modulePath = path.resolve(path.join(location.dir, `${location.name}.wasm`));
+  const modulePath = path.resolve(path.join(location.dir, `${location.name}${location.ext}`));
   const self = <Dependency>dependencyGraph.get(modulePath);
   // Function To Determine Import Type and Modify Importance
   const _analyzeExpression = (base: string) => {
@@ -218,20 +218,8 @@ const analyzeFile = (
     _analyzeExpression(<string>funcInfo.module);
   }
   // Mark this file as found
-  if (!entry) {
-    const dep = <Dependency>dependencyGraph.get(modulePath);
-    dep.found = true;
-    dep.binaryen_module = module;
-    dependencyGraph.set(modulePath, dep);
-  } else {
-    dependencyGraph.set(modulePath, {
-      entry: true,
-      found: true,
-      location: modulePath,
-      importance: 0,
-      binaryen_module: module
-    });
-  }
+  if (!entry) dependencyGraph.set(modulePath, { ...<Dependency>dependencyGraph.get(modulePath), found: true, binaryen_module: module });
+  else dependencyGraph.set(modulePath, { entry: true, found: true, location: modulePath, importance: 0, binaryen_module: module});
   // Go through the current map and call the ones that are not yet found
   while ([...dependencyGraph.values()].some((dep) => !dep.found)) {
     [...dependencyGraph.values()].forEach((depImport) => {
@@ -239,7 +227,9 @@ const analyzeFile = (
       if (!fs.existsSync(depImport.location))
         BriskLinkerError(`could not resolve ${depImport.location}`);
       // Analyze the file
-      analyzeFile(path.parse(depImport.location), binaryen.readBinary(fs.readFileSync(depImport.location)), dependencyGraph, false);
+      const _parsedPath = path.parse(depImport.location);
+      const _fileInformation = _parsedPath.ext == '.wat' ? fs.readFileSync(depImport.location, 'utf-8') : fs.readFileSync(depImport.location);
+      analyzeFile(_parsedPath, _parsedPath.ext == '.wat' ? binaryen.parseText(<string>_fileInformation) : binaryen.readBinary(<Buffer>_fileInformation), dependencyGraph, false);
     });
   }
   // Return the current graph
@@ -247,7 +237,7 @@ const analyzeFile = (
 };
 const serializeExportName = (file: string, name: string) => `${file}||${name}`;
 const resolveModuleLocation = (dir: string, base: string) =>
-  path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}.wasm`));
+  path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}`));
 const resolveModuleType = (base: string): ModuleType => {
   if (base.startsWith(BriskIdentifier)) return ModuleType.BriskModule;
   else if (base == '') return ModuleType.LocalModule;
@@ -338,13 +328,17 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
           break;
         }
         case ModuleType.LocalModule:
+          if (globalInfo.name == '_MemoryPointer') {
+            modulePool.globals.set('_MemoryPointer', '_MemoryPointer');
+            break;
+          }
           mergePool.globals.push({
             name: `${countPool.globals}`,
             module: '',
             base: '',
             type: globalInfo.type,
             mutable: globalInfo.mutable,
-            init: globalInfo.name == 'FunctionTableOffset' ? module.i32.const(tableOffset) : globalInfo.init
+            init: globalInfo.name == '_FunctionTableOffset' ? module.i32.const(tableOffset) : globalInfo.init
           });
           modulePool.globals.set(globalInfo.name, `${countPool.globals}`);
           countPool.globals++;
@@ -404,8 +398,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
             body: funcInfo.body
           });
           modulePool.functions.set(funcInfo.name, `${countPool.functions}`);
-          if (funcInfo.name == '_start')
-            entryFunctions.push(`${countPool.functions}`);
+          if (funcInfo.name == '_start') entryFunctions.push(`${countPool.functions}`);
           else {
             mergePool.functionTable.push(`${countPool.functions}`);
             countPool.functionTable++;
@@ -458,10 +451,10 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
     if (value.type == 'FunctionImport') {
       const { internalName, externalModuleName, externalBaseName, params, results } = (<FunctionImport>value).value;
       module.addFunctionImport(internalName, externalModuleName, externalBaseName, params, results);
-    } else {
-      BriskLinkerError(`Unknown Wasm Import Type ${value.type}`);
-    }
+    } else BriskLinkerError(`Unknown Wasm Import Type ${value.type}`);
   }
+  // Add Known Globals
+  module.addGlobal('_MemoryPointer', binaryen.i32, true, module.i32.const(0));
   // Add Start Function
   module.addFunction('_start', binaryen.none, binaryen.none, [],
     module.block(null, entryFunctions.map((name) => module.call(name, [], binaryen.none)))
@@ -477,11 +470,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
   module.setMemory(1,-1,'memory',[]);
   // add verifier
   if (!module.validate()) module.validate();
-  // add optimizer
-  binaryen.setShrinkLevel(3);
-  binaryen.setFlexibleInlineMaxSize(3);
-  binaryen.setOneCallerInlineMaxSize(100);
-  module.optimize();
   // Return Source
   return module;
 };

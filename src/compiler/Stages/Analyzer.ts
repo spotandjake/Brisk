@@ -48,10 +48,12 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
+        // Set File Extension
+        if (path.parse(Node.path).ext == '') Node.path = `${Node.path}.br`;
         // Add import to list of imports
-        if (!(trace[1] as Program).imports) (trace[1] as Program).imports = [];
+        if (!(<Program>trace[1]).imports) (<Program>trace[1]).imports = [];
         // Resolve Module Paths
-        (trace[1] as Program).imports.push({
+        (<Program>trace[1]).imports.push({
           path: Node.path,
           identifiers: [ Node.identifier ]
         });
@@ -65,10 +67,10 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         // Add export to list of exports
-        if (!(trace[1] as Program).exports) (trace[1] as Program).exports = [];
-        if ((trace[1] as Program).exports.includes(Node.identifier))
+        if (!(<Program>trace[1]).exports) (<Program>trace[1]).exports = [];
+        if ((<Program>trace[1]).exports.includes(Node.identifier))
           BriskError(`Export by name ${Node.identifier} already exported, you may only export a value once`, Node.position);
-        (trace[1] as Program).exports.push(Node.identifier);
+        (<Program>trace[1]).exports.push(Node.identifier);
         break;
       case 'declarationStatement': {
         let dataType;
@@ -78,14 +80,10 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           dataType = { type: Node.dataType, params: paramType, result: returnType };
         } else if ([ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType)) {
           // Hack: Add wasm stack Types
-          //@ts-ignore
-          if (Node.value.dataType == 'Number') {
-            //@ts-ignore
-            Node.value.dataType = Node.dataType;
-          }
+          // @ts-ignore
+          if (Node.value.dataType == 'Number') Node.value.dataType = Node.dataType;
         } else dataType = Node.dataType;
-        if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, dataType);
+        if (!stack.hasLocal(Node.identifier)) stack.setLocal(Node.identifier, dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
         break;
       }
@@ -108,13 +106,13 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           if (Node.identifier == 'return') {
             func = {
               type: 'Function',
-              params: [ (Parent as DeclarationStatementNode).dataType ],
+              params: [ (<DeclarationStatementNode>Parent).dataType ],
               result: 'Void'
             };
           }
           Node.arguments = Node.arguments.map((argument, index) => { 
             if (argument.type == 'literal' && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
-              (argument as LiteralNode).dataType = func.params[index];
+              (<LiteralNode>argument).dataType = func.params[index];
             return argument;
           });
         }

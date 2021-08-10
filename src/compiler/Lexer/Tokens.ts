@@ -1,5 +1,4 @@
 import { Rule } from '../Grammar/Types';
-
 const tokens: Rule[] = [
   // keyword
   {
