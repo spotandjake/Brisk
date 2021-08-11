@@ -29,7 +29,11 @@ Heap Data is implemented in linear memory where as wasm stack values use plain w
   + Threading
   + Most wasm functions should be made available to brisk to allow us to implement as much of the language as possible in itself
 + Determine how type checking will work
+  + Type Checking Inside A Single Module
+  + Type Checking Cross Module
 + Determine what sort of optimizations we will use
+  + Combining Stores
+  + Constant Propagation
 ## Type Casting
 
 ```ts
@@ -49,13 +53,3 @@ Inject imports for runtime
 Compile Immidiatly to wasm and then perform optimizations on the wasm code, use a custom ir in front of binaryen until we replace binaryen this will allow us to quickly replace binaryen along with allow us to compile to different targets in the future as oposed to just wasm.
 Perform Optimizations on the generatted wasm code
 Link the wasm code
-## Linker Design
-### Ideas
-+ Indirect Linking
-+ Pass a table reference and add an offset to the function pointer
-+ Issues
-  + How do we tell which function this refers too
-  + Further solutions
-    + store function pointers statically and namespace memory per module
-    + store a module reference with the function
-      + store a module reference with the function and linked to a global

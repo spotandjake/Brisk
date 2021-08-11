@@ -26,13 +26,9 @@ export interface GlobalImport {
   }
 }
 export type PoolImport = FunctionImport | GlobalImport;
-// eslint-disable-next-line no-unused-vars
 export const enum ModuleType {
-  // eslint-disable-next-line no-unused-vars
   BriskModule,
-  // eslint-disable-next-line no-unused-vars
   WasmModule,
-  // eslint-disable-next-line no-unused-vars
   LocalModule
 }
 export interface Dependency {
@@ -50,7 +46,7 @@ export interface Pool {
   exports: Map<string, string>; //TODO: this is gonna need more info
 }
 export interface MergePool {
-  globals: binaryen.GlobalInfo[];
+  globals: { name: string; type: binaryen.Type; mutable: boolean; init: binaryen.ExpressionRef; }[];
   functions: WasmFunction[];
   functionTable: string[];
   // Wasm Level Imports, Exports
@@ -60,8 +56,4 @@ export interface MergePool {
 export interface CountPool { // Used For Keeping Track Of Number Of Parts
   globals: number;
   functions: number;
-  functionTable: number;
-  // Wasm Level Imports, Exports
-  imports: number;
-  exports: number;
 }

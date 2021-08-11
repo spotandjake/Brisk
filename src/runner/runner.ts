@@ -1,125 +1,115 @@
 import fs from 'fs';
 const decoder = new TextDecoder('utf8');
 
+const enum HeapType {
+  None = 0,
+  Function = 1,
+  Closure = 2,
+  Boolean = 3,
+  String = 4,
+  Number = 5,
+  Array = 6,
+  Parameters = 7
+}
 interface TableRow {
   state?: string;
   ptr?: number;
   refs?: number;
   size?: number;
-  type?: string;
+  type?: (string|HeapType);
   [ key: string ]: any;
 }
-let mem: WebAssembly.Memory;
-const memoryView = (memory: WebAssembly.Memory) => {
-  const memArray = new Uint32Array(memory.buffer);
-  // Generate A Pretty table
-  const tableBody = [];
-  let row: TableRow = {};
-  let rowIndex = 0;
-  let dataSize = 0;
-  memArray.forEach((dat, i) => {
-    if (dat == 0 && dataSize == 0 && i != memArray.length) return;
-    if (dataSize == 0) {
-      if (i != 0) {
-        // Push the old row to the table and make the new row
-        tableBody.push(row);
-        row = {};
-      }
-      // This is the start of the row
-      dataSize = dat/4 - 1;
-      rowIndex = 0;
-      row = { state: 'raw', ptr: i*4, size: dat };
-    } else {
-      dataSize--;
-      rowIndex++;
-      if (rowIndex == 1) row.refs = dat;
-      else if (rowIndex == 2) { // The data type
-        row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][dat];
-      } else row[`value${rowIndex-3}`] = dat;
-    }
-  });
-  tableBody.push(row);
-  row = {};
-  // Generate actual values
-  const table: any = [];
-  tableBody.forEach((dat) => {
-    if (dat.type == 'None') dat.state = 'None';
-    table.push({ ...dat });
-    // Generate actual
-    switch(dat.type) {
-      case 'String':
-        Object.keys(dat).forEach((field) => {
-          if (field.startsWith('value')) {
-            dat[field] = decoder.decode(new Uint8Array([ dat[field] ]));
-          }
-        });
-        break;
-      case 'Boolean':
-        Object.keys(dat).forEach((field) => {
-          if (field.startsWith('value')) {
-            dat[field] = dat[field] == 1;
-          }
-        });
-        break;
-      case 'Number': {
-        let intType = 'i32';
-        Object.keys(dat).forEach((field, index: number) => {
-          if (field.startsWith('value')) {
-            if (field == 'value0') {
-              intType = dat[field] = [ 'i32', 'i64', 'f32', 'f64' ][dat[field]-1];
-            } else {
-              switch(intType) {
-                case 'i32':
-                  // Deal with negative value
-                  if (dat[field] > 2147483647) dat[field] = dat[field]-4294967296;
-                  break;
-                case 'i64': {
-                  if ((index - 6) % 2 == 0) {
-                    const ptr = <number>dat['ptr']/4+index-2;
-                    dat[field] = new BigInt64Array(memArray.slice(ptr, ptr+2).buffer)[0];
-                  } else delete dat[field];
-                  break;
+const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
+  console.log('================================================================');
+  if (memory) {
+    const memArray = new Uint32Array(memory.buffer);
+    // Generate A Pretty table
+    const table: TableRow[] = [];
+    let row: TableRow = {};
+    let rowIndex = 0;
+    let dataSize = 0;
+    // Helper
+    const getActual = (row: TableRow) => {
+      table.push({ ...row });
+      // Generate actual
+      switch(<HeapType>row.type) {
+        case HeapType.String:
+          Object.keys(row).forEach((field) => {
+            if (field.startsWith('value')) {
+              row[field] = decoder.decode(new Uint8Array([ row[field] ]));
+            }
+          });
+          break;
+        case HeapType.Boolean:
+          Object.keys(row).forEach((field) => {
+            if (field.startsWith('value')) row[field] = row[field] == 1;
+          });
+          break;
+        case HeapType.Number: {
+          let intType = 'i32';
+          Object.keys(row).forEach((field, index: number) => {
+            if (field.startsWith('value')) {
+              if (field == 'value0') {
+                intType = row[field] = [ 'i32', 'i64', 'f32', 'f64' ][row[field]-1];
+              } else {
+                switch(intType) {
+                  case 'i32':
+                    // Deal with negative value
+                    if (row[field] > 2147483647) row[field] = row[field]-4294967296;
+                    break;
+                  case 'i64': {
+                    if ((index - 6) % 2 == 0) {
+                      const ptr = <number>row['ptr']/4+index-2;
+                      row[field] = new BigInt64Array(memArray.slice(ptr, ptr+2).buffer)[0];
+                    } else delete row[field];
+                    break;
+                  }
+                  case 'f64':
+                    if ((index - 6) % 2 == 0) {
+                      const ptr = <number>row['ptr']/4+index-2;
+                      row[field] = new Float64Array(memArray.slice(ptr, ptr+2).buffer)[0];
+                    } else delete row[field];
+                    break;
                 }
-                case 'f64':
-                  if ((index - 6) % 2 == 0) {
-                    const ptr = <number>dat['ptr']/4+index-2;
-                    dat[field] = new Float64Array(memArray.slice(ptr, ptr+2).buffer)[0];
-                  } else delete dat[field];
-                  break;
               }
             }
-          }
-        });
-        break;
+          });
+          break;
+        }
       }
-    }
-    dat.state = 'actual';
-    if (dat.type == 'None') dat.state = 'None';
-    table.push(dat);
-  });
-  console.table(table);
+      row.state = row.type == HeapType.None ? 'None' : 'actual';
+      row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][<number>row.type];
+      table.push(row);
+    };
+    memArray.forEach((dat, i) => {
+      if (dat == 0 && dataSize == 0 && i != memArray.length) return;
+      if (dataSize == 0 ) {
+        if (i != 0) getActual(row);
+        // This is the start of the row
+        dataSize = dat/4 - 1;
+        rowIndex = 0;
+        row = { state: 'raw', ptr: i*4, size: dat };
+      } else {
+        dataSize--;
+        rowIndex++;
+        if (rowIndex == 1) row.refs = dat;
+        else if (rowIndex == 2) row.type = dat;
+        else row[`value${rowIndex-3}`] = dat;
+      }
+    });
+    getActual(row);
+    console.table(table);
+  } else console.log('No Memory Found');
 };
 const runtime = async (wasmFile: string) => {
   const wasm = await fs.promises.readFile(wasmFile);
   const result = await WebAssembly.instantiate(wasm, {
     env: {
-      print: (pointer: number) => console.log(pointer),
-      ShowMemory: () => {
-        if (mem) {
-          console.log('================================================================');
-          memoryView(mem);
-        } else console.log('no memory export found');
-      }
+      print: (pointer: number) => console.log(pointer)
     }
   });
-  mem = <WebAssembly.Memory>result.instance.exports.memory;
   (<() => void>result.instance.exports._start)();
-  if (result.instance.exports.memory) {
-    console.log('================================================================');
-    memoryView(<WebAssembly.Memory>result.instance.exports.memory);
-  }
+  memoryView(<WebAssembly.Memory>result.instance.exports.memory);
   return;
 };
-// (memory (import "env" "memory") 1)
-
 export default runtime;

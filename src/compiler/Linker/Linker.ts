@@ -178,7 +178,6 @@ const namespace = (
   }
 };
 // TODO: i think i parse the locations many times i should just parse them once
-// TODO: this can be made many times simpler, also check that there are no cyclic dependencies
 const analyzeFile = (
   location: path.ParsedPath,
   module: binaryen.Module,
@@ -210,12 +209,10 @@ const analyzeFile = (
   };
   // Determine File Data
   for (let i = 0; i < module.getNumGlobals(); i++) {
-    const globalInfo = binaryen.getGlobalInfo(module.getGlobalByIndex(i));
-    _analyzeExpression(<string>globalInfo.module);
+    _analyzeExpression(<string>binaryen.getGlobalInfo(module.getGlobalByIndex(i)).module);
   }
   for (let i = 0; i < module.getNumFunctions(); i++) {
-    const funcInfo = binaryen.getFunctionInfo(module.getFunctionByIndex(i));
-    _analyzeExpression(<string>funcInfo.module);
+    _analyzeExpression(<string>binaryen.getFunctionInfo(module.getFunctionByIndex(i)).module);
   }
   // Mark this file as found
   if (!entry) dependencyGraph.set(modulePath, { ...<Dependency>dependencyGraph.get(modulePath), found: true, binaryen_module: module });
@@ -228,16 +225,15 @@ const analyzeFile = (
         BriskLinkerError(`could not resolve ${depImport.location}`);
       // Analyze the file
       const _parsedPath = path.parse(depImport.location);
-      const _fileInformation = _parsedPath.ext == '.wat' ? fs.readFileSync(depImport.location, 'utf-8') : fs.readFileSync(depImport.location);
-      analyzeFile(_parsedPath, _parsedPath.ext == '.wat' ? binaryen.parseText(<string>_fileInformation) : binaryen.readBinary(<Buffer>_fileInformation), dependencyGraph, false);
+      const _fileInformation = fs.readFileSync(depImport.location);
+      analyzeFile(_parsedPath, _parsedPath.ext == '.wat' ? binaryen.parseText(_fileInformation.toString('utf-8')) : binaryen.readBinary(_fileInformation), dependencyGraph, false);
     });
   }
   // Return the current graph
   return dependencyGraph;
 };
 const serializeExportName = (file: string, name: string) => `${file}||${name}`;
-const resolveModuleLocation = (dir: string, base: string) =>
-  path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}`));
+const resolveModuleLocation = (dir: string, base: string) => path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}`));
 const resolveModuleType = (base: string): ModuleType => {
   if (base.startsWith(BriskIdentifier)) return ModuleType.BriskModule;
   else if (base == '') return ModuleType.LocalModule;
@@ -261,10 +257,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
   };
   const countPool: CountPool = {
     globals: 0,
-    functions: 0,
-    functionTable: 0,
-    imports: 0,
-    exports: 0
+    functions: 0
   };
   const entryFunctions: string[] = [];
   // Initialize Binaryen Module
@@ -311,7 +304,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
               imp.value.externalBaseName == <string>globalInfo.base &&
               imp.value.globalType == globalInfo.type
           );
-          // TODO: make sure there is no duplicate import of the same time already in the MergedPool
           if (!previousImport)  {
             mergePool.imports.push({
               type: 'GlobalImport',
@@ -324,7 +316,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
             });
           }
           modulePool.globals.set(globalInfo.name, previousImport ? previousImport.value.internalName : `${countPool.globals}`);
-          countPool.imports++;
           break;
         }
         case ModuleType.LocalModule:
@@ -334,8 +325,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
           }
           mergePool.globals.push({
             name: `${countPool.globals}`,
-            module: '',
-            base: '',
             type: globalInfo.type,
             mutable: globalInfo.mutable,
             init: globalInfo.name == '_FunctionTableOffset' ? module.i32.const(tableOffset) : globalInfo.init
@@ -384,7 +373,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
                 results: funcInfo.results
               }
             });
-            countPool.imports++;
             countPool.functions++;
           }
           break;
@@ -401,7 +389,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
           if (funcInfo.name == '_start') entryFunctions.push(`${countPool.functions}`);
           else {
             mergePool.functionTable.push(`${countPool.functions}`);
-            countPool.functionTable++;
           }
           countPool.functions++;
           break;
@@ -410,7 +397,6 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
     // Go Over Exports
     for (let i = 0; i < depModule.getNumExports(); i++) {
       const exportInfo = binaryen.getExportInfo(depModule.getExportByIndex(i));
-      // TODO: add support for exporting things that are imported
       switch (exportInfo.kind) {
         case binaryen.ExternalKinds.Function:
           LinkPool.functions.set(
@@ -447,7 +433,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
   }
   // add wasm imports
   for (const value of mergePool.imports) {
-    // TODO: add support for importing other types then just functions, i think my naming scheme for global import is wrong look at function scheme for correct
+    // TODO: add support for importing other types then just functions
     if (value.type == 'FunctionImport') {
       const { internalName, externalModuleName, externalBaseName, params, results } = (<FunctionImport>value).value;
       module.addFunctionImport(internalName, externalModuleName, externalBaseName, params, results);

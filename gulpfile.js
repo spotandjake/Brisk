@@ -5,12 +5,26 @@ import gulp from 'gulp';
 import * as rollup from 'rollup';
 import rollupTypescript from '@rollup/plugin-typescript';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { terser } from 'rollup-plugin-terser';
 import progress from 'rollup-plugin-progress';
 import eslint from 'gulp-eslint';
 import pkg from 'pkg';
 import { exec } from 'child_process';
 const rollup_plugins = [
-  rollupTypescript(),
+  rollupTypescript({
+    cacheDir: './dist/cache/'
+  }),
+  terser({
+    compress: {
+      passes: 3
+    },
+    format: {
+      beautify: true,
+      // max_line_len: 500,
+      quote_style: 1, //Always Single
+      indent_level: 2
+    }
+  }),
   progress(),
   visualizer(),
 ];
@@ -19,7 +33,7 @@ const rollup_input_options = {
 };
 const rollup_output_options = {
   format: 'es',
-  compact: false,
+  compact: true,
   sourcemap: true,
   indent: '  ',
   preferConst: true,
