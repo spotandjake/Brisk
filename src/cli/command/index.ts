@@ -3,7 +3,7 @@ interface Command {
   name: string;
   syntax: (string|string[]);
   description: string;
-  action: (commands: Command[], options: string[], args: any) => (void|Promise<void>);
+  action: (commands: Command[], options: string[], args: any) => (any|Promise<any>);
 }
 interface compiledCommand {
   name: string;

@@ -1,6 +1,5 @@
 import fs from 'fs';
 const decoder = new TextDecoder('utf8');
-
 const enum HeapType {
   None = 0,
   Function = 1,
@@ -20,7 +19,7 @@ interface TableRow {
   [ key: string ]: any;
 }
 const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
-  console.log('================================================================');
+  console.log('='.repeat(process.stdout.columns));
   if (memory) {
     const memArray = new Uint32Array(memory.buffer);
     // Generate A Pretty table
@@ -110,6 +109,5 @@ const runtime = async (wasmFile: string) => {
   });
   (<() => void>result.instance.exports._start)();
   memoryView(<WebAssembly.Memory>result.instance.exports.memory);
-  return;
 };
 export default runtime;

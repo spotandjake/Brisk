@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs';
 import crypto from 'crypto';
 import gulp from 'gulp';
@@ -16,7 +15,8 @@ const rollup_plugins = [
   }),
   terser({
     compress: {
-      passes: 3
+      passes: 3,
+      module: true
     },
     format: {
       beautify: true,
@@ -36,7 +36,7 @@ const rollup_output_options = {
   compact: true,
   sourcemap: true,
   indent: '  ',
-  preferConst: true,
+  preferConst: true
 };
 gulp.task('build', async () => {
   // Compile Nearley
@@ -92,5 +92,5 @@ gulp.task('lint', () => {
 });
 gulp.task('package', async () => {
   gulp.series('lint', 'build')();
-  await pkg.exec(['./dist/brisk.js', '--target', 'node16', '--output', 'brisk.exe']);
+  await pkg.exec(['./dist/brisk.js', '--target', 'node16', '--output', './dist/brisk.exe']);
 });

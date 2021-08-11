@@ -22,9 +22,9 @@ const commands: Command[] = [
         '  -v, --version  displays the current compiler version',
         '',
         'Commands:',
-        ...commands.map((command: Command) => {
-          const prefix = Array.isArray(command.syntax) ? command.syntax.join(',') : command.syntax;
-          return `  ${prefix}${' '.repeat(max_size - prefix.length)}  ${command.description}`;
+        ...commands.map(({ syntax, description }: Command) => {
+          const prefix = Array.isArray(syntax) ? syntax.join(',') : syntax;
+          return `  ${prefix}${' '.repeat(max_size - prefix.length)}  ${description}`;
         })
       ].join('\n'));
     }
@@ -53,21 +53,13 @@ const commands: Command[] = [
     name: 'run',
     syntax: 'run <file>',
     description: 'compile & run brisk file',
-    action: async (commands: Command[], options: string[], { file }: { file: string }) => {
-      // Run the runner
-      runner(await compile(path.join(process.cwd(), file), { wat: false }));
-    }
+    action: async (commands: Command[], options: string[], { file }: { file: string }) => runner(await compile(path.join(process.cwd(), file), { wat: false }))
   },
   {
     name: 'wasmRun',
     syntax: 'wasmRun <file>',
     description: 'run a compiled brisk file',
-    action: (commands: Command[], options: string[], { file }: { file: string }) => {
-      // Run the runner
-      runner(path.join(process.cwd(), file));
-    }
+    action: (commands: Command[], options: string[], { file }: { file: string }) => runner(path.join(process.cwd(), file))
   }
 ];
-
-const parse = Commander(commands);
-parse(process.argv);
+Commander(commands)(process.argv);
