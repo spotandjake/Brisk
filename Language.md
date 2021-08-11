@@ -2,6 +2,55 @@
 ----------------------------------------------------------------
 ## Overview
 NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite the compiler and modified as new criteria is realized when writing the first compiler.
+
+## Program Structure
+```
+├── src
+│   ├── Compiler
+│   │   ├── Compiler
+│   │   │   ├── FrontEnd
+│   │   │   │   ├── Lexer.ts
+│   │   │   │   ├── LexerTokens.ts
+│   │   │   │   ├── Parser.ts
+│   │   │   │   └── ParserTokens.ts
+│   │   │   ├── Backend
+│   │   │   │   ├── Analyzer.ts
+│   │   │   │   ├── TypeChecker.ts
+│   │   │   │   ├── Verifier.ts
+│   │   │   │   └── Compiler.ts
+│   │   │   └── Types.ts
+│   │   ├── Linker
+│   │   │   ├── Linker.ts
+│   │   │   └── Types.ts
+│   │   └── BriskIr
+│   │       ├── Program.ts
+│   │       ├── Expression.ts
+│   │       ├── Optimizer.ts
+│   │       └── Types.ts
+│   ├── Brisk Package Manager
+├── dist (or build)
+├── node_modules
+├── tests
+│   ├── index.ts
+│   └── Suite
+│       ├── Data
+│       │   ├── Lexer-Data.ts
+│       │   ├── Parser-Data.ts
+│       │   ├── TypeChecker-Data.ts
+│       │   ├── Compiler-Data.ts
+│       │   ├── Linker-Data.ts
+│       │   └── BriskIr-Data.ts
+│       └── Tests
+│           ├── Lexer-Test.ts
+│           ├── Parser-Test.ts
+│           ├── TypeChecker-Test.ts
+│           ├── Compiler-Test.ts
+│           ├── Linker-Test.ts
+│           └── BriskIr-Test.ts
+├── gulpfile.js
+├── package.json
+└── tsconfig.json
+```
 ## Builtin Types
 
 | Name     | Example                              | Description                  | Store Location |
