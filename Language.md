@@ -6,7 +6,18 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 ## Program Structure
 ```
 ├── src
+│   ├── Stdlib
+│   │   └── Print.br
+│   │   └── Math.br
+│   │   └── Http.br
+│   │   └── Host.ts
+│   ├── Runtime
+│   │   ├── Memory.br
+│   │   ├── Garbage Collection.br
+│   │   └── Wasi.br
 │   ├── Compiler
+│   │   ├── Schemas
+│   │   │   └── BuildInfo.ts
 │   │   ├── Compiler
 │   │   │   ├── FrontEnd
 │   │   │   │   ├── Lexer.ts
@@ -28,6 +39,37 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 │   │       ├── Optimizer.ts
 │   │       └── Types.ts
 │   ├── Brisk Package Manager
+│   │   ├── Server.br
+│   │   └── Client.br
+│   ├── Brisk Language Server
+│   │   ├── VsCode
+│   │   │   └── Client.ts
+│   │   ├── Vim
+│   │   |   └── Client.ts
+│   │   └── Server.br
+│   └── Brisk_Globals.ts
+├── Documentation
+│   ├── Runtime
+│   │   ├── Memory.md
+│   │   ├── GC.md
+│   │   └── Numbers.md
+│   ├── Stdlib
+│   │   ├── Math.md
+│   │   ├── Http.md
+│   │   └── Print.md
+│   ├── Language
+│   │   ├── Syntax.md
+│   │   ├── Memory.md
+│   │   └── ABI.md
+│   ├── Compiler
+│   │   ├── Structure.md
+│   │   ├── linking.md
+│   │   └── Brisk Ir.md
+│   ├── Package Manager
+│   │   └── Structure.md
+│   ├── Brisk Language Server
+│   │   └── Structure.md
+│   └── Server.br
 ├── dist (or build)
 ├── node_modules
 ├── tests
