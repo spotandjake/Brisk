@@ -136,7 +136,9 @@ In Brisk types are cast using `<T>`
 ## BuiltIn Functions
 
 # Language Design
-------------------------
+-----------------------
+## Parser
+look into using the [Glush](https://github.com/judofyr/glush) Parser tool to generate brisks new parser
 ## Compiler
 Parse Brisk Program
 Perform Type Checking
