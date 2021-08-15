@@ -109,7 +109,7 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 | f32      | let x: f32 = 1.1;                    | A 32-bit Float               | Wasm Stack     |
 | f64      | let x: f64 = 1.1;                    | A 64-bit Float               | Wasm Stack     |
 
-Heap Data is implemented in linear memory where as wasm stack values use plain wasm values, u21 is currently the default type used for pointers
+Heap Data is implemented in linear Memory whereas wasm stack values use plain wasm values, u21 is currently the default type used for pointers
 
 ## Still Needed
 + Some way to convert a primitive value to its pointer as a u32
