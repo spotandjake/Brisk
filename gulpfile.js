@@ -40,7 +40,7 @@ const rollup_output_options = {
 };
 gulp.task('build', async () => {
   // Compile Nearley
-  exec('nearleyc ./src/compiler/Grammar/Brisk.ne -o ./src/compiler/Grammar/Brisk.ts');
+  exec('nearleyc ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ne -o ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ts');
   // Compile TypeScript
   const bundle = await rollup.rollup({
     input: './src/cli/index.ts',

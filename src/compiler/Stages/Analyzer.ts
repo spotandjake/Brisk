@@ -1,18 +1,17 @@
 // Import Errors
-import { BriskSyntaxError, BriskReferenceError, BriskError } from '../Helpers/Errors';
+import { BriskSyntaxError, BriskReferenceError, BriskError } from '../../Brisk/Errors/Compiler';
 // Helper Imports
-import { RecurseTree, Stack } from '../Helpers/Helpers';
+import { RecurseTree, Stack } from '../../Brisk/Compiler/Helpers';
 import path from 'path';
 // Type Imports
 import {
   ParseTreeNode,
   Program,
-  ProgramNode,
-  FlagStatementNode, 
+  ProgramNode, 
   DeclarationStatementNode,
   LiteralNode,
   FunctionTypeNode
-} from '../Grammar/Types';
+} from '../../Brisk/Compiler/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
   const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([
@@ -22,20 +21,12 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
     [ 'i32Add', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
   ]);
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
-    // Append data to node
-    if ('position' in Node) Node.position.file = filePath;
     switch (Node.type) {
       case 'Program': {
-        // Determine flags
-        const programFlags: FlagStatementNode[] = [];
-        for (const node of Node.body) {
-          if (node.type != 'flagStatement') break;
-          programFlags.push(node);
-        }
         // Generate More Detailed Node
         Node = {
           type: 'Program',
-          flags: programFlags,
+          flags: Node.flags,
           variables: stack,
           body: Node.body,
           exports: Node.exports || [],
@@ -122,16 +113,11 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         break;
       case 'functionDeclaration': {
-        const FunctionFlags: FlagStatementNode[] = [];
-        for (const node of Node.body) {
-          if (node.type != 'flagStatement') break;
-          FunctionFlags.push(node);
-        }
         // Generate more detailed Node
         Node = {
           type: 'functionNode',
           dataType: Node.dataType,
-          flags: FunctionFlags,
+          flags: Node.flags,
           variables: stack,
           parameters: Node.parameters,
           body: Node.body,
@@ -153,8 +139,6 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         stack.setLocal(Node.identifier, Node.dataType);
         break;
     }
-    // Append data to node
-    if ('position' in Node) Node.position.file = filePath;
     return Node;
   });
   return <Program>program;

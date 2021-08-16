@@ -27,8 +27,8 @@ declare var Token_thick_arrow: any;
 declare var Token_arrow: any;
 
 import Lexer from '../Lexer/Lexer';
-import * as Nodes from './Types';
-const lexer = Lexer();
+import * as Nodes from '../../Types';
+const lexer = new Lexer('stub');
 
 interface NearleyToken {
   value: any;
@@ -62,13 +62,20 @@ const grammar: Grammar = {
   ParserRules: [
     {"name": "main", "symbols": ["StatementList"], "postprocess": 
         (data): Nodes.ProgramNode => {
+          const programFlags: Nodes.FlagStatementNode[] = [];
+          for (const node of data[0]) {
+            if (node.type != 'flagStatement') break;
+            programFlags.push(node);
+          }
           return {
             type: 'Program',
+            flags: programFlags,
             body: data[0],
             position: {
               offset: 0,
               line: 0,
-              col: 0
+              col: 0,
+              file: data[0][0].position.file
             }
           }
         }
@@ -109,7 +116,8 @@ const grammar: Grammar = {
             position: {
               offset: identifier.offset,
               line: identifier.line,
-              col: identifier.col
+              col: identifier.col,
+              file: identifier.file
             }
           }
         }
@@ -125,7 +133,8 @@ const grammar: Grammar = {
             position: {
               offset: identifier.offset,
               line: identifier.line,
-              col: identifier.col
+              col: identifier.col,
+              file: identifier.file
             }
           }
         }
@@ -139,7 +148,8 @@ const grammar: Grammar = {
             position: {
               offset: identifier.offset,
               line: identifier.line,
-              col: identifier.col
+              col: identifier.col,
+              file: identifier.file
             }
           }
         }
@@ -155,7 +165,8 @@ const grammar: Grammar = {
             position: {
               offset: start.offset,
               line: start.line,
-              col: start.col
+              col: start.col,
+              file: start.file
             }
           }
         }
@@ -170,35 +181,38 @@ const grammar: Grammar = {
             position: {
               offset: identifier.offset,
               line: identifier.line,
-              col: identifier.col
+              col: identifier.col,
+              file: identifier.file
             }
           }
         }
         },
     {"name": "FlagStatement", "symbols": [(lexer.has("Token_flag") ? {type: "Token_flag"} : Token_flag)], "postprocess": 
         (data): Nodes.FlagStatementNode => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'flagStatement',
             value: value,
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
         },
     {"name": "CommentStatement", "symbols": [(lexer.has("Token_comment") ? {type: "Token_comment"} : Token_comment)], "postprocess": 
         (data): Nodes.CommentStatementNode => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'commentStatement',
             value: value,
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
@@ -206,14 +220,15 @@ const grammar: Grammar = {
     {"name": "BlockStatement", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess": (data): Nodes.Statement[] => []},
     {"name": "BlockStatement", "symbols": [(lexer.has("Token_left_bracket") ? {type: "Token_left_bracket"} : Token_left_bracket), "wss", "StatementList", "wss", (lexer.has("Token_right_bracket") ? {type: "Token_right_bracket"} : Token_right_bracket)], "postprocess":  
         (data): Nodes.BlockStatementNode => {
-          const { value, offset, line, col } = data.filter(n => n)[0].position;
+          const { value, offset, line, col, file } = data.filter(n => n)[0].position;
           return {
             type: 'blockStatement',
             body: data.filter(n => n)[1],
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
@@ -235,14 +250,15 @@ const grammar: Grammar = {
     {"name": "Expression", "symbols": ["Expression$subexpression$1"], "postprocess": (data): Nodes.ExpressionNode => data[0][0]},
     {"name": "Variable", "symbols": [(lexer.has("Token_identifier") ? {type: "Token_identifier"} : Token_identifier)], "postprocess": 
         (data): Nodes.VariableNode => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'variable',
             identifier: value,
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
@@ -254,7 +270,7 @@ const grammar: Grammar = {
     {"name": "Atom", "symbols": ["Atom$subexpression$1"], "postprocess": (data) => data[0][0]},
     {"name": "String", "symbols": [(lexer.has("Token_string") ? {type: "Token_string"} : Token_string)], "postprocess": 
         (data: Nodes.Token[]): Nodes.LiteralNode  => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'literal',
             dataType: 'String',
@@ -262,14 +278,15 @@ const grammar: Grammar = {
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
         },
     {"name": "Number", "symbols": [(lexer.has("Token_number") ? {type: "Token_number"} : Token_number)], "postprocess": 
         (data: Nodes.Token[]): Nodes.LiteralNode  => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'literal',
             dataType: 'Number',
@@ -277,14 +294,15 @@ const grammar: Grammar = {
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
         },
     {"name": "Boolean", "symbols": [(lexer.has("Token_boolean") ? {type: "Token_boolean"} : Token_boolean)], "postprocess": 
         (data: Nodes.Token[]): Nodes.LiteralNode  => {
-          const { value, offset, line, col } = data[0];
+          const { value, offset, line, col, file } = data[0];
           return {
             type: 'literal',
             dataType: 'Boolean',
@@ -292,7 +310,8 @@ const grammar: Grammar = {
             position: {
               offset: offset,
               line: line,
-              col: col
+              col: col,
+              file: file
             }
           }
         }
@@ -300,15 +319,23 @@ const grammar: Grammar = {
     {"name": "FunctionDeclaration", "symbols": ["FunctionParameters", "wss", (lexer.has("Token_colon") ? {type: "Token_colon"} : Token_colon), "wss", "Type", "wss", (lexer.has("Token_thick_arrow") ? {type: "Token_thick_arrow"} : Token_thick_arrow), "wss", "FunctionBody"], "postprocess": 
         (data): Nodes.FunctionDeclarationNode => {
           const [ parameters, _, dataType, __, body ] = data.filter(n => n);
+          const FunctionFlags: Nodes.FlagStatementNode[] = [];
+          for (const node of body) {
+            if (node.type != 'flagStatement') break;
+            FunctionFlags.push(node);
+          }
+          // Generate more detailed Node
           return {
             type: 'functionDeclaration',
             dataType: dataType.value,
+            flags: FunctionFlags,
             parameters: parameters,
             body: body,
             position: {
               offset: dataType.offset,
               line: dataType.line,
-              col: dataType.col
+              col: dataType.col,
+              file: dataType.file
             }
           };
         }
@@ -334,7 +361,8 @@ const grammar: Grammar = {
             position: {
               offset: identifier!.offset,
               line: identifier!.line,
-              col: identifier!.col
+              col: identifier!.col,
+              file: identifier!.file
             }
           }
         }

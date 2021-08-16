@@ -1,5 +1,5 @@
-import { Rule } from '../Grammar/Types';
-const tokens: Rule[] = [
+import { Lexeme } from '../../Types';
+const tokens: Lexeme[] = [
   // keyword
   {
     type: 'keyword',

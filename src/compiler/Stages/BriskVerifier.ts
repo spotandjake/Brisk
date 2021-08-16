@@ -1,12 +1,9 @@
 // Import Errors
-import { BriskError} from '../Helpers/Errors';
+import { BriskError} from '../../Brisk/Errors/Compiler';
 // Helper Imports
-import { RecurseTree, Stack } from '../Helpers/Helpers';
+import { RecurseTree, Stack } from '../../Brisk/Compiler/Helpers';
 // Type import's
-import {
-  ParseTreeNode,
-  Program
-} from '../Grammar/Types';
+import { ParseTreeNode, Program } from '../../Brisk/Compiler/Types';
 
 const Verifier = (Program: Program): void => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

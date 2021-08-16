@@ -2,8 +2,9 @@
 import path from 'path';
 import { Commander, Command } from './command/index';
 // Import Components
-import compile from '../compiler/index';
+import compile from '../Compiler/index';
 import runner from '../runner/runner';
+import compileV2 from '../Brisk/index';
 // TODO: add flag to compile to wasm instead of wat
 const commands: Command[] = [
   {
@@ -41,7 +42,7 @@ const commands: Command[] = [
     name: 'main',
     syntax: '<file>',
     description: 'compiles the main brisk file',
-    action: (commands: Command[], options: string[], { file }: { file: string }) => compile(path.join(process.cwd(), file), {})
+    action: async (commands: Command[], options: string[], { file }: { file: string }) => await compileV2(path.join(process.cwd(), file), {})
   },
   {
     name: 'compile',

@@ -1,4 +1,4 @@
-import Parser from '../../compiler/Parser/Parser';
+import Parser from '../../Brisk/Compiler/FrontEnd/Parser/Parser';
 const data = `import print from './print.br';
 // Comments
 let main: Function = (param: Number, param2: String, param3: String): Number => {
@@ -21,8 +21,5 @@ export main;
 export default {
   name: 'parser',
   description: 'determine that parser output is the same',
-  run: (): string => {
-    const parsed = Parser('test.br', data, false);
-    return JSON.stringify(parsed);
-  }
+  run: (): string => JSON.stringify(Parser('stub', data))
 };

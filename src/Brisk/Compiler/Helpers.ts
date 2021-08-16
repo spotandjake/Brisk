@@ -1,5 +1,5 @@
 // Import Node Types
-import { ParseTreeNode, FunctionParameterNode, ExpressionNode } from '../Grammar/Types';
+import { ParseTreeNode, FunctionParameterNode, ExpressionNode } from './Types';
 // Recurse the ParseTree
 export const RecurseTree = (
   Node: ParseTreeNode,

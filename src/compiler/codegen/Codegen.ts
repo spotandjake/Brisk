@@ -1,15 +1,15 @@
 // dependency's
 import binaryen from 'binaryen';
 import path from 'path';
-import { Stack } from '../Helpers/Helpers';
-import { BriskError } from '../Helpers/Errors';
+import { Stack } from '../../Brisk/Compiler/Helpers';
+import { BriskError } from '../../Brisk/Errors/Compiler';
 // type's
 import {
   ParseTreeNode,
   Program,
   FunctionTypeNode,
   TypeNode
-} from '../Grammar/Types';
+} from '../../Brisk/Compiler/Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions

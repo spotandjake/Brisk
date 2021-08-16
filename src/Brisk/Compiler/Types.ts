@@ -1,29 +1,23 @@
-// Type Imports
-import { Stack } from '../Helpers/Helpers';
-import path from 'path';
-// General Nodes
-export interface Token {
-  type: string;
-  value: string | number | boolean | bigint;
-  text: string;
-  offset: number;
-  line: number;
-  col: number;
-}
-export interface Rule {
+import { Position } from '../Types';
+import { Stack } from './Helpers'; //TODO: replace helpers with normal stuff
+// Lexer
+interface Lexeme {
   type: string;
   id: string;
   value?: (text: string) => string | number | boolean | bigint;
   match: RegExp;
   lineBreaks?: boolean;
 }
-export interface Position {
+interface Token {
+  type: string;
+  value: string | number | boolean | bigint;
+  text: string;
   offset: number;
   line: number;
   col: number;
-  file?: path.ParsedPath;
+  file: string;
 }
-// ParseTreeTypes
+// Parser
 export type ParseTreeNode = Program | ProgramNode | Statement | ExpressionNode | FunctionParameterNode;
 type Import = (boolean|string[]);
 export interface Program {
@@ -38,6 +32,7 @@ export interface Program {
 }
 export interface ProgramNode {
   type: 'Program';
+  flags: FlagStatementNode[];
   body: Statement[];
   exports?: string[];
   imports?: { path: string; identifiers: Import; }[];
@@ -120,6 +115,7 @@ export interface FunctionNode {
 export interface FunctionDeclarationNode {
   type: 'functionDeclaration';
   dataType: TypeNode;
+  flags: FlagStatementNode[];
   parameters: FunctionParameterNode[];
   body: Statement[];
   position: Position;
@@ -139,3 +135,10 @@ export interface FunctionTypeNode {
   params: TypeNode[];
   result: TypeNode;
 }
+// Exports
+export {
+  // Lexer
+  Lexeme,
+  Token,
+  // Parser
+};

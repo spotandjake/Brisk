@@ -2,20 +2,27 @@
 # Lexer
 @{%
 import Lexer from '../Lexer/Lexer';
-import * as Nodes from './Types';
-const lexer = Lexer();
+import * as Nodes from '../../Types';
+const lexer = new Lexer('stub');
 %}
 @lexer lexer
 # General
 main -> StatementList {%
   (data): Nodes.ProgramNode => {
+    const programFlags: Nodes.FlagStatementNode[] = [];
+    for (const node of data[0]) {
+      if (node.type != 'flagStatement') break;
+      programFlags.push(node);
+    }
     return {
       type: 'Program',
+      flags: programFlags,
       body: data[0],
       position: {
         offset: 0,
         line: 0,
-        col: 0
+        col: 0,
+        file: data[0][0].position.file
       }
     }
   }
@@ -50,7 +57,8 @@ ImportStatement ->
       position: {
         offset: identifier.offset,
         line: identifier.line,
-        col: identifier.col
+        col: identifier.col,
+        file: identifier.file
       }
     }
   }
@@ -67,7 +75,8 @@ ImportWasmStatement ->
       position: {
         offset: identifier.offset,
         line: identifier.line,
-        col: identifier.col
+        col: identifier.col,
+        file: identifier.file
       }
     }
   }
@@ -82,7 +91,8 @@ ExportStatement ->
       position: {
         offset: identifier.offset,
         line: identifier.line,
-        col: identifier.col
+        col: identifier.col,
+        file: identifier.file
       }
     }
   }
@@ -99,7 +109,8 @@ DeclarationStatement ->
       position: {
         offset: start.offset,
         line: start.line,
-        col: start.col
+        col: start.col,
+        file: start.file
       }
     }
   }
@@ -115,7 +126,8 @@ CallStatement ->
       position: {
         offset: identifier.offset,
         line: identifier.line,
-        col: identifier.col
+        col: identifier.col,
+        file: identifier.file
       }
     }
   }
@@ -123,14 +135,15 @@ CallStatement ->
 FlagStatement -> 
   %Token_flag {%
   (data): Nodes.FlagStatementNode => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'flagStatement',
       value: value,
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
@@ -138,14 +151,15 @@ FlagStatement ->
 CommentStatement -> 
   %Token_comment {%
   (data): Nodes.CommentStatementNode => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'commentStatement',
       value: value,
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
@@ -154,14 +168,15 @@ BlockStatement ->
   %Token_left_bracket wss %Token_right_bracket {% (data): Nodes.Statement[] => [] %} |
   %Token_left_bracket wss StatementList wss %Token_right_bracket {% 
   (data): Nodes.BlockStatementNode => {
-    const { value, offset, line, col } = data.filter(n => n)[0].position;
+    const { value, offset, line, col, file } = data.filter(n => n)[0].position;
     return {
       type: 'blockStatement',
       body: data.filter(n => n)[1],
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
@@ -183,14 +198,15 @@ Expression -> (Atom | CallStatement | Variable) {% (data): Nodes.ExpressionNode 
 # Atom
 Variable -> %Token_identifier {%
   (data): Nodes.VariableNode => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'variable',
       identifier: value,
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
@@ -199,7 +215,7 @@ Atom -> (String | Number | Boolean | FunctionDeclaration) {% (data) => data[0][0
 # Literals
 String -> %Token_string {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'literal',
       dataType: 'String',
@@ -207,14 +223,15 @@ String -> %Token_string {%
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
 %}
 Number -> %Token_number {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'literal',
       dataType: 'Number',
@@ -222,14 +239,15 @@ Number -> %Token_number {%
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
 %}
 Boolean -> %Token_boolean {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
-    const { value, offset, line, col } = data[0];
+    const { value, offset, line, col, file } = data[0];
     return {
       type: 'literal',
       dataType: 'Boolean',
@@ -237,7 +255,8 @@ Boolean -> %Token_boolean {%
       position: {
         offset: offset,
         line: line,
-        col: col
+        col: col,
+        file: file
       }
     }
   }
@@ -247,15 +266,23 @@ FunctionDeclaration ->
   FunctionParameters wss %Token_colon wss Type wss %Token_thick_arrow wss FunctionBody {%
   (data): Nodes.FunctionDeclarationNode => {
     const [ parameters, _, dataType, __, body ] = data.filter(n => n);
+    const FunctionFlags: Nodes.FlagStatementNode[] = [];
+    for (const node of body) {
+      if (node.type != 'flagStatement') break;
+      FunctionFlags.push(node);
+    }
+    // Generate more detailed Node
     return {
       type: 'functionDeclaration',
       dataType: dataType.value,
+      flags: FunctionFlags,
       parameters: parameters,
       body: body,
       position: {
         offset: dataType.offset,
         line: dataType.line,
-        col: dataType.col
+        col: dataType.col,
+        file: dataType.file
       }
     };
   }
@@ -282,7 +309,8 @@ FunctionParameter -> %Token_identifier wss %Token_colon wss Type {%
       position: {
         offset: identifier!.offset,
         line: identifier!.line,
-        col: identifier!.col
+        col: identifier!.col,
+        file: identifier!.file
       }
     }
   }

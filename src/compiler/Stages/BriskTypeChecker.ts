@@ -1,12 +1,12 @@
 // Helper Imports
-import { RecurseTree, Stack } from '../Helpers/Helpers';
-import { BriskTypeError } from '../Helpers/Errors';
+import { RecurseTree, Stack } from '../../Brisk/Compiler/Helpers';
+import { BriskTypeError } from '../../Brisk/Errors/Compiler';
 // Type Imports
 import {
   ParseTreeNode,
   Program,
   LiteralNode
-} from '../Grammar/Types';
+} from '../../Brisk/Compiler/Types';
 
 const TypeChecker = (Program: Program) => {
   // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster

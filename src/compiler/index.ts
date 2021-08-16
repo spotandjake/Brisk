@@ -2,18 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import TOML from '@iarna/toml';
-import { BriskError } from './Helpers/Errors';
+import { BriskError } from '../Brisk/Errors/Compiler';
 import Brisk from '../Brisk_Globals';
-import Parser from './Parser/Parser';
+import Parser from '../Brisk/Compiler/FrontEnd/Parser/Parser';
 import Analyzer from './Stages/Analyzer';
 import Verifier from './Stages/BriskVerifier';
 import TypeChecker from './Stages/BriskTypeChecker';
 import Codegen from './codegen/Codegen';
-import Linker from './Linker/Linker';
-import Optimizer from './Stages/Optimizer';
+import Linker from '../Brisk/Linker/Linker';
+import Optimizer from '../Brisk/BriskIr/Optimizer';
 // Type Imports
 import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Schemas/BuildInfo';
-import { ProgramNode } from './Grammar/Types';
+import { ProgramNode } from '../Brisk/Compiler/Types';
 
 interface CompilerOptions {
   wat?: boolean;
@@ -106,7 +106,7 @@ const compile = async (filename: string, options: CompilerOptions) => {
       TOML.stringify(<TOML.JsonMap><unknown>ProgramBuildInfo)
     );
     // Return Linked
-    return { module: Linker(<path.ParsedPath>analyzed.position.file, entry), raw: raw, deps: deps };
+    return { module: Linker(path.parse(analyzed.position.file), entry), raw: raw, deps: deps };
   } else return { module: entry, raw: raw, deps: deps };
 };
 const briskCompiler = async (filename: string, options: CompilerOptions) => {

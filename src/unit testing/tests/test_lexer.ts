@@ -1,4 +1,4 @@
-import Lexer from '../../compiler/Lexer/Lexer';
+import Lexer from '../../Brisk/Compiler/FrontEnd/Lexer/Lexer';
 const data = `
 import print from './print.br';
 // Comments
@@ -24,7 +24,7 @@ export default {
   description: 'determine that lexer output is the same',
   run: (): string => {
     const output = [];
-    const lexer = Lexer();
+    const lexer = new Lexer('Stub');
     lexer.reset(data);
     // eslint-disable-next-line no-constant-condition
     while (true) {

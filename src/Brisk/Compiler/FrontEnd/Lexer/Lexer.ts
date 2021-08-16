@@ -1,14 +1,15 @@
-import Tokens from './Tokens';
+import rules from './Tokens';
 // Import Types
-import { Token, Rule } from '../Grammar/Types';
+import { Token, Lexeme } from '../../Types';
 class Lexer {
+  public file: string;
   private regex: RegExp;
-  private rules: Rule[];
+  private rules: Lexeme[];
   private dataset = '';
   private offset = 0;
   private line = 1;
   private col = 1;
-  constructor(rules: Rule[]) {
+  constructor(file: string) {
     // Process rules
     rules.forEach(({ match }) => {
       if (match.ignoreCase) throw new Error('RegExp /i flag used');
@@ -19,9 +20,10 @@ class Lexer {
     // store stuff
     this.regex = new RegExp(`(?:${rules.map(({ match }) => `((?:${match.source}))`).join('|')})`, 'my');
     this.rules = rules;
+    this.file = file;
   }
   next(): (Token | undefined) {
-    const { regex, rules, dataset, offset, line, col } = this;
+    const { regex, rules, dataset, offset, line, col, file } = this;
     // Test tokens
     regex.lastIndex = offset;
     const match = regex.exec(dataset);
@@ -43,7 +45,8 @@ class Lexer {
       text: text,
       offset: offset,
       line: line,
-      col: col
+      col: col,
+      file: file
     };
     // Keep track of position
     this.offset += text.length;
@@ -64,21 +67,22 @@ class Lexer {
     return {
       offset: this.offset,
       line: this.line,
-      col: this.col
+      col: this.col,
+      file: this.file
     };
   }
-  reset(chunk: string, info?: { offset: number, line: number, col: number }) {
+  reset(chunk: string, info?: { offset: number, line: number, col: number, file: string }) {
     this.dataset = chunk;
     this.offset = info?.offset || 0;
     this.line = info?.line || 1;
     this.col = info?.col || 1;
+    this.file = info?.file || this.file;
   }
   formatError(token: Token) {
-    if (token == null) return 'parseError: at end of file';
-    return `parseError: at line ${token.line} col ${token.col}:`;
+    return `parseError: ${token == null ? 'at end of file' : `at line ${token.line} col ${token.col}:`}`;
   }
   has(name: string) {
     return this.rules.some(({ id }) => id == name);
   }
 }
-export default () => new Lexer(Tokens);
+export default Lexer;

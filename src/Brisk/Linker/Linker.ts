@@ -2,9 +2,9 @@
 import binaryen from 'binaryen';
 import path from 'path';
 import fs from 'fs';
-import { BriskLinkerError } from '../Helpers/Errors';
+import { BriskLinkerError } from '../Errors/Linker';
 // Types
-import { Pool, Dependency, ModuleType, CountPool, MergePool, FunctionImport } from './LinkerTypes';
+import { Pool, Dependency, ModuleType, CountPool, MergePool, FunctionImport } from './Types';
 // Constants
 const BriskIdentifier = 'BRISK$MODULE$';
 // Helpers
