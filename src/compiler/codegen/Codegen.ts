@@ -8,7 +8,9 @@ import {
   ParseTreeNode,
   Program,
   FunctionTypeNode,
-  TypeNode
+  TypeNode,
+  HeapTypeID,
+  ParseTreeNodeType
 } from '../../Brisk/Compiler/Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
@@ -33,7 +35,7 @@ const _Allocate = (
   };
 };
 // Store A Value
-const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, typeName: string, data: number[], pointer?: number) => {
+const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, typeName: HeapTypeID, data: number[], pointer?: number) => {
   // Calculate Size
   let size = 0;
   data.forEach((value) => {
@@ -42,13 +44,11 @@ const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, t
   });
   // Allocate some space
   const { code, ptr } = pointer != undefined ? { code: [], ptr: pointer } : _Allocate(module, vars, size);
-  // Get type id
-  const rtId = ['Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'].indexOf(typeName)+1;
   // Store Data
   code.push(module.i32.store(4, 0, module.local.get(ptr, binaryen.i32), module.i32.const(0))); // gc refs
-  code.push(module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(rtId))); // value type
+  code.push(module.i32.store(8, 0, module.local.get(ptr, binaryen.i32), module.i32.const(typeName))); // value type
   let index = 3;
-  data.forEach((value, i) => {
+  data.forEach((value) => {
     const ValueType = binaryen.getExpressionType(value);
     const pointer = module.local.get(ptr, binaryen.i32);
     const NumericType = [ module.i32, module.i64, module.f32, module.f64 ][ValueType-2];
@@ -108,7 +108,7 @@ class Compiler {
   ): (binaryen.ExpressionRef | undefined) {
     const { module, functions, nativeImports, globals } = this;
     switch(Node.type) {
-      case 'Program': {
+      case ParseTreeNodeType.Program: {
         const { body, variables } = <Program>Node;
         const functionBody: binaryen.ExpressionRef[] = [];
         const stack = variables;
@@ -120,7 +120,7 @@ class Compiler {
         module.addFunctionExport('_start', '_start');
         break;
       }
-      case 'functionNode': {
+      case ParseTreeNodeType.functionNode: {
         const { dataType, variables, parameters, body } = Node;
         // Allocate Space for our data
         const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 4);
@@ -136,7 +136,7 @@ class Compiler {
           } else return module.local.get(<number>vars.get(name), binaryen.i32);
         });
         const { code:closureCode, ptr:closurePtr } = 
-          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, 'Closure', closurePointers);
+          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Closure, closurePointers);
         if (closureCode) functionBody.push(...closureCode);
         // reset the function
         const funcBody: binaryen.ExpressionRef[] = [];
@@ -181,12 +181,12 @@ class Compiler {
           module.block(null, funcBody)
         );
         // Store the function
-        const { code, ptr } = _Store(module, vars, 'Function', [ module.i32.const(functions.length), module.global.get('_FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
+        const { code, ptr } = _Store(module, vars, HeapTypeID.Function, [ module.i32.const(functions.length), module.global.get('_FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
       }
-      case 'callStatement': {
+      case ParseTreeNodeType.callStatement: {
         // Add calls for returns
         const functionArgs = Node.arguments.map(arg => <binaryen.ExpressionRef>this.compileToken(arg, functionBody, stack, vars, true));
         let wasm: (binaryen.ExpressionRef | undefined);
@@ -203,7 +203,7 @@ class Compiler {
         } else if (vars.has(Node.identifier) || globals.has(Node.identifier)) {
           // Assemble the Parameter structure
           const { code:paramCode, ptr:paramPtr } = 
-            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, 'Parameters', functionArgs);
+            Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Function, functionArgs);
           functionBody.push(...paramCode);
           // Assemble the Function Call
           const funcPtr = vars.has(Node.identifier) ? module.local.get(<number>vars.get(Node.identifier), binaryen.i32) : module.global.get(`${globals.get(Node.identifier)}`, binaryen.i32);
@@ -221,17 +221,17 @@ class Compiler {
         else functionBody.push(<binaryen.ExpressionRef>wasm);
         break;
       }
-      case 'declarationStatement': {
+      case ParseTreeNodeType.declarationStatement: {
         const { identifier, value } = Node;
         const wasm = this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function' ? Node.identifier : false);
         functionBody.push(module.local.set(vars.size, <binaryen.ExpressionRef>wasm));
         vars.set(identifier, vars.size);
         break;
       }
-      case 'literal': {
+      case ParseTreeNodeType.literal: {
         switch(Node.dataType) {
           case 'String': {
-            const { code, ptr } = _Store(module, vars, 'String', [...encoder.encode(<string>Node.value)].map(i => module.i32.const(i)));
+            const { code, ptr } = _Store(module, vars, HeapTypeID.String, [...encoder.encode(<string>Node.value)].map(i => module.i32.const(i)));
             functionBody.push(...code);
             return ptr;
           }
@@ -251,12 +251,12 @@ class Compiler {
             } else { //float
               data.push(module.i32.const(4), module.f64.const(<number>Node.value));
             }
-            const { code, ptr } = _Store(module, vars, 'Number', data);
+            const { code, ptr } = _Store(module, vars, HeapTypeID.Number, data);
             functionBody.push(...code);
             return ptr;
           }
           case 'Boolean': {
-            const { code, ptr } = _Store(module, vars, 'Boolean', [ module.i32.const(<boolean>Node.value == true ? 1 : 0) ]);
+            const { code, ptr } = _Store(module, vars, HeapTypeID.Boolean, [ module.i32.const(<boolean>Node.value == true ? 1 : 0) ]);
             functionBody.push(...code);
             return ptr;
           }
@@ -269,18 +269,18 @@ class Compiler {
           case 'f64':
             return module.f64.const(<number>Node.value);
           default: {
-            console.log('Unknown Var Type');
+            BriskError('Unknown Var Type');
             return module.i32.const(0);
           }
         }
       }
-      case 'variable': {
+      case ParseTreeNodeType.variable: {
         if (vars.has(Node.identifier)) return module.local.get(<number>vars.get(Node.identifier), binaryen.i32);
         else if (globals.has(Node.identifier)) return module.global.get(`${globals.get(Node.identifier)}`, binaryen.i32);
         else BriskError(`Unknown Var: ${Node.identifier}`, Node.position);
         break;
       }
-      case 'importWasmStatement': {
+      case ParseTreeNodeType.importWasmStatement: {
         // TODO: finish implementing global imports
         if (!(<FunctionTypeNode>Node.dataType)?.params) {
           if (![ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType))
@@ -302,7 +302,7 @@ class Compiler {
         nativeImports.set(Node.identifier, Node.dataType);
         break;
       }
-      case 'exportStatement': {
+      case ParseTreeNodeType.exportStatement: {
         if (!globals.has(Node.identifier)) {
           module.addGlobal(`${globals.size}`, binaryen.i32, true, module.i32.const(0));
           functionBody.push(module.global.set(`${globals.size}`,  module.local.get(<number>vars.get(Node.identifier), binaryen.i32)));
@@ -312,8 +312,8 @@ class Compiler {
         break;
       }
       // Ignore
-      case 'commentStatement':
-      case 'importStatement':
+      case ParseTreeNodeType.commentStatement:
+      case ParseTreeNodeType.importStatement:
         break;
       default: 
         console.log('Unknown Node Type');

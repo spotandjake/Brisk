@@ -11,11 +11,11 @@ main -> StatementList {%
   (data): Nodes.ProgramNode => {
     const programFlags: Nodes.FlagStatementNode[] = [];
     for (const node of data[0]) {
-      if (node.type != 'flagStatement') break;
+      if (node.type != Nodes.ParseTreeNodeType.flagStatement) break;
       programFlags.push(node);
     }
     return {
-      type: 'Program',
+      type: Nodes.ParseTreeNodeType.Program,
       flags: programFlags,
       body: data[0],
       position: {
@@ -39,7 +39,7 @@ Statement -> (StatementCommand | StatementInfo) {%
 %}
   
 StatementCommand -> 
-  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Token_semicolon wss {% 
+  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Tkn_semicolon wss {% 
   (data): Nodes.Statement => data[0][0]
 %}
 StatementInfo -> (FlagStatement | CommentStatement) wss {% 
@@ -47,11 +47,11 @@ StatementInfo -> (FlagStatement | CommentStatement) wss {%
 %}
 # StatementTypes
 ImportStatement -> 
-  %Token_import %Token_ws %Token_identifier %Token_ws %Token_from %Token_ws %Token_string {%
+  %Tkn_import %Tkn_ws %Tkn_identifier %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
   (data): Nodes.ImportStatementNode => {
     const [ _, __, identifier, ___, ____, _____, path ] = data;
     return {
-      type: 'importStatement',
+      type: Nodes.ParseTreeNodeType.importStatement,
       identifier: identifier.value,
       path: path.value,
       position: {
@@ -64,11 +64,11 @@ ImportStatement ->
   }
 %}
 ImportWasmStatement -> 
-  %Token_import %Token_ws %Token_wasm %Token_ws %Token_identifier wss %Token_colon wss Type %Token_ws %Token_from %Token_ws %Token_string {%
+  %Tkn_import %Tkn_ws %Tkn_wasm %Tkn_ws %Tkn_identifier wss %Tkn_colon wss Type %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
   (data): Nodes.ImportWasmStatementNode => {
     const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, path ] = data.filter(n => n);
     return {
-      type: 'importWasmStatement',
+      type: Nodes.ParseTreeNodeType.importWasmStatement,
       dataType: dataType.value,
       identifier: identifier.value,
       path: path.value,
@@ -82,11 +82,11 @@ ImportWasmStatement ->
   }
 %}
 ExportStatement -> 
-  %Token_export %Token_ws %Token_identifier {%
+  %Tkn_export %Tkn_ws %Tkn_identifier {%
   (data): Nodes.ExportStatementNode => {
     const [ _, __, identifier ] = data;
     return {
-      type: 'exportStatement',
+      type: Nodes.ParseTreeNodeType.exportStatement,
       identifier: identifier.value,
       position: {
         offset: identifier.offset,
@@ -98,11 +98,11 @@ ExportStatement ->
   }
 %}
 DeclarationStatement -> 
-  %Token_let %Token_ws %Token_identifier wss %Token_colon wss Type wss %Token_equal wss Expression {%
+  %Tkn_let %Tkn_ws %Tkn_identifier wss %Tkn_colon wss Type wss %Tkn_equal wss Expression {%
   (data): Nodes.DeclarationStatementNode => {
     const [ start, __, identifier, ___, dataType, ____, value ] = data.filter(n => n);
     return {
-      type: 'declarationStatement',
+      type: Nodes.ParseTreeNodeType.declarationStatement,
       dataType: dataType.value,
       identifier: identifier.value,
       value: value,
@@ -116,11 +116,11 @@ DeclarationStatement ->
   }
 %}
 CallStatement -> 
- %Token_identifier wss Arguments {%
+ %Tkn_identifier wss Arguments {%
   (data): Nodes.CallStatementNode => {
     const [ identifier, args ] = data.filter(n => n);
     return {
-      type: 'callStatement',
+      type: Nodes.ParseTreeNodeType.callStatement,
       identifier: <string>identifier.value,
       arguments: args,
       position: {
@@ -133,11 +133,11 @@ CallStatement ->
   }
 %}
 FlagStatement -> 
-  %Token_flag {%
+  %Tkn_flag {%
   (data): Nodes.FlagStatementNode => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'flagStatement',
+      type: Nodes.ParseTreeNodeType.flagStatement,
       value: value,
       position: {
         offset: offset,
@@ -149,11 +149,11 @@ FlagStatement ->
   }
 %}
 CommentStatement -> 
-  %Token_comment {%
+  %Tkn_comment {%
   (data): Nodes.CommentStatementNode => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'commentStatement',
+      type: Nodes.ParseTreeNodeType.commentStatement,
       value: value,
       position: {
         offset: offset,
@@ -165,12 +165,12 @@ CommentStatement ->
   }
 %}
 BlockStatement -> 
-  %Token_left_bracket wss %Token_right_bracket {% (data): Nodes.Statement[] => [] %} |
-  %Token_left_bracket wss StatementList wss %Token_right_bracket {% 
+  %Tkn_left_bracket wss %Tkn_right_bracket {% (data): Nodes.Statement[] => [] %} |
+  %Tkn_left_bracket wss StatementList wss %Tkn_right_bracket {% 
   (data): Nodes.BlockStatementNode => {
     const { value, offset, line, col, file } = data.filter(n => n)[0].position;
     return {
-      type: 'blockStatement',
+      type: Nodes.ParseTreeNodeType.blockStatement,
       body: data.filter(n => n)[1],
       position: {
         offset: offset,
@@ -183,12 +183,12 @@ BlockStatement ->
 %}
 # Arguments
 Arguments -> 
-  %Token_left_paren wss %Token_right_paren {% (): Nodes.ExpressionNode[] => [] %} |
-  %Token_left_paren wss ExpressionList wss %Token_right_paren {% 
+  %Tkn_left_paren wss %Tkn_right_paren {% (): Nodes.ExpressionNode[] => [] %} |
+  %Tkn_left_paren wss ExpressionList wss %Tkn_right_paren {% 
   (data): Nodes.ExpressionNode[] => data.filter(n => n)[1]
 %}
 # Expression
-ExpressionList -> Expression | ExpressionList wss %Token_comma wss Expression {%
+ExpressionList -> Expression | ExpressionList wss %Tkn_comma wss Expression {%
   (data): Nodes.ExpressionNode[] => {
     const [ expressionList, _, expression ] = data.filter(n => n);
     return [ ...expressionList, expression ];
@@ -196,11 +196,11 @@ ExpressionList -> Expression | ExpressionList wss %Token_comma wss Expression {%
 %}
 Expression -> (Atom | CallStatement | Variable) {% (data): Nodes.ExpressionNode => data[0][0] %}
 # Atom
-Variable -> %Token_identifier {%
+Variable -> %Tkn_identifier {%
   (data): Nodes.VariableNode => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'variable',
+      type: Nodes.ParseTreeNodeType.variable,
       identifier: value,
       position: {
         offset: offset,
@@ -213,11 +213,11 @@ Variable -> %Token_identifier {%
 %}
 Atom -> (String | Number | Boolean | FunctionDeclaration) {% (data) => data[0][0] %}
 # Literals
-String -> %Token_string {%
+String -> %Tkn_string {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'literal',
+      type: Nodes.ParseTreeNodeType.literal,
       dataType: 'String',
       value: <string>value,
       position: {
@@ -229,11 +229,11 @@ String -> %Token_string {%
     }
   }
 %}
-Number -> %Token_number {%
+Number -> %Tkn_number {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'literal',
+      type: Nodes.ParseTreeNodeType.literal,
       dataType: 'Number',
       value: <number>value,
       position: {
@@ -245,11 +245,11 @@ Number -> %Token_number {%
     }
   }
 %}
-Boolean -> %Token_boolean {%
+Boolean -> %Tkn_boolean {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col, file } = data[0];
     return {
-      type: 'literal',
+      type: Nodes.ParseTreeNodeType.literal,
       dataType: 'Boolean',
       value: <boolean>value,
       position: {
@@ -263,17 +263,17 @@ Boolean -> %Token_boolean {%
 %}
 # Function
 FunctionDeclaration -> 
-  FunctionParameters wss %Token_colon wss Type wss %Token_thick_arrow wss FunctionBody {%
+  FunctionParameters wss %Tkn_colon wss Type wss %Tkn_thick_arrow wss FunctionBody {%
   (data): Nodes.FunctionDeclarationNode => {
     const [ parameters, _, dataType, __, body ] = data.filter(n => n);
     const FunctionFlags: Nodes.FlagStatementNode[] = [];
     for (const node of body) {
-      if (node.type != 'flagStatement') break;
+      if (node.type != Nodes.ParseTreeNodeType.flagStatement) break;
       FunctionFlags.push(node);
     }
     // Generate more detailed Node
     return {
-      type: 'functionDeclaration',
+      type: Nodes.ParseTreeNodeType.functionDeclaration,
       dataType: dataType.value,
       flags: FunctionFlags,
       parameters: parameters,
@@ -288,22 +288,22 @@ FunctionDeclaration ->
   }
 %}
 FunctionParameters ->
-  %Token_left_paren wss %Token_right_paren {% (): Nodes.FunctionParameterNode[] => [] %} |
-  %Token_left_paren wss FunctionParameterList wss %Token_right_paren {% 
+  %Tkn_left_paren wss %Tkn_right_paren {% (): Nodes.FunctionParameterNode[] => [] %} |
+  %Tkn_left_paren wss FunctionParameterList wss %Tkn_right_paren {% 
   (data): Nodes.FunctionParameterNode[] => data.filter(n => n)[1]
 %}
 FunctionParameterList -> 
-  FunctionParameter | FunctionParameterList wss %Token_comma wss FunctionParameter {%
+  FunctionParameter | FunctionParameterList wss %Tkn_comma wss FunctionParameter {%
   (data): Nodes.FunctionParameterNode[] => {
     const [ paramList, _, Param ] = data.filter(n => n);
     return [ ...paramList, Param ];
   }
 %}
-FunctionParameter -> %Token_identifier wss %Token_colon wss Type {%
+FunctionParameter -> %Tkn_identifier wss %Tkn_colon wss Type {%
   (data): Nodes.FunctionParameterNode => {
     const [ identifier, _, dataType ] = data.filter(n => n);
     return {
-      type: 'functionParameter',
+      type: Nodes.ParseTreeNodeType.functionParameter,
       dataType: dataType.value,
       identifier: <string>identifier!.value,
       position: {
@@ -317,24 +317,24 @@ FunctionParameter -> %Token_identifier wss %Token_colon wss Type {%
 %}
 FunctionBody ->
   Expression {% (data): Nodes.Statement[] => [data[0]] %} |
-  %Token_left_bracket wss %Token_right_bracket {% (data): Nodes.Statement[] => [] %} |
-  %Token_left_bracket wss StatementList wss %Token_right_bracket {% 
+  %Tkn_left_bracket wss %Tkn_right_bracket {% (data): Nodes.Statement[] => [] %} |
+  %Tkn_left_bracket wss StatementList wss %Tkn_right_bracket {% 
   (data): Nodes.Statement[] => data.filter(n => n)[1]
 %}
 # Types
-TypeList -> Type | TypeList wss %Token_comma wss Type {%
+TypeList -> Type | TypeList wss %Tkn_comma wss Type {%
   (data): Nodes.TypeNode[] => {
     const [ typeList, _, type ] = data.filter(n => n);
     return [ ...typeList, type ];
   }
 %}
-Type -> (FunctionType | %Token_identifier) {% (data) => data[0][0] %}
-FunctionType -> FunctionTypeParam wss %Token_arrow wss Type {%
+Type -> (FunctionType | %Tkn_identifier) {% (data) => data[0][0] %}
+FunctionType -> FunctionTypeParam wss %Tkn_arrow wss Type {%
   (data): Nodes.FuncTypeNode => {
     const [ params, _, result ] = data.filter(n => n);
     return {
       value: {
-        type: 'functionType',
+        type: Nodes.ParseTreeNodeType.functionType,
         params: params.map((n: any) => n.value),
         result: result.value
       }
@@ -342,12 +342,12 @@ FunctionType -> FunctionTypeParam wss %Token_arrow wss Type {%
   }
 %}
 FunctionTypeParam -> 
-  %Token_left_paren wss %Token_right_paren {% () => [] %}|
-  %Token_left_paren wss TypeList wss %Token_right_paren {%
+  %Tkn_left_paren wss %Tkn_right_paren {% () => [] %}|
+  %Tkn_left_paren wss TypeList wss %Tkn_right_paren {%
   (data): Nodes.TypeNode[] => {
     const TypeList = data.filter(n => n)[1];
     return TypeList;
   }
 %}
 # Random
-wss  -> %Token_ws:* {% (d) => null %}
+wss  -> %Tkn_ws:* {% (d) => null %}

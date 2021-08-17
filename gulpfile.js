@@ -58,6 +58,37 @@ gulp.task('build', async () => {
   code = code.replaceAll('BRISK$CHECKSUM', crypto.createHash('md5').update(code, 'utf8').digest('hex'));
   code = code.replaceAll('BRISK$COMPILEDATE', new Date().toDateString());
   code += '\n//# sourceMappingURL=brisk.js.map';
+  // OutPut Some Stats
+  const oldCode = fs.existsSync('./dist/brisk.js') ? await fs.promises.readFile('./dist/brisk.js', 'utf-8') : '';
+  const previousStats = {
+    chars: oldCode.length,
+    lines: oldCode.split('\n').length,
+    blanks: oldCode.split('\n').filter(n => n.trim() == '').length,
+    comments: oldCode.split('\n').filter(n => n.trim().startsWith('//')).length
+  };
+  const stats = {
+    chars: code.length,
+    lines: code.split('\n').length,
+    blanks: code.split('\n').filter(n => n.trim() == '').length,
+    comments: code.split('\n').filter(n => n.trim().startsWith('//')).length
+  };
+  console.table({
+    previous: {
+      ...previousStats,
+      code: previousStats.lines-previousStats.blanks-previousStats.comments
+    },
+    current: {
+      ...stats,
+      code: stats.lines-stats.blanks-stats.comments
+    },
+    reduction: {
+      chars: previousStats.chars-code.length,
+      lines: previousStats.lines-code.split('\n').length,
+      blanks: previousStats.blanks-code.split('\n').filter(n => n.trim() == '').length,
+      comments: previousStats.comments-code.split('\n').filter(n => n.trim().startsWith('//')).length,
+      code: (previousStats.lines-previousStats.blanks-previousStats.comments)-(stats.lines-stats.blanks-stats.comments)
+    }
+  });
   // Write File
   await fs.promises.writeFile('./dist/brisk.js', code);
   // Write Source Map

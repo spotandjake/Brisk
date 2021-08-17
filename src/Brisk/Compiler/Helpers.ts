@@ -1,5 +1,5 @@
 // Import Node Types
-import { ParseTreeNode, FunctionParameterNode, ExpressionNode } from './Types';
+import { ParseTreeNode, FunctionParameterNode, ExpressionNode, ParseTreeNodeType } from './Types';
 // Recurse the ParseTree
 export const RecurseTree = (
   Node: ParseTreeNode,
@@ -19,12 +19,12 @@ export const RecurseTree = (
     if (depth == 0 || trace.length < depth) {
       // Determine Node Type
       switch (Node.type) {
-        case 'Program':
-        case 'functionDeclaration':
-        case 'blockStatement':
-        case 'functionNode': {
+        case ParseTreeNodeType.Program:
+        case ParseTreeNodeType.functionDeclaration:
+        case ParseTreeNodeType.blockStatement:
+        case ParseTreeNodeType.functionNode: {
           stack = new Stack(stack);
-          if (Node.type == 'functionDeclaration') {
+          if (Node.type == ParseTreeNodeType.functionDeclaration) {
             Node.parameters = Node.parameters.map(
               (Param: FunctionParameterNode, i: number) => RecurseNodes(Node, Param, i, stack, trace, depth, callback)
             ).filter((n: (FunctionParameterNode | null)) => n);
@@ -34,12 +34,12 @@ export const RecurseTree = (
           ).filter((n: (ParseTreeNode | null)) => n);
           break;
         }
-        case 'callStatement':
+        case ParseTreeNodeType.callStatement:
           Node.arguments = Node.arguments.map(
             (Expression: ExpressionNode, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)
           ).filter((n: (ExpressionNode | null)) => n);
           break;
-        case 'declarationStatement':
+        case ParseTreeNodeType.declarationStatement:
           Node.value = RecurseNodes(Node, Node.value, 0, stack, trace, depth, callback);
           break;
       }

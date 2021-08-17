@@ -10,7 +10,8 @@ import {
   ProgramNode, 
   DeclarationStatementNode,
   LiteralNode,
-  FunctionTypeNode
+  FunctionTypeNode,
+  ParseTreeNodeType
 } from '../../Brisk/Compiler/Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
@@ -22,10 +23,10 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
   ]);
   program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
-      case 'Program': {
+      case ParseTreeNodeType.Program: {
         // Generate More Detailed Node
         Node = {
-          type: 'Program',
+          type: ParseTreeNodeType.Program,
           flags: Node.flags,
           variables: stack,
           body: Node.body,
@@ -35,7 +36,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         };
         break;
       }
-      case 'importStatement':
+      case ParseTreeNodeType.importStatement:
         if (!stack.hasLocal(Node.identifier))
           stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
@@ -50,11 +51,11 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         });
         Node.path = path.join(filePath.dir, Node.path);
         break;
-      case 'importWasmStatement':
+      case ParseTreeNodeType.importWasmStatement:
         //@ts-ignore
         program_globals.set(Node.identifier, <FunctionTypeNode>Node.dataType);
         break;
-      case 'exportStatement':
+      case ParseTreeNodeType.exportStatement:
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         // Add export to list of exports
@@ -63,9 +64,9 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           BriskError(`Export by name ${Node.identifier} already exported, you may only export a value once`, Node.position);
         (<Program>trace[1]).exports.push(Node.identifier);
         break;
-      case 'declarationStatement': {
+      case ParseTreeNodeType.declarationStatement: {
         let dataType;
-        if (Node.value.type == 'functionNode') {
+        if (Node.value.type == ParseTreeNodeType.functionNode) {
           const returnType = Node.value.dataType;
           const paramType = Node.value.parameters.map(param => param.dataType);
           dataType = { type: Node.dataType, params: paramType, result: returnType };
@@ -78,12 +79,12 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
         break;
       }
-      case 'callStatement':
+      case ParseTreeNodeType.callStatement:
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions
-          if (Parent.type == 'functionDeclaration') {
+          if (Parent.type == ParseTreeNodeType.functionDeclaration) {
             const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
-            if (type == 'declarationStatement' && identifier == Node.identifier) {
+            if (type == ParseTreeNodeType.declarationStatement && identifier == Node.identifier) {
               stack.setClosure(Node.identifier, dataType);
               break;
             }
@@ -102,20 +103,20 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
             };
           }
           Node.arguments = Node.arguments.map((argument, index) => { 
-            if (argument.type == 'literal' && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
+            if (argument.type == ParseTreeNodeType.literal && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
               (<LiteralNode>argument).dataType = func.params[index];
             return argument;
           });
         }
         break;
-      case 'variable':
+      case ParseTreeNodeType.variable:
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         break;
-      case 'functionDeclaration': {
+      case ParseTreeNodeType.functionDeclaration: {
         // Generate more detailed Node
         Node = {
-          type: 'functionNode',
+          type: ParseTreeNodeType.functionNode,
           dataType: Node.dataType,
           flags: Node.flags,
           variables: stack,
@@ -125,17 +126,17 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         };
         break;
       }
-      case 'blockStatement': {
+      case ParseTreeNodeType.blockStatement: {
         // Generate more detailed Node
         Node = {
-          type: 'blockStatement',
+          type: ParseTreeNodeType.blockStatement,
           variables: stack,
           body: Node.body,
           position: Node.position
         };
         break;
       }
-      case 'functionParameter':
+      case ParseTreeNodeType.functionParameter:
         stack.setLocal(Node.identifier, Node.dataType);
         break;
     }

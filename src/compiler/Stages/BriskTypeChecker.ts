@@ -5,37 +5,27 @@ import { BriskTypeError } from '../../Brisk/Errors/Compiler';
 import {
   ParseTreeNode,
   Program,
-  LiteralNode
+  LiteralNode,
+  ParseTreeNodeType
 } from '../../Brisk/Compiler/Types';
 
 const TypeChecker = (Program: Program) => {
-  // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster
+  // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster, use an enum for the types
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
-      // Ignore these
-      case 'Program':
-      case 'literal':
-      case 'variable':
-      case 'callStatement': 
-      case 'importWasmStatement':
-      case 'importStatement':
-      case 'functionNode':
-      case 'commentStatement':
-      case 'exportStatement':
-        break;
       // Type Check These
-      case 'declarationStatement': {
+      case ParseTreeNodeType.declarationStatement: {
         const wanted = Node.dataType;
         let got = '';
         switch(Node.value.type) {
-          case 'literal':
+          case ParseTreeNodeType.literal:
             got = <string>(<LiteralNode>Node.value).dataType;
             break;
-          case 'functionNode':
+          case ParseTreeNodeType.functionNode:
             got = 'Function';
             break;
-          case 'callStatement': {
+          case ParseTreeNodeType.callStatement: {
             //@ts-ignore
             const value = Parent.variables.readGet(Node.value.identifier);
             if (value && value.type && value.type == 'Function') {
@@ -45,7 +35,7 @@ const TypeChecker = (Program: Program) => {
                   //@ts-ignore
                   arg.dataType != value.params[index] &&
                   //@ts-ignore
-                  (arg.type == 'callStatement' && value.params[index] != Parent.variables.readGet(Node.value.identifier).result)
+                  (arg.type == ParseTreeNodeType.callStatement && value.params[index] != Parent.variables.readGet(Node.value.identifier).result)
                   //@ts-ignore
                 ) BriskTypeError(`expected ${value.params[index]} got ${arg.dataType||Parent.variables.readGet(Node.value.identifier).result}`, Node.position);
               });
@@ -55,7 +45,7 @@ const TypeChecker = (Program: Program) => {
             } else BriskTypeError(`${Node.value.identifier} is not a Function`, Node.position);
             break;
           }
-          case 'variable':
+          case ParseTreeNodeType.variable:
             //@ts-ignore
             got = Parent.variables.readGet(Node.value.identifier);
             break;
@@ -63,15 +53,25 @@ const TypeChecker = (Program: Program) => {
             console.log(Node.value);
             break;
         }
-        if (wanted == 'Void' || got == 'Void') BriskTypeError('you may not use Void as a type for a var or value', Node.position);
-        if (got != wanted) BriskTypeError(`expecting type ${wanted} got ${got}.`, Node.position);
+        if (wanted == 'Void' || got == 'Void') BriskTypeError('Void may not be used as a type for a variable of value', Node.position);
+        else if (got != wanted) BriskTypeError(`expecting type ${wanted} got ${got}.`, Node.position);
         if (wanted == 'Void' || got == 'Void' || got != wanted) process.exit(1);
         break;
       }
       // Log These
       default:
+        if (
+          ParseTreeNodeType.Program             ||
+          ParseTreeNodeType.literal             ||
+          ParseTreeNodeType.variable            ||
+          ParseTreeNodeType.callStatement       ||
+          ParseTreeNodeType.importWasmStatement ||
+          ParseTreeNodeType.importStatement     ||
+          ParseTreeNodeType.functionNode        ||
+          ParseTreeNodeType.commentStatement    ||
+          ParseTreeNodeType.exportStatement
+        ) break; // Ignore these
         console.log('Unknown Node TypeChecker');
-        console.log(Node);
         break;
     }
     return Node;

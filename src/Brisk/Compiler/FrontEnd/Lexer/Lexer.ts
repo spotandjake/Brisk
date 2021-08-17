@@ -1,25 +1,23 @@
 import rules from './Tokens';
+import { BriskSyntaxError } from '../../../Errors/Compiler';
 // Import Types
 import { Token, Lexeme } from '../../Types';
 class Lexer {
   public file: string;
   private regex: RegExp;
-  private rules: Lexeme[];
+  private rules: Lexeme[] = rules;
   private dataset = '';
   private offset = 0;
   private line = 1;
   private col = 1;
   constructor(file: string) {
-    // Process rules
-    rules.forEach(({ match }) => {
-      if (match.ignoreCase) throw new Error('RegExp /i flag used');
-      if (match.global) throw new Error('RegExp /g flag used');
-      if (match.sticky) throw new Error('RegExp /y flag used');
-      if (match.multiline) throw new Error('RegExp /m flag used');
-    });
     // store stuff
-    this.regex = new RegExp(`(?:${rules.map(({ match }) => `((?:${match.source}))`).join('|')})`, 'my');
-    this.rules = rules;
+    this.regex = new RegExp(`(?:${
+      rules.map(({ match }) => {
+        if (match.ignoreCase || match.global || match.sticky || match.multiline)
+          BriskSyntaxError('RegExp /i/g/y/m flag used');
+        return `((?:${match.source}))`;
+      }).join('|')})`, 'my');
     this.file = file;
   }
   next(): (Token | undefined) {
@@ -29,15 +27,16 @@ class Lexer {
     const match = regex.exec(dataset);
     if (!match) {
       if (dataset.length-offset == 0) return;
-      throw new Error(`invalid syntax at line ${this.line} col ${this.col}:`);
+      BriskSyntaxError(`invalid syntax at line ${line} col ${col}:`);
+      process.exit(1); // Tricks Lsp
     }
     const [ text, ...groups ] = match;
     // Determine the rule
-    let rule, i;
-    for (i = 0; i < rules.length; i++) {
-      if (groups[i]) rule = rules[i];
+    const rule = rules.find((r, i) => { if (groups[i]) return r; });
+    if (!rule) {
+      BriskSyntaxError('could not find token for match');
+      process.exit(1); // Tricks Lsp
     }
-    if (!rule) throw new Error('could not find token for match');
     // Assemble node
     const token: Token = {
       type: rule.id,
