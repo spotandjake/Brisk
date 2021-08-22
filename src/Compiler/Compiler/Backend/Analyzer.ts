@@ -1,7 +1,7 @@
 // Import Errors
-import { BriskSyntaxError, BriskReferenceError, BriskError } from '../../Brisk/Errors/Compiler';
+import { BriskSyntaxError, BriskReferenceError, BriskError } from '../../Errors/Compiler';
 // Helper Imports
-import { RecurseTree, Stack } from '../../Brisk/Compiler/Helpers';
+import { RecurseTree, Stack } from '../Helpers';
 import path from 'path';
 // Type Imports
 import {
@@ -12,7 +12,7 @@ import {
   LiteralNode,
   FunctionTypeNode,
   ParseTreeNodeType
-} from '../../Brisk/Compiler/Types';
+} from '../Types';
 
 const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
   const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([

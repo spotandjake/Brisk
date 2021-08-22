@@ -1,5 +1,5 @@
-import Parser from '../../Brisk/Compiler/FrontEnd/Parser/Parser';
-const data = `import print from './print.br';
+export const data = {
+  Pass: `import print from './print.br';
 // Comments
 let main: Function = (param: Number, param2: String, param3: String): Number => {
   @disablegc
@@ -16,10 +16,6 @@ let call: Number = main(main(1, 2));
 main((): Void => {
 });
 export main;
-`;
-
-export default {
-  name: 'parser',
-  description: 'determine that parser output is the same',
-  run: (): string => JSON.stringify(Parser('stub', data))
-};
+`,
+  Fail: 'f'
+}

@@ -1,8 +1,8 @@
 // dependency's
 import binaryen from 'binaryen';
 import path from 'path';
-import { Stack } from '../../Brisk/Compiler/Helpers';
-import { BriskError } from '../../Brisk/Errors/Compiler';
+import { Stack } from '../Helpers';
+import { BriskError } from '../../Errors/Compiler';
 // type's
 import {
   ParseTreeNode,
@@ -11,12 +11,12 @@ import {
   TypeNode,
   HeapTypeID,
   ParseTreeNodeType
-} from '../../Brisk/Compiler/Types';
+} from '../Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
 const runtime = (module: binaryen.Module) => {
-  module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
+  module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/Runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
 // Allocate Space
