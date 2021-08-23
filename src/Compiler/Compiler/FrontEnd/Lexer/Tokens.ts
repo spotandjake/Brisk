@@ -89,7 +89,16 @@ const tokens: Lexeme[] = [
     type: LexemeType.literal,
     id: 'Tkn_string',
     match: /'.*'/,
-    value: (text: string): string => text.slice(1, text.length-1)
+    value: (text: string): string => {
+      return text.slice(1, text.length-1)
+        .replace(/(?<!\\)\\b/g, '\b')
+        .replace(/(?<!\\)\\f/g, '\f')
+        .replace(/(?<!\\)\\n/g, '\n')
+        .replace(/(?<!\\)\\r/g, '\r')
+        .replace(/(?<!\\)\\t/g, '\t')
+        .replace(/(?<!\\)\\\\/g, '\\')
+      ;
+    }
   },
   {
     type: LexemeType.literal,

@@ -18,4 +18,4 @@ main((): Void => {
 export main;
 `,
   Fail: 'f'
-}
+};

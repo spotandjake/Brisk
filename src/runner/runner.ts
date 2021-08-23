@@ -102,7 +102,7 @@ const runtime = async (wasmFile: string) => {
       fd_write: (fd: number, iovs: number, iovs_len: number, nwritten: number): number => {
         // TODO: make this polyfill work
         if (mem) {
-          decoder.decode(new Uint8Array(mem.buffer.slice(iovs, iovs+iovs_len)));
+          console.log(decoder.decode(new Uint8Array(mem.buffer).slice(iovs+12, iovs+new Uint8Array(mem.buffer)[iovs])));
         }
         return 0;
       }

@@ -29,7 +29,7 @@ const rollup_plugins = [
   visualizer(),
 ];
 const rollup_input_options = {
-  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml', 'wasi' ],
+  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml' ],
 };
 const rollup_output_options = {
   format: 'es',
