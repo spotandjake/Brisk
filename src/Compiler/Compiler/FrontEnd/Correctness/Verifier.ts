@@ -1,13 +1,12 @@
 // Import Errors
-import { BriskError} from '../../Compiler/Errors/Compiler';
+import { BriskError} from '../../../Errors/Compiler';
 // Helper Imports
-import { RecurseTree, Stack } from '../../Compiler/Compiler/Helpers';
+import { WalkTree } from '../../Helpers';
 // Type import's
-import { ParseTreeNode, Program, ParseTreeNodeType } from '../../Compiler/Compiler/Types';
+import { ParseTreeNode, Program, ParseTreeNodeType } from '../../Types';
 
 const Verifier = (Program: Program): void => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
+  Program = WalkTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number): ParseTreeNode => {
     switch (Node.type) {
       case ParseTreeNodeType.importStatement: {
         // Make sure all imports are in the main scope

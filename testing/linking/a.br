@@ -7,3 +7,5 @@ let str: String = 'test';
 print(b);
 print(c);
 print(str);
+
+print('Hello');

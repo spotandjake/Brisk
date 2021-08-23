@@ -2,7 +2,7 @@ SpecVersion = "1.2.0"
 LatestCompileDate = "Sun Aug 22 2021"
 
 [CompilerVersion]
-CheckSum = "059c43766fd970388b829de84042d9ed"
+CheckSum = "a773a965f33a65bcd9e542299e232545"
 CompiledDate = "Sun Aug 22 2021"
 
 [ProgramInfo."b.br"]

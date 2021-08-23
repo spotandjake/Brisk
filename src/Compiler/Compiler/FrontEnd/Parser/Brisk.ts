@@ -26,6 +26,7 @@ declare var Tkn_boolean: any;
 declare var Tkn_thick_arrow: any;
 declare var Tkn_arrow: any;
 
+import path from 'path';
 import Lexer from '../Lexer/Lexer';
 import * as Nodes from '../../Types';
 const lexer = new Lexer('stub');
@@ -61,7 +62,7 @@ const grammar: Grammar = {
   Lexer: lexer,
   ParserRules: [
     {"name": "main", "symbols": ["StatementList"], "postprocess": 
-        (data): Nodes.ProgramNode => {
+        (data): Nodes.Program => {
           const programFlags: Nodes.FlagStatementNode[] = [];
           for (const node of data[0]) {
             if (node.type != Nodes.ParseTreeNodeType.flagStatement) break;
@@ -71,6 +72,8 @@ const grammar: Grammar = {
             type: Nodes.ParseTreeNodeType.Program,
             flags: programFlags,
             body: data[0],
+            exports: [],
+            imports: [],
             position: {
               offset: 0,
               line: 0,
@@ -108,11 +111,11 @@ const grammar: Grammar = {
         },
     {"name": "ImportStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_string") ? {type: "Tkn_string"} : Tkn_string)], "postprocess": 
         (data): Nodes.ImportStatementNode => {
-          const [ _, __, identifier, ___, ____, _____, path ] = data;
+          const [ _, __, identifier, ___, ____, _____, p ] = data;
           return {
             type: Nodes.ParseTreeNodeType.importStatement,
             identifier: identifier.value,
-            path: path.value,
+            path: path.join(path.parse(identifier.file).dir, path.parse(p.value).ext == '' ? `${p.value}.br` : p.value),
             position: {
               offset: identifier.offset,
               line: identifier.line,
@@ -124,12 +127,12 @@ const grammar: Grammar = {
         },
     {"name": "ImportWasmStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_wasm") ? {type: "Tkn_wasm"} : Tkn_wasm), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), "wss", (lexer.has("Tkn_colon") ? {type: "Tkn_colon"} : Tkn_colon), "wss", "Type", (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_string") ? {type: "Tkn_string"} : Tkn_string)], "postprocess": 
         (data): Nodes.ImportWasmStatementNode => {
-          const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, path ] = data.filter(n => n);
+          const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, p ] = data.filter(n => n);
           return {
             type: Nodes.ParseTreeNodeType.importWasmStatement,
             dataType: dataType.value,
             identifier: identifier.value,
-            path: path.value,
+            path: p.value,
             position: {
               offset: identifier.offset,
               line: identifier.line,
@@ -317,7 +320,7 @@ const grammar: Grammar = {
         }
         },
     {"name": "FunctionDeclaration", "symbols": ["FunctionParameters", "wss", (lexer.has("Tkn_colon") ? {type: "Tkn_colon"} : Tkn_colon), "wss", "Type", "wss", (lexer.has("Tkn_thick_arrow") ? {type: "Tkn_thick_arrow"} : Tkn_thick_arrow), "wss", "FunctionBody"], "postprocess": 
-        (data): Nodes.FunctionDeclarationNode => {
+        (data): Nodes.FunctionNode => {
           const [ parameters, _, dataType, __, body ] = data.filter(n => n);
           const FunctionFlags: Nodes.FlagStatementNode[] = [];
           for (const node of body) {
@@ -326,7 +329,7 @@ const grammar: Grammar = {
           }
           // Generate more detailed Node
           return {
-            type: Nodes.ParseTreeNodeType.functionDeclaration,
+            type: Nodes.ParseTreeNodeType.functionNode,
             dataType: dataType.value,
             flags: FunctionFlags,
             parameters: parameters,

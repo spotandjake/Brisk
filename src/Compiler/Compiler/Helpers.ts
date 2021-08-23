@@ -1,116 +1,79 @@
 // Import Node Types
-import { ParseTreeNode, FunctionParameterNode, ExpressionNode, ParseTreeNodeType } from './Types';
+import { ParseTreeNode, FunctionParameterNode, ExpressionNode, ParseTreeNodeType, Statement, Program } from './Types';
 // Recurse the ParseTree
-export const RecurseTree = (
+export const WalkTree = (
   Node: ParseTreeNode,
-  callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (ParseTreeNode | null),
-  depth = 0
-): any => {
-  const RecurseNodes = (
-    Parent: ParseTreeNode,
-    Node: ParseTreeNode,
-    index: number,
-    stack: Stack,
-    trace: ParseTreeNode[],
-    depth: number,
-    callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (ParseTreeNode | null)
-  ): any => {
+  callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (null|ParseTreeNode)
+): Program => {
+  const WalkNode = (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => {
     trace = [...trace, Parent];
-    if (depth == 0 || trace.length < depth) {
-      // Determine Node Type
-      switch (Node.type) {
-        case ParseTreeNodeType.Program:
-        case ParseTreeNodeType.functionDeclaration:
-        case ParseTreeNodeType.blockStatement:
-        case ParseTreeNodeType.functionNode: {
-          stack = new Stack(stack);
-          if (Node.type == ParseTreeNodeType.functionDeclaration) {
-            Node.parameters = Node.parameters.map(
-              (Param: FunctionParameterNode, i: number) => RecurseNodes(Node, Param, i, stack, trace, depth, callback)
-            ).filter((n: (FunctionParameterNode | null)) => n);
-          }
-          Node.body = Node.body.map(
-            (Statement: ParseTreeNode, i: number) => RecurseNodes(Node, Statement, i, stack, trace, depth, callback)
-          ).filter((n: (ParseTreeNode | null)) => n);
-          break;
-        }
-        case ParseTreeNodeType.callStatement:
-          Node.arguments = Node.arguments.map(
-            (Expression: ExpressionNode, i: number) => RecurseNodes(Node, Expression, i, stack, trace, depth, callback)
-          ).filter((n: (ExpressionNode | null)) => n);
-          break;
-        case ParseTreeNodeType.declarationStatement:
-          Node.value = RecurseNodes(Node, Node.value, 0, stack, trace, depth, callback);
-          break;
+    // Determine Node Type
+    switch (Node.type) {
+      case ParseTreeNodeType.Program:
+      case ParseTreeNodeType.blockStatement:
+      case ParseTreeNodeType.functionNode: {
+        stack = new Stack(stack);
+        if (Node.type == ParseTreeNodeType.functionNode)
+          Node.parameters = <FunctionParameterNode[]>Node.parameters.map((Param, i) => WalkNode(Node, Param, i, stack, trace)).filter(n => n);
+        Node.body = <Statement[]>Node.body.map((Statement, i) => WalkNode(Node, Statement, i, stack, trace)).filter(n => n);
+        break;
       }
+      case ParseTreeNodeType.callStatement:
+        Node.arguments = <ExpressionNode[]>Node.arguments.map((Expression, i) => WalkNode(Node, Expression, i, stack, trace)).filter(n => n);
+        break;
+      case ParseTreeNodeType.declarationStatement:
+        Node.value = <ExpressionNode>WalkNode(Node, Node.value, 0, stack, trace);
+        break;
     }
     return callback(Parent, Node, index, stack, trace);
   };
-  return RecurseNodes(<ParseTreeNode>{}, Node, 0, new Stack(), [], depth, callback);
+  return <Program>WalkNode(Node, Node, 0, new Stack(), []);
 };
 // A Stack Data Type
 export class Stack {
-  public local: any = {};
-  public closure: any = {};
-  public ParentStack: Stack | undefined;
+  private local: Map<string, any> = new Map();
+  public closure: Map<string, any> = new Map();
+  private ParentStack: Stack | undefined;
   constructor(ParentStack?: Stack) {
     this.ParentStack = ParentStack;
   }
   readHas(name: string) {
-    if (this.hasLocal(name)) return true;
-    else if (this.hasClosure(name)) return true;
-    else if (this.ParentStack && this.ParentStack.has(name)) return true;
-    else return false;
+    return this.hasLocal(name) || this.hasClosure(name) || (this.ParentStack && this.ParentStack.has(name));
   }
   has(name: string): boolean {
-    if (this.hasLocal(name)) return true;
-    else if (this.hasClosure(name)) return true;
+    if (this.hasLocal(name) || this.hasClosure(name)) return true;
     else if (this.ParentStack && this.ParentStack.has(name)) {
       this.setClosure(name, this.ParentStack.get(name));
       return true;
     } else return false;
   }
   hasLocal(name: string): boolean {
-    return this.local.hasOwnProperty(name);
+    return this.local.has(name);
   }
   hasClosure(name: string): boolean {
-    return this.closure.hasOwnProperty(name);
-  }
-  hasParent(name: string): boolean {
-    return this.ParentStack ? this.ParentStack.hasLocal(name) : false;
+    return this.closure.has(name);
   }
   setLocal(name: string, value: any): void {
-    this.local[name] = value;
+    this.local.set(name, value);
   }
   setClosure(name: string, value: any): void {
-    this.closure[name] = value;
+    this.closure.set(name, value);
   }
   readGet(name: string): any {
-    if (this.hasLocal(name)) return this.local[name];
-    else if (this.hasClosure(name)) return this.closure[name];
-    else {
-      if (this.ParentStack && this.ParentStack.has(name)) {
-        return this.ParentStack.get(name);
-      }
-    }
+    if (this.hasLocal(name)) return this.local.get(name);
+    else if (this.hasClosure(name)) return this.closure.get(name);
+    else if (this.ParentStack && this.ParentStack.has(name)) return this.ParentStack.get(name);
   }
   get(name: string): any {
-    if (this.hasLocal(name)) return this.local[name];
-    else if (this.hasClosure(name)) return this.closure[name];
-    else {
-      if (this.ParentStack && this.ParentStack.has(name)) {
-        this.setClosure(name, this.ParentStack.get(name));
-        return this.ParentStack.get(name);
-      }
+    if (this.hasLocal(name)) return this.local.get(name);
+    else if (this.hasClosure(name)) return this.closure.get(name);
+    else if (this.ParentStack && this.ParentStack.has(name)) {
+      this.setClosure(name, this.ParentStack.get(name));
+      return this.ParentStack.get(name);
     }
   }
-  getLocal(name: string): any {
-    return this.local[name];
-  }
-  getClosure(name: string): any {
-    return this.closure[name];
-  }
-  get length() {
-    return Object.keys(this.local).length + Object.keys(this.closure).length;
-  }
+}
+export interface varStack {
+  closure: Map<string, any>;
+  local: Map<string, any>;
 }

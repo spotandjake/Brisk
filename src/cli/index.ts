@@ -3,7 +3,7 @@ import path from 'path';
 import { Commander, Command } from './command/index';
 // Import Components
 import compile from '../v1/index';
-import runner from '../runner/runner';
+import runner from '../Runner/runner';
 import compileV2 from '../Compiler/index';
 // TODO: add flag to compile to wasm instead of wat
 const resolvePath = (file: string) => path.join(process.cwd(), file);
@@ -41,7 +41,7 @@ const commands: Command[] = [
     name: 'main',
     syntax: '<file>',
     description: 'compiles the main brisk file',
-    action: async (commands: Command[], options: string[], { file }: { file: string }) => await compileV2(resolvePath(file), {})
+    action: async (commands: Command[], options: string[], { file }: { file: string }) => await compile(resolvePath(file), {})
   },
   {
     name: 'compile',

@@ -234,5 +234,40 @@
   (call $2
    (local.get $0)
   )
+  (i32.store offset=4
+   (local.tee $0
+    (call $0
+     (i32.const 32)
+    )
+   )
+   (i32.const 0)
+  )
+  (i32.store offset=8
+   (local.get $0)
+   (i32.const 4)
+  )
+  (i32.store offset=12
+   (local.get $0)
+   (i32.const 72)
+  )
+  (i32.store offset=16
+   (local.get $0)
+   (i32.const 101)
+  )
+  (i32.store offset=20
+   (local.get $0)
+   (i32.const 108)
+  )
+  (i32.store offset=24
+   (local.get $0)
+   (i32.const 108)
+  )
+  (i32.store offset=28
+   (local.get $0)
+   (i32.const 111)
+  )
+  (call $2
+   (local.get $0)
+  )
  )
 )

@@ -5,15 +5,15 @@ import TOML from '@iarna/toml';
 import { BriskError } from '../Compiler/Errors/Compiler';
 import Brisk from '../Brisk_Globals';
 import Parser from '../Compiler/Compiler/FrontEnd/Parser/Parser';
-import Analyzer from '../Compiler/Compiler/Backend/Analyzer';
-import Verifier from './Stages/BriskVerifier';
-import TypeChecker from './Stages/BriskTypeChecker';
-import Codegen from '../Compiler/Compiler/Backend/Codegen';
+import Analyzer from '../Compiler/Compiler/FrontEnd/Analyzer';
+import Verifier from '../Compiler/Compiler/FrontEnd/Correctness/Verifier';
+import TypeChecker from '../Compiler/Compiler/FrontEnd/Correctness/TypeChecker';
+import Codegen from '../Compiler/Compiler/Backend/Compiler';
 import Linker from '../Compiler/Linker/Linker';
 import Optimizer from '../Compiler/BriskIr/Optimizer';
 // Type Imports
 import BuildInfoSchema, { BuildInfoSpecVersion, BuildInfoTemplate } from '../Compiler/Schemas/BuildInfo';
-import { ProgramNode } from '../Compiler/Compiler/Types';
+import { Program } from '../Compiler/Compiler/Types';
 
 interface CompilerOptions {
   wat?: boolean;
@@ -27,15 +27,14 @@ const defaultOptions: CompilerOptions = {
 const compileFile = async (filename: string) => {
   // Read File
   if (!fs.existsSync(filename)) BriskError(`${filename} does not exist`);
-  const filePath = path.parse(filename);
   const raw = await fs.promises.readFile(filename, 'utf-8');
   // Parse the Code
-  const parsed: ProgramNode = Parser(filename, raw);
+  const parsed: Program = Parser(filename, raw);
   if (parsed == undefined) BriskError('program is empty');
   // Analyze the Code
-  const analyzed = Analyzer(filePath, parsed);
+  const analyzed = Analyzer(parsed);
   // Make A List of dependency File directory's
-  const deps: string[] = analyzed.imports.map((module) => path.join(filePath.dir, module.path));
+  const deps: string[] = analyzed.imports.map((module) => module.path);
   // Verify Tree
   Verifier(analyzed);
   // Perform Type Checking

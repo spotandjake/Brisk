@@ -4,27 +4,17 @@ import path from 'path';
 import { Stack } from '../Helpers';
 import { BriskError } from '../../Errors/Compiler';
 // type's
-import {
-  ParseTreeNode,
-  Program,
-  FunctionTypeNode,
-  TypeNode,
-  HeapTypeID,
-  ParseTreeNodeType
-} from '../Types';
+import { ParseTreeNode, Program, FunctionTypeNode, TypeNode, HeapTypeID, ParseTreeNodeType } from '../Types';
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
 const runtime = (module: binaryen.Module) => {
-  module.addFunctionImport('_malloc', 'BRISK$MODULE$../../src/Runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
+  // TODO: these paths are not relative, they break if you move the input file currently
+  module.addFunctionImport('_malloc', 'BRISK$MODULE$./../src/Runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
 // Allocate Space
-const _Allocate = (
-  module: binaryen.Module,
-  vars: Map<(string | number), number>,
-  size: number
-) => {
+const _Allocate = (module: binaryen.Module, vars: Map<(string | number), number>, size: number) => {
   // Get the local Variable Index
   const ptrIndex = vars.size; //size|refs|type|value
   vars.set(ptrIndex, 0); // add a var to the stack for the pointer
@@ -111,7 +101,7 @@ class Compiler {
       case ParseTreeNodeType.Program: {
         const { body, variables } = <Program>Node;
         const functionBody: binaryen.ExpressionRef[] = [];
-        const stack = variables;
+        const stack = <Stack>variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
         module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
@@ -126,7 +116,7 @@ class Compiler {
         const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 4);
         functionBody.push(...AllocationCode);
         // Make the closure
-        const closurePointers = Object.keys(variables.closure).map((name: string) => {
+        const closurePointers = [...(<Stack>variables).closure.keys()].map((name: string) => {
           if (!vars.has(name)) {
             if (functionDeclaration == name) return module.local.get(AllocationPtr, binaryen.i32);
             else {
@@ -136,11 +126,11 @@ class Compiler {
           } else return module.local.get(<number>vars.get(name), binaryen.i32);
         });
         const { code:closureCode, ptr:closurePtr } = 
-          Object.keys(variables.closure).length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Closure, closurePointers);
+          [...(<Stack>variables).closure.keys()].length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Closure, closurePointers);
         if (closureCode) functionBody.push(...closureCode);
         // reset the function
         const funcBody: binaryen.ExpressionRef[] = [];
-        const funcStack = variables;
+        const funcStack = <Stack>variables;
         const funcVars: Map<(string|number), number> = new Map([
           // Set the closure parameter as a secret var
           [ 0, 0 ], // add a empty value for closure, we use numbers because all user var names are going to be strings
@@ -148,7 +138,7 @@ class Compiler {
         ]);
         // Add closure assignments to the function and variable list
         let closureI = 3;
-        for (const varName in variables.closure) {
+        for (const varName in [...(<Stack>variables).closure.keys()]) {
           funcBody.push(
             module.local.set(
               funcVars.size,
@@ -312,7 +302,6 @@ class Compiler {
         break;
       }
       // Ignore
-      case ParseTreeNodeType.commentStatement:
       case ParseTreeNodeType.importStatement:
         break;
       default: 

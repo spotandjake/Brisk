@@ -1,6 +1,7 @@
 @preprocessor typescript
 # Lexer
 @{%
+import path from 'path';
 import Lexer from '../Lexer/Lexer';
 import * as Nodes from '../../Types';
 const lexer = new Lexer('stub');
@@ -8,7 +9,7 @@ const lexer = new Lexer('stub');
 @lexer lexer
 # General
 main -> StatementList {%
-  (data): Nodes.ProgramNode => {
+  (data): Nodes.Program => {
     const programFlags: Nodes.FlagStatementNode[] = [];
     for (const node of data[0]) {
       if (node.type != Nodes.ParseTreeNodeType.flagStatement) break;
@@ -18,6 +19,8 @@ main -> StatementList {%
       type: Nodes.ParseTreeNodeType.Program,
       flags: programFlags,
       body: data[0],
+      exports: [],
+      imports: [],
       position: {
         offset: 0,
         line: 0,
@@ -49,11 +52,11 @@ StatementInfo -> (FlagStatement | CommentStatement) wss {%
 ImportStatement -> 
   %Tkn_import %Tkn_ws %Tkn_identifier %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
   (data): Nodes.ImportStatementNode => {
-    const [ _, __, identifier, ___, ____, _____, path ] = data;
+    const [ _, __, identifier, ___, ____, _____, p ] = data;
     return {
       type: Nodes.ParseTreeNodeType.importStatement,
       identifier: identifier.value,
-      path: path.value,
+      path: path.join(path.parse(identifier.file).dir, path.parse(p.value).ext == '' ? `${p.value}.br` : p.value),
       position: {
         offset: identifier.offset,
         line: identifier.line,
@@ -66,12 +69,12 @@ ImportStatement ->
 ImportWasmStatement -> 
   %Tkn_import %Tkn_ws %Tkn_wasm %Tkn_ws %Tkn_identifier wss %Tkn_colon wss Type %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
   (data): Nodes.ImportWasmStatementNode => {
-    const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, path ] = data.filter(n => n);
+    const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, p ] = data.filter(n => n);
     return {
       type: Nodes.ParseTreeNodeType.importWasmStatement,
       dataType: dataType.value,
       identifier: identifier.value,
-      path: path.value,
+      path: p.value,
       position: {
         offset: identifier.offset,
         line: identifier.line,
@@ -264,7 +267,7 @@ Boolean -> %Tkn_boolean {%
 # Function
 FunctionDeclaration -> 
   FunctionParameters wss %Tkn_colon wss Type wss %Tkn_thick_arrow wss FunctionBody {%
-  (data): Nodes.FunctionDeclarationNode => {
+  (data): Nodes.FunctionNode => {
     const [ parameters, _, dataType, __, body ] = data.filter(n => n);
     const FunctionFlags: Nodes.FlagStatementNode[] = [];
     for (const node of body) {
@@ -273,7 +276,7 @@ FunctionDeclaration ->
     }
     // Generate more detailed Node
     return {
-      type: Nodes.ParseTreeNodeType.functionDeclaration,
+      type: Nodes.ParseTreeNodeType.functionNode,
       dataType: dataType.value,
       flags: FunctionFlags,
       parameters: parameters,

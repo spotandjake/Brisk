@@ -1,18 +1,12 @@
 // Helper Imports
-import { RecurseTree, Stack } from '../../Compiler/Compiler/Helpers';
-import { BriskTypeError } from '../../Compiler/Errors/Compiler';
+import { WalkTree } from '../../Helpers';
+import { BriskTypeError } from '../../../Errors/Compiler';
 // Type Imports
-import {
-  ParseTreeNode,
-  Program,
-  LiteralNode,
-  ParseTreeNodeType
-} from '../../Compiler/Compiler/Types';
+import { ParseTreeNode, Program, LiteralNode, ParseTreeNodeType } from '../../Types';
 
 const TypeChecker = (Program: Program) => {
   // TODO: type check with imports, TypeCheck Function Calls, rewrite type checker to be faster, use an enum for the types
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Program = RecurseTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
+  Program = WalkTree(Program, (Parent: ParseTreeNode, Node: ParseTreeNode): ParseTreeNode => {
     switch (Node.type) {
       // Type Check These
       case ParseTreeNodeType.declarationStatement: {

@@ -10,7 +10,6 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 -│   │   └── Print.br
 -│   │   └── Math.br
 -│   │   └── Http.br
--│   │   └── Host.ts
 +│   ├── Runtime
 -│   │   ├── Memory.br
 -│   │   ├── Garbage Collection.br
@@ -23,14 +22,15 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 +│   │   │   │   ├── Lexer
 +│   │   │   │   │   ├── Lexer.ts
 +│   │   │   │   │   └── Tokens.ts
-+│   │   │   │   └── Parser
--│   │   │   │       ├── Parser.ts
--│   │   │   │       └── Tokens.ts
++│   │   │   │   ├── Parser
+-│   │   │   │   │   ├── Parser.ts
+-│   │   │   │   │   └── Tokens.ts
++│   │   │   │   ├── Correctness
++│   │   │   │   │   ├── TypeChecker.ts
++│   │   │   │   │   └── Verifier.ts
+-│   │   │   │   └── Analyzer.ts
 +│   │   │   ├── Backend
-+│   │   │   │   ├── Analyzer.ts
--│   │   │   │   ├── TypeChecker.ts
--│   │   │   │   ├── Verifier.ts
--│   │   │   │   └── Compiler.ts
++│   │   │   │   └── Compiler.ts
 -│   │   │   └── Types.ts
 +│   │   ├── Linker
 +│   │   │   ├── Linker.ts
@@ -40,6 +40,9 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 -│   │       ├── Expression.ts
 +│   │       ├── Optimizer.ts
 -│   │       └── Types.ts
++│   ├── Runner
++│   │   ├── wasi-polyfill.ts
++│   │   └── runner.ts
 -│   ├── Brisk Package Manager
 -│   │   ├── Server.br
 -│   │   └── Client.br
@@ -85,7 +88,7 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 +│   │   │   └── ABI.md
 +│   │   ├── Compiler
 +│   │   │   ├── Structure.md
--│   │   │   ├── linking.md
++│   │   │   ├── Linking.md
 -│   │   │   └── Brisk Ir.md
 +│   │   ├── Package Manager
 -│   │   │   └── Structure.md
@@ -164,3 +167,15 @@ Inject imports for runtime
 Compile Immidiatly to wasm and then perform optimizations on the wasm code, use a custom ir in front of binaryen until we replace binaryen this will allow us to quickly replace binaryen along with allow us to compile to different targets in the future as oposed to just wasm.
 Perform Optimizations on the generatted wasm code
 Link the wasm code
+
+## TODO
+1) Write A Form Of Brisk Ir, it can be built on top of binaryen for now but this will allow us to make the linker much smaller and will allow us to easily move away from binaryen in the future.
+2) Rewrite the entry point of the compiler, move from v1 to v2.
+3) Rewrite Linker, make it operate on wasm modules instead of a binaryen module being used as a parameter, this way it could be easily made into an external executable.
+4) Rewrite the runner to have wasi-polyfills, then rewrite parts of the compiler to depend on wasi and not our host runtime.
+5) Work on moving the memory table in the runner to a brisk module.
+6) Write tests for more parts
+7) Write a handwritten compiler move away from nearley
+8) Reduce complexity of the project entirely
+9) Move entirely to the brisk ir
+10) Rewrite the typechecking so it can handle inference's and casting

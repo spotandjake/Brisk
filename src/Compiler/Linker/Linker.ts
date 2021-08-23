@@ -233,7 +233,9 @@ const analyzeFile = (
   return dependencyGraph;
 };
 const serializeExportName = (file: string, name: string) => `${file}||${name}`;
-const resolveModuleLocation = (dir: string, base: string) => path.resolve(path.join(dir, `${base.slice(BriskIdentifier.length)}`));
+const resolveModuleLocation = (dir: string, base: string) => {
+  return path.resolve(path.isAbsolute(base.slice(BriskIdentifier.length)) ? base.slice(BriskIdentifier.length) : path.join(dir, base.slice(BriskIdentifier.length)));
+};
 const resolveModuleType = (base: string): ModuleType => {
   if (base.startsWith(BriskIdentifier)) return ModuleType.BriskModule;
   else if (base == '') return ModuleType.LocalModule;

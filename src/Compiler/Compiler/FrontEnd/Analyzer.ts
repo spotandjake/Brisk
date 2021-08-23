@@ -1,55 +1,26 @@
 // Import Errors
 import { BriskSyntaxError, BriskReferenceError, BriskError } from '../../Errors/Compiler';
 // Helper Imports
-import { RecurseTree, Stack } from '../Helpers';
-import path from 'path';
+import { WalkTree, Stack } from '../Helpers';
 // Type Imports
-import {
-  ParseTreeNode,
-  Program,
-  ProgramNode, 
-  DeclarationStatementNode,
-  LiteralNode,
-  FunctionTypeNode,
-  ParseTreeNodeType
-} from '../Types';
+import { ParseTreeNode, Program,  DeclarationStatementNode, FunctionTypeNode, ParseTreeNodeType, Import } from '../Types';
 
-const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
+const Analyzer = (program: Program) => {
+  // Old Analyzers
   const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([
     [ 'return', { type: 'Function', params: [ 'any' ], result: 'Void' } ],
     [ 'memStore', { type: 'Function', params: [ 'i32', 'i32', 'i32' ], result: 'Void' } ],
     [ 'memLoad', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ],
     [ 'i32Add', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
   ]);
-  program = RecurseTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
+  const exports: string[] = [], imports: { path: string; identifiers: Import; }[] = [];
+  program = WalkTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
     switch (Node.type) {
-      case ParseTreeNodeType.Program: {
-        // Generate More Detailed Node
-        Node = {
-          type: ParseTreeNodeType.Program,
-          flags: Node.flags,
-          variables: stack,
-          body: Node.body,
-          exports: Node.exports || [],
-          imports: Node.imports || [],
-          position: Node.position
-        };
-        break;
-      }
       case ParseTreeNodeType.importStatement:
-        if (!stack.hasLocal(Node.identifier))
-          stack.setLocal(Node.identifier, 'import');
+        if (!stack.hasLocal(Node.identifier)) stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
-        // Set File Extension
-        if (path.parse(Node.path).ext == '') Node.path = `${Node.path}.br`;
-        // Add import to list of imports
-        if (!(<Program>trace[1]).imports) (<Program>trace[1]).imports = [];
         // Resolve Module Paths
-        (<Program>trace[1]).imports.push({
-          path: Node.path,
-          identifiers: [ Node.identifier ]
-        });
-        Node.path = path.join(filePath.dir, Node.path);
+        imports.push({ path: Node.path, identifiers: [ Node.identifier ] });
         break;
       case ParseTreeNodeType.importWasmStatement:
         //@ts-ignore
@@ -59,10 +30,9 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         // Add export to list of exports
-        if (!(<Program>trace[1]).exports) (<Program>trace[1]).exports = [];
-        if ((<Program>trace[1]).exports.includes(Node.identifier))
+        if (exports.includes(Node.identifier))
           BriskError(`Export by name ${Node.identifier} already exported, you may only export a value once`, Node.position);
-        (<Program>trace[1]).exports.push(Node.identifier);
+        exports.push(Node.identifier);
         break;
       case ParseTreeNodeType.declarationStatement: {
         let dataType;
@@ -72,8 +42,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
           dataType = { type: Node.dataType, params: paramType, result: returnType };
         } else if ([ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType)) {
           // Hack: Add wasm stack Types
-          // @ts-ignore
-          if (Node.value.dataType == 'Number') Node.value.dataType = Node.dataType;
+          if (Node.value.type == ParseTreeNodeType.literal &&  Node.value.dataType == 'Number') Node.value.dataType = Node.dataType;
         } else dataType = Node.dataType;
         if (!stack.hasLocal(Node.identifier)) stack.setLocal(Node.identifier, dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
@@ -82,7 +51,7 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
       case ParseTreeNodeType.callStatement:
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions
-          if (Parent.type == ParseTreeNodeType.functionDeclaration) {
+          if (Parent.type == ParseTreeNodeType.functionNode) {
             const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
             if (type == ParseTreeNodeType.declarationStatement && identifier == Node.identifier) {
               stack.setClosure(Node.identifier, dataType);
@@ -102,9 +71,9 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
               result: 'Void'
             };
           }
-          Node.arguments = Node.arguments.map((argument, index) => { 
+          Node.arguments = Node.arguments.map((argument, index) => {
             if (argument.type == ParseTreeNodeType.literal && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
-              (<LiteralNode>argument).dataType = func.params[index];
+              argument.dataType = func.params[index];
             return argument;
           });
         }
@@ -113,36 +82,22 @@ const Analyzer = (filePath: path.ParsedPath, program: ProgramNode): Program => {
         if (!stack.has(Node.identifier))
           BriskReferenceError(`${Node.identifier} is not defined`, Node.position);
         break;
-      case ParseTreeNodeType.functionDeclaration: {
-        // Generate more detailed Node
-        Node = {
-          type: ParseTreeNodeType.functionNode,
-          dataType: Node.dataType,
-          flags: Node.flags,
-          variables: stack,
-          parameters: Node.parameters,
-          body: Node.body,
-          position: Node.position
-        };
+      case ParseTreeNodeType.Program:
+      case ParseTreeNodeType.functionNode:
+      case ParseTreeNodeType.blockStatement:
+        Node.variables = stack;
         break;
-      }
-      case ParseTreeNodeType.blockStatement: {
-        // Generate more detailed Node
-        Node = {
-          type: ParseTreeNodeType.blockStatement,
-          variables: stack,
-          body: Node.body,
-          position: Node.position
-        };
-        break;
-      }
       case ParseTreeNodeType.functionParameter:
         stack.setLocal(Node.identifier, Node.dataType);
         break;
+      case ParseTreeNodeType.commentStatement:
+        return null;
     }
     return Node;
   });
-  return <Program>program;
+  program.exports = exports;
+  program.imports = imports;
+  return program;
 };
 
 export default Analyzer;

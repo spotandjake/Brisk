@@ -3,7 +3,6 @@
 -│   │   └── Print.br
 -│   │   └── Math.br
 -│   │   └── Http.br
--│   │   └── Host.ts
 +│   ├── Runtime
 -│   │   ├── Memory.br
 -│   │   ├── Garbage Collection.br
@@ -16,14 +15,15 @@
 +│   │   │   │   ├── Lexer
 +│   │   │   │   │   ├── Lexer.ts
 +│   │   │   │   │   └── Tokens.ts
-+│   │   │   │   └── Parser
--│   │   │   │       ├── Parser.ts
--│   │   │   │       └── Tokens.ts
++│   │   │   │   ├── Parser
+-│   │   │   │   │   ├── Parser.ts
+-│   │   │   │   │   └── Tokens.ts
++│   │   │   │   ├── Correctness
++│   │   │   │   │   ├── TypeChecker.ts
++│   │   │   │   │   └── Verifier.ts
+-│   │   │   │   └── Analyzer.ts
 +│   │   │   ├── Backend
-+│   │   │   │   ├── Analyzer.ts
--│   │   │   │   ├── TypeChecker.ts
--│   │   │   │   ├── Verifier.ts
--│   │   │   │   └── Compiler.ts
++│   │   │   │   └── Compiler.ts
 -│   │   │   └── Types.ts
 +│   │   ├── Linker
 +│   │   │   ├── Linker.ts
@@ -33,6 +33,9 @@
 -│   │       ├── Expression.ts
 +│   │       ├── Optimizer.ts
 -│   │       └── Types.ts
++│   ├── Runner
++│   │   ├── wasi-polyfill.ts
++│   │   └── runner.ts
 -│   ├── Brisk Package Manager
 -│   │   ├── Server.br
 -│   │   └── Client.br
@@ -78,7 +81,7 @@
 +│   │   │   └── ABI.md
 +│   │   ├── Compiler
 +│   │   │   ├── Structure.md
--│   │   │   ├── linking.md
++│   │   │   ├── Linking.md
 -│   │   │   └── Brisk Ir.md
 +│   │   ├── Package Manager
 -│   │   │   └── Structure.md

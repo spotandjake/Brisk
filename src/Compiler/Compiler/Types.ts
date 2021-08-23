@@ -28,6 +28,7 @@ interface Token {
 }
 // Parser
 export const enum HeapTypeID {
+  None = 0,
   Function=1,
   Closure=2,
   Boolean=3,
@@ -49,28 +50,19 @@ export const enum ParseTreeNodeType {
   variable,
   literal,
   functionNode,
-  functionDeclaration,
   functionParameter,
   functionType
 }
-export type ParseTreeNode = Program | ProgramNode | Statement | ExpressionNode | FunctionParameterNode;
-type Import = (boolean|string[]);
+export type ParseTreeNode = Program | Statement | ExpressionNode | FunctionParameterNode;
+export type Import = (boolean|string[]);
 export interface Program {
   type: ParseTreeNodeType.Program;
   flags: FlagStatementNode[];
-  variables: Stack;
-  globals: any[];
+  variables?: Stack;
+  globals?: any[];
   body: Statement[];
   exports: string[];
   imports: { path: string; identifiers: Import; }[];
-  position: Position;
-}
-export interface ProgramNode {
-  type: ParseTreeNodeType.Program;
-  flags: FlagStatementNode[];
-  body: Statement[];
-  exports?: string[];
-  imports?: { path: string; identifiers: Import; }[];
   position: Position;
 }
 export type Statement = 
@@ -125,7 +117,7 @@ export interface BlockStatementNode {
   position: Position;
 }
 export type ExpressionNode = 
-  LiteralNode | FunctionDeclarationNode | FunctionNode | CallStatementNode | VariableNode;
+  LiteralNode | FunctionNode | CallStatementNode | VariableNode;
 
 export interface VariableNode {
   type: ParseTreeNodeType.variable;
@@ -142,15 +134,7 @@ export interface FunctionNode {
   type: ParseTreeNodeType.functionNode;
   dataType: TypeNode;
   flags: FlagStatementNode[];
-  variables: Stack;
-  parameters: FunctionParameterNode[];
-  body: Statement[];
-  position: Position;
-}
-export interface FunctionDeclarationNode {
-  type: ParseTreeNodeType.functionDeclaration;
-  dataType: TypeNode;
-  flags: FlagStatementNode[];
+  variables?: Stack;
   parameters: FunctionParameterNode[];
   body: Statement[];
   position: Position;

@@ -29,7 +29,7 @@ const rollup_plugins = [
   visualizer(),
 ];
 const rollup_input_options = {
-  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml' ],
+  external: [ 'path', 'fs', 'crypto', 'nearley', 'tslib', 'binaryen', '@iarna/toml', 'wasi' ],
 };
 const rollup_output_options = {
   format: 'es',
@@ -40,7 +40,7 @@ const rollup_output_options = {
 };
 gulp.task('build', async () => {
   // Compile Nearley
-  exec('nearleyc ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ne -o ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ts');
+  exec('nearleyc ./src/Compiler/Compiler/FrontEnd/Parser/Brisk.ne -o ./src/Compiler/Compiler/FrontEnd/Parser/Brisk.ts');
   // Compile TypeScript
   const bundle = await rollup.rollup({
     input: './src/cli/index.ts',
@@ -95,6 +95,7 @@ gulp.task('build', async () => {
   await fs.promises.writeFile('./dist/brisk.js.map', JSON.stringify(outputCode.map));
 });
 gulp.task('build-tests', async () => {
+  exec('nearleyc ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ne -o ./src/Brisk/Compiler/FrontEnd/Parser/Brisk.ts');
   // Compile TypeScript
   const bundle = await rollup.rollup({
     input: './src/tests/index.ts',
@@ -285,7 +286,12 @@ gulp.task('fileTree', async () => {
         else a.push(node);
       }
     });
-    return a;
+    return a.sort((a, b) => {
+      if (a.type == 'Folder' && b.type == 'Folder') return a.name.localeCompare(b.name);
+      else if (a.type == 'Folder' && b.type != 'Folder') return -1;
+      else if (b.type == 'Folder' && a.type != 'Folder') return 1;
+      else return a.name.localeCompare(b.name);
+    });
   };
   // Generate the new map
   const _DifferenceMap = generateMap(compareTree(newMap, _OldTree));
