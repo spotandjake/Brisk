@@ -2,9 +2,8 @@
 import path from 'path';
 import { Commander, Command } from './command/index';
 // Import Components
-import compile from '../v1/index';
 import runner from '../Runner/runner';
-import compileV2 from '../Compiler/index';
+import compile from '../Compiler/index';
 // TODO: add flag to compile to wasm instead of wat
 const resolvePath = (file: string) => path.join(process.cwd(), file);
 const commands: Command[] = [

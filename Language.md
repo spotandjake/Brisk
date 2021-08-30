@@ -179,3 +179,4 @@ Link the wasm code
 8) Reduce complexity of the project entirely
 9) Move entirely to the brisk ir
 10) Rewrite the typechecking so it can handle inference's and casting
+11) Fix Runtime Linking Location

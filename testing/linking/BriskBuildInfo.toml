@@ -1,14 +1,18 @@
 SpecVersion = "1.2.0"
-LatestCompileDate = "Sun Aug 22 2021"
+LatestCompileDate = "Mon Aug 30 2021"
 
 [CompilerVersion]
-CheckSum = "a773a965f33a65bcd9e542299e232545"
-CompiledDate = "Sun Aug 22 2021"
+CheckSum = "db1546721683ac0559fc682c2981abc5"
+CompiledDate = "Mon Aug 30 2021"
+
+[ProgramInfo."a.br"]
+signature = "628ad316c7a1635f41c8f12d81766d53"
+LatestCompileDate = "Mon Aug 30 2021"
 
 [ProgramInfo."b.br"]
 signature = "cd2493a7bb32702bf7268bc32d586b46"
-LatestCompileDate = "Sun Aug 22 2021"
+LatestCompileDate = "Mon Aug 30 2021"
 
 [ProgramInfo."c.br"]
 signature = "f6d2222ee359676b4cec2a013d69a3c5"
-LatestCompileDate = "Sun Aug 22 2021"
+LatestCompileDate = "Mon Aug 30 2021"

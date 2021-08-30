@@ -8,9 +8,9 @@ import { ParseTreeNode, Program, FunctionTypeNode, TypeNode, HeapTypeID, ParseTr
 // Constants
 const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
 // Runtime Functions
-const runtime = (module: binaryen.Module) => {
+const runtime = (filePath: string, module: binaryen.Module) => {
   // TODO: these paths are not relative, they break if you move the input file currently
-  module.addFunctionImport('_malloc', 'BRISK$MODULE$./../src/Runtime/memory.wat', '_malloc', binaryen.i32, binaryen.i32);
+  module.addFunctionImport('_malloc', `BRISK$MODULE$${path.relative(path.parse(filePath).dir, `${process.argv[1]}/../../src/Runtime/memory.wat`)}`, '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
 // Allocate Space
@@ -56,7 +56,7 @@ class Compiler {
   compile(Node: Program): binaryen.Module {
     const { module, globals } = this;
     // Build Runtime
-    runtime(module);
+    runtime(Node.position.file, module);
     // Enable Features
     module.setFeatures(binaryen.Features.MutableGlobals);
     // Initiate our memory
