@@ -17,7 +17,7 @@ NextGen Brisk Documentation for compiler v2, will be implemented when we rewrite
 +│   ├── Compiler
 +│   │   ├── Schemas
 +│   │   │   └── BuildInfo.ts
--│   │   ├── Compiler
++│   │   ├── Compiler
 +│   │   │   ├── FrontEnd
 +│   │   │   │   ├── Lexer
 +│   │   │   │   │   ├── Lexer.ts
