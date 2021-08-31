@@ -20,7 +20,6 @@ const namespace = (
   const expressionInfo = binaryen.getExpressionInfo(expression);
   // NameSpace Expression
   // TODO: would be preferable to find a way i do not need to code functionality for every piece and only need to code for things that require mapping, and then all sub expressions map
-  // TODO: change the types so i can use type guards over type casts
   switch (expressionInfo.id) {
     case binaryen.ExpressionIds.Invalid:
       BriskLinkerError('Invalid wasm expression');
@@ -389,9 +388,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
           });
           modulePool.functions.set(funcInfo.name, `${countPool.functions}`);
           if (funcInfo.name == '_start') entryFunctions.push(`${countPool.functions}`);
-          else {
-            mergePool.functionTable.push(`${countPool.functions}`);
-          }
+          else mergePool.functionTable.push(`${countPool.functions}`);
           countPool.functions++;
           break;
       }

@@ -8,7 +8,7 @@ declare var Tkn_import: any;
 declare var Tkn_ws: any;
 declare var Tkn_identifier: any;
 declare var Tkn_from: any;
-declare var Tkn_string: any;
+declare var Tkn_str: any;
 declare var Tkn_wasm: any;
 declare var Tkn_colon: any;
 declare var Tkn_export: any;
@@ -16,13 +16,13 @@ declare var Tkn_let: any;
 declare var Tkn_equal: any;
 declare var Tkn_flag: any;
 declare var Tkn_comment: any;
-declare var Tkn_left_bracket: any;
-declare var Tkn_right_bracket: any;
-declare var Tkn_left_paren: any;
-declare var Tkn_right_paren: any;
+declare var Tkn_l_bracket: any;
+declare var Tkn_r_bracket: any;
+declare var Tkn_l_paren: any;
+declare var Tkn_r_paren: any;
 declare var Tkn_comma: any;
 declare var Tkn_number: any;
-declare var Tkn_boolean: any;
+declare var Tkn_bool: any;
 declare var Tkn_thick_arrow: any;
 declare var Tkn_arrow: any;
 
@@ -109,7 +109,7 @@ const grammar: Grammar = {
     {"name": "StatementInfo", "symbols": ["StatementInfo$subexpression$1", "wss"], "postprocess":  
         (data): Nodes.Statement => data[0][0]
         },
-    {"name": "ImportStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_string") ? {type: "Tkn_string"} : Tkn_string)], "postprocess": 
+    {"name": "ImportStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_str") ? {type: "Tkn_str"} : Tkn_str)], "postprocess": 
         (data): Nodes.ImportStatementNode => {
           const [ _, __, identifier, ___, ____, _____, p ] = data;
           return {
@@ -125,7 +125,7 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "ImportWasmStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_wasm") ? {type: "Tkn_wasm"} : Tkn_wasm), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), "wss", (lexer.has("Tkn_colon") ? {type: "Tkn_colon"} : Tkn_colon), "wss", "Type", (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_string") ? {type: "Tkn_string"} : Tkn_string)], "postprocess": 
+    {"name": "ImportWasmStatement", "symbols": [(lexer.has("Tkn_import") ? {type: "Tkn_import"} : Tkn_import), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_wasm") ? {type: "Tkn_wasm"} : Tkn_wasm), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_identifier") ? {type: "Tkn_identifier"} : Tkn_identifier), "wss", (lexer.has("Tkn_colon") ? {type: "Tkn_colon"} : Tkn_colon), "wss", "Type", (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_from") ? {type: "Tkn_from"} : Tkn_from), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), (lexer.has("Tkn_str") ? {type: "Tkn_str"} : Tkn_str)], "postprocess": 
         (data): Nodes.ImportWasmStatementNode => {
           const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, p ] = data.filter(n => n);
           return {
@@ -220,8 +220,8 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_left_bracket") ? {type: "Tkn_left_bracket"} : Tkn_left_bracket), "wss", (lexer.has("Tkn_right_bracket") ? {type: "Tkn_right_bracket"} : Tkn_right_bracket)], "postprocess": (data): Nodes.Statement[] => []},
-    {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_left_bracket") ? {type: "Tkn_left_bracket"} : Tkn_left_bracket), "wss", "StatementList", "wss", (lexer.has("Tkn_right_bracket") ? {type: "Tkn_right_bracket"} : Tkn_right_bracket)], "postprocess":  
+    {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess": (data): Nodes.Statement[] => []},
+    {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", "StatementList", "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess":  
         (data): Nodes.BlockStatementNode => {
           const { value, offset, line, col, file } = data.filter(n => n)[0].position;
           return {
@@ -236,8 +236,8 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "Arguments", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess": (): Nodes.ExpressionNode[] => []},
-    {"name": "Arguments", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", "ExpressionList", "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess":  
+    {"name": "Arguments", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess": (): Nodes.ExpressionNode[] => []},
+    {"name": "Arguments", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", "ExpressionList", "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess":  
         (data): Nodes.ExpressionNode[] => data.filter(n => n)[1]
         },
     {"name": "ExpressionList", "symbols": ["Expression"]},
@@ -271,7 +271,7 @@ const grammar: Grammar = {
     {"name": "Atom$subexpression$1", "symbols": ["Boolean"]},
     {"name": "Atom$subexpression$1", "symbols": ["FunctionDeclaration"]},
     {"name": "Atom", "symbols": ["Atom$subexpression$1"], "postprocess": (data) => data[0][0]},
-    {"name": "String", "symbols": [(lexer.has("Tkn_string") ? {type: "Tkn_string"} : Tkn_string)], "postprocess": 
+    {"name": "String", "symbols": [(lexer.has("Tkn_str") ? {type: "Tkn_str"} : Tkn_str)], "postprocess": 
         (data: Nodes.Token[]): Nodes.LiteralNode  => {
           const { value, offset, line, col, file } = data[0];
           return {
@@ -303,7 +303,7 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "Boolean", "symbols": [(lexer.has("Tkn_boolean") ? {type: "Tkn_boolean"} : Tkn_boolean)], "postprocess": 
+    {"name": "Boolean", "symbols": [(lexer.has("Tkn_bool") ? {type: "Tkn_bool"} : Tkn_bool)], "postprocess": 
         (data: Nodes.Token[]): Nodes.LiteralNode  => {
           const { value, offset, line, col, file } = data[0];
           return {
@@ -343,8 +343,8 @@ const grammar: Grammar = {
           };
         }
         },
-    {"name": "FunctionParameters", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess": (): Nodes.FunctionParameterNode[] => []},
-    {"name": "FunctionParameters", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", "FunctionParameterList", "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess":  
+    {"name": "FunctionParameters", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess": (): Nodes.FunctionParameterNode[] => []},
+    {"name": "FunctionParameters", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", "FunctionParameterList", "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess":  
         (data): Nodes.FunctionParameterNode[] => data.filter(n => n)[1]
         },
     {"name": "FunctionParameterList", "symbols": ["FunctionParameter"]},
@@ -371,8 +371,8 @@ const grammar: Grammar = {
         }
         },
     {"name": "FunctionBody", "symbols": ["Expression"], "postprocess": (data): Nodes.Statement[] => [data[0]]},
-    {"name": "FunctionBody", "symbols": [(lexer.has("Tkn_left_bracket") ? {type: "Tkn_left_bracket"} : Tkn_left_bracket), "wss", (lexer.has("Tkn_right_bracket") ? {type: "Tkn_right_bracket"} : Tkn_right_bracket)], "postprocess": (data): Nodes.Statement[] => []},
-    {"name": "FunctionBody", "symbols": [(lexer.has("Tkn_left_bracket") ? {type: "Tkn_left_bracket"} : Tkn_left_bracket), "wss", "StatementList", "wss", (lexer.has("Tkn_right_bracket") ? {type: "Tkn_right_bracket"} : Tkn_right_bracket)], "postprocess":  
+    {"name": "FunctionBody", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess": (data): Nodes.Statement[] => []},
+    {"name": "FunctionBody", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", "StatementList", "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess":  
         (data): Nodes.Statement[] => data.filter(n => n)[1]
         },
     {"name": "TypeList", "symbols": ["Type"]},
@@ -397,8 +397,8 @@ const grammar: Grammar = {
           }
         }
         },
-    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess": () => []},
-    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Tkn_left_paren") ? {type: "Tkn_left_paren"} : Tkn_left_paren), "wss", "TypeList", "wss", (lexer.has("Tkn_right_paren") ? {type: "Tkn_right_paren"} : Tkn_right_paren)], "postprocess": 
+    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess": () => []},
+    {"name": "FunctionTypeParam", "symbols": [(lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", "TypeList", "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren)], "postprocess": 
         (data): Nodes.TypeNode[] => {
           const TypeList = data.filter(n => n)[1];
           return TypeList;

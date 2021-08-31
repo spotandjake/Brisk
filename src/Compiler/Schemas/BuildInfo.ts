@@ -1,7 +1,8 @@
+import Brisk from '../../Brisk_Globals';
 // SpecVersion: 1.2.0
 const BuildInfoSpecVersion = '1.2.0';
 interface BuildInfo {
-  SpecVersion: '1.2.0';
+  SpecVersion: string;
   CompilerVersion: {
     CheckSum: string;
     CompiledDate: string;
@@ -11,18 +12,19 @@ interface BuildInfo {
     [file: string]: {
       signature: string;
       LatestCompileDate: string;
-      // TODO: Add TypeInfo
     }
   }
 }
-const BuildInfoTemplate: BuildInfo = {
-  SpecVersion: BuildInfoSpecVersion,
-  CompilerVersion: {
-    CheckSum: '',
-    CompiledDate: ''
-  },
-  LatestCompileDate: '',
-  ProgramInfo: {}
+export const BuildInfoTemplate = (date: string): BuildInfo => {
+  return {
+    SpecVersion: BuildInfoSpecVersion,
+    CompilerVersion: {
+      CheckSum: Brisk.Checksum,
+      CompiledDate: Brisk.CompileDate
+    },
+    LatestCompileDate: '',
+    ProgramInfo: {}
+  };
 };
 export default BuildInfo;
-export { BuildInfoSpecVersion, BuildInfoTemplate };
+export { BuildInfoSpecVersion };

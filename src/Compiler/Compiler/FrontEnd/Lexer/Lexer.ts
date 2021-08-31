@@ -32,21 +32,11 @@ class Lexer {
     }
     const [ text, ...groups ] = match;
     // Determine the rule
-    const rule = rules.find((r, i) => { if (groups[i]) return r; });
+    const rule = rules.find((r, i) => groups[i]);
     if (!rule) {
       BriskSyntaxError('could not find token for match');
       process.exit(1); // Tricks Lsp
     }
-    // Assemble node
-    const token: Token = {
-      type: rule.id,
-      value: rule.value ? rule.value(text) : text,
-      text: text,
-      offset: offset,
-      line: line,
-      col: col,
-      file: file
-    };
     // Keep track of position
     this.offset += text.length;
     this.col += text.length;
@@ -60,7 +50,15 @@ class Lexer {
         this.col = text.length - <number>a.pop();
       }
     }
-    return token;
+    return {
+      type: rule.id,
+      value: rule.value ? rule.value(text) : text,
+      text: text,
+      offset: offset,
+      line: line,
+      col: col,
+      file: file
+    };
   }
   save() {
     return {

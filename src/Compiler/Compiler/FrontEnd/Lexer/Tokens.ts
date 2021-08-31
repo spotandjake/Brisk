@@ -29,22 +29,22 @@ const tokens: Lexeme[] = [
   // separator
   {
     type: LexemeType.separator,
-    id: 'Tkn_left_paren',
+    id: 'Tkn_l_paren',
     match: /\(/
   },
   {
     type: LexemeType.separator,
-    id: 'Tkn_right_paren',
+    id: 'Tkn_r_paren',
     match: /\)/
   },
   {
     type: LexemeType.separator,
-    id: 'Tkn_left_bracket',
+    id: 'Tkn_l_bracket',
     match: /\{/
   },
   {
     type: LexemeType.separator,
-    id: 'Tkn_right_bracket',
+    id: 'Tkn_r_bracket',
     match: /\}/
   },
   {
@@ -87,7 +87,7 @@ const tokens: Lexeme[] = [
   // literal
   {
     type: LexemeType.literal,
-    id: 'Tkn_string',
+    id: 'Tkn_str',
     match: /'.*'/,
     value: (text: string): string => {
       return text.slice(1, text.length-1)
@@ -111,7 +111,7 @@ const tokens: Lexeme[] = [
   },
   {
     type: LexemeType.literal,
-    id: 'Tkn_boolean',
+    id: 'Tkn_bool',
     match: /(?:true|false)/,
     value: (text: string): boolean => text == 'true'
   },

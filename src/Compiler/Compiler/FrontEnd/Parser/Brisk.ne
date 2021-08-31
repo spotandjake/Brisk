@@ -50,7 +50,7 @@ StatementInfo -> (FlagStatement | CommentStatement) wss {%
 %}
 # StatementTypes
 ImportStatement -> 
-  %Tkn_import %Tkn_ws %Tkn_identifier %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
+  %Tkn_import %Tkn_ws %Tkn_identifier %Tkn_ws %Tkn_from %Tkn_ws %Tkn_str {%
   (data): Nodes.ImportStatementNode => {
     const [ _, __, identifier, ___, ____, _____, p ] = data;
     return {
@@ -67,7 +67,7 @@ ImportStatement ->
   }
 %}
 ImportWasmStatement -> 
-  %Tkn_import %Tkn_ws %Tkn_wasm %Tkn_ws %Tkn_identifier wss %Tkn_colon wss Type %Tkn_ws %Tkn_from %Tkn_ws %Tkn_string {%
+  %Tkn_import %Tkn_ws %Tkn_wasm %Tkn_ws %Tkn_identifier wss %Tkn_colon wss Type %Tkn_ws %Tkn_from %Tkn_ws %Tkn_str {%
   (data): Nodes.ImportWasmStatementNode => {
     const [ _, __, ___, ____, identifier, _____, dataType, ______, _______, ________, p ] = data.filter(n => n);
     return {
@@ -168,8 +168,8 @@ CommentStatement ->
   }
 %}
 BlockStatement -> 
-  %Tkn_left_bracket wss %Tkn_right_bracket {% (data): Nodes.Statement[] => [] %} |
-  %Tkn_left_bracket wss StatementList wss %Tkn_right_bracket {% 
+  %Tkn_l_bracket wss %Tkn_r_bracket {% (data): Nodes.Statement[] => [] %} |
+  %Tkn_l_bracket wss StatementList wss %Tkn_r_bracket {% 
   (data): Nodes.BlockStatementNode => {
     const { value, offset, line, col, file } = data.filter(n => n)[0].position;
     return {
@@ -186,8 +186,8 @@ BlockStatement ->
 %}
 # Arguments
 Arguments -> 
-  %Tkn_left_paren wss %Tkn_right_paren {% (): Nodes.ExpressionNode[] => [] %} |
-  %Tkn_left_paren wss ExpressionList wss %Tkn_right_paren {% 
+  %Tkn_l_paren wss %Tkn_r_paren {% (): Nodes.ExpressionNode[] => [] %} |
+  %Tkn_l_paren wss ExpressionList wss %Tkn_r_paren {% 
   (data): Nodes.ExpressionNode[] => data.filter(n => n)[1]
 %}
 # Expression
@@ -216,7 +216,7 @@ Variable -> %Tkn_identifier {%
 %}
 Atom -> (String | Number | Boolean | FunctionDeclaration) {% (data) => data[0][0] %}
 # Literals
-String -> %Tkn_string {%
+String -> %Tkn_str {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col, file } = data[0];
     return {
@@ -248,7 +248,7 @@ Number -> %Tkn_number {%
     }
   }
 %}
-Boolean -> %Tkn_boolean {%
+Boolean -> %Tkn_bool {%
   (data: Nodes.Token[]): Nodes.LiteralNode  => {
     const { value, offset, line, col, file } = data[0];
     return {
@@ -291,8 +291,8 @@ FunctionDeclaration ->
   }
 %}
 FunctionParameters ->
-  %Tkn_left_paren wss %Tkn_right_paren {% (): Nodes.FunctionParameterNode[] => [] %} |
-  %Tkn_left_paren wss FunctionParameterList wss %Tkn_right_paren {% 
+  %Tkn_l_paren wss %Tkn_r_paren {% (): Nodes.FunctionParameterNode[] => [] %} |
+  %Tkn_l_paren wss FunctionParameterList wss %Tkn_r_paren {% 
   (data): Nodes.FunctionParameterNode[] => data.filter(n => n)[1]
 %}
 FunctionParameterList -> 
@@ -320,8 +320,8 @@ FunctionParameter -> %Tkn_identifier wss %Tkn_colon wss Type {%
 %}
 FunctionBody ->
   Expression {% (data): Nodes.Statement[] => [data[0]] %} |
-  %Tkn_left_bracket wss %Tkn_right_bracket {% (data): Nodes.Statement[] => [] %} |
-  %Tkn_left_bracket wss StatementList wss %Tkn_right_bracket {% 
+  %Tkn_l_bracket wss %Tkn_r_bracket {% (data): Nodes.Statement[] => [] %} |
+  %Tkn_l_bracket wss StatementList wss %Tkn_r_bracket {% 
   (data): Nodes.Statement[] => data.filter(n => n)[1]
 %}
 # Types
@@ -345,8 +345,8 @@ FunctionType -> FunctionTypeParam wss %Tkn_arrow wss Type {%
   }
 %}
 FunctionTypeParam -> 
-  %Tkn_left_paren wss %Tkn_right_paren {% () => [] %}|
-  %Tkn_left_paren wss TypeList wss %Tkn_right_paren {%
+  %Tkn_l_paren wss %Tkn_r_paren {% () => [] %}|
+  %Tkn_l_paren wss TypeList wss %Tkn_r_paren {%
   (data): Nodes.TypeNode[] => {
     const TypeList = data.filter(n => n)[1];
     return TypeList;
