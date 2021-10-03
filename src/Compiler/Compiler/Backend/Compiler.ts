@@ -6,7 +6,7 @@ import { BriskError } from '../../Errors/Compiler';
 // type's
 import { ParseTreeNode, Program, FunctionTypeNode, TypeNode, HeapTypeID, ParseTreeNodeType } from '../Types';
 // Constants
-const paramType = binaryen.createType([ binaryen.i32, binaryen.i32 ]);
+const paramType = binaryen.createType([binaryen.i32, binaryen.i32]);
 // Runtime Functions
 const runtime = (filePath: string, module: binaryen.Module) => {
   // TODO: these paths are not relative, they break if you move the input file currently
@@ -20,7 +20,7 @@ const _Allocate = (module: binaryen.Module, vars: Map<(string | number), number>
   vars.set(ptrIndex, 0); // add a var to the stack for the pointer
   // Put the data into an Array Buffer
   return {
-    code: [ module.local.set(ptrIndex, module.call('_malloc', [ module.i32.const((size+3)*4) ], binaryen.i32)) ],
+    code: [module.local.set(ptrIndex, module.call('_malloc', [module.i32.const((size + 3) * 4)], binaryen.i32))],
     ptr: ptrIndex
   };
 };
@@ -41,8 +41,8 @@ const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, t
   data.forEach((value) => {
     const ValueType = binaryen.getExpressionType(value);
     const pointer = module.local.get(ptr, binaryen.i32);
-    const NumericType = [ module.i32, module.i64, module.f32, module.f64 ][ValueType-2];
-    code.push(NumericType.store(index*4, 0, pointer, value));
+    const NumericType = [module.i32, module.i64, module.f32, module.f64][ValueType - 2];
+    code.push(NumericType.store(index * 4, 0, pointer, value));
     index += (ValueType == 3 || ValueType == 5) ? 2 : 1;
   });
   return { code: code, ptr: module.local.get(ptr, binaryen.i32) };
@@ -60,19 +60,19 @@ class Compiler {
     // Enable Features
     module.setFeatures(binaryen.Features.MutableGlobals);
     // Initiate our memory
-    module.setMemory(1,-1,'memory',[]);
+    module.setMemory(1, -1, 'memory', []);
     // Add our module id global
     module.addGlobal('_FunctionTableOffset', binaryen.i32, true, module.i32.const(0));
     module.addGlobal('_MemoryPointer', binaryen.i32, true, module.i32.const(0));
     // Deal with imports
-    Node.imports.forEach(({ path:modulePath, identifiers }) => {
+    Node.imports.forEach(({ path: modulePath, identifiers }) => {
       // TODO: add import all, add type checking for imports
       if (Array.isArray(identifiers)) {
         const _modulePath = path.parse(modulePath);
         const directory = path.normalize(_modulePath.dir);
         const importPath = `${(directory == '.' ? _modulePath.name : `${directory}/${_modulePath.name}`)}${(_modulePath.ext == '.br') ? '.wasm' : _modulePath.ext}`;
         identifiers.forEach((name: string) => {
-          module.addGlobalImport(`${globals.size}`, `BRISK$MODULE$${importPath}`, `BRISK$EXPORT$${name}`, binaryen.i32),
+          module.addGlobalImport(`${globals.size}`, `BRISK$MODULE$${importPath}`, `BRISK$EXPORT$${name}`, binaryen.i32);
           globals.set(name, globals.size);
         });
       } else console.log('Import all: Codegen not implemented yet');
@@ -97,14 +97,14 @@ class Compiler {
     functionDeclaration: (boolean | string) = false
   ): (binaryen.ExpressionRef | undefined) {
     const { module, functions, nativeImports, globals } = this;
-    switch(Node.type) {
+    switch (Node.type) {
       case ParseTreeNodeType.Program: {
         const { body, variables } = <Program>Node;
         const functionBody: binaryen.ExpressionRef[] = [];
         const stack = <Stack>variables;
         const vars = new Map();
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars));
-        module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32), 
+        module.addFunction('_start', binaryen.none, binaryen.none, new Array(vars.size).fill(binaryen.i32),
           module.block(null, functionBody)
         );
         module.addFunctionExport('_start', '_start');
@@ -113,7 +113,7 @@ class Compiler {
       case ParseTreeNodeType.functionNode: {
         const { dataType, variables, parameters, body } = Node;
         // Allocate Space for our data
-        const { code:AllocationCode, ptr:AllocationPtr } = _Allocate(module, vars, 4);
+        const { code: AllocationCode, ptr: AllocationPtr } = _Allocate(module, vars, 4);
         functionBody.push(...AllocationCode);
         // Make the closure
         const closurePointers = [...(<Stack>variables).closure.keys()].map((name: string) => {
@@ -125,16 +125,16 @@ class Compiler {
             }
           } else return module.local.get(<number>vars.get(name), binaryen.i32);
         });
-        const { code:closureCode, ptr:closurePtr } = 
+        const { code: closureCode, ptr: closurePtr } =
           [...(<Stack>variables).closure.keys()].length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Closure, closurePointers);
         if (closureCode) functionBody.push(...closureCode);
         // reset the function
         const funcBody: binaryen.ExpressionRef[] = [];
         const funcStack = <Stack>variables;
-        const funcVars: Map<(string|number), number> = new Map([
+        const funcVars: Map<(string | number), number> = new Map([
           // Set the closure parameter as a secret var
-          [ 0, 0 ], // add a empty value for closure, we use numbers because all user var names are going to be strings
-          [ 1, 0 ] // add a empty value for parameters
+          [0, 0], // add a empty value for closure, we use numbers because all user var names are going to be strings
+          [1, 0] // add a empty value for parameters
         ]);
         // Add closure assignments to the function and variable list
         let closureI = 3;
@@ -142,7 +142,7 @@ class Compiler {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(closureI*4, 0, module.local.get(0, binaryen.i32))
+              module.i32.load(closureI * 4, 0, module.local.get(0, binaryen.i32))
             )
           );
           funcVars.set(varName, funcVars.size);
@@ -154,7 +154,7 @@ class Compiler {
           funcBody.push(
             module.local.set(
               funcVars.size,
-              module.i32.load(parametersI*4, 0, module.local.get(1, binaryen.i32))
+              module.i32.load(parametersI * 4, 0, module.local.get(1, binaryen.i32))
             )
           );
           funcVars.set(param.identifier, funcVars.size);
@@ -167,11 +167,11 @@ class Compiler {
         module.addFunction(
           name,
           paramType, binaryen.i32,
-          new Array(funcVars.size).fill(binaryen.i32), 
+          new Array(funcVars.size).fill(binaryen.i32),
           module.block(null, funcBody)
         );
         // Store the function
-        const { code, ptr } = _Store(module, vars, HeapTypeID.Function, [ module.i32.const(functions.length), module.global.get('_FunctionTableOffset', binaryen.i32), closurePtr ], AllocationPtr);
+        const { code, ptr } = _Store(module, vars, HeapTypeID.Function, [module.i32.const(functions.length), module.global.get('_FunctionTableOffset', binaryen.i32), closurePtr], AllocationPtr);
         functions.push(name);
         functionBody.push(...code);
         return ptr;
@@ -192,7 +192,7 @@ class Compiler {
           );
         } else if (vars.has(Node.identifier) || globals.has(Node.identifier)) {
           // Assemble the Parameter structure
-          const { code:paramCode, ptr:paramPtr } = 
+          const { code: paramCode, ptr: paramPtr } =
             Node.arguments.length == 0 ? { code: [], ptr: module.i32.const(0) } : _Store(module, vars, HeapTypeID.Function, functionArgs);
           functionBody.push(...paramCode);
           // Assemble the Function Call
@@ -203,7 +203,7 @@ class Compiler {
               module.i32.load(12, 0, module.copyExpression(funcPtr)),
               module.i32.load(16, 0, module.copyExpression(funcPtr))
             ),
-            [ module.i32.load(20, 0, module.copyExpression(funcPtr)), paramPtr ],
+            [module.i32.load(20, 0, module.copyExpression(funcPtr)), paramPtr],
             paramType, binaryen.i32
           );
         } else BriskError(`Unknown Function: ${Node.identifier}`, Node.position);
@@ -213,13 +213,13 @@ class Compiler {
       }
       case ParseTreeNodeType.declarationStatement: {
         const { identifier, value } = Node;
-        const wasm = this.compileToken(value, functionBody, stack, vars, true, Node.dataType=='Function' ? Node.identifier : false);
+        const wasm = this.compileToken(value, functionBody, stack, vars, true, Node.dataType == 'Function' ? Node.identifier : false);
         functionBody.push(module.local.set(vars.size, <binaryen.ExpressionRef>wasm));
         vars.set(identifier, vars.size);
         break;
       }
       case ParseTreeNodeType.literal: {
-        switch(Node.dataType) {
+        switch (Node.dataType) {
           case 'String': {
             const { code, ptr } = _Store(module, vars, HeapTypeID.String, [...encoder.encode(<string>Node.value)].map(i => module.i32.const(i)));
             functionBody.push(...code);
@@ -236,7 +236,7 @@ class Compiler {
               } else { // i64
                 data.push(
                   module.i32.const(2), module.i64.const(Number(<bigint>Node.value & BigInt(0xffffffff)), Number(<bigint>Node.value >> 32n))
-                ); 
+                );
               }
             } else { //float
               data.push(module.i32.const(4), module.f64.const(<number>Node.value));
@@ -246,7 +246,7 @@ class Compiler {
             return ptr;
           }
           case 'Boolean': {
-            const { code, ptr } = _Store(module, vars, HeapTypeID.Boolean, [ module.i32.const(<boolean>Node.value == true ? 1 : 0) ]);
+            const { code, ptr } = _Store(module, vars, HeapTypeID.Boolean, [module.i32.const(<boolean>Node.value == true ? 1 : 0)]);
             functionBody.push(...code);
             return ptr;
           }
@@ -273,7 +273,7 @@ class Compiler {
       case ParseTreeNodeType.importWasmStatement: {
         // TODO: finish implementing global imports
         if (!(<FunctionTypeNode>Node.dataType)?.params) {
-          if (![ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType))
+          if (!['i32', 'i64', 'f32', 'f64'].includes(<string>Node.dataType))
             BriskError('Wasm Import Type Must be a Function, i32, i64, f32, f64', Node.position);
           module.addGlobalImport(
             Node.identifier, Node.path, Node.identifier,
@@ -295,7 +295,7 @@ class Compiler {
       case ParseTreeNodeType.exportStatement: {
         if (!globals.has(Node.identifier)) {
           module.addGlobal(`${globals.size}`, binaryen.i32, true, module.i32.const(0));
-          functionBody.push(module.global.set(`${globals.size}`,  module.local.get(<number>vars.get(Node.identifier), binaryen.i32)));
+          functionBody.push(module.global.set(`${globals.size}`, module.local.get(<number>vars.get(Node.identifier), binaryen.i32)));
           globals.set(Node.identifier, globals.size);
         }
         module.addGlobalExport(`${globals.get(Node.identifier)}`, `BRISK$EXPORT$${Node.identifier}`);
@@ -304,7 +304,7 @@ class Compiler {
       // Ignore
       case ParseTreeNodeType.importStatement:
         break;
-      default: 
+      default:
         console.log('Unknown Node Type');
         console.log(Node.type);
         break;
