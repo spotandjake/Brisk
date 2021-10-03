@@ -9,7 +9,6 @@ import { ParseTreeNode, Program, FunctionTypeNode, TypeNode, HeapTypeID, ParseTr
 const paramType = binaryen.createType([binaryen.i32, binaryen.i32]);
 // Runtime Functions
 const runtime = (filePath: string, module: binaryen.Module) => {
-  // TODO: these paths are not relative, they break if you move the input file currently
   module.addFunctionImport('_malloc', `BRISK$MODULE$${path.relative(path.parse(filePath).dir, `${process.argv[1]}/../../src/Runtime/memory.wat`)}`, '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
@@ -47,7 +46,7 @@ const _Store = (module: binaryen.Module, vars: Map<(string | number), number>, t
   });
   return { code: code, ptr: module.local.get(ptr, binaryen.i32) };
 };
-const encoder = new TextEncoder();
+// const encoder = new TextEncoder();
 class Compiler {
   private module: binaryen.Module = new binaryen.Module();
   private functions: string[] = [];
@@ -220,44 +219,18 @@ class Compiler {
       }
       case ParseTreeNodeType.literal: {
         switch (Node.dataType) {
-          case 'String': {
-            const { code, ptr } = _Store(module, vars, HeapTypeID.String, [...encoder.encode(<string>Node.value)].map(i => module.i32.const(i)));
-            functionBody.push(...code);
-            return ptr;
-          }
           case 'Number': {
-            // TODO: Add support for rationals and arbitrary precision numbers
-            // TODO: Consider representing all integers as i64
-            const isInt: boolean = Number.isInteger(<number>Node.value);
-            const data: number[] = [];
-            if (isInt || typeof Node.value === 'bigint') { //integer
-              if (<number>Node.value < 2147483647 && <number>Node.value > -2147483647) { //i32
-                data.push(module.i32.const(1), module.i32.const(<number>Node.value));
-              } else { // i64
-                data.push(
-                  module.i32.const(2), module.i64.const(Number(<bigint>Node.value & BigInt(0xffffffff)), Number(<bigint>Node.value >> 32n))
-                );
-              }
-            } else { //float
-              data.push(module.i32.const(4), module.f64.const(<number>Node.value));
+            // Number
+            const val = <number>Node.value;
+            if (val > -0x3fffffff && val < 0x3fffffff) {
+              // 0-31 Bits, Toward Number
+              // 32 bit, Toward Weather or not number
+              return module.i32.const(<number>Node.value * 2 + 1);
+            } else {
+              BriskError('Number is larger then supported');
+              return module.i32.const(0);
             }
-            const { code, ptr } = _Store(module, vars, HeapTypeID.Number, data);
-            functionBody.push(...code);
-            return ptr;
           }
-          case 'Boolean': {
-            const { code, ptr } = _Store(module, vars, HeapTypeID.Boolean, [module.i32.const(<boolean>Node.value == true ? 1 : 0)]);
-            functionBody.push(...code);
-            return ptr;
-          }
-          case 'i32':
-            return module.i32.const(<number>Node.value);
-          case 'i64':
-            return module.i64.const(Number(<bigint>Node.value & BigInt(0xffffffff)), Number(<bigint>Node.value >> 32n));
-          case 'f32':
-            return module.f32.const(<number>Node.value);
-          case 'f64':
-            return module.f64.const(<number>Node.value);
           default: {
             BriskError('Unknown Var Type');
             return module.i32.const(0);

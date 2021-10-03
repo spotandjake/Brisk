@@ -45,21 +45,23 @@ const compileFile = async (entry: boolean, filename: string, cache: BuildInfoSch
   };
 };
 const compile = async (filename: string, cache: BuildInfoSchema, options: CompilerOptions) => {
-  const deps: Map<string, boolean> = new Map([ [ filename, false ] ]);
+  const deps: Map<string, boolean> = new Map([[filename, false]]);
   const _cache: { [key: string]: string } = {};
   let _compiled;
   // eslint-disable-next-line no-constant-condition
   while (true) {
     // Determine Which File To Compile
-    const dep = [...deps.entries()].find(([ _, done]) => !done);
+    const dep = [...deps.entries()].find(([_, done]) => !done);
     if (dep == undefined) break;
     const fileName = dep[0];
-    const { newDeps, hash, compiled } = await compileFile(fileName == filename, fileName, cache, { ...options, wat: fileName == filename ? options.wat : false });
-    if (compiled) _compiled = compiled;
-    _cache[fileName] = hash;
+    if (!fileName.endsWith('.wat') && !fileName.endsWith('.wasm')) {
+      const { newDeps, hash, compiled } = await compileFile(fileName == filename, fileName, cache, { ...options, wat: fileName == filename ? options.wat : false });
+      if (compiled) _compiled = compiled;
+      _cache[fileName] = hash;
+      if (options.link) newDeps.forEach((location) => { if (!deps.has(location)) deps.set(location, false); });
+    }
     // Manage Dependency Compilation
     deps.set(fileName, true);
-    if (options.link) newDeps.forEach((location) => { if (!deps.has(location)) deps.set(location, false); });
   }
   // Return New List Of File Hashes
   return { file: _compiled, cache: _cache };

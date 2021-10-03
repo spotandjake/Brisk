@@ -13,7 +13,7 @@ const namespace = (
   expression: binaryen.ExpressionRef,
   dependency: Dependency,
   modulePool: Pool
-): binaryen.ExpressionRef  => {
+): binaryen.ExpressionRef => {
   // Make a simpler function for use inside this function
   const _namespace = (exp: binaryen.ExpressionRef) => namespace(module, exp, dependency, modulePool);
   // Get ExpressionInfo
@@ -67,7 +67,7 @@ const namespace = (
       );
     }
     case binaryen.ExpressionIds.LocalSet: {
-      const { isTee, index:i, value:v, type } = <binaryen.LocalSetInfo>expressionInfo;
+      const { isTee, index: i, value: v, type } = <binaryen.LocalSetInfo>expressionInfo;
       return isTee ? module.local.tee(i, _namespace(v), type) : module.local.set(i, _namespace(v));
     }
     case binaryen.ExpressionIds.GlobalGet:
@@ -128,15 +128,17 @@ const namespace = (
     }
     case binaryen.ExpressionIds.Binary: {
       const binaryInfo = (<binaryen.BinaryInfo>expressionInfo);
-      switch(<binaryen.Operations>(binaryInfo.op+60)) {
+      switch (<binaryen.Operations>(binaryInfo.op + 60)) {
         case binaryen.Operations.AddInt32:
           return module.i32.add(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+        case binaryen.Operations.SubInt32:
+          return module.i32.sub(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         case binaryen.Operations.LeUInt32:
           return module.i32.le_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         case binaryen.Operations.GeUInt32:
           return module.i32.ge_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         default:
-          BriskLinkerError(`Unknown Binary Operation: ${binaryInfo.op+60}`);
+          BriskLinkerError(`Unknown Binary Operation: ${binaryInfo.op + 60}`);
           return expression; // The Program Never Reaches This Line
       }
     }
@@ -181,7 +183,7 @@ const analyzeFile = (
   location: path.ParsedPath,
   module: binaryen.Module,
   dependencyGraph: Map<string, Dependency>,
-  entry=true
+  entry = true
 ): Map<string, Dependency> => {
   // Determine File Information
   const modulePath = path.resolve(path.join(location.dir, `${location.name}${location.ext}`));
@@ -202,7 +204,7 @@ const analyzeFile = (
       }
       // Deal with sorting
       const dep = <Dependency>dependencyGraph.get(absolutePath);
-      if (!entry && self.importance > dep.importance-1) dep.importance = self.importance+1;
+      if (!entry && self.importance > dep.importance - 1) dep.importance = self.importance + 1;
       dependencyGraph.set(absolutePath, dep);
     }
   };
@@ -215,7 +217,7 @@ const analyzeFile = (
   }
   // Mark this file as found
   if (!entry) dependencyGraph.set(modulePath, { ...<Dependency>dependencyGraph.get(modulePath), found: true, binaryen_module: module });
-  else dependencyGraph.set(modulePath, { entry: true, found: true, location: modulePath, importance: 0, binaryen_module: module});
+  else dependencyGraph.set(modulePath, { entry: true, found: true, location: modulePath, importance: 0, binaryen_module: module });
   // Go through the current map and call the ones that are not yet found
   while ([...dependencyGraph.values()].some((dep) => !dep.found)) {
     [...dependencyGraph.values()].forEach((depImport) => {
@@ -305,7 +307,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
               imp.value.externalBaseName == <string>globalInfo.base &&
               imp.value.globalType == globalInfo.type
           );
-          if (!previousImport)  {
+          if (!previousImport) {
             mergePool.imports.push({
               type: 'GlobalImport',
               value: {
@@ -363,7 +365,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
               imp.value.results == funcInfo.results
           );
           modulePool.functions.set(funcInfo.name, previousImport ? previousImport.value.internalName : `${countPool.functions}`);
-          if (!previousImport)  {
+          if (!previousImport) {
             mergePool.imports.push({
               type: 'FunctionImport',
               value: {
@@ -452,7 +454,7 @@ const Linker = (location: path.ParsedPath, mainModule: binaryen.Module): binarye
   // Setup our wasm Module
   module.setFeatures(binaryen.Features.MutableGlobals);
   // Initiate our memory
-  module.setMemory(1,-1,'memory',[]);
+  module.setMemory(1, -1, 'memory', []);
   // add verifier
   if (!module.validate()) module.validate();
   // Return Source

@@ -26,14 +26,14 @@ const compileProgram = async (entry: string, options: CompilerOptions) => {
   const compiled = opts.link ? Linker(path.parse(entry), <binaryen.Module>file) : <binaryen.Module>file;
   // Write New Cache
   const ProgramBuildInfo = BuildInfoTemplate(date);
-  for (const [ key, value ] of Object.entries(cache)) {
+  for (const [key, value] of Object.entries(cache)) {
     ProgramBuildInfo.ProgramInfo[path.relative(filePath.dir, key)] = { signature: value, LatestCompileDate: date };
   }
   // TODO: add support for deeper incremental building
   await fs.promises.writeFile(buildInfoPath, TOML.stringify(<TOML.JsonMap><unknown>ProgramBuildInfo));
   // Optimize Program
   const outputModule = Optimizer(compiled);
-  const outputName = entry.replace(/\[^.]+$/, opts.wat ? '.wat' : '.wasm');
+  const outputName = entry.replace(/[^.]+$/, opts.wat ? 'wat' : 'wasm');
   await fs.promises.writeFile(outputName, opts.wat ? outputModule.emitText() : outputModule.emitBinary());
   return outputName;
 };
