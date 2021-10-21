@@ -1,21 +1,12 @@
 import fs from 'fs';
+import { HeapTypeID } from '../Compiler/Compiler/Types';
 const decoder = new TextDecoder('utf8');
-const enum HeapType {
-  None = 0,
-  Function = 1,
-  Closure = 2,
-  Boolean = 3,
-  String = 4,
-  Number = 5,
-  Array = 6,
-  Parameters = 7
-}
 interface TableRow {
   state?: string;
   ptr?: number;
   refs?: number;
   size?: number;
-  type?: (string|HeapType);
+  type?: (string|HeapTypeID);
   [ key: string ]: any;
 }
 const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
@@ -31,20 +22,20 @@ const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
     const getActual = (row: TableRow) => {
       table.push({ ...row });
       // Generate actual
-      switch(<HeapType>row.type) {
-        case HeapType.String:
+      switch(<HeapTypeID>row.type) {
+        case HeapTypeID.String:
           Object.keys(row).forEach((field) => {
             if (field.startsWith('value')) {
               row[field] = decoder.decode(new Uint8Array([ row[field] ]));
             }
           });
           break;
-        case HeapType.Boolean:
+        case HeapTypeID.Boolean:
           Object.keys(row).forEach((field) => {
             if (field.startsWith('value')) row[field] = row[field] == 1;
           });
           break;
-        case HeapType.Number: {
+        case HeapTypeID.Number: {
           let intType = 'i32';
           Object.keys(row).forEach((field, index: number) => {
             if (field.startsWith('value')) {
@@ -76,7 +67,7 @@ const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
           break;
         }
       }
-      row.state = row.type == HeapType.None ? 'None' : 'actual';
+      row.state = row.type == HeapTypeID.None ? 'None' : 'actual';
       row.type = ['None', 'Function', 'Closure', 'Boolean', 'String', 'Number', 'Array', 'Parameters'][<number>row.type];
       table.push(row);
     };
@@ -101,12 +92,23 @@ const memoryView = (memory: (undefined|WebAssembly.Memory)) => {
   } else console.log('No Memory Found');
 };
 const runtime = async (wasmFile: string) => {
+  let mem: WebAssembly.Memory|null = null;
   const wasm = await fs.promises.readFile(wasmFile);
   const result = await WebAssembly.instantiate(wasm, {
     env: {
       print: (pointer: number) => console.log(pointer)
+    },
+    wasi_unstable: {
+      fd_write: (fd: number, iovs: number, iovs_len: number, nwritten: number): number => {
+        // TODO: make this polyfill work
+        if (mem) {
+          console.log(decoder.decode(new Uint8Array(mem.buffer).slice(iovs+12, iovs+new Uint8Array(mem.buffer)[iovs])));
+        }
+        return 0;
+      }
     }
   });
+  mem = <WebAssembly.Memory>result.instance.exports.memory;
   (<() => void>result.instance.exports._start)();
   memoryView(<WebAssembly.Memory>result.instance.exports.memory);
 };

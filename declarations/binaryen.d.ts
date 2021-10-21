@@ -1498,70 +1498,89 @@ declare namespace binaryen {
     RefNullInfo        | RefIsNullInfo       | MemoryGrowInfo    |
     RefFuncInfo        | TryInfo             | ThrowInfo         |
     RethrowInfo        | BrOnExnInfo         | PopInfo           |
-    PushInfo           | TupleMakeInfo
+    PushInfo           | TupleMakeInfo;
 
-  interface ExpressionInfo {
-    id: ExpressionIds;
+  interface BlockInfo {
+    id: ExpressionIds.Block;
     type: Type;
-  }
-
-  interface BlockInfo extends ExpressionInfo {
     name: string;
     children: ExpressionRef[];
   }
 
-  interface IfInfo extends ExpressionInfo {
+  interface IfInfo {
+    id: ExpressionIds.If;
+    type: Type;
     condition: ExpressionRef;
     ifTrue: ExpressionRef;
     ifFalse: ExpressionRef;
   }
 
-  interface LoopInfo extends ExpressionInfo {
+  interface LoopInfo {
+    id: ExpressionIds.Loop;
+    type: Type;
     name: string;
     body: ExpressionRef;
   }
-  interface BreakInfo extends ExpressionInfo {
+  interface BreakInfo {
+    id: ExpressionIds.Break;
+    type: Type;
     name: string;
     condition: ExpressionRef;
     value: ExpressionRef;
   }
-  interface SwitchInfo extends ExpressionInfo {
+  interface SwitchInfo {
+    id: ExpressionIds.Switch;
+    type: Type;
     names: string[];
     defaultName: string | null;
     condition: ExpressionRef;
     value: ExpressionRef;
   }
-  interface CallInfo extends ExpressionInfo {
+  interface CallInfo {
+    id: ExpressionIds.Call;
+    type: Type;
     isReturn: boolean;
     target: string;
     operands: ExpressionRef[];
   }
-  interface CallIndirectInfo extends ExpressionInfo {
+  interface CallIndirectInfo {
+    id: ExpressionIds.CallIndirect;
+    type: Type;
     isReturn: boolean;
     target: ExpressionRef;
     table: TableRef;
     operands: ExpressionRef[];
   }
-  interface LocalGetInfo extends ExpressionInfo {
+  interface LocalGetInfo {
+    id: ExpressionIds.LocalGet;
+    type: Type;
     index: number;
   }
 
-  interface LocalSetInfo extends ExpressionInfo {
+  interface LocalSetInfo {
+    id: ExpressionIds.LocalSet;
+    type: Type;
     isTee: boolean;
     index: number;
     value: ExpressionRef;
   }
 
-  interface GlobalGetInfo extends ExpressionInfo {
+  interface GlobalGetInfo {
+    id: ExpressionIds.GlobalGet;
+    type: Type;
     name: string;
   }
 
-  interface GlobalSetInfo extends ExpressionInfo {
+  interface GlobalSetInfo {
+    id: ExpressionIds.GlobalSet;
+    type: Type;
     name: string;
     value: ExpressionRef;
   }
 
-  interface LoadInfo extends ExpressionInfo {
+  interface LoadInfo {
+    id: ExpressionIds.Load;
+    type: Type;
     isAtomic: boolean;
     isSigned: boolean;
     offset: number;
@@ -1570,7 +1589,9 @@ declare namespace binaryen {
     ptr: ExpressionRef;
   }
 
-  interface StoreInfo extends ExpressionInfo {
+  interface StoreInfo {
+    id: ExpressionIds.Store;
+    type: Type;
     isAtomic: boolean;
     offset: number;
     bytes: number;
@@ -1579,48 +1600,68 @@ declare namespace binaryen {
     value: ExpressionRef;
   }
 
-  interface ConstInfo extends ExpressionInfo {
+  interface ConstInfo {
+    id: ExpressionIds.Const;
+    type: Type;
     value: number | { low: number, high: number };
   }
 
-  interface UnaryInfo extends ExpressionInfo {
+  interface UnaryInfo {
+    id: ExpressionIds.Unary;
+    type: Type;
     op: Operations;
     value: ExpressionRef;
   }
 
-  interface BinaryInfo extends ExpressionInfo {
+  interface BinaryInfo {
+    id: ExpressionIds.Binary;
+    type: Type;
     op: Operations;
     left: ExpressionRef;
     right: ExpressionRef;
   }
 
-  interface SelectInfo extends ExpressionInfo {
+  interface SelectInfo {
+    id: ExpressionIds.Select;
+    type: Type;
     ifTrue: ExpressionRef;
     ifFalse: ExpressionRef;
     condition: ExpressionRef;
   }
 
-  interface DropInfo extends ExpressionInfo {
+  interface DropInfo {
+    id: ExpressionIds.Drop;
+    type: Type;
     value: ExpressionRef;
   }
 
-  interface ReturnInfo extends ExpressionInfo {
+  interface ReturnInfo {
+    id: ExpressionIds.Return;
+    type: Type;
     value: ExpressionRef;
   }
 
-  interface NopInfo extends ExpressionInfo {
+  interface NopInfo {
+    id: ExpressionIds.Nop;
+    type: Type;
   }
 
-  interface UnreachableInfo extends ExpressionInfo {
+  interface UnreachableInfo {
+    id: ExpressionIds.Unreachable;
+    type: Type;
   }
 
-  interface HostInfo extends ExpressionInfo {
+  interface HostInfo {
+    id: ExpressionIds.Invalid;
+    type: Type;
     op: Operations;
     nameOperand: string | null;
     operands: ExpressionRef[];
   }
 
-  interface AtomicRMWInfo extends ExpressionInfo {
+  interface AtomicRMWInfo {
+    id: ExpressionIds.AtomicRMW;
+    type: Type;
     op: Operations;
     bytes: number;
     offset: number;
@@ -1628,7 +1669,9 @@ declare namespace binaryen {
     value: ExpressionRef;
   }
 
-  interface AtomicCmpxchgInfo extends ExpressionInfo {
+  interface AtomicCmpxchgInfo {
+    id: ExpressionIds.AtomicCmpxchg;
+    type: Type;
     bytes: number;
     offset: number;
     ptr: ExpressionRef;
@@ -1636,128 +1679,176 @@ declare namespace binaryen {
     replacement: ExpressionRef;
   }
 
-  interface AtomicWaitInfo extends ExpressionInfo {
+  interface AtomicWaitInfo {
+    id: ExpressionIds.AtomicWait;
+    type: Type;
     ptr: ExpressionRef;
     expected: ExpressionRef;
     timeout: ExpressionRef;
     expectedType: Type;
   }
 
-  interface AtomicNotifyInfo extends ExpressionInfo {
+  interface AtomicNotifyInfo {
+    id: ExpressionIds.AtomicNotify;
+    type: Type;
     ptr: ExpressionRef;
     notifyCount: ExpressionRef;
   }
 
-  interface AtomicFenceInfo extends ExpressionInfo {
+  interface AtomicFenceInfo {
+    id: ExpressionIds.AtomicFence;
+    type: Type;
     order: number;
   }
 
-  interface SIMDExtractInfo extends ExpressionInfo {
+  interface SIMDExtractInfo {
+    id: ExpressionIds.SIMDExtract;
+    type: Type;
     op: Operations;
     vec: ExpressionRef;
     index: ExpressionRef;
   }
 
-  interface SIMDReplaceInfo extends ExpressionInfo {
+  interface SIMDReplaceInfo {
+    id: ExpressionIds.SIMDReplace;
+    type: Type;
     op: Operations;
     vec: ExpressionRef;
     index: ExpressionRef;
     value: ExpressionRef;
   }
 
-  interface SIMDShuffleInfo extends ExpressionInfo {
+  interface SIMDShuffleInfo {
+    id: ExpressionIds.SIMDShuffle;
+    type: Type;
     left: ExpressionRef;
     right: ExpressionRef;
     mask: number[];
   }
 
-  interface SIMDTernaryInfo extends ExpressionInfo {
+  interface SIMDTernaryInfo {
+    id: ExpressionIds.SIMDTernary;
+    type: Type;
     op: Operations;
     a: ExpressionRef;
     b: ExpressionRef;
     c: ExpressionRef;
   }
 
-  interface SIMDShiftInfo extends ExpressionInfo {
+  interface SIMDShiftInfo {
+    id: ExpressionIds.SIMDShift;
+    type: Type;
     op: Operations;
     vec: ExpressionRef;
     shift: ExpressionRef;
   }
 
-  interface SIMDLoadInfo extends ExpressionInfo {
+  interface SIMDLoadInfo {
+    id: ExpressionIds.SIMDLoad;
+    type: Type;
     op: Operations;
     offset: number;
     align: number;
     ptr: ExpressionRef;
   }
 
-  interface MemoryInitInfo extends ExpressionInfo {
+  interface MemoryInitInfo {
+    id: ExpressionIds.MemoryInit;
+    type: Type;
     segment: number;
     dest: ExpressionRef;
     offset: ExpressionRef;
     size: ExpressionRef;
   }
 
-  interface MemoryDropInfo extends ExpressionInfo {
+  interface MemoryDropInfo {
+    id: ExpressionIds.Invalid;
+    type: Type;
     segment: number;
   }
 
-  interface MemoryCopyInfo extends ExpressionInfo {
+  interface MemoryCopyInfo {
+    id: ExpressionIds.MemoryCopy;
+    type: Type;
     dest: ExpressionRef;
     source: ExpressionRef;
     size: ExpressionRef;
   }
 
-  interface MemoryFillInfo extends ExpressionInfo {
+  interface MemoryFillInfo {
+    id: ExpressionIds.MemoryFill;
+    type: Type;
     dest: ExpressionRef;
     value: ExpressionRef;
     size: ExpressionRef;
   }
 
-  interface MemoryGrowInfo extends ExpressionInfo {
+  interface MemoryGrowInfo {
+    id: ExpressionIds.MemoryGrow;
+    type: Type;
     delta: ExpressionRef;
   }
 
-  interface RefNullInfo extends ExpressionInfo {
+  interface RefNullInfo {
+    id: ExpressionIds.RefNull;
+    type: Type;
   }
 
-  interface RefIsNullInfo extends ExpressionInfo {
+  interface RefIsNullInfo {
+    id: ExpressionIds.RefIsNull;
+    type: Type;
     value: ExpressionRef;
   }
 
-  interface RefFuncInfo extends ExpressionInfo {
+  interface RefFuncInfo {
+    id: ExpressionIds.RefFunc;
+    type: Type;
     func: string;
   }
 
-  interface TryInfo extends ExpressionInfo {
+  interface TryInfo {
+    id: ExpressionIds.Try;
+    type: Type;
     body: ExpressionRef;
     catchBody: ExpressionRef;
   }
 
-  interface ThrowInfo extends ExpressionInfo {
+  interface ThrowInfo {
+    id: ExpressionIds.Throw;
+    type: Type;
     event: string;
     operands: ExpressionRef[];
   }
 
-  interface RethrowInfo extends ExpressionInfo {
+  interface RethrowInfo {
+    id: ExpressionIds.Rethrow;
+    type: Type;
     exnref: ExpressionRef;
   }
 
-  interface BrOnExnInfo extends ExpressionInfo {
+  interface BrOnExnInfo {
+    id: ExpressionIds.BrOnExn;
+    type: Type;
     name: string;
     event: string;
     exnref: ExpressionRef;
   }
 
-  interface PopInfo extends ExpressionInfo {
+  interface PopInfo {
+    id: ExpressionIds.Pop;
+    type: Type;
   }
 
-  interface PushInfo extends ExpressionInfo {
+  interface PushInfo {
+    id: ExpressionIds.Invalid;
+    type: Type;
     type: never; // ?
     value: ExpressionRef;
   }
 
-  interface TupleMakeInfo extends ExpressionInfo {
+  interface TupleMakeInfo {
+    id: ExpressionIds.TupleMake;
+    type: Type;
     operands: ExpressionRef[];
   }
 

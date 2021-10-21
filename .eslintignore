@@ -1,4 +1,3 @@
-src/compiler/binaryen/
-src/compiler/Grammar/Brisk.ts
+src/Compiler/Compiler/FrontEnd/Parser/Brisk.ts
 node_modules/
 dist/

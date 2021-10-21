@@ -95,4 +95,4 @@ yarn start-tests
 
 ## Adding a Test
 
-To add a new test case, add a `.ts` file in `./unit testing/test` with code that shows the bug is now fixed, or your new feature now works.
+To add a new test case, add a `.ts` file in `./tests/test` with code that shows the bug is now fixed, or your new feature now works.
