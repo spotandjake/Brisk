@@ -3,7 +3,7 @@
 ## Preset Values
 + Functions
   + `_start`
-    + The Start Function/Entry Point for a grain module
+    + The Start Function/Entry Point for a brisk module
 + Globals
   + `_MemoryPointer`
     + Refers To the Current Pointer In Memory
