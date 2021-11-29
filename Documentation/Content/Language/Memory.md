@@ -4,10 +4,10 @@
 | Name     | Example                              | Description                  | Store Location |
 |----------|--------------------------------------|------------------------------|----------------|
 | Number   | let x: Number = 1;                   | Any Number                   | Heap           |
-| Boolean  | let x: Boolean = true;               | A Boolean                    | Heap           |
 | String   | let x: String = 'test';              | A String                     | Heap           |
 | Function | let x: Function = (): Number => 1+1; | A First Class Brisk Function | Heap           |
 | Void     |                                      | A Void Type                  | None           |
+| Boolean  | let x: Boolean = true;               | A Boolean                    | Wasm Stack     |
 | i32      | let x: i32 = 1;                      | A 32-bit signed Integer      | Wasm Stack     |
 | u32      | let x: u32 = 1;                      | A 32-bit unsigned Integer    | Wasm Stack     |
 | i64      | let x: i64 = 1;                      | A 64-bit signed Integer      | Wasm Stack     |

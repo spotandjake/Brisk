@@ -227,8 +227,15 @@ class Compiler {
               // 32 bit, Toward Weather or not number
               return module.i32.const(<number>Node.value * 2 + 1);
             } else {
-              BriskError('Number is larger then supported');
+              BriskError('Number is larger then currently supported');
               return module.i32.const(0);
+            }
+          }
+          case 'Boolean': {
+            if (Node.value) {
+              return module.i32.const(4294967294); // True
+            } else {
+              return module.i32.const(2147483646); // False
             }
           }
           default: {

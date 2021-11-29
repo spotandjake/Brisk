@@ -2,6 +2,8 @@
 import wasm print: (Number) -> Void from 'env';
 let a: Number = 10;
 print(a);
-// let printNumber: Function = (b: Number): Void => {
-//   print(b);
-// };
+let b: Boolean = false;
+print(b);
+// if (true) {
+//   print(a);
+// }
