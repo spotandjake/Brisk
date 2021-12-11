@@ -4,6 +4,10 @@ let a: Number = 10;
 print(a);
 let b: Boolean = false;
 print(b);
+let test: Function = (): Void => {
+  let t: Number = 10;
+  print(t);
+};
 // if (true) {
 //   print(a);
 // }
