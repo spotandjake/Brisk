@@ -26,6 +26,16 @@ const tokens: Lexeme[] = [
     id: 'Tkn_let',
     match: /let/
   },
+  {
+    type: LexemeType.keyword,
+    id: 'Tkn_if',
+    match: /if/
+  },
+  {
+    type: LexemeType.keyword,
+    id: 'Tkn_else',
+    match: /else/
+  },
   // separator
   {
     type: LexemeType.separator,
@@ -90,14 +100,15 @@ const tokens: Lexeme[] = [
     id: 'Tkn_str',
     match: /'.*'/,
     value: (text: string): string => {
-      return text.slice(1, text.length-1)
+      return text.slice(1, text.length - 1)
         .replace(/(?<!\\)\\b/g, '\b')
         .replace(/(?<!\\)\\f/g, '\f')
         .replace(/(?<!\\)\\n/g, '\n')
         .replace(/(?<!\\)\\r/g, '\r')
         .replace(/(?<!\\)\\t/g, '\t')
         .replace(/(?<!\\)\\\\/g, '\\')
-      ;
+        // eslint-disable-next-line indent
+        ;
     }
   },
   {
@@ -105,7 +116,7 @@ const tokens: Lexeme[] = [
     id: 'Tkn_number',
     match: /[-|+]?[0-9]*(?:\.?[0-9]+)/,
     value: (text: string): (number | bigint) => {
-      if (Number(text) < 2147483647 &&  Number(text) > -2147483647 || !Number.isInteger(Number(text))) return Number(text);
+      if (Number(text) < 2147483647 && Number(text) > -2147483647 || !Number.isInteger(Number(text))) return Number(text);
       else return BigInt(text);
     }
   },

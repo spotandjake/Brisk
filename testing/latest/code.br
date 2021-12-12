@@ -1,13 +1,30 @@
-// Test Stack Types
+// // Test Stack Types
 import wasm print: (Number) -> Void from 'env';
-let a: Number = 10;
-print(a);
-let b: Boolean = false;
-print(b);
-let test: Function = (): Void => {
-  let t: Number = 10;
-  print(t);
+let loop: Function = (body: Function): Void => {
+  let _loop: Function = (body: Function, index: Number): Number => {
+    if (body(index)) return(0);
+    _loop(body, index);
+    return(1);
+  };
+  _loop(body, 0);
 };
-// if (true) {
-//   print(a);
-// }
+loop((index: Number): Boolean => {
+  print(index);
+  return(true);
+});
+// let a: Number = 10;
+// print(a);
+// let b: Boolean = false;
+// print(b);
+// let test: Function = (): Boolean => {
+//   let t: Number = 10;
+//   print(t);
+//   return(false);
+// };
+// let d: Number = 11;
+// print(d);
+// let c: Boolean = test();
+// print(c);
+// else if (true) {
+//   print(d);
+// } else print(c);

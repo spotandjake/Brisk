@@ -12,6 +12,11 @@ const runtime = (filePath: string, module: binaryen.Module) => {
   module.addFunctionImport('_malloc', `BRISK$MODULE$${path.relative(path.parse(filePath).dir, `${process.argv[1]}/../../src/Runtime/memory.wat`)}`, '_malloc', binaryen.i32, binaryen.i32);
 };
 // Compiler
+const enum ValueConstant {
+  True = 4294967294,
+  False = 2147483646,
+  Void = 1879048190
+}
 // Allocate Space
 const _Allocate = (module: binaryen.Module, vars: Map<(string | number), number>, size: number) => {
   // Get the local Variable Index
@@ -138,7 +143,7 @@ class Compiler {
         ]);
         // Add closure assignments to the function and variable list
         let closureI = 3;
-        for (const varName in [...(<Stack>variables).closure.keys()]) {
+        for (const varName of [...(<Stack>variables).closure.keys()]) {
           funcBody.push(
             module.local.set(
               funcVars.size,
@@ -162,7 +167,7 @@ class Compiler {
         }
         // Make the body
         body.map((tkn: ParseTreeNode) => this.compileToken(tkn, funcBody, funcStack, funcVars, false));
-        if (dataType == 'Void') funcBody.push(module.return(module.i32.const(-1)));
+        if (dataType == 'Void') funcBody.push(module.return(module.i32.const(ValueConstant.Void)));
         const name = `${functions.length}`;
         module.addFunction(
           name,
@@ -183,7 +188,7 @@ class Compiler {
         if (Node.identifier == 'return') wasm = module.return(functionArgs[0]);
         else if (Node.identifier == 'memStore') wasm = module.i32.store(0, 0, module.i32.add(functionArgs[0], functionArgs[1]), functionArgs[2]);
         else if (Node.identifier == 'memLoad') wasm = module.i32.load(0, 0, module.i32.add(functionArgs[0], functionArgs[1]));
-        else if (Node.identifier == 'i32Add') wasm = module.i32.add(functionArgs[0], functionArgs[1]);
+        else if (Node.identifier == 'i32Add') wasm = module.i32.sub(module.i32.add(functionArgs[0], functionArgs[1]), module.i32.const(1));
         else if (nativeImports.has(Node.identifier)) {
           wasm = module.call(
             Node.identifier,
@@ -211,9 +216,32 @@ class Compiler {
         else functionBody.push(<binaryen.ExpressionRef>wasm);
         break;
       }
+      case ParseTreeNodeType.blockStatement: {
+        // Block Statements break closures
+        const { body } = Node;
+        const functionBody: binaryen.ExpressionRef[] = [];
+        body.map((tkn: ParseTreeNode) => this.compileToken(tkn, functionBody, stack, vars, true));
+        return module.block(null, functionBody);
+      }
+      case ParseTreeNodeType.ifStatement: {
+        const { condition, body, alternate } = Node;
+        const wasmCondition = <binaryen.ExpressionRef>this.compileToken(condition, functionBody, stack, vars, start, true);
+        const wasmBody = <binaryen.ExpressionRef>this.compileToken(body, functionBody, stack, vars, start, true);
+        functionBody.push(
+          module.if(
+            module.i32.eq(
+              wasmCondition,
+              module.i32.const(ValueConstant.True)
+            ),
+            wasmBody,
+            alternate ? <binaryen.ExpressionRef>this.compileToken(alternate, functionBody, stack, vars, start, true) : undefined
+          )
+        );
+        break;
+      }
       case ParseTreeNodeType.declarationStatement: {
-        const { identifier, value } = Node;
-        const wasm = <binaryen.ExpressionRef>this.compileToken(value, functionBody, stack, vars, start, true, Node.dataType == 'Function' ? Node.identifier : false);
+        const { identifier, value, dataType } = Node;
+        const wasm = <binaryen.ExpressionRef>this.compileToken(value, functionBody, stack, vars, start, true, dataType == 'Function' ? identifier : false);
         if (start) {
           module.addGlobal(`${globals.size}`, binaryen.getExpressionType(wasm), true, module.i32.const(0));
           functionBody.push(module.global.set(`${globals.size}`, wasm));
@@ -238,13 +266,8 @@ class Compiler {
               return module.i32.const(0);
             }
           }
-          case 'Boolean': {
-            if (Node.value) {
-              return module.i32.const(4294967294); // True
-            } else {
-              return module.i32.const(2147483646); // False
-            }
-          }
+          case 'Boolean':
+            return module.i32.const(Node.value ? ValueConstant.True : ValueConstant.False);
           default: {
             BriskError('Unknown Var Type');
             return module.i32.const(0);
@@ -291,6 +314,7 @@ class Compiler {
         break;
       }
       // Ignore
+      case ParseTreeNodeType.commentStatement:
       case ParseTreeNodeType.importStatement:
         break;
       default:

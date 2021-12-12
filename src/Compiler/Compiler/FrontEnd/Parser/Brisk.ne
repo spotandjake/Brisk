@@ -40,9 +40,16 @@ StatementList -> Statement | StatementList Statement {%
 Statement -> (StatementCommand | StatementInfo) {% 
   (data): Nodes.Statement => data[0][0]
 %}
+StatementInternal -> (StatementCommandInternal | StatementInfo) {% 
+  (data): Nodes.Statement => data[0][0]
+%}
   
 StatementCommand -> 
-  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement) %Tkn_semicolon wss {% 
+  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement | ifStatement) %Tkn_semicolon wss {% 
+  (data): Nodes.Statement => data[0][0]
+%}
+StatementCommandInternal -> 
+  (ImportStatement | ImportWasmStatement | ExportStatement | DeclarationStatement | CallStatement | BlockStatement | ifStatement) wss {% 
   (data): Nodes.Statement => data[0][0]
 %}
 StatementInfo -> (FlagStatement | CommentStatement) wss {% 
@@ -171,7 +178,7 @@ BlockStatement ->
   %Tkn_l_bracket wss %Tkn_r_bracket {% (data): Nodes.Statement[] => [] %} |
   %Tkn_l_bracket wss StatementList wss %Tkn_r_bracket {% 
   (data): Nodes.BlockStatementNode => {
-    const { value, offset, line, col, file } = data.filter(n => n)[0].position;
+    const { offset, line, col, file } = data.filter(n => n)[0];
     return {
       type: Nodes.ParseTreeNodeType.blockStatement,
       body: data.filter(n => n)[1],
@@ -184,6 +191,33 @@ BlockStatement ->
     }
   }
 %}
+# TODO: fix else if
+ifStatement -> (ifStatementInternal | elseStatement) {% (data): Nodes.IfStatementNode => data[0][0] %}
+ifStatementInternal -> %Tkn_if wss %Tkn_l_paren wss Expression wss %Tkn_r_paren %Tkn_ws wss StatementInternal {%
+  (data): Nodes.IfStatementNode => {
+    const [ position, __, condition, ___, ____, body ] = data.filter(n => n);
+    return {
+      type: Nodes.ParseTreeNodeType.ifStatement,
+      condition: condition,
+      body: body,
+      position: {
+        offset: position.offset,
+        line: position.line,
+        col: position.col,
+        file: position.file
+      }
+    }
+  }
+%}
+elseStatement -> ifStatementInternal %Tkn_else %Tkn_ws wss StatementInternal {%
+  (data): Nodes.IfStatementNode => {
+    const [ ifStatementInternal, _, __, alternate ] = data.filter(n => n);
+    return {
+      ...ifStatementInternal,
+      alternate: alternate
+    }
+  }
+%} 
 # Arguments
 Arguments -> 
   %Tkn_l_paren wss %Tkn_r_paren {% (): Nodes.ExpressionNode[] => [] %} |

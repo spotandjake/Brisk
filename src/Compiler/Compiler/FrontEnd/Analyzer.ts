@@ -3,15 +3,15 @@ import { BriskSyntaxError, BriskReferenceError, BriskError } from '../../Errors/
 // Helper Imports
 import { WalkTree, Stack } from '../Helpers';
 // Type Imports
-import { ParseTreeNode, Program,  DeclarationStatementNode, FunctionTypeNode, ParseTreeNodeType, Import } from '../Types';
+import { ParseTreeNode, Program, DeclarationStatementNode, FunctionTypeNode, ParseTreeNodeType, Import } from '../Types';
 
 const Analyzer = (program: Program) => {
   // Old Analyzers
   const program_globals: Map<string, { type: string; params: string[], result: string; }> = new Map([
-    [ 'return', { type: 'Function', params: [ 'any' ], result: 'Void' } ],
-    [ 'memStore', { type: 'Function', params: [ 'i32', 'i32', 'i32' ], result: 'Void' } ],
-    [ 'memLoad', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ],
-    [ 'i32Add', { type: 'Function', params: [ 'i32', 'i32' ], result: 'i32' } ]
+    ['return', { type: 'Function', params: ['any'], result: 'Void' }],
+    ['memStore', { type: 'Function', params: ['i32', 'i32', 'i32'], result: 'Void' }],
+    ['memLoad', { type: 'Function', params: ['i32', 'i32'], result: 'i32' }],
+    ['i32Add', { type: 'Function', params: ['i32', 'i32'], result: 'Number' }]
   ]);
   const exports: string[] = [], imports: { path: string; identifiers: Import; }[] = [];
   program = WalkTree(program, (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]): (null | ParseTreeNode) => {
@@ -20,7 +20,7 @@ const Analyzer = (program: Program) => {
         if (!stack.hasLocal(Node.identifier)) stack.setLocal(Node.identifier, 'import');
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
         // Resolve Module Paths
-        imports.push({ path: Node.path, identifiers: [ Node.identifier ] });
+        imports.push({ path: Node.path, identifiers: [Node.identifier] });
         break;
       case ParseTreeNodeType.importWasmStatement:
         //@ts-ignore
@@ -40,9 +40,9 @@ const Analyzer = (program: Program) => {
           const returnType = Node.value.dataType;
           const paramType = Node.value.parameters.map(param => param.dataType);
           dataType = { type: Node.dataType, params: paramType, result: returnType };
-        } else if ([ 'i32', 'i64', 'f32', 'f64' ].includes(<string>Node.dataType)) {
+        } else if (['i32', 'i64', 'f32', 'f64'].includes(<string>Node.dataType)) {
           // Hack: Add wasm stack Types
-          if (Node.value.type == ParseTreeNodeType.literal &&  Node.value.dataType == 'Number') Node.value.dataType = Node.dataType;
+          if (Node.value.type == ParseTreeNodeType.literal && Node.value.dataType == 'Number') Node.value.dataType = Node.dataType;
         } else dataType = Node.dataType;
         if (!stack.hasLocal(Node.identifier)) stack.setLocal(Node.identifier, dataType);
         else BriskSyntaxError(`redeclaration of ${Node.identifier}`, Node.position);
@@ -52,7 +52,7 @@ const Analyzer = (program: Program) => {
         if (!stack.has(Node.identifier)) {
           // Hax to allow recursive functions
           if (Parent.type == ParseTreeNodeType.functionNode) {
-            const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length-2];
+            const { type, identifier, dataType } = <DeclarationStatementNode>trace[trace.length - 2];
             if (type == ParseTreeNodeType.declarationStatement && identifier == Node.identifier) {
               stack.setClosure(Node.identifier, dataType);
               break;
@@ -67,12 +67,12 @@ const Analyzer = (program: Program) => {
           if (Node.identifier == 'return') {
             func = {
               type: 'Function',
-              params: [ (<DeclarationStatementNode>Parent).dataType ],
+              params: [(<DeclarationStatementNode>Parent).dataType],
               result: 'Void'
             };
           }
           Node.arguments = Node.arguments.map((argument, index) => {
-            if (argument.type == ParseTreeNodeType.literal && argument.dataType == 'Number' && [ 'i32', 'i64', 'f32', 'f64' ].includes(<string>func.params[index]))
+            if (argument.type == ParseTreeNodeType.literal && argument.dataType == 'Number' && ['i32', 'i64', 'f32', 'f64'].includes(<string>func.params[index]))
               argument.dataType = func.params[index];
             return argument;
           });

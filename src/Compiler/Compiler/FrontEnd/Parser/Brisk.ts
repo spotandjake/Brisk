@@ -18,8 +18,10 @@ declare var Tkn_flag: any;
 declare var Tkn_comment: any;
 declare var Tkn_l_bracket: any;
 declare var Tkn_r_bracket: any;
+declare var Tkn_if: any;
 declare var Tkn_l_paren: any;
 declare var Tkn_r_paren: any;
+declare var Tkn_else: any;
 declare var Tkn_comma: any;
 declare var Tkn_number: any;
 declare var Tkn_bool: any;
@@ -95,13 +97,29 @@ const grammar: Grammar = {
     {"name": "Statement", "symbols": ["Statement$subexpression$1"], "postprocess":  
         (data): Nodes.Statement => data[0][0]
         },
+    {"name": "StatementInternal$subexpression$1", "symbols": ["StatementCommandInternal"]},
+    {"name": "StatementInternal$subexpression$1", "symbols": ["StatementInfo"]},
+    {"name": "StatementInternal", "symbols": ["StatementInternal$subexpression$1"], "postprocess":  
+        (data): Nodes.Statement => data[0][0]
+        },
     {"name": "StatementCommand$subexpression$1", "symbols": ["ImportStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["ImportWasmStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["ExportStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["DeclarationStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["CallStatement"]},
     {"name": "StatementCommand$subexpression$1", "symbols": ["BlockStatement"]},
+    {"name": "StatementCommand$subexpression$1", "symbols": ["ifStatement"]},
     {"name": "StatementCommand", "symbols": ["StatementCommand$subexpression$1", (lexer.has("Tkn_semicolon") ? {type: "Tkn_semicolon"} : Tkn_semicolon), "wss"], "postprocess":  
+        (data): Nodes.Statement => data[0][0]
+        },
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["ImportStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["ImportWasmStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["ExportStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["DeclarationStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["CallStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["BlockStatement"]},
+    {"name": "StatementCommandInternal$subexpression$1", "symbols": ["ifStatement"]},
+    {"name": "StatementCommandInternal", "symbols": ["StatementCommandInternal$subexpression$1", "wss"], "postprocess":  
         (data): Nodes.Statement => data[0][0]
         },
     {"name": "StatementInfo$subexpression$1", "symbols": ["FlagStatement"]},
@@ -223,7 +241,7 @@ const grammar: Grammar = {
     {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess": (data): Nodes.Statement[] => []},
     {"name": "BlockStatement", "symbols": [(lexer.has("Tkn_l_bracket") ? {type: "Tkn_l_bracket"} : Tkn_l_bracket), "wss", "StatementList", "wss", (lexer.has("Tkn_r_bracket") ? {type: "Tkn_r_bracket"} : Tkn_r_bracket)], "postprocess":  
         (data): Nodes.BlockStatementNode => {
-          const { value, offset, line, col, file } = data.filter(n => n)[0].position;
+          const { offset, line, col, file } = data.filter(n => n)[0];
           return {
             type: Nodes.ParseTreeNodeType.blockStatement,
             body: data.filter(n => n)[1],
@@ -233,6 +251,34 @@ const grammar: Grammar = {
               col: col,
               file: file
             }
+          }
+        }
+        },
+    {"name": "ifStatement$subexpression$1", "symbols": ["ifStatementInternal"]},
+    {"name": "ifStatement$subexpression$1", "symbols": ["elseStatement"]},
+    {"name": "ifStatement", "symbols": ["ifStatement$subexpression$1"], "postprocess": (data): Nodes.IfStatementNode => data[0][0]},
+    {"name": "ifStatementInternal", "symbols": [(lexer.has("Tkn_if") ? {type: "Tkn_if"} : Tkn_if), "wss", (lexer.has("Tkn_l_paren") ? {type: "Tkn_l_paren"} : Tkn_l_paren), "wss", "Expression", "wss", (lexer.has("Tkn_r_paren") ? {type: "Tkn_r_paren"} : Tkn_r_paren), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), "wss", "StatementInternal"], "postprocess": 
+        (data): Nodes.IfStatementNode => {
+          const [ position, __, condition, ___, ____, body ] = data.filter(n => n);
+          return {
+            type: Nodes.ParseTreeNodeType.ifStatement,
+            condition: condition,
+            body: body,
+            position: {
+              offset: position.offset,
+              line: position.line,
+              col: position.col,
+              file: position.file
+            }
+          }
+        }
+        },
+    {"name": "elseStatement", "symbols": ["ifStatementInternal", (lexer.has("Tkn_else") ? {type: "Tkn_else"} : Tkn_else), (lexer.has("Tkn_ws") ? {type: "Tkn_ws"} : Tkn_ws), "wss", "StatementInternal"], "postprocess": 
+        (data): Nodes.IfStatementNode => {
+          const [ ifStatementInternal, _, __, alternate ] = data.filter(n => n);
+          return {
+            ...ifStatementInternal,
+            alternate: alternate
           }
         }
         },
