@@ -3,7 +3,7 @@ import { ParseTreeNode, FunctionParameterNode, ExpressionNode, ParseTreeNodeType
 // Recurse the ParseTree
 export const WalkTree = (
   Node: ParseTreeNode,
-  callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (null|ParseTreeNode)
+  callback: (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => (null | ParseTreeNode)
 ): Program => {
   const WalkNode = (Parent: ParseTreeNode, Node: ParseTreeNode, index: number, stack: Stack, trace: ParseTreeNode[]) => {
     trace = [...trace, Parent];

@@ -133,6 +133,8 @@ const namespace = (
           return module.i32.add(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         case binaryen.Operations.SubInt32:
           return module.i32.sub(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
+        case binaryen.Operations.EqInt32:
+          return module.i32.eq(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         case binaryen.Operations.LeUInt32:
           return module.i32.le_u(_namespace(binaryInfo.left), _namespace(binaryInfo.right));
         case binaryen.Operations.GeUInt32:

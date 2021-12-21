@@ -2,9 +2,9 @@ SpecVersion = "1.2.0"
 LatestCompileDate = ""
 
 [CompilerVersion]
-CheckSum = "e734afc6a0ed3d43fb55f330fd72c064"
-CompiledDate = "Sat Oct 02 2021"
+CheckSum = "af3150a06fa53ed50416cdfe5498bdba"
+CompiledDate = "Sat Dec 11 2021"
 
 [ProgramInfo."code.br"]
-signature = "6936fcf23a58dfb1e1c27cd0f5901723"
-LatestCompileDate = "Sat Oct 02 2021"
+signature = "8737a669b7a97b807a8d4e8034d86a7a"
+LatestCompileDate = "Sat Dec 11 2021"
