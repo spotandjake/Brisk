@@ -35,6 +35,7 @@ const lex = (program: string, file: string) => {
     createToken({ label: 'Comparison Equal', name: 'compareEqual', pattern: /==/ }), // compareEqual
     createToken({ label: 'Comparison Not Equal', name: 'compareNotEqual', pattern: /!=/ }), // compareNotEqual
     createToken({ label: 'Arrow', name: 'thick_arrow', pattern: /=>/ }), // thick_arrow
+    createToken({ label: 'Signature Arrow', name: 'thin_arrow', pattern: /->/ }), // thin_arrow
     createToken({ label: 'Not', name: 'not', pattern: /!/ }), // not
     createToken({ label: 'Equal', name: 'equal', pattern: /=/ }), // equal
     createToken({ label: 'Add', name: 'add', pattern: /\+/ }), // add
