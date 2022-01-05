@@ -1,7 +1,9 @@
-import wasm fd_write: (i32, i32, i32, i32) -> i32 from 'wasi_unstable';
-let print: Function = (value: string): Void => {
-  fd_write(1, value, memLoad(value, 4), 200); // We Need to Make Sure We Are Not Overwriting Other Data, With The Number of Bytes Written Spot
-};
-print('Hello World');
-print('Hello');
-print('World');
+import token from 'test';
+// import wasm fd_write: (i32, i32, i32, i32) -> i32 from 'wasi_unstable';
+// let print: Function = (value: string): Void => {
+//   fd_write(1, value, memLoad(value, 4), 200); // We Need to Make Sure We Are Not Overwriting Other Data, With The Number of Bytes Written Spot
+// };
+// print('Hello World');
+// print('Hello');
+// print('World');
+export a;
