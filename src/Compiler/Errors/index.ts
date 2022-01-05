@@ -1,4 +1,4 @@
-import { Position } from '../Types';
+import { Position } from '../Types/Types';
 
 const _BriskError = (type: string, message: string, pos?: Position, exit = true): void => {
   const color = exit ? '\x1b[31m' : '\x1b[33m';

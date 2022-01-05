@@ -1,7 +1,7 @@
 import rules from './Tokens';
-import { BriskSyntaxError } from '../../../Errors/Compiler';
+import { BriskSyntaxError } from '../Errors/Compiler';
 // Import Types
-import { Token, Lexeme } from '../../Types';
+import { Token, Lexeme } from '../Types/Lexer';
 class Lexer {
   public file: string;
   private regex: RegExp;
@@ -12,12 +12,11 @@ class Lexer {
   private col = 1;
   constructor(file: string) {
     // store stuff
-    this.regex = new RegExp(`(?:${
-      rules.map(({ match }) => {
-        if (match.ignoreCase || match.global || match.sticky || match.multiline)
-          BriskSyntaxError('RegExp /i/g/y/m flag used');
-        return `((?:${match.source}))`;
-      }).join('|')})`, 'my');
+    this.regex = new RegExp(`(?:${rules.map(({ match }) => {
+      if (match.ignoreCase || match.global || match.sticky || match.multiline)
+        BriskSyntaxError('RegExp /i/g/y/m flag used');
+      return `((?:${match.source}))`;
+    }).join('|')})`, 'my');
     this.file = file;
   }
   next(): (Token | undefined) {
@@ -26,11 +25,11 @@ class Lexer {
     regex.lastIndex = offset;
     const match = regex.exec(dataset);
     if (!match) {
-      if (dataset.length-offset == 0) return;
+      if (dataset.length - offset == 0) return;
       BriskSyntaxError(`invalid syntax at line ${line} col ${col}:`);
       process.exit(1); // Tricks Lsp
     }
-    const [ text, ...groups ] = match;
+    const [text, ...groups] = match;
     // Determine the rule
     const rule = rules.find((r, i) => groups[i]);
     if (!rule) {
@@ -43,8 +42,8 @@ class Lexer {
     if (rule.lineBreaks) {
       // Check if contains lineBreaks and count
       const a: number[] = [];
-      let i=-1;
-      while((i=text.indexOf('\n',i+1)) >= 0) a.push(i);
+      let i = -1;
+      while ((i = text.indexOf('\n', i + 1)) >= 0) a.push(i);
       if (a.length != 0) {
         this.line += a.length;
         this.col = text.length - <number>a.pop();
@@ -54,10 +53,12 @@ class Lexer {
       type: rule.id,
       value: rule.value ? rule.value(text) : text,
       text: text,
-      offset: offset,
-      line: line,
-      col: col,
-      file: file
+      position: {
+        offset: offset,
+        line: line,
+        col: col,
+        file: file
+      }
     };
   }
   save() {
@@ -75,8 +76,8 @@ class Lexer {
     this.col = info?.col || 1;
     this.file = info?.file || this.file;
   }
-  formatError(token: Token) {
-    return `parseError: ${token == null ? 'at end of file' : `at line ${token.line} col ${token.col}:`}`;
+  formatError({ position }: Token) {
+    return `parseError: ${position == null ? 'at end of file' : `at line ${position.line} col ${position.col}:`}`;
   }
   has(name: string) {
     return this.rules.some(({ id }) => id == name);

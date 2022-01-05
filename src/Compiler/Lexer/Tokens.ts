@@ -1,4 +1,4 @@
-import { Lexeme, LexemeType } from '../../Types';
+import { Lexeme, LexemeType } from '../Types/Lexer';
 const tokens: Lexeme[] = [
   // keyword
   {
@@ -23,8 +23,28 @@ const tokens: Lexeme[] = [
   },
   {
     type: LexemeType.keyword,
+    id: 'Tkn_const',
+    match: /const/
+  },
+  {
+    type: LexemeType.keyword,
     id: 'Tkn_let',
     match: /let/
+  },
+  {
+    type: LexemeType.keyword,
+    id: 'Tkn_if',
+    match: /if/
+  },
+  {
+    type: LexemeType.keyword,
+    id: 'Tkn_else',
+    match: /else/
+  },
+  {
+    type: LexemeType.keyword,
+    id: 'Tkn_return',
+    match: /return/
   },
   // separator
   {
@@ -39,18 +59,43 @@ const tokens: Lexeme[] = [
   },
   {
     type: LexemeType.separator,
-    id: 'Tkn_l_bracket',
+    id: 'Tkn_l_brace',
     match: /\{/
   },
   {
     type: LexemeType.separator,
-    id: 'Tkn_r_bracket',
+    id: 'Tkn_r_brace',
     match: /\}/
+  },
+  {
+    type: LexemeType.separator,
+    id: 'Tkn_l_bracket',
+    match: /\[/
+  },
+  {
+    type: LexemeType.separator,
+    id: 'Tkn_r_bracket',
+    match: /\]/
+  },
+  {
+    type: LexemeType.separator,
+    id: 'Tkn_r_chevron',
+    match: /\</
+  },
+  {
+    type: LexemeType.separator,
+    id: 'Tkn_r_chevron',
+    match: /\>/
   },
   {
     type: LexemeType.separator,
     id: 'Tkn_comma',
     match: /,/
+  },
+  {
+    type: LexemeType.separator,
+    id: 'Tkn_period',
+    match: /\./
   },
   {
     type: LexemeType.separator,
@@ -71,11 +116,6 @@ const tokens: Lexeme[] = [
   // operator
   {
     type: LexemeType.operator,
-    id: 'Tkn_arrow',
-    match: /->/
-  },
-  {
-    type: LexemeType.operator,
     id: 'Tkn_thick_arrow',
     match: /=>/
   },
@@ -84,36 +124,48 @@ const tokens: Lexeme[] = [
     id: 'Tkn_equal',
     match: /=/
   },
+  {
+    type: LexemeType.operator,
+    id: 'Tkn_add',
+    match: /\+/
+  },
+  {
+    type: LexemeType.operator,
+    id: 'Tkn_sub',
+    match: /-/
+  },
+  {
+    type: LexemeType.operator,
+    id: 'Tkn_equalCompare',
+    match: /==/
+  },
   // literal
   {
     type: LexemeType.literal,
     id: 'Tkn_str',
     match: /'.*'/,
     value: (text: string): string => {
-      return text.slice(1, text.length-1)
+      return text.slice(1, text.length - 1)
         .replace(/(?<!\\)\\b/g, '\b')
         .replace(/(?<!\\)\\f/g, '\f')
         .replace(/(?<!\\)\\n/g, '\n')
         .replace(/(?<!\\)\\r/g, '\r')
         .replace(/(?<!\\)\\t/g, '\t')
         .replace(/(?<!\\)\\\\/g, '\\')
-      ;
+        // eslint-disable-next-line indent
+        ;
     }
   },
   {
     type: LexemeType.literal,
     id: 'Tkn_number',
     match: /[-|+]?[0-9]*(?:\.?[0-9]+)/,
-    value: (text: string): (number | bigint) => {
-      if (Number(text) < 2147483647 &&  Number(text) > -2147483647 || !Number.isInteger(Number(text))) return Number(text);
-      else return BigInt(text);
-    }
+    value: (text: string): number => Number(text)
   },
   {
     type: LexemeType.literal,
-    id: 'Tkn_bool',
-    match: /(?:true|false)/,
-    value: (text: string): boolean => text == 'true'
+    id: 'Tkn_constant',
+    match: /(?:true|false|void)/
   },
   // flag
   {
