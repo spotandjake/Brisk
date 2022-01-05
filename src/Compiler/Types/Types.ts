@@ -7,4 +7,4 @@ interface Position {
 // Exports
 export {
   Position
-}
+};

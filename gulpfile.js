@@ -20,7 +20,7 @@ gulp.task('build', async () => {
   // Build the Compiler
   const bundle = await rollup.rollup({
     input: './src/cli/index.ts',
-    external: [ 'commander' ],
+    external: [ 'commander', 'chevrotain' ],
     plugins: [
       swc.default({
         jsc: {
