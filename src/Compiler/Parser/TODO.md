@@ -1,8 +1,10 @@
 # TODO
-+ [ ] Add Destructuring
-+ [ ] Add Objects and property accesses
++ [ ] Switch from cst parser to ast parser and start building our ast.
 + [ ] If Else Statements
-+ [ ] Expressions
+
+# After we have our basic parser built 
++ [ ] Add Destructuring
++ [ ] Add Objects
++ [ ] Fix Expressions
   + [ ] Support (a) + (a) so parenthesis and other types of expressions
-+ [ ] Functions
-+ [ ] Variable Assignments
+  + [ ] We need to fix expressions they are overly complicated and certain things dont work properly at the moment

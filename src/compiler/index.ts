@@ -6,7 +6,7 @@ const compile = (program: string, file: string) => {
   // 1. Lex
   const lexed = lex(program);
   // 2. Parse
-  const parsed = parse(lexed);
+  const parsed = parse(lexed, file);
   // 3. Analyze ParseTree
   // 4. Type Check
   // 5. Generate Code

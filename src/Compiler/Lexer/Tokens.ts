@@ -15,7 +15,6 @@ export const TknConst = createToken({ label: 'Const Definition', name: 'const', 
 export const TknLet = createToken({ label: 'Definition', name: 'let', pattern: /let/ }); // let
 export const TknIf = createToken({ label: 'If Statement', name: 'if', pattern: /if/ }); // if
 export const TknElse = createToken({ label: 'Else Statement', name: 'else', pattern: /else/ }); // else
-export const TknReturn = createToken({ label: 'Return', name: 'return', pattern: /return/ }); // return
 // Separators
 export const TknLParen = createToken({ label: 'Left Parenthesis', name: 'l_paren', pattern: /\(/ }); // l_paren
 export const TknRParen = createToken({ label: 'Right Parenthesis', name: 'r_paren', pattern: /\)/ }); // r_paren
@@ -69,7 +68,6 @@ export const Tokens = [
   TknLet,
   TknIf,
   TknElse,
-  TknReturn,
   // Separators
   TknLParen,
   TknRParen,
