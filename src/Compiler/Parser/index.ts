@@ -1,6 +1,7 @@
 // Imports
 import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
+import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
 // Parser
 class Parser extends EmbeddedActionsParser {
@@ -15,56 +16,82 @@ class Parser extends EmbeddedActionsParser {
   }
   // Grammar
   public program = this.RULE('Program', (): Nodes.ProgramNode => {
-    const value = this.SUBRULE(this.statementList);
+    const body = this.SUBRULE(this.statementList);
     return {
       nodeType: Nodes.NodeType.Program,
       category: Nodes.NodeCategory.General,
-      // body: value, TODO: Get Value
-      // position: TODO: Get Position
+      body: body,
+      position: {
+        offset: 0,
+        line: 0,
+        col: 0,
+        file: this.file,
+      }
     };
   });
-  private statementList = this.RULE('StatementList', () => {
+  private statementList = this.RULE('StatementList', (): Nodes.Statement[] => {
+    const body: Nodes.Statement[] = [];
     this.SUBRULE(this.wss);
     this.MANY(() => {
       this.OR([
-        { ALT: () => this.SUBRULE(this.statement) },
-        { ALT: () => this.SUBRULE(this.flag) },
+        { ALT: () => body.push(this.SUBRULE(this.statement)) },
+        { ALT: () => body.push(this.SUBRULE(this.flag)) },
       ]);
       this.SUBRULE1(this.wss);
     });
-    return 'TODO';
+    return body;
   });
-  private statement = this.RULE('Statement', () => {
-    this.SUBRULE(this._statement);
+  private statement = this.RULE('Statement', (): Nodes.Statement => {
+    const statement = this.SUBRULE(this._statement);
     this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknSemiColon);
-    return 'TODO';
+    return statement;
   });
-  private _statement = this.RULE('_Statement', () => {
-    this.OR([
+  private _statement = this.RULE('_Statement', (): Nodes.Statement => {
+    return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
-    return 'TODO';
   });
   // Flags
-  private flag = this.RULE('Flag', () => {
-    this.CONSUME(Tokens.TknFlag);
-    return 'TODO';
+  private flag = this.RULE('Flag', (): Nodes.FlagNode => {
+    const flag = this.CONSUME(Tokens.TknFlag);
+    return {
+      nodeType: Nodes.NodeType.FlagStatement,
+      category: Nodes.NodeCategory.Statement,
+      value: flag.image,
+      position: {
+        offset: flag.startOffset,
+        line: flag.startLine || 0,
+        col: flag.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   // Statements
-  private blockStatement = this.RULE('BlockStatement', () => {
-    this.CONSUME(Tokens.TknLBrace);
+  private blockStatement = this.RULE('BlockStatement', (): Nodes.BlockStatementNode => {
+    const body: Nodes.Statement[] = [];
+    const open = this.CONSUME(Tokens.TknLBrace);
     this.SUBRULE(this.wss);
     this.MANY(() => {
-      this.SUBRULE(this.statement);
+      body.push(this.SUBRULE(this.statement));
       this.SUBRULE1(this.wss);
     });
     this.CONSUME(Tokens.TknRBrace);
-    return 'TODO';
+    return {
+      nodeType: Nodes.NodeType.BlockStatement,
+      category: Nodes.NodeCategory.Statement,
+      body: body,
+      position: {
+        offset: open.startOffset,
+        line: open.startLine || 0,
+        col: open.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private singleLineStatement = this.RULE('SingleLineStatement', () => {
-    this.OR([
+    return this.OR([
       { ALT: () => this.SUBRULE(this.importStatement) },
       { ALT: () => this.SUBRULE(this.wasmImportStatement) },
       { ALT: () => this.SUBRULE(this.exportStatement) },
@@ -75,35 +102,57 @@ class Parser extends EmbeddedActionsParser {
       ,
       { ALT: () => this.SUBRULE(this.wasmCallExpression) }
     ]);
-    return 'TODO';
   });
-  private importStatement = this.RULE('ImportStatement', () => {
-    this.SUBRULE(this.importStart);
-    this.SUBRULE(this.variable);
+  private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
+    const position = this.SUBRULE(this.importStart);
+    const variable = this.SUBRULE(this.variable);
     this.SUBRULE1(this.ws);
     this.CONSUME(Tokens.TknFrom);
     this.SUBRULE2(this.ws);
-    this.SUBRULE(this.stringLiteral);
-    return 'TODO';
+    const source = this.SUBRULE(this.stringLiteral);
+    return {
+      nodeType: Nodes.NodeType.ImportStatement,
+      category: Nodes.NodeCategory.Statement,
+      variable: variable, // TODO: we want to add support for destructuring imports
+      source: source,
+      position: position
+    };
   });
-  private wasmImportStatement = this.RULE('WasmImportStatement', () => {
-    this.SUBRULE(this.importStart);
+  private wasmImportStatement = this.RULE('WasmImportStatement', (): Nodes.WasmImportStatementNode => {
+    const position = this.SUBRULE(this.importStart);
     this.CONSUME(Tokens.TknWasm);
     this.SUBRULE1(this.ws);
-    this.SUBRULE(this.variable);
+    const variable = this.SUBRULE(this.variable);
     this.SUBRULE(this.wss);
-    this.SUBRULE(this.wasmType);
+    const typeSignature = this.SUBRULE(this.wasmType);
     this.SUBRULE2(this.ws);
     this.CONSUME(Tokens.TknFrom);
     this.SUBRULE3(this.ws);
-    this.SUBRULE(this.stringLiteral);
-    return 'TODO';
+    const source = this.SUBRULE(this.stringLiteral);
+    return {
+      nodeType: Nodes.NodeType.WasmImportStatement,
+      category: Nodes.NodeCategory.Statement,
+      typeSignature: typeSignature,
+      variable: variable, // TODO: we want to add support for destructuring imports
+      source: source,
+      position: position
+    };
   });
-  private exportStatement = this.RULE('ExportStatement', () => {
-    this.CONSUME(Tokens.TknExport);
+  private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
+    const location = this.CONSUME(Tokens.TknExport);
     this.SUBRULE(this.wss);
-    this.SUBRULE(this.variable);
-    return 'TODO';
+    const variable = this.SUBRULE(this.variable);
+    return {
+      nodeType: Nodes.NodeType.ExportStatement,
+      category: Nodes.NodeCategory.Statement,
+      variable: variable, // Allow exporting groups of variables
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private constantDeclarationStatement = this.RULE('ConstantDeclaration', () => {
     this.CONSUME(Tokens.TknConst);
@@ -225,9 +274,9 @@ class Parser extends EmbeddedActionsParser {
   //   ]);
   // });
   // Atoms
-  private atom = this.RULE('Atom', () => {
+  private atom = this.RULE('Atom', (): Nodes.Atom => {
     this.SUBRULE(this.wss);
-    this.OR([
+    const atom = this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
       { ALT: () => this.SUBRULE(this.numberLiteral) },
       { ALT: () => this.SUBRULE(this.constantLiteral) },
@@ -236,20 +285,50 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.propertyAccess), IGNORE_AMBIGUITIES: true },
     ]);
     this.SUBRULE1(this.wss);
-    return 'TODO';
+    return atom;
   });
   // Literals
-  private stringLiteral = this.RULE('StringLiteral', () => {
-    this.CONSUME(Tokens.TknString);
-    return 'TODO';
+  private stringLiteral = this.RULE('StringLiteral', (): Nodes.StringLiteral => {
+    const value = this.CONSUME(Tokens.TknString);
+    return {
+      nodeType: Nodes.NodeType.StringLiteral,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
-  private numberLiteral = this.RULE('NumberLiteral', () => {
-    this.CONSUME(Tokens.TknNumber);
-    return 'TODO';
+  private numberLiteral = this.RULE('NumberLiteral', (): Nodes.NumberLiteral => {
+    const value = this.CONSUME(Tokens.TknNumber);
+    return {
+      nodeType: Nodes.NodeType.NumberLiteral,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private constantLiteral = this.RULE('ConstantLiteral', () => {
-    this.CONSUME(Tokens.TknConstant);
-    return 'TODO';
+    const value = this.CONSUME(Tokens.TknConstant);
+    return {
+      nodeType: Nodes.NodeType.NumberLiteral,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   // TODO: this needs to redone we only want to capture one property and we want this to be captured by a memberStatement or something
   private propertyAccess = this.RULE('PropertyAccess', () => {
@@ -263,9 +342,19 @@ class Parser extends EmbeddedActionsParser {
     });
     return 'TODO';
   });
-  private variable = this.RULE('Variable', () => {
-    this.CONSUME(Tokens.TknIdentifier);
-    return 'TODO';
+  private variable = this.RULE('Variable', (): Nodes.Variable => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    return {
+      nodeType: Nodes.NodeType.Variable,
+      category: Nodes.NodeCategory.Variable,
+      name: identifier.image,
+      position: {
+        offset: identifier.startOffset,
+        line: identifier.startLine || 0,
+        col: identifier.startColumn || 0,
+        file: this.file,
+      },
+    };
   });
   private functionDefinition = this.RULE('FunctionDefinition', () => {
     this.CONSUME(Tokens.TknLParen);
@@ -331,29 +420,41 @@ class Parser extends EmbeddedActionsParser {
     return 'TODO';
   });
   // General Helpers
-  private importStart = this.RULE('Import', () => {
-    this.CONSUME(Tokens.TknImport);
+  private importStart = this.RULE('Import', (): Position => {
+    const location = this.CONSUME(Tokens.TknImport);
     this.SUBRULE(this.ws);
-    return 'TODO';
+    return {
+      offset: location.startOffset,
+      line: location.startLine || 0,
+      col: location.startColumn || 0,
+      file: this.file,
+    };
   });
   private ws = this.RULE('WhiteSpace', () => {
-    this.CONSUME(Tokens.TknWhitespace);
-    return 'TODO';
+    const space = this.CONSUME(Tokens.TknWhitespace);
+    return {
+      nodeType: Nodes.NodeType.WhiteSpace,
+      category: Nodes.NodeCategory.WhiteSpace,
+      value: space.image,
+      position: {
+        offset: space.startOffset,
+        line: space.startLine || 0,
+        col: space.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private wss = this.RULE('OptionalWhiteSpace', (): Nodes.WhiteSpace => {
-    let spaces: IToken[] = [];
-    this.MANY(() => {
-      spaces.push(this.CONSUME(Tokens.TknWhitespace));
-    });
-    console.log(spaces);
+    const spaces: IToken[] = [];
+    this.MANY(() => spaces.push(this.CONSUME(Tokens.TknWhitespace)));
     return {
       nodeType: Nodes.NodeType.WhiteSpace,
       category: Nodes.NodeCategory.WhiteSpace,
       value: spaces.map((space) => space.image).join(''),
       position: {
-        offset: spaces[0].startOffset,
-        line: spaces[0].startLine || 0,
-        col: spaces[0].startColumn || 0,
+        offset: spaces[0]?.startOffset || 0,
+        line: spaces[0]?.startLine || 0,
+        col: spaces[0]?.startColumn || 0,
         file: this.file,
       }
     };

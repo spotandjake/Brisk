@@ -8,6 +8,9 @@ export const enum NodeType {
   // Statements
   FlagStatement,
   BlockStatement,
+  ImportStatement,
+  WasmImportStatement,
+  ExportStatement,
   // Literals
   StringLiteral,
   NumberLiteral,
@@ -49,9 +52,35 @@ export interface BlockStatementNode {
   body: Statement[];
   position: Position;
 }
+export interface ImportStatementNode {
+  nodeType: NodeType.ImportStatement;
+  category: NodeCategory.Statement;
+  variable: Variable; // TODO: we want to add support for destructuring imports
+  source: StringLiteral;
+  position: Position;
+}
+export interface WasmImportStatementNode {
+  nodeType: NodeType.WasmImportStatement;
+  category: NodeCategory.Statement;
+  typeSignature: TypeSignature;
+  variable: Variable; // TODO: we want to add support for destructuring imports
+  source: StringLiteral;
+  position: Position;
+}
+export interface ExportStatementNode {
+  nodeType: NodeType.ExportStatement;
+  category: NodeCategory.Statement;
+  variable: Variable; // TODO: we want to add support for destructuring imports
+  position: Position;
+}
 // Literals
-export type Literal =
-  FlagNode | BlockStatementNode
+export type Atom =
+  StringLiteral |
+  NumberLiteral |
+  ConstantLiteral |
+  FunctionLiteral |
+  Variable |
+  PropertyAccess
   ;
 export interface StringLiteral {
   nodeType: NodeType.StringLiteral;
