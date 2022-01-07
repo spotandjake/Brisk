@@ -1,6 +1,7 @@
 // Imports
 import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
+import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
 // Parser
@@ -228,15 +229,16 @@ class Parser extends EmbeddedActionsParser {
         ALT: () => this.SUBRULE(this.wasmCallExpression)
       },
       {
+        ALT: () => this.SUBRULE(this.logicalExpression)
+      },
+      {
+        ALT: () => this.SUBRULE(this.parenthesisExpression)
+      },
+      {
         ALT: () => this.SUBRULE(this.atom), IGNORE_AMBIGUITIES: true
       },
     ]);
   });
-  // private parenthesisExpression = this.RULE('ParenthesisExpression', () => {
-  //   this.CONSUME(Tokens.TknLParen);
-  //   this.SUBRULE(this.callExpression);
-  //   this.CONSUME(Tokens.TknRParen);
-  // });
   private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
     const args: Nodes.Expression[] = [];
     const name = this.SUBRULE(this.variable);
@@ -247,8 +249,7 @@ class Parser extends EmbeddedActionsParser {
       SEP: Tokens.TknComma,
       DEF: () => {
         this.SUBRULE2(this.wss);
-        // this.SUBRULE(this.arithmeticExpression);
-        args.push(this.SUBRULE(this.atom));
+        args.push(this.SUBRULE(this.expression));
         this.SUBRULE3(this.wss);
       }
     });
@@ -278,8 +279,7 @@ class Parser extends EmbeddedActionsParser {
       SEP: Tokens.TknComma,
       DEF: () => {
         this.SUBRULE4(this.wss);
-        // this.SUBRULE(this.arithmeticExpression);
-        args.push(this.SUBRULE(this.atom));
+        args.push(this.SUBRULE(this.expression));
         this.SUBRULE5(this.wss);
       }
     });
@@ -297,13 +297,6 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  // private arithmeticExpression = this.RULE('ArithmeticExpression', () => {
-  //   this.SUBRULE(this.comparisonExpression);
-  //   this.MANY(() => {
-  //     this.CONSUME(Tokens.arithmeticOperators);
-  //     this.SUBRULE1(this.comparisonExpression);
-  //   });
-  // });
   // private comparisonExpression = this.RULE('ComparisonExpression', () => {
   //   this.SUBRULE(this.logicalExpression);
   //   this.MANY(() => {
@@ -311,19 +304,54 @@ class Parser extends EmbeddedActionsParser {
   //     this.SUBRULE1(this.logicalExpression);
   //   });
   // });
-  // private logicalExpression = this.RULE('LogicalExpression', () => { // TODO: these are not working
-  //   this.OR([
-  //     {
-  //       ALT: () => this.SUBRULE(this.atom)
-  //     },
-  //     {
-  //       ALT: () => {
-  //         this.CONSUME(Tokens.logicalOperators);
-  //         this.SUBRULE1(this.atom);
-  //       }
-  //     },
-  //   ]);
+  private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
+    const logicalOperatorToken = this.CONSUME(Tokens.logicalOperators);
+    console.log(logicalOperatorToken);
+    let logicalOperator;
+    switch (logicalOperatorToken.tokenType.name) {
+      case LexerTokenType.TknNot:
+        logicalOperator = Nodes.LogicalExpressionOperator.LogicalNot;
+        break;
+      default:
+        // TODO: Remover this, This should never be hit in the compiler
+        logicalOperator = Nodes.LogicalExpressionOperator.LogicalNot;
+    }
+    const value = this.SUBRULE1(this.expression);
+    return {
+      nodeType: Nodes.NodeType.LogicExpression,
+      category: Nodes.NodeCategory.Expression,
+      logicalOperator: logicalOperator,
+      value: value,
+      position: {
+        offset: logicalOperatorToken.startOffset,
+        line: logicalOperatorToken.startLine || 0,
+        col: logicalOperatorToken.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
+  // private arithmeticExpression = this.RULE('ArithmeticExpression', () => {
+  //   this.SUBRULE(this.expression);
+  //   this.CONSUME(Tokens.arithmeticOperators);
+  //   this.SUBRULE1(this.expression);
+  //   return 'TODO';
   // });
+  private parenthesisExpression = this.RULE('ParenthesisExpression', (): Nodes.ParenthesisExpressionNode => {
+    const location = this.CONSUME(Tokens.TknLParen);
+    const expression = this.SUBRULE(this.expression);
+    this.CONSUME(Tokens.TknRParen);
+    return {
+      nodeType: Nodes.NodeType.ParenthesisExpression,
+      category: Nodes.NodeCategory.Expression,
+      value: expression,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
   // Atoms
   private atom = this.RULE('Atom', (): Nodes.Atom => {
     this.SUBRULE(this.wss);
@@ -420,31 +448,35 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private functionDefinition = this.RULE('FunctionDefinition', (): Nodes.FunctionLiteralNode => {
+    const params: Nodes.ParameterNode[] = [];
     const location = this.CONSUME(Tokens.TknLParen);
     this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
         this.SUBRULE1(this.wss);
-        this.SUBRULE(this.variable);
+        const name = this.SUBRULE(this.variable);
         this.SUBRULE2(this.wss);
-        this.SUBRULE(this.type);
+        const paramType = this.SUBRULE(this.type);
         this.SUBRULE3(this.wss);
+        params.push({
+          name: name,
+          paramType: paramType,
+        });
       }
     });
     this.CONSUME(Tokens.TknRParen);
     this.SUBRULE4(this.wss);
-    this.SUBRULE1(this.type);
+    const returnType = this.SUBRULE1(this.type);
     this.SUBRULE5(this.wss);
     this.CONSUME(Tokens.TknThickArrow);
     this.SUBRULE6(this.wss);
     const body = this.SUBRULE(this._statement);
-    // TODO: Add Params and return type
     return {
       nodeType: Nodes.NodeType.FunctionLiteral,
       category: Nodes.NodeCategory.Literal,
-      // returnType TODO: Add Return Type
-      // params: []; TODO: Add Params
+      returnType: returnType,
+      params: params,
       body: body,
       position: {
         offset: location.startOffset,

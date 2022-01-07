@@ -1,7 +1,6 @@
 // General Imports
 import { Position } from './Types';
 // Node Types
-// TODO: issue with enums with swc
 export const enum NodeType {
   // Program
   Program,
@@ -16,6 +15,8 @@ export const enum NodeType {
   // Expressions
   CallExpression,
   WasmCallExpression,
+  LogicExpression,
+  ParenthesisExpression,
   // Literals
   StringLiteral,
   NumberLiteral,
@@ -73,14 +74,14 @@ export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
   typeSignature: Type;
-  variable: VariableNode; // TODO: we want to add support for destructuring imports
+  variable: VariableNode;
   source: StringLiteralNode;
   position: Position;
 }
 export interface ExportStatementNode {
   nodeType: NodeType.ExportStatement;
   category: NodeCategory.Statement;
-  variable: Variable; // TODO: we want to add support for destructuring imports
+  variable: Variable; // TODO: we want to add support for exporting objects
   position: Position;
 }
 export const enum DeclarationTypes {
@@ -103,8 +104,15 @@ export interface AssignmentStatementNode {
   value: Expression;
   position: Position;
 }
+// Expression Symbols
+export const enum LogicalExpressionOperator {
+  LogicalNot,
+}
 // Expressions
-export type Expression = CallExpressionNode | WasmCallExpressionNode | Atom;
+export type Expression =
+  CallExpressionNode | WasmCallExpressionNode | ParenthesisExpressionNode |
+  Atom
+  ;
 export interface CallExpressionNode {
   nodeType: NodeType.CallExpression;
   category: NodeCategory.Expression;
@@ -117,6 +125,19 @@ export interface WasmCallExpressionNode {
   category: NodeCategory.Expression;
   name: string[];
   args: Expression[];
+  position: Position;
+}
+export interface LogicExpressionNode {
+  nodeType: NodeType.LogicExpression;
+  category: NodeCategory.Expression;
+  logicalOperator: LogicalExpressionOperator;
+  value: Expression;
+  position: Position;
+}
+export interface ParenthesisExpressionNode {
+  nodeType: NodeType.ParenthesisExpression;
+  category: NodeCategory.Expression;
+  value: Expression;
   position: Position;
 }
 // Literals
@@ -149,8 +170,8 @@ export interface ConstantLiteralNode {
 export interface FunctionLiteralNode {
   nodeType: NodeType.FunctionLiteral;
   category: NodeCategory.Literal;
-  // returnType TODO: Add Return Type
-  // params: []; TODO: Add Params
+  returnType: TypeNode;
+  params: ParameterNode[];
   body: Statement;
   position: Position;
 }
@@ -191,4 +212,9 @@ export interface WhiteSpaceNode {
   category: NodeCategory.WhiteSpace;
   value: string;
   position: Position;
+}
+// General
+export interface ParameterNode {
+  name: Variable;
+  paramType: TypeNode;
 }
