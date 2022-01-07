@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, TokenType, ILexingResult, IToken, createSyntaxDiagramsCode } from 'chevrotain';
+import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
@@ -99,9 +99,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.assignmentStatement) },
-      { ALT: () => this.SUBRULE(this.callExpression), IGNORE_AMBIGUITIES: true }
-      ,
-      { ALT: () => this.SUBRULE(this.wasmCallExpression) }
+      { ALT: () => this.SUBRULE(this.expressionStatement) }
     ]);
   });
   private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
@@ -219,22 +217,54 @@ class Parser extends EmbeddedActionsParser {
       position: name.position,
     };
   });
+  private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
+    return this.OR([
+      { ALT: () => this.SUBRULE(this.callExpression) },
+      { ALT: () => this.SUBRULE(this.wasmCallExpression) }
+    ]);
+  });
   // Expressions
   private expression = this.RULE('Expression', (): Nodes.Expression => {
-    return this.SUBRULE(this.arithmeticExpression);
+    return this.SUBRULE(this.comparisonExpression);
   });
-  // private comparisonExpression = this.RULE('ComparisonExpression', () => {
-  //   this.SUBRULE(this.logicalExpression);
-  //   this.MANY(() => {
-  //     this.CONSUME(Tokens.comparisonOperators);
-  //     this.SUBRULE1(this.logicalExpression);
-  //   });
-  // });
-  // TODO: we cannot wrap these in parenthesis at the moment that is a problem
+  private comparisonExpression = this.RULE('ComparisonExpression', (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
+    const operators: Nodes.ComparisonExpressionOperator[] = [];
+    const expressions: Nodes.Expression[] = [];
+    const lhs = this.SUBRULE(this.arithmeticExpression);
+    this.SUBRULE(this.wss);
+    this.MANY(() => {
+      switch (this.CONSUME(Tokens.comparisonOperators).tokenType.name) {
+        case LexerTokenType.TknComparisonEqual:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
+          break;
+        case LexerTokenType.TknComparisonNotEqual:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonNotEqual);
+          break;
+      }
+      this.SUBRULE1(this.wss);
+      expressions.push(this.SUBRULE1(this.arithmeticExpression));
+      this.SUBRULE2(this.wss);
+    });
+    if (expressions.length == 0) {
+      return lhs;
+    } else {
+      return expressions.reduce((prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
+        return {
+          nodeType: Nodes.NodeType.ComparisonExpression,
+          category: Nodes.NodeCategory.Expression,
+          lhs: prevValue,
+          operator: operators[index],
+          rhs: currentValue,
+          position: prevValue.position
+        };
+      }, lhs);
+    }
+  });
   private arithmeticExpression = this.RULE('ArithmeticExpression', (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
     const operators: Nodes.ArithmeticExpressionOperator[] = [];
     const expressions: Nodes.Expression[] = [];
     const lhs = this.SUBRULE(this.simpleExpression);
+    this.SUBRULE(this.wss);
     this.MANY(() => {
       switch (this.CONSUME(Tokens.arithmeticOperators).tokenType.name) {
         case LexerTokenType.TknAdd:
@@ -244,14 +274,14 @@ class Parser extends EmbeddedActionsParser {
           operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
           break;
       }
+      this.SUBRULE1(this.wss);
       expressions.push(this.SUBRULE1(this.simpleExpression));
+      this.SUBRULE2(this.wss);
     });
-    console.log(lhs);
-    console.log(expressions);
     if (expressions.length == 0) {
       return lhs;
     } else {
-      return expressions.reduce((prevValue, currentValue, index) => {
+      return expressions.reduce((prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
         return {
           nodeType: Nodes.NodeType.ArithmeticExpression,
           category: Nodes.NodeCategory.Expression,
@@ -327,15 +357,14 @@ class Parser extends EmbeddedActionsParser {
   private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
     const args: Nodes.Expression[] = [];
     const name = this.SUBRULE(this.variable);
-    this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE1(this.wss);
+    this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        this.SUBRULE2(this.wss);
+        this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
-        this.SUBRULE3(this.wss);
+        this.SUBRULE2(this.wss);
       }
     });
     this.CONSUME(Tokens.TknRParen);
@@ -352,20 +381,17 @@ class Parser extends EmbeddedActionsParser {
     const args: Nodes.Expression[] = [];
     const location = this.CONSUME(Tokens.TknWasmCall);
     this.atLeastOne(0, () => {
-      this.SUBRULE(this.wss);
       this.CONSUME(Tokens.TknPeriod);
-      this.SUBRULE1(this.wss);
       name.push(this.CONSUME(Tokens.TknIdentifier).image);
-      this.SUBRULE2(this.wss);
     });
     this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE3(this.wss);
+    this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        this.SUBRULE4(this.wss);
+        this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
-        this.SUBRULE5(this.wss);
+        this.SUBRULE2(this.wss);
       }
     });
     this.CONSUME(Tokens.TknRParen);
@@ -639,6 +665,6 @@ const parse = (lexingResult: ILexingResult, file: string) => {
   console.log('================================================================');
   console.dir(parser.program(), { depth: null });
   // =================================================================
-  return createSyntaxDiagramsCode(parser.getSerializedGastProductions());
+  return 'out';
 };
 export default parse;

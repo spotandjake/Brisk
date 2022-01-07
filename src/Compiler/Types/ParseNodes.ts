@@ -13,6 +13,7 @@ export const enum NodeType {
   DeclarationStatement,
   AssignmentStatement,
   // Expressions
+  ComparisonExpression,
   ArithmeticExpression,
   LogicExpression,
   ParenthesisExpression,
@@ -106,17 +107,30 @@ export interface AssignmentStatementNode {
   position: Position;
 }
 // Expression Symbols
+export const enum ComparisonExpressionOperator {
+  ComparisonEqual,
+  ComparisonNotEqual,
+}
+export const enum ArithmeticExpressionOperator {
+  ArithmeticAdd,
+  ArithmeticSub,
+}
 export const enum LogicalExpressionOperator {
   LogicalNot,
 }
-export const enum ArithmeticExpressionOperator {
-  ArithmeticAdd = '+',
-  ArithmeticSub = '-',
-}
 // Expressions
 export type Expression =
-  ArithmeticExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
+  ComparisonExpressionNode | ArithmeticExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
   ;
+
+export interface ComparisonExpressionNode {
+  nodeType: NodeType.ComparisonExpression;
+  category: NodeCategory.Expression;
+  lhs: Expression;
+  operator: ComparisonExpressionOperator;
+  rhs: Expression;
+  position: Position;
+}
 export interface ArithmeticExpressionNode {
   nodeType: NodeType.ArithmeticExpression;
   category: NodeCategory.Expression;

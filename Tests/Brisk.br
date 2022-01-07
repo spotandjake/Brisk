@@ -1,6 +1,5 @@
 // let test: Number = test(test(1), 1);
-let test: Number = (1) + 2;
-// let test: Number = !1 + 1 + (1 + 1) + (1 == 1);
+let test: Number = !1 + 1 + (1 + 1) + (1 == 1);
 // let test: Function = (test: Number, test: String): Number => {
 //   return(test);
 // };
