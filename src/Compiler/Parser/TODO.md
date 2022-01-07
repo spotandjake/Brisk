@@ -8,3 +8,4 @@
 + [ ] Fix Expressions
   + [ ] Support (a) + (a) so parenthesis and other types of expressions
   + [ ] We need to fix expressions they are overly complicated and certain things dont work properly at the moment
++ [ ] Fix our MemberAccess Nodes

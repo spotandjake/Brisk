@@ -1,8 +1,10 @@
 // Imports
 import gulp from 'gulp';
 import * as rollup from 'rollup';
-import swc from 'rollup-plugin-swc';
+// import swc from 'rollup-plugin-swc';
+import swc from './rollup-plugins/swc/index.js';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+// import ts from 'rollup-plugin-ts';
 import fs from 'fs';
 // Configs
 // Gulp Tasks
@@ -20,12 +22,11 @@ gulp.task('build', async () => {
   // Build the Compiler
   const bundle = await rollup.rollup({
     input: './src/cli/index.ts',
-    external: [ 'commander', 'chevrotain' ],
+    external: [ 'commander', 'chevrotain', 'fs' ],
     plugins: [
-      swc.default({
+      swc({
         jsc: {
           minify: {
-            compress: true,
             mangle: true
           },
           parser: {
