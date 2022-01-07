@@ -13,10 +13,11 @@ export const enum NodeType {
   DeclarationStatement,
   AssignmentStatement,
   // Expressions
-  CallExpression,
-  WasmCallExpression,
+  ArithmeticExpression,
   LogicExpression,
   ParenthesisExpression,
+  CallExpression,
+  WasmCallExpression,
   // Literals
   StringLiteral,
   NumberLiteral,
@@ -108,11 +109,35 @@ export interface AssignmentStatementNode {
 export const enum LogicalExpressionOperator {
   LogicalNot,
 }
+export const enum ArithmeticExpressionOperator {
+  ArithmeticAdd = '+',
+  ArithmeticSub = '-',
+}
 // Expressions
 export type Expression =
-  CallExpressionNode | WasmCallExpressionNode | ParenthesisExpressionNode |
-  Atom
+  ArithmeticExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
   ;
+export interface ArithmeticExpressionNode {
+  nodeType: NodeType.ArithmeticExpression;
+  category: NodeCategory.Expression;
+  lhs: Expression;
+  operator: ArithmeticExpressionOperator;
+  rhs: Expression;
+  position: Position;
+}
+export interface LogicExpressionNode {
+  nodeType: NodeType.LogicExpression;
+  category: NodeCategory.Expression;
+  operator: LogicalExpressionOperator;
+  value: Expression;
+  position: Position;
+}
+export interface ParenthesisExpressionNode {
+  nodeType: NodeType.ParenthesisExpression;
+  category: NodeCategory.Expression;
+  value: Expression;
+  position: Position;
+}
 export interface CallExpressionNode {
   nodeType: NodeType.CallExpression;
   category: NodeCategory.Expression;
@@ -125,19 +150,6 @@ export interface WasmCallExpressionNode {
   category: NodeCategory.Expression;
   name: string[];
   args: Expression[];
-  position: Position;
-}
-export interface LogicExpressionNode {
-  nodeType: NodeType.LogicExpression;
-  category: NodeCategory.Expression;
-  logicalOperator: LogicalExpressionOperator;
-  value: Expression;
-  position: Position;
-}
-export interface ParenthesisExpressionNode {
-  nodeType: NodeType.ParenthesisExpression;
-  category: NodeCategory.Expression;
-  value: Expression;
   position: Position;
 }
 // Literals

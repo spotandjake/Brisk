@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
+import { EmbeddedActionsParser, TokenType, ILexingResult, IToken, createSyntaxDiagramsCode } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
@@ -221,13 +221,51 @@ class Parser extends EmbeddedActionsParser {
   });
   // Expressions
   private expression = this.RULE('Expression', (): Nodes.Expression => {
+    return this.SUBRULE(this.arithmeticExpression);
+  });
+  // private comparisonExpression = this.RULE('ComparisonExpression', () => {
+  //   this.SUBRULE(this.logicalExpression);
+  //   this.MANY(() => {
+  //     this.CONSUME(Tokens.comparisonOperators);
+  //     this.SUBRULE1(this.logicalExpression);
+  //   });
+  // });
+  // TODO: we cannot wrap these in parenthesis at the moment that is a problem
+  private arithmeticExpression = this.RULE('ArithmeticExpression', (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
+    const operators: Nodes.ArithmeticExpressionOperator[] = [];
+    const expressions: Nodes.Expression[] = [];
+    const lhs = this.SUBRULE(this.simpleExpression);
+    this.MANY(() => {
+      switch (this.CONSUME(Tokens.arithmeticOperators).tokenType.name) {
+        case LexerTokenType.TknAdd:
+          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticAdd);
+          break;
+        case LexerTokenType.TknSubtract:
+          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
+          break;
+      }
+      expressions.push(this.SUBRULE1(this.simpleExpression));
+    });
+    console.log(lhs);
+    console.log(expressions);
+    if (expressions.length == 0) {
+      return lhs;
+    } else {
+      return expressions.reduce((prevValue, currentValue, index) => {
+        return {
+          nodeType: Nodes.NodeType.ArithmeticExpression,
+          category: Nodes.NodeCategory.Expression,
+          lhs: prevValue,
+          operator: operators[index],
+          rhs: currentValue,
+          position: prevValue.position
+        };
+      }, lhs);
+    }
+  });
+  // TODO: if we could get rid of this that would be fantastic, but it is needed to avoid left recursion
+  private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
     return this.OR([
-      {
-        ALT: () => this.SUBRULE(this.callExpression)
-      },
-      {
-        ALT: () => this.SUBRULE(this.wasmCallExpression)
-      },
       {
         ALT: () => this.SUBRULE(this.logicalExpression)
       },
@@ -235,9 +273,56 @@ class Parser extends EmbeddedActionsParser {
         ALT: () => this.SUBRULE(this.parenthesisExpression)
       },
       {
+        ALT: () => this.SUBRULE(this.callExpression)
+      },
+      {
+        ALT: () => this.SUBRULE(this.wasmCallExpression)
+      },
+      {
         ALT: () => this.SUBRULE(this.atom), IGNORE_AMBIGUITIES: true
       },
     ]);
+  });
+  private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
+    const logicalOperatorToken = this.CONSUME(Tokens.logicalOperators);
+    let operator;
+    switch (logicalOperatorToken.tokenType.name) {
+      case LexerTokenType.TknNot:
+        operator = Nodes.LogicalExpressionOperator.LogicalNot;
+        break;
+      default:
+        // TODO: Remover this, This should never be hit in the compiler
+        operator = Nodes.LogicalExpressionOperator.LogicalNot;
+    }
+    const value = this.SUBRULE1(this.simpleExpression);
+    return {
+      nodeType: Nodes.NodeType.LogicExpression,
+      category: Nodes.NodeCategory.Expression,
+      operator: operator,
+      value: value,
+      position: {
+        offset: logicalOperatorToken.startOffset,
+        line: logicalOperatorToken.startLine || 0,
+        col: logicalOperatorToken.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
+  private parenthesisExpression = this.RULE('ParenthesisExpression', (): Nodes.ParenthesisExpressionNode => {
+    const location = this.CONSUME(Tokens.TknLParen);
+    const expression = this.SUBRULE(this.expression);
+    this.CONSUME(Tokens.TknRParen);
+    return {
+      nodeType: Nodes.NodeType.ParenthesisExpression,
+      category: Nodes.NodeCategory.Expression,
+      value: expression,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
     const args: Nodes.Expression[] = [];
@@ -297,61 +382,7 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  // private comparisonExpression = this.RULE('ComparisonExpression', () => {
-  //   this.SUBRULE(this.logicalExpression);
-  //   this.MANY(() => {
-  //     this.CONSUME(Tokens.comparisonOperators);
-  //     this.SUBRULE1(this.logicalExpression);
-  //   });
-  // });
-  private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
-    const logicalOperatorToken = this.CONSUME(Tokens.logicalOperators);
-    console.log(logicalOperatorToken);
-    let logicalOperator;
-    switch (logicalOperatorToken.tokenType.name) {
-      case LexerTokenType.TknNot:
-        logicalOperator = Nodes.LogicalExpressionOperator.LogicalNot;
-        break;
-      default:
-        // TODO: Remover this, This should never be hit in the compiler
-        logicalOperator = Nodes.LogicalExpressionOperator.LogicalNot;
-    }
-    const value = this.SUBRULE1(this.expression);
-    return {
-      nodeType: Nodes.NodeType.LogicExpression,
-      category: Nodes.NodeCategory.Expression,
-      logicalOperator: logicalOperator,
-      value: value,
-      position: {
-        offset: logicalOperatorToken.startOffset,
-        line: logicalOperatorToken.startLine || 0,
-        col: logicalOperatorToken.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
-  // private arithmeticExpression = this.RULE('ArithmeticExpression', () => {
-  //   this.SUBRULE(this.expression);
-  //   this.CONSUME(Tokens.arithmeticOperators);
-  //   this.SUBRULE1(this.expression);
-  //   return 'TODO';
-  // });
-  private parenthesisExpression = this.RULE('ParenthesisExpression', (): Nodes.ParenthesisExpressionNode => {
-    const location = this.CONSUME(Tokens.TknLParen);
-    const expression = this.SUBRULE(this.expression);
-    this.CONSUME(Tokens.TknRParen);
-    return {
-      nodeType: Nodes.NodeType.ParenthesisExpression,
-      category: Nodes.NodeCategory.Expression,
-      value: expression,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      }
-    };
-  });
+
   // Atoms
   private atom = this.RULE('Atom', (): Nodes.Atom => {
     this.SUBRULE(this.wss);
@@ -608,6 +639,6 @@ const parse = (lexingResult: ILexingResult, file: string) => {
   console.log('================================================================');
   console.dir(parser.program(), { depth: null });
   // =================================================================
-  return 'test';
+  return createSyntaxDiagramsCode(parser.getSerializedGastProductions());
 };
 export default parse;

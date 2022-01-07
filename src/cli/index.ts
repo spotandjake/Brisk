@@ -19,6 +19,8 @@ program
     // Link
     // Module
     console.log(output);
+    // TODO: remove this it is temporary
+    await fs.writeFile('parser.html', output);
   });
 // Start
 program.parse(process.argv);
