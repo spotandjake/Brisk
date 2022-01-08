@@ -199,7 +199,8 @@ export const TknConstant = createToken({
 export const TknWasmCall = createToken({
   label: 'Wasm Call',
   name: LexerTokenType.TknWasmCall,
-  categories: literalTokens, pattern: /@wasm/
+  categories: literalTokens,
+  pattern: /@wasm/
 }); // Wasm Call
 // Flags
 export const TknFlag = createToken({

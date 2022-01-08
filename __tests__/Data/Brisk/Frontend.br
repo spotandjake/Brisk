@@ -1,0 +1,36 @@
+// Import Testing
+import test from 'test';
+import wasm test: (i32, i32) -> i32 from 'test';
+import wasm t: i32 from 'test';
+// TODO: add Property access testing
+// This is a comment
+// if statement testing
+if (1 == 1) {
+  print('If Test');
+} else if ('test') {
+  print('Else If Test');
+} else {
+  print('Else Test');
+};
+if (1 == 1) print('test');
+else print('test');
+
+if (true) {
+  print('true');
+};
+
+if (false) print('test');
+
+// Function Call Tests
+print('test');
+f();
+@wasm.i32.add(1, 1);
+// Variable Declaration tests
+let a: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
+let f: Function = (test: Number): Number => {
+  return(test);
+};
+const a: Number = 1;
+
+// Export Tests
+export f;

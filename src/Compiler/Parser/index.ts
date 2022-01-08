@@ -703,9 +703,7 @@ const parse = (lexingResult: ILexingResult, file: string) => {
     // TODO: Better Error handling
     throw new Error('Parsing errors detected');
   }
-  console.log('================================================================');
-  console.dir(parser.program(), { depth: null });
   // =================================================================
-  return 'out';
+  return parser.program();
 };
 export default parse;

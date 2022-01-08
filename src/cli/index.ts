@@ -19,6 +19,8 @@ program
     // Link
     // Module
     console.log(output);
+    console.log('================================================================');
+    console.dir(output, { depth: null });
   });
 // Start
 program.parse(process.argv);

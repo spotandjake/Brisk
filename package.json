@@ -30,7 +30,10 @@
     },
     "moduleNameMapper": {
       "^(\\.{1,2}/.*)\\.js$": "$1"
-    }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ]
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.1.2",

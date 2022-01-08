@@ -7,5 +7,5 @@ import lex from '../../src/Compiler/Lexer/index';
 const Lexer_Main = fs.readFileSync('./__tests__/Data/Lexer/Lexer.br', 'utf8');
 // Lexer Tests
 test('Lexer: Main', () => {
-  expect(JSON.stringify(lex(Lexer_Main))).toMatchSnapshot();
+  expect(lex(Lexer_Main)).toMatchSnapshot();
 });
