@@ -5,6 +5,7 @@ export const enum NodeType {
   // Program
   Program,
   // Statements
+  IfStatement,
   FlagStatement,
   BlockStatement,
   ImportStatement,
@@ -51,8 +52,17 @@ export interface ProgramNode {
 }
 // Statements
 export type Statement =
-  FlagNode | BlockStatementNode
+  FlagNode | IfStatementNode | BlockStatementNode |
+  ImportStatementNode | WasmImportStatementNode | ExportStatementNode | DeclarationStatementNode | AssignmentStatementNode
   ;
+export interface IfStatementNode {
+  nodeType: NodeType.IfStatement;
+  category: NodeCategory.Statement;
+  condition: Expression;
+  body: Statement;
+  alternative?: Statement;
+  position: Position;
+}
 export interface FlagNode {
   nodeType: NodeType.FlagStatement;
   category: NodeCategory.Statement;

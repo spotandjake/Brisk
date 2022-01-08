@@ -93,6 +93,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private singleLineStatement = this.RULE('SingleLineStatement', () => {
     return this.OR([
+      { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.importStatement) },
       { ALT: () => this.SUBRULE(this.wasmImportStatement) },
       { ALT: () => this.SUBRULE(this.exportStatement) },
@@ -101,6 +102,46 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.assignmentStatement) },
       { ALT: () => this.SUBRULE(this.expressionStatement) }
     ]);
+  });
+  private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
+    const location = this.CONSUME(Tokens.TknIf);
+    this.SUBRULE(this.wss);
+    this.CONSUME(Tokens.TknLParen);
+    this.SUBRULE1(this.wss);
+    const condition = this.SUBRULE(this.expression);
+    this.SUBRULE2(this.wss);
+    this.CONSUME(Tokens.TknRParen);
+    this.SUBRULE3(this.wss);
+    const body = this.SUBRULE(this._statement);
+    const alternative = this.OR([
+      {
+        ALT: () => {
+          this.SUBRULE(this.ws);
+          this.CONSUME(Tokens.TknElse);
+          this.SUBRULE1(this.ws);
+          return this.SUBRULE2(this._statement);
+        }
+      },
+      {
+        ALT: () => {
+          this.SUBRULE4(this.wss);
+          return undefined;
+        }
+      },
+    ]);
+    return {
+      nodeType: Nodes.NodeType.IfStatement,
+      category: Nodes.NodeCategory.Statement,
+      condition: condition,
+      body: body,
+      alternative: alternative,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
   });
   private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
     const position = this.SUBRULE(this.importStart);

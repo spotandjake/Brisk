@@ -1,5 +1,4 @@
 # TODO
-+ [ ] If Else Statements
 + [ ] Make a test suite using jest or something
   + [ ] Initial Setup
   + [ ] Lexer

@@ -5,7 +5,7 @@
   + Syntax
     + Aliasing A Wasm Call `@Wasm.[Type].[Command](...Parameters)`
     + Lexer
-      + Keywords (`const`, `let`, `import`, `from`, `wasm`,`return`)
+      + Keywords (`const`, `let`, `import`, `from`, `wasm`,)
         + Variable Initializer
           + `const` Defines a constant variable that cannot be reassigned
           + `let` Defines a variable that can be reassigned
