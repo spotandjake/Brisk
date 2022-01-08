@@ -8,7 +8,7 @@ import fs from 'fs';
 const compileTypeScriptFile = async (name, input, output) => {
   const bundle = await rollup.rollup({
     input: input,
-    external: [ 'commander', 'chevrotain', 'fs', '@jest/globals' ],
+    external: ['commander', 'chevrotain', 'fs', '@jest/globals'],
     plugins: [
       swc({
         jsc: {
@@ -69,18 +69,18 @@ gulp.task('build', async () => {
   console.table({
     previous: {
       ...previousStats,
-      code: previousStats.lines-previousStats.blanks-previousStats.comments
+      code: previousStats.lines - previousStats.blanks - previousStats.comments
     },
     current: {
       ...stats,
-      code: stats.lines-stats.blanks-stats.comments
+      code: stats.lines - stats.blanks - stats.comments
     },
     reduction: {
-      chars: previousStats.chars-newCode.length,
-      lines: previousStats.lines-newCode.split('\n').length,
-      blanks: previousStats.blanks-newCode.split('\n').filter(n => n.trim() == '').length,
-      comments: previousStats.comments-newCode.split('\n').filter(n => n.trim().startsWith('//')).length,
-      code: (previousStats.lines-previousStats.blanks-previousStats.comments)-(stats.lines-stats.blanks-stats.comments)
+      chars: previousStats.chars - newCode.length,
+      lines: previousStats.lines - newCode.split('\n').length,
+      blanks: previousStats.blanks - newCode.split('\n').filter(n => n.trim() == '').length,
+      comments: previousStats.comments - newCode.split('\n').filter(n => n.trim().startsWith('//')).length,
+      code: (previousStats.lines - previousStats.blanks - previousStats.comments) - (stats.lines - stats.blanks - stats.comments)
     }
   });
 });
