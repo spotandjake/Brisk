@@ -11,7 +11,6 @@ const compile = (program: string, file: string) => {
   if (parsed == undefined) throw new Error('Parsed was undefined');
   // 3. Analyze ParseTree
   const analyzed = analyze(parsed);
-  console.dir(analyzed, { depth: null });
   // 4. Type Check
   // 5. Generate Code
   // 6. Return Code

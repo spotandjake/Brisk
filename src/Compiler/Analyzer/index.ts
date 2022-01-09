@@ -1,20 +1,15 @@
-import { NodeType, ProgramNode, NodeTemplate, Type, DeclarationTypes } from '../Types/ParseNodes';
-import Node, { AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
+import { NodeType, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
+import Node, { VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
 import { BriskParseError } from '../Errors/Compiler';
-// eslint-disable-next-line @typescript-eslint/ban-types
-const hasOwnProperty = <X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> => {
-  return obj.hasOwnProperty(prop);
-};
-// TODO: Fix the typing
-const analyzeNode = <T extends NodeTemplate>(
-  _variables: Map<number, { name: string, global: boolean, constant: boolean, type: Type | undefined }>,
-  stacks: Map<string, number>[],
-  closure: Set<number>,
-  stack: Map<string, number>,
+
+const analyzeNode = <T extends Node>(
+  _variables: VariableMap,
+  stacks: VariableStack[],
+  closure: VariableClosure,
+  stack: VariableStack,
   parent: Node | undefined,
   node: T
 ): T => {
-  // TODO: add the stack and closure and _variables to the nodes
   // Properties
   let stackMap = stack;
   let closureMap = closure;
@@ -28,18 +23,32 @@ const analyzeNode = <T extends NodeTemplate>(
     case NodeType.Program:
       stacks.push(stack);
       stackMap = new Map();
-      // TODO: add maps to node
       closureMap = new Set();
+      node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
+      // TODO: Remove ts-ignore Here
+      // @ts-ignore
+      node = <AnalyzedProgramNode>{
+        ...node,
+        variables: _variables,
+        stack: stackMap,
+      };
       break;
     // Statements
     case NodeType.BlockStatement:
       stacks.push(stack);
       stackMap = new Map();
-      // TODO: add maps to node
       closureMap = new Set();
+      node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
+      // TODO: remove this ts-ignore
+      //@ts-ignore
+      node = <AnalyzedBlockStatementNode>{
+        ...node,
+        stack: stackMap,
+      };
       break;
     case NodeType.IfStatement:
       node.condition = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.condition);
+      node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
       break;
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
@@ -71,25 +80,20 @@ const analyzeNode = <T extends NodeTemplate>(
       break;
     // Expressions
     case NodeType.ComparisonExpression:
-      // TODO: consider adding optimizations here for simple literals
-      node.lhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.lhs);
-      node.rhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.rhs);
-      break;
     case NodeType.ArithmeticExpression:
-      // TODO: consider adding optimizations here for simple literals
       node.lhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.lhs);
       node.rhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.rhs);
       break;
     case NodeType.LogicExpression:
-      // TODO: consider adding optimizations here for simple literals
-      node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
-      break;
     case NodeType.ParenthesisExpression:
       node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
       break;
-    case NodeType.WasmCallExpression:
     case NodeType.CallExpression:
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
+      node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
+      break;
+    case NodeType.WasmCallExpression:
+      // TODO: I think we need to analyze the name here
       node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
       break;
     // Literals
@@ -97,29 +101,37 @@ const analyzeNode = <T extends NodeTemplate>(
     case NodeType.FunctionLiteral:
       stacks.push(stack);
       stackMap = new Map();
-      // TODO: add maps to node
       closureMap = new Set();
       node.params = node.params.map(param => analyzeNode(_variables, stacks, closureMap, stackMap, node, param));
+      node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
+      // TODO: remove this ts-ignore
+      //@ts-ignore
+      node = <AnalyzedFunctionLiteralNode>{
+        ...node,
+        closure: closureMap,
+        stack: stackMap,
+      };
       break;
     // Variables
     case NodeType.VariableDefinition:
+      if (stack.has(<string>node.name)) BriskParseError(`Variable ${node.name} is not defined.`, node.position);
       _variables.set(_variables.size, {
-        name: node.name,
+        name: <string>node.name,
         global: node.global,
         constant: node.constant,
         type: node.type
       });
-      stack.set(node.name, _variables.size - 1);
+      stack.set(<string>node.name, _variables.size - 1);
       node.name = _variables.size - 1;
       break;
     case NodeType.VariableUsage:
-      if (stack.has(node.name)) node.name = stack.get(node.name);
+      if (stack.has(<string>node.name)) node.name = <number>stack.get(<string>node.name);
       else {
         // Search The Above Stacks
         let found = false;
         for (const parentStack of stacks.reverse()) {
-          if (parentStack.has(node.name)) {
-            node.name = <number>parentStack.get(node.name);
+          if (parentStack.has(<string>node.name)) {
+            node.name = <number>parentStack.get(<string>node.name);
             closure.add(node.name);
             found = true;
             break;
@@ -130,7 +142,7 @@ const analyzeNode = <T extends NodeTemplate>(
       break;
     case NodeType.MemberAccess:
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
-      if (hasOwnProperty(node, 'child')) node.child = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.child);
+      if (node.child) node.child = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.child);
       break;
     case NodeType.Parameter:
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
@@ -147,20 +159,14 @@ const analyzeNode = <T extends NodeTemplate>(
     case NodeType.ConstantLiteral:
       break;
     // Other
-    default:
-      BriskParseError('Analyzer: Unknown Node Type', node.position);
-      break;
+    // Uncomment this when adding new nodes
+    // default:
+    //   BriskParseError('Analyzer: Unknown Node Type', node.position);
+    //   break;
   }
-  // Logic for traversing the Parse Tree
-  if (hasOwnProperty(node, 'body')) {
-    if (Array.isArray(node.body)) node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
-    else node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
-  }
-  if (parent == undefined) console.log(_variables);
   return node;
 };
-const analyze = (program: ProgramNode) => {
-  return analyzeNode(new Map(), [], new Set(), new Map(), undefined, program);
-};
+const analyze = (program: ProgramNode) =>
+  analyzeNode(new Map(), [], new Set(), new Map(), undefined, program);
 
 export default analyze;

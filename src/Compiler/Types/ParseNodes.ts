@@ -139,7 +139,7 @@ export const enum LogicalExpressionOperator {
 }
 // Expressions
 export type Expression =
-  ComparisonExpressionNode | ArithmeticExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
+  ComparisonExpressionNode | ArithmeticExpressionNode | LogicExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
   ;
 
 export interface ComparisonExpressionNode {
@@ -273,9 +273,5 @@ export interface ParameterNode {
 }
 
 // Export Every Node
-export interface NodeTemplate {
-  nodeType: NodeType;
-  category: NodeCategory;
-}
-type Node = ProgramNode | Statement | Expression;
+type Node = ProgramNode | Statement | Expression | ParameterNode;
 export default Node;

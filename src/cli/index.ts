@@ -19,7 +19,7 @@ program
     // Link
     // Module
     console.log('================================================================');
-    // console.dir(output, { depth: null });
+    console.dir(output, { depth: null });
   });
 // Start
 program.parse(process.argv);
