@@ -519,7 +519,7 @@ class Parser extends EmbeddedActionsParser {
   private constantLiteral = this.RULE('ConstantLiteral', () => {
     const value = this.CONSUME(Tokens.TknConstant);
     return {
-      nodeType: Nodes.NodeType.NumberLiteral,
+      nodeType: Nodes.NodeType.ConstantLiteral,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
       position: {
@@ -647,6 +647,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.FunctionType,
       category: Nodes.NodeCategory.Type,
+      name: 'Function',
       params: params,
       returnType: returnType,
       position: {

@@ -225,6 +225,7 @@ export type Type = FunctionTypeNode | TypeNode;
 export interface FunctionTypeNode {
   nodeType: NodeType.FunctionType;
   category: NodeCategory.Type;
+  name: 'Function';
   params: TypeNode[];
   returnType: TypeNode;
   position: Position;

@@ -1,6 +1,7 @@
 import lex from './Lexer/index';
 import parse from './Parser/index';
 import analyze from './Analyzer/index';
+import typeCheck from './TypeChecker/index';
 // The Compiler Entry
 const compile = (program: string, file: string) => {
   // Compilation Steps
@@ -12,9 +13,10 @@ const compile = (program: string, file: string) => {
   // 3. Analyze ParseTree
   const analyzed = analyze(parsed);
   // 4. Type Check
+  const typeChecked = typeCheck(analyzed);
   // 5. Generate Code
   // 6. Return Code
-  return analyzed;
+  return typeChecked;
 };
 
 export default compile;

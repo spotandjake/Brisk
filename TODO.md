@@ -20,3 +20,7 @@
   + [x] add values to nodes
 + [ ] TypeChecker
 + [ ] Compiler
+
+
++ [ ] Important todo
+  + [ ] I dont think the analyzer or typechecker know how to deal with member access nodes

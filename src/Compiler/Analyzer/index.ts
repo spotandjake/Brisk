@@ -1,13 +1,14 @@
-import { NodeType, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
-import Node, { VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
+import Node, { NodeType, NodeCategory, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
+import AnalyzerNode, { VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
 import { BriskParseError } from '../Errors/Compiler';
 
-const analyzeNode = <T extends Node>(
+type AllNodes = AnalyzerNode | Node;
+const analyzeNode = <T extends AllNodes>(
   _variables: VariableMap,
   stacks: VariableStack[],
   closure: VariableClosure,
   stack: VariableStack,
-  parent: Node | undefined,
+  parent: AllNodes | undefined,
   node: T
 ): T => {
   // Properties
@@ -56,7 +57,12 @@ const analyzeNode = <T extends Node>(
         ...node.variable,
         global: parent != undefined && parent.nodeType == NodeType.Program,
         constant: true,
-        type: (node.nodeType == NodeType.WasmImportStatement) ? node.typeSignature : undefined, // TODO: determine how to type regular import
+        type: (node.nodeType == NodeType.WasmImportStatement) ? node.typeSignature : {
+          nodeType: NodeType.Type,
+          category: NodeCategory.Type,
+          name: 'Unknown',
+          position: node.position,
+        }, // TODO: determine how to type regular import
       });
       break;
     case NodeType.ExportStatement:
@@ -104,7 +110,6 @@ const analyzeNode = <T extends Node>(
       closureMap = new Set();
       node.params = node.params.map(param => analyzeNode(_variables, stacks, closureMap, stackMap, node, param));
       node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
-      // TODO: remove this ts-ignore
       //@ts-ignore
       node = <AnalyzedFunctionLiteralNode>{
         ...node,
@@ -167,6 +172,6 @@ const analyzeNode = <T extends Node>(
   return node;
 };
 const analyze = (program: ProgramNode) =>
-  analyzeNode(new Map(), [], new Set(), new Map(), undefined, program);
+  <AnalyzedProgramNode>analyzeNode(new Map(), [], new Set(), new Map(), undefined, program);
 
 export default analyze;
