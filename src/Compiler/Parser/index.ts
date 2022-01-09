@@ -1,6 +1,7 @@
 // Imports
 import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
+import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
@@ -10,7 +11,8 @@ class Parser extends EmbeddedActionsParser {
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
       // TODO: The lower we can make this number the faster our parser
-      maxLookahead: 3
+      maxLookahead: 3,
+      errorMessageProvider: ErrorProvider
     });
     this.file = file;
     this.performSelfAnalysis();
@@ -45,7 +47,9 @@ class Parser extends EmbeddedActionsParser {
   private statement = this.RULE('Statement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
     this.SUBRULE(this.wss);
-    this.CONSUME(Tokens.TknSemiColon);
+    this.CONSUME(Tokens.TknSemiColon, {
+      ERR_MSG: 'expecting `;` at end of Statement'
+    });
     return statement;
   });
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
@@ -698,6 +702,7 @@ const parse = (lexingResult: ILexingResult, file: string) => {
   const parser = new Parser(Tokens.Tokens, file);
   // "input" is a setter which will reset the parser's state.
   parser.input = lexingResult.tokens;
+  console.log(parser.errors);
   if (parser.errors.length > 0) {
     // TODO: currently we dont throw an error when there is unknown code we just call it good this is a problem
     // TODO: Better Error handling

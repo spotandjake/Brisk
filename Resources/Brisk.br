@@ -1,4 +1,5 @@
-// let test: Number = test(test(1), 1);
+let test: Number = test(test(1), 1);
+if
 // if (test) {
 //   print('If');
 // } else if (test) {
