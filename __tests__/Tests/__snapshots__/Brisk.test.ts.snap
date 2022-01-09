@@ -29,3 +29,19 @@ Object {
   },
 }
 `;
+
+exports[`Parser-Lexer-Analyzer: Main 1`] = `
+Object {
+  "body": Array [],
+  "category": 0,
+  "nodeType": 0,
+  "position": Object {
+    "col": 0,
+    "file": "file",
+    "line": 0,
+    "offset": 0,
+  },
+  "stack": Map {},
+  "variables": Map {},
+}
+`;

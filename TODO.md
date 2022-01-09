@@ -4,6 +4,12 @@
 + [ ] Parser
   + [ ] Add Destructuring
   + [ ] Add Objects
+  + [ ] Add enums
+  + [ ] add interfaces
+  + [ ] add type casting
+  + [ ] add type Definitions
+    + [ ] union types
+  + [ ] Add generics
 + [ ] Analyzer
   + [x] Fix typing
   + [x] determine globals
