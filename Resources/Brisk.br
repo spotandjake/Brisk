@@ -1,25 +1,9 @@
-let test: Number = test(test(1), 1);
-if
-// if (test) {
-//   print('If');
-// } else if (test) {
-//   print('Else If');
-// } else {
-//   print('Else');
-// };
-// let test: Number = !1 + 1 + (1 + 1) + (1 == 1);
-// let test: Function = (test: Number, test: String): Number => {
-//   return(test);
-// };
-// let hi: Function = @wasm.test();
-// Test
-// import token from 'test';
-// import wasm fd_write: (i32, i32, i32, i32) -> i32 from 'wasi_unstable';
-// let print: Function = (value: string): Void => {
-//   fd_write(1, value, memLoad(value, 4), 200); // We Need to Make Sure We Are Not Overwriting Other Data, With The Number of Bytes Written Spot
-// };
-// print('Hello World');
-// print('Hello');
-// print('World');
-// let a: Number = test(t, 1);
-// export a;
+import c from 'c';
+import wasm d: (i32) -> i32 from 'd';
+let test: Number = 1;
+let print: Number = 1;
+
+const t: Number = (a: String): Function => {
+  let b: Number = test;
+  print(a, b);
+};

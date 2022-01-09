@@ -107,13 +107,19 @@
   + [x] Lexer - Chevrotain
     + [ ] Consider Creating a program that can convert These Lexer Tokens To An Extension
   + [ ] Parser - Chevrotain
+    - [x] Main Parser
+    - [ ] Things To Add
+      - [ ] Destructuring
+      - [ ] Objects
+      - [ ] Arrays
+    - [ ] Errors
   + [ ] Analyzer
     + [ ] Find Closures Values
       + [ ] Closures are functions that rely on local vars defined above, To determine these we need to double check the values it is relying on are not in the global scope.
     + [ ] Determine Global's i.e Vars in the top level
     + [ ] Find Unused Vars
       + [ ] Remove Them
-    + [ ] Hoist Functions That Are Not Closures To The Top Level So They Are Not First Class Functions
+    + [ ] Determine global functions
   + [ ] Type Checker
     + [ ] Determine Type's of each value and then make sure they match there use case
   + [ ] Compiler

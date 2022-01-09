@@ -22,8 +22,6 @@ export const enum LexerTokenType {
   RightBrace = 'RightBrace',
   LeftBracket = 'LeftBracket',
   RightBracket = 'RightBracket',
-  LeftChevron = 'LeftChevron',
-  RightChevron = 'RightChevron',
   Comma = 'Comma',
   Period = 'Period',
   Colon = 'Colon',
@@ -32,7 +30,10 @@ export const enum LexerTokenType {
   // Operators
   TknComparisonEqual = 'TknComparisonEqual',
   TknComparisonNotEqual = 'TknComparisonNotEqual',
-
+  TknComparisonLessThan = 'TknComparisonLessThan',
+  TknComparisonGreaterThan = 'TknComparisonGreaterThan',
+  TknComparisonLessThanOrEqual = 'TknComparisonLessThanOrEqual',
+  TknComparisonGreaterThanOrEqual = 'TknComparisonGreaterThanOrEqual',
   TknArrow = 'TknArrow',
   TknThinArrow = 'TknThinArrow',
 
@@ -41,6 +42,9 @@ export const enum LexerTokenType {
   TknEqual = 'TknEqual',
   TknAdd = 'TknAdd',
   TknSubtract = 'TknSubtract',
+  TknDivision = 'TknDivision',
+  TknMultiply = 'TknMultiply',
+  TknPower = 'TknPower',
   // Literals
   TknStringLiteral = 'String',
   TknNumberLiteral = 'Number',

@@ -27,6 +27,8 @@ f();
 @wasm.i32.add(1, 1);
 // Variable Declaration tests
 let a: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
+let t: Number = a;
+let t: Number = t.t;
 let f: Function = (test: Number): Number => {
   return(test);
 };

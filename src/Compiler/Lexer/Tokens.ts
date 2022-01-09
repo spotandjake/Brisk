@@ -94,16 +94,6 @@ export const TknRBracket = createToken({
   name: LexerTokenType.RightBracket,
   pattern: /\]/
 });
-export const TknLChevron = createToken({
-  label: 'Left Chevron',
-  name: LexerTokenType.LeftChevron,
-  pattern: /</
-});
-export const TknRChevron = createToken({
-  label: 'Right Chevron',
-  name: LexerTokenType.RightChevron,
-  pattern: />/
-});
 export const TknComma = createToken({
   label: 'Comma',
   name: LexerTokenType.Comma,
@@ -143,6 +133,30 @@ export const TknComparisonNotEqual = createToken({
   categories: comparisonOperators,
   pattern: /!=/
 });
+export const TknComparisonGreaterThan = createToken({
+  label: 'Comparison Greater Than',
+  name: LexerTokenType.TknComparisonGreaterThan,
+  categories: comparisonOperators,
+  pattern: />/
+});
+export const TknComparisonLessThan = createToken({
+  label: 'Comparison Less Than',
+  name: LexerTokenType.TknComparisonLessThan,
+  categories: comparisonOperators,
+  pattern: /</
+});
+export const TknComparisonGreaterThanEqual = createToken({
+  label: 'Comparison Greater Than Or Equal To',
+  name: LexerTokenType.TknComparisonGreaterThanOrEqual,
+  categories: comparisonOperators,
+  pattern: />=/
+});
+export const TknComparisonLessThanEqual = createToken({
+  label: 'Comparison Less Than Or Equal To',
+  name: LexerTokenType.TknComparisonLessThanOrEqual,
+  categories: comparisonOperators,
+  pattern: /<=/
+});
 export const TknThickArrow = createToken({
   label: 'Arrow',
   name: LexerTokenType.TknArrow,
@@ -176,6 +190,24 @@ export const TknSub = createToken({
   name: LexerTokenType.TknSubtract,
   categories: arithmeticOperators,
   pattern: /-/
+});
+export const TknDiv = createToken({
+  label: 'Division',
+  name: LexerTokenType.TknDivision,
+  categories: arithmeticOperators,
+  pattern: /\//
+});
+export const TknMul = createToken({
+  label: 'Multiplication',
+  name: LexerTokenType.TknMultiply,
+  categories: arithmeticOperators,
+  pattern: /\*/
+});
+export const TknPow = createToken({
+  label: 'Power Of',
+  name: LexerTokenType.TknPower,
+  categories: arithmeticOperators,
+  pattern: /\^/
 });
 // Literals
 export const TknString = createToken({
@@ -244,8 +276,6 @@ export const Tokens = [
   TknRBrace,
   TknLBracket,
   TknRBracket,
-  TknLChevron,
-  TknRChevron,
   TknComma,
   TknPeriod,
   TknColon,
@@ -253,12 +283,19 @@ export const Tokens = [
   TknWhitespace,
   TknComparisonEqual,
   TknComparisonNotEqual,
+  TknComparisonGreaterThanEqual,
+  TknComparisonLessThanEqual,
+  TknComparisonGreaterThan,
+  TknComparisonLessThan,
   TknThickArrow,
   TknThinArrow,
   TknNot,
   TknEqual,
   TknAdd,
   TknSub,
+  TknDiv,
+  TknMul,
+  TknPow,
   // Literals
   literalTokens,
   TknString,

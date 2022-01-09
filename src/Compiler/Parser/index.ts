@@ -1,7 +1,7 @@
 // Imports
 import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
-import ErrorProvider from './ErrorProvider';
+// import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
@@ -10,9 +10,9 @@ class Parser extends EmbeddedActionsParser {
   private file: string;
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
-      // TODO: The lower we can make this number the faster our parser
+      // TODO: The lower we can make this number the faster our parser, lets try to get it down to 2
       maxLookahead: 3,
-      errorMessageProvider: ErrorProvider
+      // errorMessageProvider: ErrorProvider
     });
     this.file = file;
     this.performSelfAnalysis();
@@ -104,7 +104,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.assignmentStatement) },
-      { ALT: () => this.SUBRULE(this.expressionStatement) }
+      { ALT: () => this.SUBRULE(this.expressionStatement), IGNORE_AMBIGUITIES: true },
     ]);
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
@@ -149,7 +149,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
     const position = this.SUBRULE(this.importStart);
-    const variable = this.SUBRULE(this.variableNode);
+    const variable = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE1(this.ws);
     this.CONSUME(Tokens.TknFrom);
     this.SUBRULE2(this.ws);
@@ -166,7 +166,7 @@ class Parser extends EmbeddedActionsParser {
     const position = this.SUBRULE(this.importStart);
     this.CONSUME(Tokens.TknWasm);
     this.SUBRULE1(this.ws);
-    const variable = this.SUBRULE(this.variableNode);
+    const variable = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
     const typeSignature = this.SUBRULE(this.wasmType);
     this.SUBRULE2(this.ws);
@@ -201,7 +201,7 @@ class Parser extends EmbeddedActionsParser {
   private constantDeclarationStatement = this.RULE('ConstantDeclaration', (): Nodes.DeclarationStatementNode => {
     const location = this.CONSUME(Tokens.TknConst);
     this.SUBRULE(this.ws);
-    const name = this.SUBRULE(this.variableNode);
+    const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE1(this.wss);
     const varType = this.SUBRULE(this.type);
     this.SUBRULE2(this.wss);
@@ -226,7 +226,7 @@ class Parser extends EmbeddedActionsParser {
   private declarationStatement = this.RULE('Declaration', (): Nodes.DeclarationStatementNode => {
     const location = this.CONSUME(Tokens.TknLet);
     this.SUBRULE(this.ws);
-    const name = this.SUBRULE(this.variableNode);
+    const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
     const varType = this.SUBRULE(this.type);
     this.SUBRULE1(this.wss);
@@ -285,6 +285,18 @@ class Parser extends EmbeddedActionsParser {
         case LexerTokenType.TknComparisonNotEqual:
           operators.push(Nodes.ComparisonExpressionOperator.ComparisonNotEqual);
           break;
+        case LexerTokenType.TknComparisonLessThan:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThan);
+          break;
+        case LexerTokenType.TknComparisonGreaterThan:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThan);
+          break;
+        case LexerTokenType.TknComparisonLessThanOrEqual:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual);
+          break;
+        case LexerTokenType.TknComparisonGreaterThanOrEqual:
+          operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
+          break;
       }
       this.SUBRULE1(this.wss);
       expressions.push(this.SUBRULE1(this.arithmeticExpression));
@@ -318,6 +330,15 @@ class Parser extends EmbeddedActionsParser {
         case LexerTokenType.TknSubtract:
           operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
           break;
+        case LexerTokenType.TknDivision:
+          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticDiv);
+          break;
+        case LexerTokenType.TknMultiply:
+          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticMul);
+          break;
+        case LexerTokenType.TknPower:
+          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
+          break;
       }
       this.SUBRULE1(this.wss);
       expressions.push(this.SUBRULE1(this.simpleExpression));
@@ -338,7 +359,6 @@ class Parser extends EmbeddedActionsParser {
       }, lhs);
     }
   });
-  // TODO: if we could get rid of this that would be fantastic, but it is needed to avoid left recursion
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
     return this.OR([
       {
@@ -348,13 +368,13 @@ class Parser extends EmbeddedActionsParser {
         ALT: () => this.SUBRULE(this.parenthesisExpression)
       },
       {
+        ALT: () => this.SUBRULE(this.atom), IGNORE_AMBIGUITIES: true
+      },
+      {
         ALT: () => this.SUBRULE(this.callExpression)
       },
       {
         ALT: () => this.SUBRULE(this.wasmCallExpression)
-      },
-      {
-        ALT: () => this.SUBRULE(this.atom), IGNORE_AMBIGUITIES: true
       },
     ]);
   });
@@ -462,8 +482,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.numberLiteral) },
       { ALT: () => this.SUBRULE(this.constantLiteral) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
-      { ALT: () => this.SUBRULE(this.variableNode) },
-      { ALT: () => this.SUBRULE(this.memberAccessNode), IGNORE_AMBIGUITIES: true },
+      { ALT: () => this.SUBRULE(this.variable) },
     ]);
     this.SUBRULE1(this.wss);
     return atom;
@@ -513,14 +532,14 @@ class Parser extends EmbeddedActionsParser {
   });
   private variable = this.RULE('Variable', (): Nodes.Variable => {
     return this.OR([
-      { ALT: () => this.SUBRULE(this.variableNode) },
-      { ALT: () => this.SUBRULE(this.numberLiteral) },
+      { ALT: () => this.SUBRULE(this.memberAccessNode) },
+      { ALT: () => this.SUBRULE(this.variableUsageNode) },
     ]);
   });
-  private variableNode = this.RULE('VariableNode', (): Nodes.VariableNode => {
+  private variableDefinitionNode = this.RULE('VariableDefinitionNode', (): Nodes.VariableDefinitionNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     return {
-      nodeType: Nodes.NodeType.Variable,
+      nodeType: Nodes.NodeType.VariableDefinition,
       category: Nodes.NodeCategory.Variable,
       name: identifier.image,
       position: {
@@ -531,16 +550,26 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  // TODO: this needs to redone we only want to capture one property and we want this to be captured by a memberStatement or something
+  private variableUsageNode = this.RULE('VariableUsageNode', (): Nodes.VariableUsageNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    return {
+      nodeType: Nodes.NodeType.VariableUsage,
+      category: Nodes.NodeCategory.Variable,
+      name: identifier.image,
+      position: {
+        offset: identifier.startOffset,
+        line: identifier.startLine || 0,
+        col: identifier.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
-    const name = this.SUBRULE(this.variableNode);
+    const name = this.SUBRULE(this.variableUsageNode);
     this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknPeriod);
     this.SUBRULE1(this.wss);
-    const child = this.OR([
-      { ALT: () => this.SUBRULE(this.memberAccessNode) },
-      { ALT: () => this.SUBRULE1(this.variableNode) },
-    ]);
+    const child = this.SUBRULE(this.variable);
     return {
       nodeType: Nodes.NodeType.MemberAccess,
       category: Nodes.NodeCategory.Variable,
@@ -557,11 +586,13 @@ class Parser extends EmbeddedActionsParser {
       SEP: Tokens.TknComma,
       DEF: () => {
         this.SUBRULE1(this.wss);
-        const name = this.SUBRULE(this.variable);
+        const name = this.SUBRULE(this.variableDefinitionNode);
         this.SUBRULE2(this.wss);
         const paramType = this.SUBRULE(this.type);
         this.SUBRULE3(this.wss);
         params.push({
+          nodeType: Nodes.NodeType.Parameter,
+          category: Nodes.NodeCategory.Variable,
           name: name,
           paramType: paramType,
         });
@@ -702,10 +733,8 @@ const parse = (lexingResult: ILexingResult, file: string) => {
   const parser = new Parser(Tokens.Tokens, file);
   // "input" is a setter which will reset the parser's state.
   parser.input = lexingResult.tokens;
-  console.log(parser.errors);
   if (parser.errors.length > 0) {
-    // TODO: currently we dont throw an error when there is unknown code we just call it good this is a problem
-    // TODO: Better Error handling
+    // TODO: Error Handling Seems To Be Broken Somehow
     throw new Error('Parsing errors detected');
   }
   // =================================================================

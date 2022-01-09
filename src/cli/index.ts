@@ -18,9 +18,8 @@ program
     const output = compile(fileContent, file);
     // Link
     // Module
-    console.log(output);
     console.log('================================================================');
-    console.dir(output, { depth: null });
+    // console.dir(output, { depth: null });
   });
 // Start
 program.parse(process.argv);

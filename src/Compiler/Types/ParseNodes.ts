@@ -29,8 +29,10 @@ export const enum NodeType {
   FunctionType,
   Type,
   // Vars
-  Variable,
+  VariableDefinition,
+  VariableUsage,
   MemberAccess,
+  Parameter,
   // WhiteSpace
   WhiteSpace
 }
@@ -78,7 +80,7 @@ export interface BlockStatementNode {
 export interface ImportStatementNode {
   nodeType: NodeType.ImportStatement;
   category: NodeCategory.Statement;
-  variable: VariableNode; // TODO: we want to add support for destructuring imports
+  variable: VariableDefinitionNode; // TODO: we want to add support for destructuring imports
   source: StringLiteralNode;
   position: Position;
 }
@@ -86,7 +88,7 @@ export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
   typeSignature: Type;
-  variable: VariableNode;
+  variable: VariableDefinitionNode;
   source: StringLiteralNode;
   position: Position;
 }
@@ -104,7 +106,7 @@ export interface DeclarationStatementNode {
   nodeType: NodeType.DeclarationStatement;
   category: NodeCategory.Statement;
   declarationType: DeclarationTypes;
-  name: VariableNode;
+  name: VariableDefinitionNode;
   varType: Type;
   value: Expression;
   position: Position;
@@ -120,10 +122,17 @@ export interface AssignmentStatementNode {
 export const enum ComparisonExpressionOperator {
   ComparisonEqual,
   ComparisonNotEqual,
+  ComparisonLessThan,
+  ComparisonGreaterThan,
+  ComparisonLessThanOrEqual,
+  ComparisonGreaterThanOrEqual,
 }
 export const enum ArithmeticExpressionOperator {
   ArithmeticAdd,
   ArithmeticSub,
+  ArithmeticMul,
+  ArithmeticDiv,
+  ArithmeticPow,
 }
 export const enum LogicalExpressionOperator {
   LogicalNot,
@@ -182,7 +191,7 @@ export type Atom =
   NumberLiteralNode |
   ConstantLiteralNode |
   FunctionLiteralNode |
-  VariableNode |
+  VariableUsageNode |
   MemberAccessNode
   ;
 export interface StringLiteralNode {
@@ -198,7 +207,7 @@ export interface NumberLiteralNode {
   position: Position;
 }
 export interface ConstantLiteralNode {
-  nodeType: NodeType.StringLiteral;
+  nodeType: NodeType.ConstantLiteral;
   category: NodeCategory.Literal;
   value: string;
   position: Position;
@@ -228,17 +237,23 @@ export interface TypeNode {
 }
 // Variables
 // TODO: these should probably just be identifier and member something because are not necessarily variables.
-export type Variable = VariableNode | MemberAccessNode;
-export interface VariableNode {
-  nodeType: NodeType.Variable;
+export type Variable = VariableUsageNode | MemberAccessNode;
+export interface VariableDefinitionNode {
+  nodeType: NodeType.VariableDefinition;
   category: NodeCategory.Variable;
-  name: string;
+  name: string | number;
+  position: Position;
+}
+export interface VariableUsageNode {
+  nodeType: NodeType.VariableUsage;
+  category: NodeCategory.Variable;
+  name: string | number;
   position: Position;
 }
 export interface MemberAccessNode {
   nodeType: NodeType.MemberAccess;
   category: NodeCategory.Variable;
-  name: VariableNode;
+  name: VariableUsageNode;
   child?: Variable;
   position: Position;
 }
@@ -251,6 +266,16 @@ export interface WhiteSpaceNode {
 }
 // General
 export interface ParameterNode {
-  name: Variable;
+  nodeType: NodeType.Parameter;
+  category: NodeCategory.Variable;
+  name: VariableDefinitionNode;
   paramType: TypeNode;
 }
+
+// Export Every Node
+export interface NodeTemplate {
+  nodeType: NodeType;
+  category: NodeCategory;
+}
+type Node = ProgramNode | Statement | Expression;
+export default Node;

@@ -6,20 +6,17 @@ const errorProvider: IParserErrorMessageProvider = {
   },
   buildNotAllInputParsedMessage: (options) => {
     // TODO: implement these
-    console.log(options);
     console.log('buildNotAllInputParsedMessage');
     return `very bad dog! you still have some input remaining at offset:${options.firstRedundant.startOffset}`;
   },
   buildNoViableAltMessage: (options) => {
     // TODO: implement these
-    console.log(options);
     console.log('buildNoViableAltMessage');
     // defer to the default implementation for `buildNoViableAltMessage`
     return defaultParserErrorProvider.buildNoViableAltMessage(options);
   },
   buildEarlyExitMessage: (options) => {
     // TODO: implement these
-    console.log(options);
     console.log('buildEarlyExitMessage');
     return `Early Exit: ${options.expectedIterationPaths[0][0].name}`;
   }
