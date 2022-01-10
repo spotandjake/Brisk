@@ -1,3 +1,13 @@
+# Tommorow
++ [ ] Way to generate parser test data
+  + Gulp task to build tests
++ [ ] Improve Parser There are bugs
+  + [ ] Spaces Between statements cause he rest not to parse
++ [ ] Analyzer
+  + [ ] Determine Unused Variables
+  + [ ] Determine Which Ones Are Exported
+  + [ ] Ensure that `imports` and `exports` are top level
+
 # TODO After We Built Everything Else
 + [ ] Tests
   + [ ] Way to generate parser test data
@@ -10,6 +20,7 @@
   + [ ] add type Definitions
     + [ ] union types
   + [ ] Add generics
+  + [ ] Parser Error Messages
 + [ ] Analyzer
   + [x] Fix typing
   + [x] determine globals
