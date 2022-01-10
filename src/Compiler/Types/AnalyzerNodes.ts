@@ -4,6 +4,8 @@ export interface VariableData {
   name: string;
   global: boolean;
   constant: boolean;
+  exported: boolean;
+  used: boolean;
   type: Type;
 }
 export type VariableMap = Map<number, VariableData>;

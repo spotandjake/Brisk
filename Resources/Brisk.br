@@ -17,3 +17,4 @@ const t: Function = (a: String): String => {
 // TODO: add return type
 // TODO: we need to make this work
 // let b: Number = t();
+export t;

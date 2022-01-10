@@ -89,9 +89,11 @@ gulp.task('clean', async () => {
   if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
   await fs.promises.mkdir(folder);
 });
-// gulp.task('test', async () => {
-//   // Clean the original
-//   await gulp.series('clean')();
-//   // Build the Compiler
-//   await compileTypeScriptFile('brisk', './Tests/Suite.test.ts', './dist/Suite.test.js');
-// });
+gulp.task('mock', async () => {
+  // Clean the original
+  const folder = './__tests__/dist';
+  if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
+  await fs.promises.mkdir(folder);
+  // Build the Compiler
+  await compileTypeScriptFile('Brisk-Test-Data', './__tests__/Data.ts', './__tests__/dist/Data.js');
+});

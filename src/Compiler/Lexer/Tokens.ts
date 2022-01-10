@@ -22,6 +22,12 @@ export const logicalOperators = createToken({
   name: LexerTokenType.LogicalOperators,
   pattern: Lexer.NA
 });
+// Comments
+export const TknComment = createToken({
+  label: 'Comment',
+  name: LexerTokenType.TknComment,
+  pattern: /\/\/.*/
+}); // Comment
 // Keywords
 export const TknImport = createToken({
   label: 'Import',
@@ -195,7 +201,8 @@ export const TknDiv = createToken({
   label: 'Division',
   name: LexerTokenType.TknDivision,
   categories: arithmeticOperators,
-  pattern: /\//
+  pattern: /\//,
+  longer_alt: TknComment
 });
 export const TknMul = createToken({
   label: 'Multiplication',
@@ -240,12 +247,6 @@ export const TknFlag = createToken({
   name: LexerTokenType.TknFlag,
   pattern: /@.*/
 }); // Flag
-// Comments
-export const TknComment = createToken({
-  label: 'Comment',
-  name: LexerTokenType.TknComment,
-  pattern: /\/\/.*/
-}); // Comment
 // Identifiers
 export const TknIdentifier = createToken({
   label: 'Identifier',

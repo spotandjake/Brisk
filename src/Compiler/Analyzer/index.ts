@@ -1,5 +1,5 @@
 import Node, { NodeType, NodeCategory, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
-import AnalyzerNode, { VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
+import AnalyzerNode, { VariableData, VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
 import { BriskParseError } from '../Errors/Compiler';
 
 type AllNodes = AnalyzerNode | Node;
@@ -53,6 +53,8 @@ const analyzeNode = <T extends AllNodes>(
       break;
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
+      if (parent != undefined && parent.nodeType != NodeType.Program)
+        BriskParseError('Import statements must be at the top level.', node.position);
       node.variable = analyzeNode(_variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
         ...node.variable,
         global: parent != undefined && parent.nodeType == NodeType.Program,
@@ -66,9 +68,17 @@ const analyzeNode = <T extends AllNodes>(
       });
       break;
     case NodeType.ExportStatement:
+      // TODO: Allow exporting expressions
       if (parent != undefined && parent.nodeType != NodeType.Program)
         BriskParseError('Export statements must be at the top level.', node.position);
       node.variable = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.variable);
+      if (node.variable.nodeType == NodeType.VariableUsage) {
+        const name = <number>node.variable.name;
+        _variables.set(name, {
+          ...(<VariableData>_variables.get(name)),
+          exported: true,
+        });
+      }
       break;
     case NodeType.DeclarationStatement:
       // TODO: recursive values are gonna be a problem, i.e let test = test.test.test;
@@ -124,28 +134,43 @@ const analyzeNode = <T extends AllNodes>(
         name: <string>node.name,
         global: node.global,
         constant: node.constant,
+        exported: false,
+        used: false,
         type: node.type
       });
       stack.set(<string>node.name, _variables.size - 1);
       node.name = _variables.size - 1;
       break;
     case NodeType.VariableUsage:
-      if (stack.has(<string>node.name)) node.name = <number>stack.get(<string>node.name);
-      else {
+      if (stack.has(<string>node.name)) {
+        const name = <number>stack.get(<string>node.name);
+        node.name = name;
+        _variables.set(name, {
+          ...(<VariableData>_variables.get(name)),
+          used: true
+        });
+      } else {
         // Search The Above Stacks
-        let found = false;
+        let name: number | undefined;
         for (const parentStack of stacks.reverse()) {
           if (parentStack.has(<string>node.name)) {
-            node.name = <number>parentStack.get(<string>node.name);
-            closure.add(node.name);
-            found = true;
+            const varName = <number>parentStack.get(<string>node.name);
+            node.name = varName;
+            closure.add(varName);
+            name = varName;
             break;
           }
         }
-        if (!found) BriskParseError(`Variable ${node.name} is not defined.`, node.position);
+        if (name != undefined) {
+          _variables.set(name, {
+            ...(<VariableData>_variables.get(name)),
+            used: true
+          });
+        } else BriskParseError(`Variable ${node.name} is not defined.`, node.position);
       }
       break;
     case NodeType.MemberAccess:
+      // TODO: we need to deal with better
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
       if (node.child) node.child = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.child);
       break;

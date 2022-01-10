@@ -7,7 +7,7 @@ import parse from '../../src/Compiler/Parser/index';
 import analyze from '../../src/Compiler/Analyzer/index';
 import compile from '../../src/Compiler/index';
 // Import Data: Relative to dist
-const FrontEnd_Main = fs.readFileSync('./__tests__/Data/Brisk/Frontend.br', 'utf8');
+const FrontEnd_Main = fs.readFileSync('./__tests__/Data/Brisk/Brisk_pass.br', 'utf8');
 // Compiler
 test('Compile: Main', () => {
   expect(compile(FrontEnd_Main, 'file')).toMatchSnapshot();

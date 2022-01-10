@@ -1,12 +1,7 @@
 # Tommorow
-+ [ ] Way to generate parser test data
-  + Gulp task to build tests
++ [ ] Fix Member Access Nodes
 + [ ] Improve Parser There are bugs
-  + [ ] Spaces Between statements cause he rest not to parse
-+ [ ] Analyzer
-  + [ ] Determine Unused Variables
-  + [ ] Determine Which Ones Are Exported
-  + [ ] Ensure that `imports` and `exports` are top level
+  + [ ] New lines Between statements cause he rest not to parse
 
 # TODO After We Built Everything Else
 + [ ] Tests
@@ -38,6 +33,11 @@
   + [ ] Deal With MemberAccess
 + [ ] Compiler
 
++ [ ] Write More Tests
+  + [ ] Parser
+  + [ ] Lexer
+  + [ ] Analyzer
+  + [ ] TypeChecker
 
 + [ ] Important todo
   + [ ] I dont think the analyzer or typechecker know how to deal with member access nodes

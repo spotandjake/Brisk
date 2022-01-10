@@ -16,7 +16,8 @@
     "build": "gulp build",
     "clean": "gulp clean",
     "typecheck": "tsc --project tsconfig.json",
-    "lint": "eslint src/**"
+    "lint": "eslint src/**",
+    "mock": "gulp mock && node --enable-source-maps ./__tests__/dist/Data.js"
   },
   "jest": {
     "preset": "ts-jest/presets/default-esm",

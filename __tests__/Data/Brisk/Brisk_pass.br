@@ -1,7 +1,8 @@
 // Import Testing
-import test from 'test';
-import wasm test: (i32, i32) -> i32 from 'test';
-import wasm t: i32 from 'test';
+import a from 'test';
+import wasm print: (String) -> Void from 'print';
+import wasm f: () -> Void from 'print';
+import wasm b: i32 from 'test';
 // TODO: add Property access testing
 // This is a comment
 // if statement testing
@@ -26,11 +27,13 @@ print('test');
 f();
 @wasm.i32.add(1, 1);
 // Variable Declaration tests
-let a: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
-let f: Function = (test: Number): Number => {
-  return(test);
+let c: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
+let d: Number = a;
+let e: Number = t.t;
+let f: Function = (g: Number): Number => {
+  return(g);
 };
-const a: Number = 1;
+const h: Number = 1;
 
 // Export Tests
-export f;
+export i;
