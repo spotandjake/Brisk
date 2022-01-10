@@ -13,10 +13,10 @@ const compile = (program: string, file: string) => {
   // 3. Analyze ParseTree
   const analyzed = analyze(parsed);
   // 4. Type Check
-  const typeChecked = typeCheck(analyzed);
+  typeCheck(analyzed);
   // 5. Generate Code
   // 6. Return Code
-  return typeChecked;
+  return analyzed;
 };
 
 export default compile;

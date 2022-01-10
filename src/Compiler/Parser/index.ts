@@ -442,13 +442,8 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
-    const name: string[] = [];
     const args: Nodes.Expression[] = [];
     const location = this.CONSUME(Tokens.TknWasmCall);
-    this.atLeastOne(0, () => {
-      this.CONSUME(Tokens.TknPeriod);
-      name.push(this.CONSUME(Tokens.TknIdentifier).image);
-    });
     this.CONSUME(Tokens.TknLParen);
     this.SUBRULE(this.wss);
     this.MANY_SEP({
@@ -463,7 +458,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.WasmCallExpression,
       category: Nodes.NodeCategory.Expression,
-      name: name,
+      name: location.image,
       args: args,
       position: {
         offset: location.startOffset,

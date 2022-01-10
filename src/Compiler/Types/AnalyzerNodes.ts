@@ -26,7 +26,7 @@ export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {
   type: Type;
 }
 
-type AnalyzerNode =
+export type AnalyzerNode =
   AnalyzedProgramNode | AnalyzedBlockStatementNode | AnalyzedFunctionLiteralNode |
   AnalyzedVariableDefinitionNode |
   Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode | VariableDefinitionNode>

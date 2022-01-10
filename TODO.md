@@ -14,11 +14,17 @@
   + [x] Fix typing
   + [x] determine globals
   + [x] closures
+  + [ ] Deal With MemberAccess
   + [ ] Parseliterals
   + [ ] determine unused variables
   + [ ] determine which vars are exported, this will with code generation of that.
   + [x] add values to nodes
 + [ ] TypeChecker
+  + [ ] Add TypeChecking For Imports
+  + [ ] Add TypeChecking For Function Calls
+  + [ ] Add Better TypeChecking On Wasm Calls
+  + [ ] Complete Other TODO
+  + [ ] Deal With MemberAccess
 + [ ] Compiler
 
 

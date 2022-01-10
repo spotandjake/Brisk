@@ -181,7 +181,7 @@ export interface CallExpressionNode {
 export interface WasmCallExpressionNode {
   nodeType: NodeType.WasmCallExpression;
   category: NodeCategory.Expression;
-  name: string[];
+  name: string;
   args: Expression[];
   position: Position;
 }

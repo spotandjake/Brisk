@@ -119,7 +119,7 @@ const analyzeNode = <T extends AllNodes>(
       break;
     // Variables
     case NodeType.VariableDefinition:
-      if (stack.has(<string>node.name)) BriskParseError(`Variable ${node.name} is not defined.`, node.position);
+      if (stack.has(<string>node.name)) BriskParseError(`Variable ${node.name} is already defined.`, node.position);
       _variables.set(_variables.size, {
         name: <string>node.name,
         global: node.global,

@@ -1,22 +1,19 @@
-
-import c from 'c';
-import wasm d: (i32) -> i32 from 'd';
-let test: Number = 1;
-let print: Number = 1;
-
-const return: Function = (a: Number): Number => {
-  @wasm.return(a);
-};
-if (true) {};
-
-
 const t: Function = (a: String): String => {
-  let b: Number = test;
-  print(a, b);
-  return(1);
+  let b: Number = 1;
 };
+// let a: i32 = @wasm.i32.const(1);
+// let b: i32 = @wasm.i32.add(a, a);
+// import c from 'c';
+// import wasm d: (i32) -> i32 from 'd';
+// let test: Number = 1;
+// let print: Number = 1;
 
-let b: String = 1 == 1;
+// const return: Function = (a: Number): Number => {
+//   @wasm.return(a);
+// };
+// if (true) {};
+
+// let b: String = 1 == 1;
 // TODO: add return type
 // TODO: we need to make this work
 // let b: Number = t();
