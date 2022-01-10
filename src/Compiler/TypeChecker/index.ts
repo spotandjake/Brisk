@@ -455,6 +455,18 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
       return createTypeNode('Function', node.position);
     case NodeType.StringLiteral:
       return createTypeNode('String', node.position);
+    case NodeType.I32Literal:
+      return createTypeNode('i32', node.position);
+    case NodeType.I64Literal:
+      return createTypeNode('i64', node.position);
+    case NodeType.U32Literal:
+      return createTypeNode('u32', node.position);
+    case NodeType.U64Literal:
+      return createTypeNode('u64', node.position);
+    case NodeType.F32Literal:
+      return createTypeNode('f32', node.position);
+    case NodeType.F64Literal:
+      return createTypeNode('f64', node.position);
     case NodeType.NumberLiteral:
       return createTypeNode('Number', node.position);
     case NodeType.ConstantLiteral:
@@ -478,7 +490,7 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
     // Other
     // Uncomment this when adding new nodes
     default:
-      BriskTypeError('Analyzer: Unknown Node Type', node.position);
+      BriskTypeError('TypeChecker: Unknown Node Type', node.position);
       return createTypeNode('Void', node.position);
   }
 };

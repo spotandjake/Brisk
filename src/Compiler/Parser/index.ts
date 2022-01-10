@@ -474,6 +474,12 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE(this.wss);
     const atom = this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
+      { ALT: () => this.SUBRULE(this.i32Literal) },
+      { ALT: () => this.SUBRULE(this.i64Literal) },
+      { ALT: () => this.SUBRULE(this.u32Literal) },
+      { ALT: () => this.SUBRULE(this.u64Literal) },
+      { ALT: () => this.SUBRULE(this.f32Literal) },
+      { ALT: () => this.SUBRULE(this.f64Literal) },
       { ALT: () => this.SUBRULE(this.numberLiteral) },
       { ALT: () => this.SUBRULE(this.constantLiteral) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
@@ -487,6 +493,90 @@ class Parser extends EmbeddedActionsParser {
     const value = this.CONSUME(Tokens.TknString);
     return {
       nodeType: Nodes.NodeType.StringLiteral,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private i32Literal = this.RULE('I32Literal', (): Nodes.I32LiteralNode => {
+    const value = this.CONSUME(Tokens.TknI32);
+    return {
+      nodeType: Nodes.NodeType.I32Literal,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private i64Literal = this.RULE('I64Literal', (): Nodes.I64LiteralNode => {
+    const value = this.CONSUME(Tokens.TknI64);
+    return {
+      nodeType: Nodes.NodeType.I64Literal,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private u32Literal = this.RULE('U32Literal', (): Nodes.U32LiteralNode => {
+    const value = this.CONSUME(Tokens.TknU32);
+    return {
+      nodeType: Nodes.NodeType.U32Literal,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private u64Literal = this.RULE('U64Literal', (): Nodes.U64LiteralNode => {
+    const value = this.CONSUME(Tokens.TknU64);
+    return {
+      nodeType: Nodes.NodeType.U64Literal,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private f32Literal = this.RULE('F32Literal', (): Nodes.F32LiteralNode => {
+    const value = this.CONSUME(Tokens.TknF32);
+    return {
+      nodeType: Nodes.NodeType.F32Literal,
+      category: Nodes.NodeCategory.Literal,
+      value: value.image,
+      position: {
+        offset: value.startOffset,
+        line: value.startLine || 0,
+        col: value.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private f64Literal = this.RULE('F64Literal', (): Nodes.F64LiteralNode => {
+    const value = this.CONSUME(Tokens.TknF64);
+    return {
+      nodeType: Nodes.NodeType.F64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
       position: {

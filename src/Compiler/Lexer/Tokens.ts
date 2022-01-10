@@ -69,6 +69,67 @@ export const TknElse = createToken({
   name: LexerTokenType.ElseToken,
   pattern: /else/
 });
+// Literals
+export const TknString = createToken({
+  label: 'String Literal',
+  name: LexerTokenType.TknStringLiteral,
+  categories: literalTokens,
+  pattern: /'.*'/
+}); // String
+export const TknI32 = createToken({
+  label: 'I32 Literal',
+  name: LexerTokenType.TknI32Literal,
+  categories: literalTokens,
+  pattern: /[-|+]?[0-9]+n/
+}); // I32
+export const TknI64 = createToken({
+  label: 'I64 Literal',
+  name: LexerTokenType.TknI64Literal,
+  categories: literalTokens,
+  pattern: /[-|+]?[0-9]+N/
+}); // I64
+export const TknU32 = createToken({
+  label: 'U32 Literal',
+  name: LexerTokenType.TknU32Literal,
+  categories: literalTokens,
+  pattern: /[0-9]+u/
+}); // U32
+export const TknU64 = createToken({
+  label: 'U64 Literal',
+  name: LexerTokenType.TknU64Literal,
+  categories: literalTokens,
+  pattern: /[0-9]+U/
+}); // U64
+export const TknF32 = createToken({
+  label: 'F32 Literal',
+  name: LexerTokenType.TknF32Literal,
+  categories: literalTokens,
+  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)f/
+}); // F32
+export const TknF64 = createToken({
+  label: 'F64 Literal',
+  name: LexerTokenType.TknF64Literal,
+  categories: literalTokens,
+  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)F/
+}); // F64
+export const TknNumber = createToken({
+  label: 'Number Literal',
+  name: LexerTokenType.TknNumberLiteral,
+  categories: literalTokens,
+  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)/
+}); // Number
+export const TknConstant = createToken({
+  label: 'Constant Literal',
+  name: LexerTokenType.TknConstantLiteral,
+  categories: literalTokens,
+  pattern: /(?:true|false|void)/
+}); // Constant
+export const TknWasmCall = createToken({
+  label: 'Wasm Call',
+  name: LexerTokenType.TknWasmCall,
+  categories: literalTokens,
+  pattern: /@wasm((\.[a-z\d]+)+)/
+}); // Wasm Call
 // Separators
 export const TknLParen = createToken({
   label: 'Left Parenthesis',
@@ -216,31 +277,6 @@ export const TknPow = createToken({
   categories: arithmeticOperators,
   pattern: /\^/
 });
-// Literals
-export const TknString = createToken({
-  label: 'String Literal',
-  name: LexerTokenType.TknStringLiteral,
-  categories: literalTokens,
-  pattern: /'.*'/
-}); // String
-export const TknNumber = createToken({
-  label: 'Number Literal',
-  name: LexerTokenType.TknNumberLiteral,
-  categories: literalTokens,
-  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)/
-}); // Number
-export const TknConstant = createToken({
-  label: 'Constant Literal',
-  name: LexerTokenType.TknConstantLiteral,
-  categories: literalTokens,
-  pattern: /(?:true|false|void)/
-}); // Constant
-export const TknWasmCall = createToken({
-  label: 'Wasm Call',
-  name: LexerTokenType.TknWasmCall,
-  categories: literalTokens,
-  pattern: /@wasm((\.[a-z\d]+)+)/
-}); // Wasm Call
 // Flags
 export const TknFlag = createToken({
   label: 'Flag',
@@ -261,6 +297,20 @@ export const Tokens = [
   assignmentOperators,
   arithmeticOperators,
   logicalOperators,
+  // Comments
+  TknComment,
+  // Literals
+  literalTokens,
+  TknString,
+  TknI32,
+  TknI64,
+  TknU32,
+  TknU64,
+  TknF32,
+  TknF64,
+  TknNumber,
+  TknConstant,
+  TknWasmCall,
   // Keywords
   TknImport,
   TknWasm,
@@ -297,16 +347,8 @@ export const Tokens = [
   TknDiv,
   TknMul,
   TknPow,
-  // Literals
-  literalTokens,
-  TknString,
-  TknNumber,
-  TknConstant,
-  TknWasmCall,
   // Flags
   TknFlag,
-  // Comments
-  TknComment,
   // Identifiers
   TknIdentifier,
 ];

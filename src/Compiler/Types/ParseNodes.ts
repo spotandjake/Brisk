@@ -22,6 +22,12 @@ export const enum NodeType {
   WasmCallExpression,
   // Literals
   StringLiteral,
+  I32Literal,
+  I64Literal,
+  U32Literal,
+  U64Literal,
+  F32Literal,
+  F64Literal,
   NumberLiteral,
   ConstantLiteral,
   FunctionLiteral,
@@ -188,6 +194,12 @@ export interface WasmCallExpressionNode {
 // Literals
 export type Atom =
   StringLiteralNode |
+  I32LiteralNode |
+  I64LiteralNode |
+  U32LiteralNode |
+  U64LiteralNode |
+  F32LiteralNode |
+  F64LiteralNode |
   NumberLiteralNode |
   ConstantLiteralNode |
   FunctionLiteralNode |
@@ -196,6 +208,42 @@ export type Atom =
   ;
 export interface StringLiteralNode {
   nodeType: NodeType.StringLiteral;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface I32LiteralNode {
+  nodeType: NodeType.I32Literal;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface I64LiteralNode {
+  nodeType: NodeType.I64Literal;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface U32LiteralNode {
+  nodeType: NodeType.U32Literal;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface U64LiteralNode {
+  nodeType: NodeType.U64Literal;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface F32LiteralNode {
+  nodeType: NodeType.F32Literal;
+  category: NodeCategory.Literal;
+  value: string;
+  position: Position;
+}
+export interface F64LiteralNode {
+  nodeType: NodeType.F64Literal;
   category: NodeCategory.Literal;
   value: string;
   position: Position;

@@ -47,6 +47,12 @@ export const enum LexerTokenType {
   TknPower = 'TknPower',
   // Literals
   TknStringLiteral = 'String',
+  TknI32Literal = 'I32',
+  TknI64Literal = 'I64',
+  TknU32Literal = 'U32',
+  TknU64Literal = 'U64',
+  TknF32Literal = 'F32',
+  TknF64Literal = 'F64',
   TknNumberLiteral = 'Number',
   TknConstantLiteral = 'Constant',
   TknWasmCall = 'Wasm Instruction Call',

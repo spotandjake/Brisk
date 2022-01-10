@@ -185,6 +185,12 @@ const analyzeNode = <T extends AllNodes>(
     // Ignore
     case NodeType.FlagStatement:
     case NodeType.StringLiteral:
+    case NodeType.I32Literal:
+    case NodeType.I64Literal:
+    case NodeType.U32Literal:
+    case NodeType.U64Literal:
+    case NodeType.F32Literal:
+    case NodeType.F64Literal:
     case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
       break;

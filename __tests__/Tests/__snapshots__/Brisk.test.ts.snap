@@ -1,6 +1,1706 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Compile: Main 1`] = `
+exports[`Compile: Literals Pass 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 0,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 1,
+          "offset": 6,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 1,
+            "offset": 7,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 1,
+        "offset": 0,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 1,
+          "offset": 15,
+        },
+        "value": "1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 1,
+          "offset": 7,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 1,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 2,
+          "offset": 26,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 2,
+            "offset": 27,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 2,
+        "offset": 20,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 2,
+          "offset": 35,
+        },
+        "value": "1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 27,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 2,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 3,
+          "offset": 46,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 3,
+            "offset": 47,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 3,
+        "offset": 40,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 3,
+          "offset": 55,
+        },
+        "value": "+1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 3,
+          "offset": 47,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 3,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 4,
+          "offset": 67,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 4,
+            "offset": 68,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 4,
+        "offset": 61,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 4,
+          "offset": 76,
+        },
+        "value": "-1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 4,
+          "offset": 68,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 4,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 5,
+          "offset": 88,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 5,
+            "offset": 89,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 5,
+        "offset": 82,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 5,
+          "offset": 97,
+        },
+        "value": "1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 5,
+          "offset": 89,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 5,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 6,
+          "offset": 108,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 6,
+            "offset": 109,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 6,
+        "offset": 102,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 6,
+          "offset": 117,
+        },
+        "value": "1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 6,
+          "offset": 109,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 6,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 7,
+          "offset": 128,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 7,
+            "offset": 129,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 7,
+        "offset": 122,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 7,
+          "offset": 137,
+        },
+        "value": "+1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 7,
+          "offset": 129,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 7,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 8,
+          "offset": 149,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 8,
+            "offset": 150,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 8,
+        "offset": 143,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 8,
+          "offset": 158,
+        },
+        "value": "+1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 8,
+          "offset": 150,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 8,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 9,
+          "offset": 170,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 9,
+            "offset": 171,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 9,
+        "offset": 164,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 9,
+          "offset": 179,
+        },
+        "value": "1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 9,
+          "offset": 171,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 9,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 10,
+          "offset": 192,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 10,
+            "offset": 193,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 10,
+        "offset": 186,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 10,
+          "offset": 201,
+        },
+        "value": "1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 10,
+          "offset": 193,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 10,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 11,
+          "offset": 214,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 11,
+            "offset": 215,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 11,
+        "offset": 208,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 11,
+          "offset": 223,
+        },
+        "value": "-1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 215,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 11,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 12,
+          "offset": 237,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 12,
+            "offset": 238,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 12,
+        "offset": 231,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 12,
+          "offset": 246,
+        },
+        "value": "-1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 12,
+          "offset": 238,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 12,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 13,
+          "offset": 260,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 13,
+            "offset": 261,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 13,
+        "offset": 254,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 13,
+          "offset": 269,
+        },
+        "value": "+1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 13,
+          "offset": 261,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 13,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 14,
+          "offset": 283,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 14,
+            "offset": 284,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 14,
+        "offset": 277,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 14,
+          "offset": 292,
+        },
+        "value": "+1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 14,
+          "offset": 284,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 14,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 15,
+          "offset": 306,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "u32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 15,
+            "offset": 307,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 15,
+        "offset": 300,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 18,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 15,
+          "offset": 315,
+        },
+        "value": "1u",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 15,
+          "offset": 307,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 15,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 16,
+          "offset": 326,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "u64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 16,
+            "offset": 327,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 16,
+        "offset": 320,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 19,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 16,
+          "offset": 335,
+        },
+        "value": "1U",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 16,
+          "offset": 327,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 16,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 17,
+          "offset": 346,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "String",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 17,
+            "offset": 347,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 17,
+        "offset": 340,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 19,
+          "file": "file",
+          "line": 17,
+          "offset": 358,
+        },
+        "value": "'Test'",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 17,
+          "offset": 347,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 17,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 18,
+          "offset": 373,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Boolean",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 18,
+            "offset": 374,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 18,
+        "offset": 367,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 18,
+          "offset": 386,
+        },
+        "value": "true",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 18,
+          "offset": 374,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 18,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 19,
+          "offset": 399,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Boolean",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 19,
+            "offset": 400,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 19,
+        "offset": 393,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 19,
+          "offset": 412,
+        },
+        "value": "false",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 19,
+          "offset": 400,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 19,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 20,
+          "offset": 426,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 20,
+            "offset": 427,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 20,
+        "offset": 420,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 17,
+          "file": "file",
+          "line": 20,
+          "offset": 436,
+        },
+        "value": "void",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Void",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 20,
+          "offset": 427,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 20,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 21,
+          "offset": 449,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Function",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 21,
+            "offset": 450,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 21,
+        "offset": 443,
+      },
+      "value": Object {
+        "body": Object {
+          "body": Array [],
+          "category": 1,
+          "nodeType": 3,
+          "position": Object {
+            "col": 42,
+            "file": "file",
+            "line": 21,
+            "offset": 484,
+          },
+          "stack": Map {},
+        },
+        "category": 3,
+        "closure": Set {},
+        "nodeType": 24,
+        "params": Array [
+          Object {
+            "category": 5,
+            "name": Object {
+              "category": 5,
+              "constant": true,
+              "global": false,
+              "name": 21,
+              "nodeType": 27,
+              "position": Object {
+                "col": 22,
+                "file": "file",
+                "line": 21,
+                "offset": 464,
+              },
+              "type": Object {
+                "category": 4,
+                "name": "String",
+                "nodeType": 26,
+                "position": Object {
+                  "col": 23,
+                  "file": "file",
+                  "line": 21,
+                  "offset": 465,
+                },
+              },
+            },
+            "nodeType": 30,
+            "paramType": Object {
+              "category": 4,
+              "name": "String",
+              "nodeType": 26,
+              "position": Object {
+                "col": 23,
+                "file": "file",
+                "line": 21,
+                "offset": 465,
+              },
+            },
+          },
+        ],
+        "position": Object {
+          "col": 21,
+          "file": "file",
+          "line": 21,
+          "offset": 463,
+        },
+        "returnType": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 32,
+            "file": "file",
+            "line": 21,
+            "offset": 474,
+          },
+        },
+        "stack": Map {
+          "v" => 21,
+        },
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 21,
+          "offset": 450,
+        },
+      },
+    },
+  ],
+  "category": 0,
+  "nodeType": 0,
+  "position": Object {
+    "col": 0,
+    "file": "file",
+    "line": 0,
+    "offset": 0,
+  },
+  "stack": Map {
+    "a" => 0,
+    "b" => 1,
+    "c" => 2,
+    "d" => 3,
+    "e" => 4,
+    "f" => 5,
+    "g" => 6,
+    "h" => 7,
+    "i" => 8,
+    "j" => 9,
+    "k" => 10,
+    "l" => 11,
+    "m" => 12,
+    "n" => 13,
+    "o" => 14,
+    "p" => 15,
+    "q" => 16,
+    "r" => 17,
+    "s" => 18,
+    "t" => 19,
+    "u" => 20,
+  },
+  "variables": Map {
+    0 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "a",
+      "type": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 1,
+          "offset": 7,
+        },
+      },
+      "used": false,
+    },
+    1 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "b",
+      "type": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 27,
+        },
+      },
+      "used": false,
+    },
+    2 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "c",
+      "type": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 3,
+          "offset": 47,
+        },
+      },
+      "used": false,
+    },
+    3 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "d",
+      "type": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 4,
+          "offset": 68,
+        },
+      },
+      "used": false,
+    },
+    4 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "e",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 5,
+          "offset": 89,
+        },
+      },
+      "used": false,
+    },
+    5 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "f",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 6,
+          "offset": 109,
+        },
+      },
+      "used": false,
+    },
+    6 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "g",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 7,
+          "offset": 129,
+        },
+      },
+      "used": false,
+    },
+    7 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "h",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 8,
+          "offset": 150,
+        },
+      },
+      "used": false,
+    },
+    8 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "i",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 9,
+          "offset": 171,
+        },
+      },
+      "used": false,
+    },
+    9 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "j",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 10,
+          "offset": 193,
+        },
+      },
+      "used": false,
+    },
+    10 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "k",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 215,
+        },
+      },
+      "used": false,
+    },
+    11 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "l",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 12,
+          "offset": 238,
+        },
+      },
+      "used": false,
+    },
+    12 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "m",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 13,
+          "offset": 261,
+        },
+      },
+      "used": false,
+    },
+    13 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "n",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 14,
+          "offset": 284,
+        },
+      },
+      "used": false,
+    },
+    14 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "o",
+      "type": Object {
+        "category": 4,
+        "name": "u32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 15,
+          "offset": 307,
+        },
+      },
+      "used": false,
+    },
+    15 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "p",
+      "type": Object {
+        "category": 4,
+        "name": "u64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 16,
+          "offset": 327,
+        },
+      },
+      "used": false,
+    },
+    16 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "q",
+      "type": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 17,
+          "offset": 347,
+        },
+      },
+      "used": false,
+    },
+    17 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "r",
+      "type": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 18,
+          "offset": 374,
+        },
+      },
+      "used": false,
+    },
+    18 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "s",
+      "type": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 19,
+          "offset": 400,
+        },
+      },
+      "used": false,
+    },
+    19 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "t",
+      "type": Object {
+        "category": 4,
+        "name": "Void",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 20,
+          "offset": 427,
+        },
+      },
+      "used": false,
+    },
+    20 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "u",
+      "type": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 21,
+          "offset": 450,
+        },
+      },
+      "used": false,
+    },
+    21 => Object {
+      "constant": true,
+      "exported": false,
+      "global": false,
+      "name": "v",
+      "type": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 23,
+          "file": "file",
+          "line": 21,
+          "offset": 465,
+        },
+      },
+      "used": false,
+    },
+  },
+}
+`;
+
+exports[`Compile: Main Pass 1`] = `
 Object {
   "body": Array [
     Object {
@@ -28,7 +1728,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 0,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -38,7 +1738,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Unknown",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 1,
             "file": "file",
@@ -71,12 +1771,12 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -94,7 +1794,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -108,7 +1808,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 1,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -118,12 +1818,12 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Function",
-          "nodeType": 19,
+          "nodeType": 25,
           "params": Array [
             Object {
               "category": 4,
               "name": "String",
-              "nodeType": 20,
+              "nodeType": 26,
               "position": Object {
                 "col": 21,
                 "file": "file",
@@ -141,7 +1841,7 @@ Object {
           "returnType": Object {
             "category": 4,
             "name": "Void",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 32,
               "file": "file",
@@ -175,7 +1875,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -186,7 +1886,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -200,7 +1900,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 2,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -210,7 +1910,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Function",
-          "nodeType": 19,
+          "nodeType": 25,
           "params": Array [],
           "position": Object {
             "col": 16,
@@ -221,7 +1921,7 @@ Object {
           "returnType": Object {
             "category": 4,
             "name": "Void",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 22,
               "file": "file",
@@ -255,7 +1955,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -268,7 +1968,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 3,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -278,7 +1978,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "i32",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 16,
             "file": "file",
@@ -310,7 +2010,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -356,7 +2056,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -422,7 +2122,7 @@ Object {
             "name": Object {
               "category": 5,
               "name": 1,
-              "nodeType": 22,
+              "nodeType": 28,
               "position": Object {
                 "col": 3,
                 "file": "file",
@@ -454,7 +2154,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -473,7 +2173,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -511,7 +2211,7 @@ Object {
         "name": Object {
           "category": 5,
           "name": 1,
-          "nodeType": 22,
+          "nodeType": 28,
           "position": Object {
             "col": 13,
             "file": "file",
@@ -532,7 +2232,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -551,7 +2251,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -593,7 +2293,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Unknown",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 1,
           "file": "file",
@@ -611,12 +2311,12 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -634,7 +2334,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -653,7 +2353,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -664,7 +2364,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -683,7 +2383,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -697,7 +2397,995 @@ Object {
 }
 `;
 
-exports[`Parser-Lexer: Main 1`] = `
+exports[`Parser-Lexer: Literals Pass 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "a",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 1,
+          "offset": 6,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 1,
+        "offset": 0,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 1,
+          "offset": 15,
+        },
+        "value": "1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 1,
+          "offset": 7,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "b",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 2,
+          "offset": 26,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 2,
+        "offset": 20,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 2,
+          "offset": 35,
+        },
+        "value": "1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 27,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "c",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 3,
+          "offset": 46,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 3,
+        "offset": 40,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 3,
+          "offset": 55,
+        },
+        "value": "+1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 3,
+          "offset": 47,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "d",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 4,
+          "offset": 67,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 4,
+        "offset": 61,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 4,
+          "offset": 76,
+        },
+        "value": "-1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 4,
+          "offset": 68,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "e",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 5,
+          "offset": 88,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 5,
+        "offset": 82,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 5,
+          "offset": 97,
+        },
+        "value": "1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 5,
+          "offset": 89,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "f",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 6,
+          "offset": 108,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 6,
+        "offset": 102,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 6,
+          "offset": 117,
+        },
+        "value": "1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 6,
+          "offset": 109,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "g",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 7,
+          "offset": 128,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 7,
+        "offset": 122,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 7,
+          "offset": 137,
+        },
+        "value": "+1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 7,
+          "offset": 129,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "h",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 8,
+          "offset": 149,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 8,
+        "offset": 143,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 8,
+          "offset": 158,
+        },
+        "value": "+1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 8,
+          "offset": 150,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "i",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 9,
+          "offset": 170,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 9,
+        "offset": 164,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 9,
+          "offset": 179,
+        },
+        "value": "1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 9,
+          "offset": 171,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "j",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 10,
+          "offset": 192,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 10,
+        "offset": 186,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 10,
+          "offset": 201,
+        },
+        "value": "1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 10,
+          "offset": 193,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "k",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 11,
+          "offset": 214,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 11,
+        "offset": 208,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 11,
+          "offset": 223,
+        },
+        "value": "-1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 215,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "l",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 12,
+          "offset": 237,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 12,
+        "offset": 231,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 12,
+          "offset": 246,
+        },
+        "value": "-1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 12,
+          "offset": 238,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "m",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 13,
+          "offset": 260,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 13,
+        "offset": 254,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 13,
+          "offset": 269,
+        },
+        "value": "+1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 13,
+          "offset": 261,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "n",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 14,
+          "offset": 283,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 14,
+        "offset": 277,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 14,
+          "offset": 292,
+        },
+        "value": "+1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 14,
+          "offset": 284,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "o",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 15,
+          "offset": 306,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 15,
+        "offset": 300,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 18,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 15,
+          "offset": 315,
+        },
+        "value": "1u",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 15,
+          "offset": 307,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "p",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 16,
+          "offset": 326,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 16,
+        "offset": 320,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 19,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 16,
+          "offset": 335,
+        },
+        "value": "1U",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 16,
+          "offset": 327,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "q",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 17,
+          "offset": 346,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 17,
+        "offset": 340,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 19,
+          "file": "file",
+          "line": 17,
+          "offset": 358,
+        },
+        "value": "'Test'",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 17,
+          "offset": 347,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "r",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 18,
+          "offset": 373,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 18,
+        "offset": 367,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 18,
+          "offset": 386,
+        },
+        "value": "true",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 18,
+          "offset": 374,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "s",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 19,
+          "offset": 399,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 19,
+        "offset": 393,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 19,
+          "offset": 412,
+        },
+        "value": "false",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 19,
+          "offset": 400,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "t",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 20,
+          "offset": 426,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 20,
+        "offset": 420,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 17,
+          "file": "file",
+          "line": 20,
+          "offset": 436,
+        },
+        "value": "void",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Void",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 20,
+          "offset": 427,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "name": "u",
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 21,
+          "offset": 449,
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 21,
+        "offset": 443,
+      },
+      "value": Object {
+        "body": Object {
+          "body": Array [],
+          "category": 1,
+          "nodeType": 3,
+          "position": Object {
+            "col": 42,
+            "file": "file",
+            "line": 21,
+            "offset": 484,
+          },
+        },
+        "category": 3,
+        "nodeType": 24,
+        "params": Array [
+          Object {
+            "category": 5,
+            "name": Object {
+              "category": 5,
+              "name": "v",
+              "nodeType": 27,
+              "position": Object {
+                "col": 22,
+                "file": "file",
+                "line": 21,
+                "offset": 464,
+              },
+            },
+            "nodeType": 30,
+            "paramType": Object {
+              "category": 4,
+              "name": "String",
+              "nodeType": 26,
+              "position": Object {
+                "col": 23,
+                "file": "file",
+                "line": 21,
+                "offset": 465,
+              },
+            },
+          },
+        ],
+        "position": Object {
+          "col": 21,
+          "file": "file",
+          "line": 21,
+          "offset": 463,
+        },
+        "returnType": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 32,
+            "file": "file",
+            "line": 21,
+            "offset": 474,
+          },
+        },
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 21,
+          "offset": 450,
+        },
+      },
+    },
+  ],
+  "category": 0,
+  "nodeType": 0,
+  "position": Object {
+    "col": 0,
+    "file": "file",
+    "line": 0,
+    "offset": 0,
+  },
+}
+`;
+
+exports[`Parser-Lexer: Main Pass 1`] = `
 Object {
   "body": Array [
     Object {
@@ -723,7 +3411,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -755,12 +3443,12 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -778,7 +3466,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -790,7 +3478,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -822,7 +3510,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -833,7 +3521,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -845,7 +3533,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -877,7 +3565,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -888,7 +3576,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "b",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -919,7 +3607,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -965,7 +3653,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -1031,7 +3719,7 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 22,
+              "nodeType": 28,
               "position": Object {
                 "col": 3,
                 "file": "file",
@@ -1062,7 +3750,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1081,7 +3769,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -1119,7 +3807,7 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 22,
+          "nodeType": 28,
           "position": Object {
             "col": 13,
             "file": "file",
@@ -1140,7 +3828,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1159,7 +3847,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -1189,7 +3877,1707 @@ Object {
 }
 `;
 
-exports[`Parser-Lexer-Analyzer: Main 1`] = `
+exports[`Parser-Lexer-Analyzer: Literals Pass 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 0,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 1,
+          "offset": 6,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 1,
+            "offset": 7,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 1,
+        "offset": 0,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 1,
+          "offset": 15,
+        },
+        "value": "1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 1,
+          "offset": 7,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 1,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 2,
+          "offset": 26,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 2,
+            "offset": 27,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 2,
+        "offset": 20,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 2,
+          "offset": 35,
+        },
+        "value": "1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 27,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 2,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 3,
+          "offset": 46,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 3,
+            "offset": 47,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 3,
+        "offset": 40,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 16,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 3,
+          "offset": 55,
+        },
+        "value": "+1n",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 3,
+          "offset": 47,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 3,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 4,
+          "offset": 67,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "i64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 4,
+            "offset": 68,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 4,
+        "offset": 61,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 17,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 4,
+          "offset": 76,
+        },
+        "value": "-1N",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 4,
+          "offset": 68,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 4,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 5,
+          "offset": 88,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 5,
+            "offset": 89,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 5,
+        "offset": 82,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 5,
+          "offset": 97,
+        },
+        "value": "1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 5,
+          "offset": 89,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 5,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 6,
+          "offset": 108,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 6,
+            "offset": 109,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 6,
+        "offset": 102,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 6,
+          "offset": 117,
+        },
+        "value": "1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 6,
+          "offset": 109,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 6,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 7,
+          "offset": 128,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 7,
+            "offset": 129,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 7,
+        "offset": 122,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 7,
+          "offset": 137,
+        },
+        "value": "+1f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 7,
+          "offset": 129,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 7,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 8,
+          "offset": 149,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 8,
+            "offset": 150,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 8,
+        "offset": 143,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 8,
+          "offset": 158,
+        },
+        "value": "+1F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 8,
+          "offset": 150,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 8,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 9,
+          "offset": 170,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 9,
+            "offset": 171,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 9,
+        "offset": 164,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 9,
+          "offset": 179,
+        },
+        "value": "1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 9,
+          "offset": 171,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 9,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 10,
+          "offset": 192,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 10,
+            "offset": 193,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 10,
+        "offset": 186,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 10,
+          "offset": 201,
+        },
+        "value": "1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 10,
+          "offset": 193,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 10,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 11,
+          "offset": 214,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 11,
+            "offset": 215,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 11,
+        "offset": 208,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 11,
+          "offset": 223,
+        },
+        "value": "-1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 215,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 11,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 12,
+          "offset": 237,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 12,
+            "offset": 238,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 12,
+        "offset": 231,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 12,
+          "offset": 246,
+        },
+        "value": "-1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 12,
+          "offset": 238,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 12,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 13,
+          "offset": 260,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 13,
+            "offset": 261,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 13,
+        "offset": 254,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 20,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 13,
+          "offset": 269,
+        },
+        "value": "+1.0f",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 13,
+          "offset": 261,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 13,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 14,
+          "offset": 283,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "f64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 14,
+            "offset": 284,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 14,
+        "offset": 277,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 21,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 14,
+          "offset": 292,
+        },
+        "value": "+1.0F",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 14,
+          "offset": 284,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 14,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 15,
+          "offset": 306,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "u32",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 15,
+            "offset": 307,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 15,
+        "offset": 300,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 18,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 15,
+          "offset": 315,
+        },
+        "value": "1u",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 15,
+          "offset": 307,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 15,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 16,
+          "offset": 326,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "u64",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 16,
+            "offset": 327,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 16,
+        "offset": 320,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 19,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 16,
+          "offset": 335,
+        },
+        "value": "1U",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "u64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 16,
+          "offset": 327,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 16,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 17,
+          "offset": 346,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "String",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 17,
+            "offset": 347,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 17,
+        "offset": 340,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 19,
+          "file": "file",
+          "line": 17,
+          "offset": 358,
+        },
+        "value": "'Test'",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 17,
+          "offset": 347,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 17,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 18,
+          "offset": 373,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Boolean",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 18,
+            "offset": 374,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 18,
+        "offset": 367,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 18,
+          "offset": 386,
+        },
+        "value": "true",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 18,
+          "offset": 374,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 18,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 19,
+          "offset": 399,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Boolean",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 19,
+            "offset": 400,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 19,
+        "offset": 393,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 19,
+          "offset": 412,
+        },
+        "value": "false",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 19,
+          "offset": 400,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 19,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 20,
+          "offset": 426,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 20,
+            "offset": 427,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 20,
+        "offset": 420,
+      },
+      "value": Object {
+        "category": 3,
+        "nodeType": 23,
+        "position": Object {
+          "col": 17,
+          "file": "file",
+          "line": 20,
+          "offset": 436,
+        },
+        "value": "void",
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Void",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 20,
+          "offset": 427,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "declarationType": 0,
+      "name": Object {
+        "category": 5,
+        "constant": true,
+        "global": true,
+        "name": 20,
+        "nodeType": 27,
+        "position": Object {
+          "col": 7,
+          "file": "file",
+          "line": 21,
+          "offset": 449,
+        },
+        "type": Object {
+          "category": 4,
+          "name": "Function",
+          "nodeType": 26,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 21,
+            "offset": 450,
+          },
+        },
+      },
+      "nodeType": 7,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 21,
+        "offset": 443,
+      },
+      "value": Object {
+        "body": Object {
+          "body": Array [],
+          "category": 1,
+          "nodeType": 3,
+          "position": Object {
+            "col": 42,
+            "file": "file",
+            "line": 21,
+            "offset": 484,
+          },
+          "stack": Map {},
+        },
+        "category": 3,
+        "closure": Set {},
+        "nodeType": 24,
+        "params": Array [
+          Object {
+            "category": 5,
+            "name": Object {
+              "category": 5,
+              "constant": true,
+              "global": false,
+              "name": 21,
+              "nodeType": 27,
+              "position": Object {
+                "col": 22,
+                "file": "file",
+                "line": 21,
+                "offset": 464,
+              },
+              "type": Object {
+                "category": 4,
+                "name": "String",
+                "nodeType": 26,
+                "position": Object {
+                  "col": 23,
+                  "file": "file",
+                  "line": 21,
+                  "offset": 465,
+                },
+              },
+            },
+            "nodeType": 30,
+            "paramType": Object {
+              "category": 4,
+              "name": "String",
+              "nodeType": 26,
+              "position": Object {
+                "col": 23,
+                "file": "file",
+                "line": 21,
+                "offset": 465,
+              },
+            },
+          },
+        ],
+        "position": Object {
+          "col": 21,
+          "file": "file",
+          "line": 21,
+          "offset": 463,
+        },
+        "returnType": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 32,
+            "file": "file",
+            "line": 21,
+            "offset": 474,
+          },
+        },
+        "stack": Map {
+          "v" => 21,
+        },
+      },
+      "varType": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 21,
+          "offset": 450,
+        },
+      },
+    },
+  ],
+  "category": 0,
+  "nodeType": 0,
+  "position": Object {
+    "col": 0,
+    "file": "file",
+    "line": 0,
+    "offset": 0,
+  },
+  "stack": Map {
+    "a" => 0,
+    "b" => 1,
+    "c" => 2,
+    "d" => 3,
+    "e" => 4,
+    "f" => 5,
+    "g" => 6,
+    "h" => 7,
+    "i" => 8,
+    "j" => 9,
+    "k" => 10,
+    "l" => 11,
+    "m" => 12,
+    "n" => 13,
+    "o" => 14,
+    "p" => 15,
+    "q" => 16,
+    "r" => 17,
+    "s" => 18,
+    "t" => 19,
+    "u" => 20,
+  },
+  "variables": Map {
+    0 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "a",
+      "type": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 1,
+          "offset": 7,
+        },
+      },
+      "used": false,
+    },
+    1 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "b",
+      "type": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 27,
+        },
+      },
+      "used": false,
+    },
+    2 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "c",
+      "type": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 3,
+          "offset": 47,
+        },
+      },
+      "used": false,
+    },
+    3 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "d",
+      "type": Object {
+        "category": 4,
+        "name": "i64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 4,
+          "offset": 68,
+        },
+      },
+      "used": false,
+    },
+    4 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "e",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 5,
+          "offset": 89,
+        },
+      },
+      "used": false,
+    },
+    5 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "f",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 6,
+          "offset": 109,
+        },
+      },
+      "used": false,
+    },
+    6 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "g",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 7,
+          "offset": 129,
+        },
+      },
+      "used": false,
+    },
+    7 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "h",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 8,
+          "offset": 150,
+        },
+      },
+      "used": false,
+    },
+    8 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "i",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 9,
+          "offset": 171,
+        },
+      },
+      "used": false,
+    },
+    9 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "j",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 10,
+          "offset": 193,
+        },
+      },
+      "used": false,
+    },
+    10 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "k",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 215,
+        },
+      },
+      "used": false,
+    },
+    11 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "l",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 12,
+          "offset": 238,
+        },
+      },
+      "used": false,
+    },
+    12 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "m",
+      "type": Object {
+        "category": 4,
+        "name": "f32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 13,
+          "offset": 261,
+        },
+      },
+      "used": false,
+    },
+    13 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "n",
+      "type": Object {
+        "category": 4,
+        "name": "f64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 14,
+          "offset": 284,
+        },
+      },
+      "used": false,
+    },
+    14 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "o",
+      "type": Object {
+        "category": 4,
+        "name": "u32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 15,
+          "offset": 307,
+        },
+      },
+      "used": false,
+    },
+    15 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "p",
+      "type": Object {
+        "category": 4,
+        "name": "u64",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 16,
+          "offset": 327,
+        },
+      },
+      "used": false,
+    },
+    16 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "q",
+      "type": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 17,
+          "offset": 347,
+        },
+      },
+      "used": false,
+    },
+    17 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "r",
+      "type": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 18,
+          "offset": 374,
+        },
+      },
+      "used": false,
+    },
+    18 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "s",
+      "type": Object {
+        "category": 4,
+        "name": "Boolean",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 19,
+          "offset": 400,
+        },
+      },
+      "used": false,
+    },
+    19 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "t",
+      "type": Object {
+        "category": 4,
+        "name": "Void",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 20,
+          "offset": 427,
+        },
+      },
+      "used": false,
+    },
+    20 => Object {
+      "constant": true,
+      "exported": false,
+      "global": true,
+      "name": "u",
+      "type": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 26,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 21,
+          "offset": 450,
+        },
+      },
+      "used": false,
+    },
+    21 => Object {
+      "constant": true,
+      "exported": false,
+      "global": false,
+      "name": "v",
+      "type": Object {
+        "category": 4,
+        "name": "String",
+        "nodeType": 26,
+        "position": Object {
+          "col": 23,
+          "file": "file",
+          "line": 21,
+          "offset": 465,
+        },
+      },
+      "used": false,
+    },
+  },
+}
+`;
+
+exports[`Parser-Lexer-Analyzer: Main Pass 1`] = `
 Object {
   "body": Array [
     Object {
@@ -1217,7 +5605,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 0,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -1227,7 +5615,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Unknown",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 1,
             "file": "file",
@@ -1260,12 +5648,12 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -1283,7 +5671,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -1297,7 +5685,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 1,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -1307,12 +5695,12 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Function",
-          "nodeType": 19,
+          "nodeType": 25,
           "params": Array [
             Object {
               "category": 4,
               "name": "String",
-              "nodeType": 20,
+              "nodeType": 26,
               "position": Object {
                 "col": 21,
                 "file": "file",
@@ -1330,7 +5718,7 @@ Object {
           "returnType": Object {
             "category": 4,
             "name": "Void",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 32,
               "file": "file",
@@ -1364,7 +5752,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -1375,7 +5763,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -1389,7 +5777,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 2,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -1399,7 +5787,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "Function",
-          "nodeType": 19,
+          "nodeType": 25,
           "params": Array [],
           "position": Object {
             "col": 16,
@@ -1410,7 +5798,7 @@ Object {
           "returnType": Object {
             "category": 4,
             "name": "Void",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 22,
               "file": "file",
@@ -1444,7 +5832,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -1457,7 +5845,7 @@ Object {
         "constant": true,
         "global": true,
         "name": 3,
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -1467,7 +5855,7 @@ Object {
         "type": Object {
           "category": 4,
           "name": "i32",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 16,
             "file": "file",
@@ -1499,7 +5887,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -1545,7 +5933,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -1611,7 +5999,7 @@ Object {
             "name": Object {
               "category": 5,
               "name": 1,
-              "nodeType": 22,
+              "nodeType": 28,
               "position": Object {
                 "col": 3,
                 "file": "file",
@@ -1643,7 +6031,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1662,7 +6050,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -1700,7 +6088,7 @@ Object {
         "name": Object {
           "category": 5,
           "name": 1,
-          "nodeType": 22,
+          "nodeType": 28,
           "position": Object {
             "col": 13,
             "file": "file",
@@ -1721,7 +6109,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1740,7 +6128,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -1782,7 +6170,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Unknown",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 1,
           "file": "file",
@@ -1800,12 +6188,12 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -1823,7 +6211,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -1842,7 +6230,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -1853,7 +6241,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -1872,7 +6260,7 @@ Object {
       "type": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",

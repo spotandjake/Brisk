@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Parser: Main 1`] = `
+exports[`Parser: Literals Pass 1`] = `
 Object {
   "body": Array [
     Object {
@@ -26,7 +26,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -58,12 +58,12 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 20,
+            "nodeType": 26,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -81,7 +81,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -93,7 +93,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -125,7 +125,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 19,
+        "nodeType": 25,
         "params": Array [],
         "position": Object {
           "col": 16,
@@ -136,7 +136,7 @@ Object {
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 20,
+          "nodeType": 26,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -148,7 +148,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -180,7 +180,7 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 20,
+        "nodeType": 26,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -191,7 +191,7 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "b",
-        "nodeType": 21,
+        "nodeType": 27,
         "position": Object {
           "col": 13,
           "file": "file",
@@ -222,7 +222,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -268,7 +268,7 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 22,
+                "nodeType": 28,
                 "position": Object {
                   "col": 3,
                   "file": "file",
@@ -334,7 +334,7 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 22,
+              "nodeType": 28,
               "position": Object {
                 "col": 3,
                 "file": "file",
@@ -365,7 +365,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -384,7 +384,7 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -422,7 +422,7 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 22,
+          "nodeType": 28,
           "position": Object {
             "col": 13,
             "file": "file",
@@ -443,7 +443,7 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -462,7 +462,499 @@ Object {
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 22,
+          "position": Object {
+            "col": 10,
+            "file": "file",
+            "line": 16,
+            "offset": 382,
+          },
+          "value": "1",
+        },
+      },
+      "nodeType": 1,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 16,
+        "offset": 373,
+      },
+    },
+  ],
+  "category": 0,
+  "nodeType": 0,
+  "position": Object {
+    "col": 0,
+    "file": "file",
+    "line": 0,
+    "offset": 0,
+  },
+}
+`;
+
+exports[`Parser: Main Pass 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "category": 1,
+      "nodeType": 4,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 2,
+        "offset": 19,
+      },
+      "source": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 15,
+          "file": "file",
+          "line": 2,
+          "offset": 33,
+        },
+        "value": "'test'",
+      },
+      "variable": Object {
+        "category": 5,
+        "name": "a",
+        "nodeType": 27,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 2,
+          "offset": 26,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "nodeType": 5,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 3,
+        "offset": 42,
+      },
+      "source": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 42,
+          "file": "file",
+          "line": 3,
+          "offset": 83,
+        },
+        "value": "'print'",
+      },
+      "typeSignature": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 25,
+        "params": Array [
+          Object {
+            "category": 4,
+            "name": "String",
+            "nodeType": 26,
+            "position": Object {
+              "col": 21,
+              "file": "file",
+              "line": 3,
+              "offset": 62,
+            },
+          },
+        ],
+        "position": Object {
+          "col": 20,
+          "file": "file",
+          "line": 3,
+          "offset": 61,
+        },
+        "returnType": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 32,
+            "file": "file",
+            "line": 3,
+            "offset": 73,
+          },
+        },
+      },
+      "variable": Object {
+        "category": 5,
+        "name": "print",
+        "nodeType": 27,
+        "position": Object {
+          "col": 13,
+          "file": "file",
+          "line": 3,
+          "offset": 54,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "nodeType": 5,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 4,
+        "offset": 93,
+      },
+      "source": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 32,
+          "file": "file",
+          "line": 4,
+          "offset": 124,
+        },
+        "value": "'print'",
+      },
+      "typeSignature": Object {
+        "category": 4,
+        "name": "Function",
+        "nodeType": 25,
+        "params": Array [],
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 4,
+          "offset": 108,
+        },
+        "returnType": Object {
+          "category": 4,
+          "name": "Void",
+          "nodeType": 26,
+          "position": Object {
+            "col": 22,
+            "file": "file",
+            "line": 4,
+            "offset": 114,
+          },
+        },
+      },
+      "variable": Object {
+        "category": 5,
+        "name": "f",
+        "nodeType": 27,
+        "position": Object {
+          "col": 13,
+          "file": "file",
+          "line": 4,
+          "offset": 105,
+        },
+      },
+    },
+    Object {
+      "category": 1,
+      "nodeType": 5,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 5,
+        "offset": 134,
+      },
+      "source": Object {
+        "category": 3,
+        "nodeType": 15,
+        "position": Object {
+          "col": 25,
+          "file": "file",
+          "line": 5,
+          "offset": 158,
+        },
+        "value": "'test'",
+      },
+      "typeSignature": Object {
+        "category": 4,
+        "name": "i32",
+        "nodeType": 26,
+        "position": Object {
+          "col": 16,
+          "file": "file",
+          "line": 5,
+          "offset": 149,
+        },
+      },
+      "variable": Object {
+        "category": 5,
+        "name": "b",
+        "nodeType": 27,
+        "position": Object {
+          "col": 13,
+          "file": "file",
+          "line": 5,
+          "offset": 146,
+        },
+      },
+    },
+    Object {
+      "alternative": Object {
+        "alternative": Object {
+          "body": Array [
+            Object {
+              "args": Array [
+                Object {
+                  "category": 3,
+                  "nodeType": 15,
+                  "position": Object {
+                    "col": 9,
+                    "file": "file",
+                    "line": 14,
+                    "offset": 354,
+                  },
+                  "value": "'Else Test'",
+                },
+              ],
+              "category": 2,
+              "name": Object {
+                "category": 5,
+                "name": "print",
+                "nodeType": 28,
+                "position": Object {
+                  "col": 3,
+                  "file": "file",
+                  "line": 14,
+                  "offset": 348,
+                },
+              },
+              "nodeType": 13,
+              "position": Object {
+                "col": 3,
+                "file": "file",
+                "line": 14,
+                "offset": 348,
+              },
+            },
+          ],
+          "category": 1,
+          "nodeType": 3,
+          "position": Object {
+            "col": 8,
+            "file": "file",
+            "line": 13,
+            "offset": 343,
+          },
+        },
+        "body": Object {
+          "body": Array [
+            Object {
+              "args": Array [
+                Object {
+                  "category": 3,
+                  "nodeType": 15,
+                  "position": Object {
+                    "col": 9,
+                    "file": "file",
+                    "line": 12,
+                    "offset": 318,
+                  },
+                  "value": "'Else If Test'",
+                },
+              ],
+              "category": 2,
+              "name": Object {
+                "category": 5,
+                "name": "print",
+                "nodeType": 28,
+                "position": Object {
+                  "col": 3,
+                  "file": "file",
+                  "line": 12,
+                  "offset": 312,
+                },
+              },
+              "nodeType": 13,
+              "position": Object {
+                "col": 3,
+                "file": "file",
+                "line": 12,
+                "offset": 312,
+              },
+            },
+          ],
+          "category": 1,
+          "nodeType": 3,
+          "position": Object {
+            "col": 20,
+            "file": "file",
+            "line": 11,
+            "offset": 307,
+          },
+        },
+        "category": 1,
+        "condition": Object {
+          "category": 3,
+          "nodeType": 15,
+          "position": Object {
+            "col": 12,
+            "file": "file",
+            "line": 11,
+            "offset": 299,
+          },
+          "value": "'test'",
+        },
+        "nodeType": 1,
+        "position": Object {
+          "col": 8,
+          "file": "file",
+          "line": 11,
+          "offset": 295,
+        },
+      },
+      "body": Object {
+        "body": Array [
+          Object {
+            "args": Array [
+              Object {
+                "category": 3,
+                "nodeType": 15,
+                "position": Object {
+                  "col": 9,
+                  "file": "file",
+                  "line": 10,
+                  "offset": 275,
+                },
+                "value": "'If Test'",
+              },
+            ],
+            "category": 2,
+            "name": Object {
+              "category": 5,
+              "name": "print",
+              "nodeType": 28,
+              "position": Object {
+                "col": 3,
+                "file": "file",
+                "line": 10,
+                "offset": 269,
+              },
+            },
+            "nodeType": 13,
+            "position": Object {
+              "col": 3,
+              "file": "file",
+              "line": 10,
+              "offset": 269,
+            },
+          },
+        ],
+        "category": 1,
+        "nodeType": 3,
+        "position": Object {
+          "col": 13,
+          "file": "file",
+          "line": 9,
+          "offset": 264,
+        },
+      },
+      "category": 1,
+      "condition": Object {
+        "category": 2,
+        "lhs": Object {
+          "category": 3,
+          "nodeType": 22,
+          "position": Object {
+            "col": 5,
+            "file": "file",
+            "line": 9,
+            "offset": 256,
+          },
+          "value": "1",
+        },
+        "nodeType": 9,
+        "operator": 0,
+        "position": Object {
+          "col": 5,
+          "file": "file",
+          "line": 9,
+          "offset": 256,
+        },
+        "rhs": Object {
+          "category": 3,
+          "nodeType": 22,
+          "position": Object {
+            "col": 10,
+            "file": "file",
+            "line": 9,
+            "offset": 261,
+          },
+          "value": "1",
+        },
+      },
+      "nodeType": 1,
+      "position": Object {
+        "col": 1,
+        "file": "file",
+        "line": 9,
+        "offset": 252,
+      },
+    },
+    Object {
+      "alternative": undefined,
+      "body": Object {
+        "args": Array [
+          Object {
+            "category": 3,
+            "nodeType": 15,
+            "position": Object {
+              "col": 19,
+              "file": "file",
+              "line": 16,
+              "offset": 391,
+            },
+            "value": "'test'",
+          },
+        ],
+        "category": 2,
+        "name": Object {
+          "category": 5,
+          "name": "print",
+          "nodeType": 28,
+          "position": Object {
+            "col": 13,
+            "file": "file",
+            "line": 16,
+            "offset": 385,
+          },
+        },
+        "nodeType": 13,
+        "position": Object {
+          "col": 13,
+          "file": "file",
+          "line": 16,
+          "offset": 385,
+        },
+      },
+      "category": 1,
+      "condition": Object {
+        "category": 2,
+        "lhs": Object {
+          "category": 3,
+          "nodeType": 22,
+          "position": Object {
+            "col": 5,
+            "file": "file",
+            "line": 16,
+            "offset": 377,
+          },
+          "value": "1",
+        },
+        "nodeType": 9,
+        "operator": 0,
+        "position": Object {
+          "col": 5,
+          "file": "file",
+          "line": 16,
+          "offset": 377,
+        },
+        "rhs": Object {
+          "category": 3,
+          "nodeType": 22,
           "position": Object {
             "col": 10,
             "file": "file",
