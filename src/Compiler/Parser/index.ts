@@ -10,7 +10,6 @@ class Parser extends EmbeddedActionsParser {
   private file: string;
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
-      // TODO: The lower we can make this number the faster our parser, lets try to get it down to 2
       maxLookahead: 3,
       // errorMessageProvider: ErrorProvider
     });
@@ -651,9 +650,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
     const name = this.SUBRULE(this.variableUsageNode);
-    this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknPeriod);
-    this.SUBRULE1(this.wss);
     const child = this.SUBRULE(this.variable);
     return {
       nodeType: Nodes.NodeType.MemberAccess,

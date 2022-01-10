@@ -50,6 +50,8 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.IfStatement:
       node.condition = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.condition);
       node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
+      if (node.alternative)
+        node.alternative = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.alternative);
       break;
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
@@ -109,7 +111,6 @@ const analyzeNode = <T extends AllNodes>(
       node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
       break;
     case NodeType.WasmCallExpression:
-      // TODO: I think we need to analyze the name here
       node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
       break;
     // Literals
@@ -170,7 +171,7 @@ const analyzeNode = <T extends AllNodes>(
       }
       break;
     case NodeType.MemberAccess:
-      // TODO: we need to deal with better
+      // TODO: we need to deal with these properly
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
       if (node.child) node.child = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.child);
       break;

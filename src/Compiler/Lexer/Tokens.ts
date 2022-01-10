@@ -2,25 +2,41 @@ import { Lexer, createToken } from 'chevrotain';
 import { LexerTokenType } from '../Types/LexerNodes';
 // =================================================================
 // Categories
+export const keywordTokens = createToken({
+  name: LexerTokenType.Keywords,
+  pattern: Lexer.NA
+});
 export const literalTokens = createToken({
   name: LexerTokenType.Literals,
   pattern: Lexer.NA
 });
+export const separatorTokens = createToken({
+  name: LexerTokenType.Separators,
+  pattern: Lexer.NA
+});
+export const operators = createToken({
+  name: LexerTokenType.Operators,
+  pattern: Lexer.NA
+});
 export const comparisonOperators = createToken({
   name: LexerTokenType.ComparisonOperators,
-  pattern: Lexer.NA
+  pattern: Lexer.NA,
+  categories: operators
 });
 export const assignmentOperators = createToken({
   name: LexerTokenType.AssignmentOperators,
-  pattern: Lexer.NA
+  pattern: Lexer.NA,
+  categories: operators
 });
 export const arithmeticOperators = createToken({
   name: LexerTokenType.ArithmeticOperators,
-  pattern: Lexer.NA
+  pattern: Lexer.NA,
+  categories: operators
 });
 export const logicalOperators = createToken({
   name: LexerTokenType.LogicalOperators,
-  pattern: Lexer.NA
+  pattern: Lexer.NA,
+  categories: operators
 });
 // Comments
 export const TknComment = createToken({
@@ -32,42 +48,50 @@ export const TknComment = createToken({
 export const TknImport = createToken({
   label: 'Import',
   name: LexerTokenType.ImportToken,
-  pattern: /import/
+  pattern: /import/,
+  categories: keywordTokens,
 });
 export const TknWasm = createToken({
   label: 'Wasm Import Identifier',
   name: LexerTokenType.WasmToken,
-  pattern: /wasm/
+  pattern: /wasm/,
+  categories: keywordTokens,
 });
 export const TknFrom = createToken({
   label: 'From',
   name: LexerTokenType.FromToken,
-  pattern: /from/
+  pattern: /from/,
+  categories: keywordTokens,
 });
 export const TknExport = createToken({
   label: 'Export',
   name: LexerTokenType.ExportToken,
-  pattern: /export/
+  pattern: /export/,
+  categories: keywordTokens,
 });
 export const TknConst = createToken({
   label: 'Const',
   name: LexerTokenType.ConstToken,
-  pattern: /const/
+  pattern: /const/,
+  categories: keywordTokens,
 });
 export const TknLet = createToken({
   label: 'Let',
   name: LexerTokenType.LetToken,
-  pattern: /let/
+  pattern: /let/,
+  categories: keywordTokens,
 });
 export const TknIf = createToken({
   label: 'If',
   name: LexerTokenType.IfToken,
-  pattern: /if/
+  pattern: /if/,
+  categories: keywordTokens,
 });
 export const TknElse = createToken({
   label: 'Else',
   name: LexerTokenType.ElseToken,
-  pattern: /else/
+  pattern: /else/,
+  categories: keywordTokens,
 });
 // Literals
 export const TknString = createToken({
@@ -134,51 +158,61 @@ export const TknWasmCall = createToken({
 export const TknLParen = createToken({
   label: 'Left Parenthesis',
   name: LexerTokenType.LeftParenthesis,
+  categories: separatorTokens,
   pattern: /\(/
 });
 export const TknRParen = createToken({
   label: 'Right Parenthesis',
   name: LexerTokenType.RightParenthesis,
+  categories: separatorTokens,
   pattern: /\)/
 });
 export const TknLBrace = createToken({
   label: 'Left Brace',
   name: LexerTokenType.LeftBrace,
+  categories: separatorTokens,
   pattern: /\{/
 });
 export const TknRBrace = createToken({
   label: 'Right Brace',
   name: LexerTokenType.RightBrace,
+  categories: separatorTokens,
   pattern: /\}/
 });
 export const TknLBracket = createToken({
   label: 'Left Bracket',
   name: LexerTokenType.LeftBracket,
+  categories: separatorTokens,
   pattern: /\[/
 });
 export const TknRBracket = createToken({
   label: 'Right Bracket',
   name: LexerTokenType.RightBracket,
+  categories: separatorTokens,
   pattern: /\]/
 });
 export const TknComma = createToken({
   label: 'Comma',
   name: LexerTokenType.Comma,
+  categories: separatorTokens,
   pattern: /,/
 });
 export const TknPeriod = createToken({
   label: 'Period',
   name: LexerTokenType.Period,
+  categories: separatorTokens,
   pattern: /\./
 });
 export const TknColon = createToken({
   label: 'Colon',
   name: LexerTokenType.Colon,
+  categories: separatorTokens,
   pattern: /:/
 });
 export const TknSemiColon = createToken({
   label: 'Semicolon',
   name: LexerTokenType.Semicolon,
+  categories: separatorTokens,
   pattern: /;/
 });
 export const TknWhitespace = createToken({
@@ -292,7 +326,10 @@ export const TknIdentifier = createToken({
 // =================================================================
 export const Tokens = [
   // Categories
+  keywordTokens,
   literalTokens,
+  separatorTokens,
+  operators,
   comparisonOperators,
   assignmentOperators,
   arithmeticOperators,

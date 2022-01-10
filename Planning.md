@@ -112,7 +112,7 @@
       - [ ] Destructuring
       - [ ] Objects
       - [ ] Arrays
-    - [ ] Errors
+    - [ ] Better Errors
   + [ ] Analyzer
     + [ ] Find Closures Values
       + [ ] Closures are functions that rely on local vars defined above, To determine these we need to double check the values it is relying on are not in the global scope.

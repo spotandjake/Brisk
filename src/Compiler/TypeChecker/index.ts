@@ -8,10 +8,15 @@ const typeNodeString = (typeNode: Type) =>
 const createTypeNode = (name: string, position: Position): Type => {
   return { nodeType: NodeType.Type, category: NodeCategory.Type, name: name, position: position };
 };
-const checkValidType = (expected: Type, got: Type, position: Position) => {
+const checkValidType = (
+  expected: Type,
+  got: Type,
+  position: Position,
+  message = (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\``
+) => {
   if (expected.name == 'Any' || got.name == 'Any') return;
   if (expected.name != got.name)
-    BriskTypeError(`Expected Type \`${typeNodeString(expected)}\`, got \`${typeNodeString(got)}\``, position);
+    BriskTypeError(message(typeNodeString(expected), typeNodeString(got)), position);
 };
 const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: AnalyzerNode): Type => {
   // Properties
@@ -31,7 +36,11 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
       return createTypeNode('Void', node.position);
     case NodeType.IfStatement: {
       const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.condition);
+      console.log(typeNode);
+      console.log(node.condition);
       checkValidType(createTypeNode('Boolean', node.position), typeNode, node.position);
+      typeCheckNode(_variables, stack, <AnalyzerNode>node.body);
+      if (node.alternative) typeCheckNode(_variables, stack, <AnalyzerNode>node.alternative);
       return createTypeNode('Void', node.position);
     }
     case NodeType.WasmImportStatement:
@@ -45,7 +54,6 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
       return createTypeNode('Void', node.position);
     }
     case NodeType.AssignmentStatement: {
-      // TODO: we need to verify this works
       const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
       const expectedType = typeCheckNode(_variables, stack, node.name);
       checkValidType(expectedType, typeNode, node.position);
@@ -53,12 +61,24 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
     }
     // Expressions
     case NodeType.ComparisonExpression:
-      typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs);
-      typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs);
+      checkValidType(
+        typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs),
+        typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs),
+        node.position,
+        (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\`, lhs must match rhs`
+      );
       return createTypeNode('Boolean', node.position);
     case NodeType.ArithmeticExpression:
-      typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs);
-      typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs);
+      checkValidType(
+        createTypeNode('Number', node.position),
+        typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs),
+        node.position
+      );
+      checkValidType(
+        createTypeNode('Number', node.position),
+        typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs),
+        node.position
+      );
       return createTypeNode('Number', node.position);
     case NodeType.LogicExpression: {
       const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
@@ -71,7 +91,6 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
       // TODO: Type Check This, we will need union types and to determine the type in the analyzer
       return createTypeNode('Any', node.position);
     case NodeType.WasmCallExpression:
-      // TODO: Type Check This
       if (node.name.length == 0) {
         BriskTypeError('You must specify the function name', node.position);
         return createTypeNode('Void', node.position);
@@ -81,7 +100,6 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
             BriskTypeError(`Expected ${expected.length} arguments, got ${got.length} arguments`, node.position);
           else expected.forEach((arg, i) => checkValidType(arg, got[i], node.position));
         };
-        // TODO: implement i32, i64, f32, f64 syntax, switch from Number to the new syntax
         // TODO: Add atomic stuff, try to make this code a lot smaller
         switch (node.name.slice(6)) {
           // Global

@@ -1,7 +1,10 @@
 // Lexer Nodes
 export const enum LexerTokenType {
   // Categories
+  Keywords = 'Keywords',
   Literals = 'Literals',
+  Separators = 'Separators',
+  Operators = 'Operators',
   ComparisonOperators = 'ComparisonOperators',
   AssignmentOperators = 'AssignmentOperators',
   ArithmeticOperators = 'ArithmeticOperators',

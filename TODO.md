@@ -1,30 +1,22 @@
 # Tomorrow
-+ [ ] Program to generate syntax highlighting from createToken
 + [ ] Improve Parser There are bugs
   + [ ] New lines Between statements cause he rest not to parse
 + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
-# TODO After We Built Everything Else
-+ [ ] Tests
-  + [ ] Way to generate parser test data
+# Tasks
 + [ ] Lexer
-  + [x] Add Wasm Stack Value Syntax
-    + 1f
-    + 1.0f
-    + 1n
-    + 2n
-    + lowercase is 32 bit version uppercase is 64bit version
   + [ ] Add support for different types of numbers
     + [ ] hex, oct, bin
 + [ ] Parser
+  + [ ] Improve Type System
+    + [ ] add enums
+    + [ ] add interfaces
+    + [ ] Type Casting
+    + [ ] Type Definitions
+      + [ ] union types
+    + [ ] support recursive types
+    + [ ] generics
   + [ ] Add Destructuring
   + [ ] Add Objects
-  + [ ] Add enums
-  + [ ] add interfaces
-  + [ ] add type casting
-  + [ ] add type Definitions
-    + [ ] union types
-    + [ ] recursive types
-  + [ ] Add generics
   + [ ] Parser Error Messages
 + [ ] Analyzer
   + [x] Fix typing
@@ -46,6 +38,7 @@
   + [ ] Deal With MemberAccess
 + [ ] Compiler
 + [ ] lsp
+  + [ ] Program to generate syntax highlighting from createToken
 
 + [ ] Write More Tests
   + [ ] Parser

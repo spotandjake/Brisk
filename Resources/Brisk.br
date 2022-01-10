@@ -1,38 +1,64 @@
-const a: i32 = 1n;
-const b: i64 = 1N;
-const c: i32 = +1n;
-const d: i64 = -1N;
-const e: f32 = 1f;
-const f: f64 = 1F;
-const g: f32 = +1f;
-const h: f64 = +1F;
-const i: f32 = 1.0f;
-const j: f64 = 1.0F;
-const k: f32 = -1.0f;
-const l: f64 = -1.0F;
-const m: f32 = +1.0f;
-const n: f64 = +1.0F;
-const o: u32 = 1u;
-const p: u64 = 1U;
-const q: String = 'Test';
-const r: Boolean = true;
-const s: Boolean = false;
-const t: Void = void;
-const u: Function = (v: String): Void => {};
-// let a: i32 = @wasm.i32.const(1);
-// let b: i32 = @wasm.i32.add(a, a);
-// import c from 'c';
-// import wasm d: (i32) -> i32 from 'd';
-// let test: Number = 1;
-// let print: Number = 1;
+// Import Testing
+import a from 'test';
+import wasm print: (String) -> Void from 'print';
+import wasm f: () -> Void from 'print';
+import wasm b: i32 from 'test';
+// TODO: add Property access testing
+// This is a comment
+// if statement testing
+if (1 == 1) {
+  print('If Test');
+} else if ('test' == 'test') {
+  print('Else If Test');
+} else {
+  print('Else Test');
+};
+if (1 == 1) print('test');
+else print('test');
 
-// const return: Function = (a: Number): Number => {
-//   @wasm.return(a);
-// };
-// if (true) {};
+if (true) {
+  print('true');
+};
 
-// let b: String = 1 == 1;
-// TODO: add return type
-// TODO: we need to make this work
-// let b: Number = t();
-// export g;
+if (false) print('test');
+
+// Function Call Tests
+print('test');
+f();
+@wasm.i32.add(1, 1);
+// Variable Declaration tests
+let c: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
+c = 1;
+let d: Number = a;
+let e: Number = t.t;
+let f: Function = (g: Number): Number => {
+  return(g);
+};
+const h: Number = 1;
+
+// Export Tests
+export i;
+
+
+
+// const a: i32 = 1n;
+// const b: i64 = 1N;
+// const c: i32 = +1n;
+// const d: i64 = -1N;
+// const e: f32 = 1f;
+// const f: f64 = 1F;
+// const g: f32 = +1f;
+// const h: f64 = +1F;
+// const i: f32 = 1.0f;
+// const j: f64 = 1.0F;
+// const k: f32 = -1.0f;
+// const l: f64 = -1.0F;
+// const m: f32 = +1.0f;
+// const n: f64 = +1.0F;
+// const o: u32 = 1u;
+// const p: u64 = 1U;
+// const q: String = 'Test';
+// const r: Boolean = true;
+// const s: Boolean = false;
+// const t: Void = void;
+// const u: Function = (v: String): Void => {};
