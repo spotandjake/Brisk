@@ -93,6 +93,18 @@ export const TknElse = createToken({
   pattern: /else/,
   categories: keywordTokens,
 });
+export const TknInterface = createToken({
+  label: 'Interface',
+  name: LexerTokenType.InterfaceToken,
+  pattern: /interface/,
+  categories: keywordTokens,
+});
+export const TknType = createToken({
+  label: 'Type',
+  name: LexerTokenType.TypeToken,
+  pattern: /type/,
+  categories: keywordTokens,
+});
 // Literals
 export const TknString = createToken({
   label: 'String Literal',
@@ -357,6 +369,8 @@ export const Tokens = [
   TknLet,
   TknIf,
   TknElse,
+  TknInterface,
+  TknType,
   // Separators
   TknLParen,
   TknRParen,

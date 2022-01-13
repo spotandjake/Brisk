@@ -1,3 +1,6 @@
+interface Test {
+  field: i32;
+};
 // import wasm print: (String) -> Void from 'print';
 // let 
 // if (false) print('test');

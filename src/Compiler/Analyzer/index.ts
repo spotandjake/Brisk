@@ -81,7 +81,7 @@ const analyzeNode = <T extends AllNodes>(
         global: parent != undefined && parent.nodeType == NodeType.Program,
         constant: true,
         type: (node.nodeType == NodeType.WasmImportStatement) ? node.typeSignature : {
-          nodeType: NodeType.Type,
+          nodeType: NodeType.TypeUsage,
           category: NodeCategory.Type,
           name: 'Unknown',
           position: node.position,

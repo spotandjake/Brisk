@@ -1,16 +1,16 @@
-import { NodeType, NodeCategory, Type } from '../Types/ParseNodes';
+import { NodeType, NodeCategory, TypeUsage } from '../Types/ParseNodes';
 import { Position } from '../Types/Types';
 import { AnalyzerNode, AnalyzedExpression, VariableData, VariableMap, VariableStack, AnalyzedProgramNode } from '../Types/AnalyzerNodes';
 import { BriskTypeError } from '../Errors/Compiler';
 
-const typeNodeString = (typeNode: Type) =>
-  typeNode.nodeType == NodeType.Type ? typeNode.name : `(${typeNode.params.map(param => param.name).join(', ')}) -> ${typeNode.returnType.name}`;
-const createTypeNode = (name: string, position: Position): Type => {
-  return { nodeType: NodeType.Type, category: NodeCategory.Type, name: name, position: position };
+const typeNodeString = (typeNode: TypeUsage) =>
+  typeNode.nodeType == NodeType.TypeUsage ? typeNode.name : `(${typeNode.params.map(param => param.name).join(', ')}) -> ${typeNode.returnType.name}`;
+const createTypeNode = (name: string, position: Position): TypeUsage => {
+  return { nodeType: NodeType.TypeUsage, category: NodeCategory.Type, name: name, position: position };
 };
 const checkValidType = (
-  expected: Type,
-  got: Type,
+  expected: TypeUsage,
+  got: TypeUsage,
   position: Position,
   message = (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\``
 ) => {
@@ -20,7 +20,7 @@ const checkValidType = (
   if (expected.name != got.name)
     BriskTypeError(message(typeNodeString(expected), typeNodeString(got)), position);
 };
-const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: AnalyzerNode): Type => {
+const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: AnalyzerNode): TypeUsage => {
   // Properties
   // What are we analyzing
   // Finding Closures
@@ -95,7 +95,7 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
         BriskTypeError('You must specify the function name', node.position);
         return createTypeNode('Void', node.position);
       } else {
-        const checkArgs = (expected: Type[], got: Type[]) => {
+        const checkArgs = (expected: TypeUsage[], got: TypeUsage[]) => {
           if (expected.length != got.length)
             BriskTypeError(`Expected ${expected.length} arguments, got ${got.length} arguments`, node.position);
           else expected.forEach((arg, i) => checkValidType(arg, got[i], node.position));

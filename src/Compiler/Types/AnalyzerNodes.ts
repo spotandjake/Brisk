@@ -1,4 +1,4 @@
-import Node, { Expression, ProgramNode, BlockStatementNode, FunctionLiteralNode, VariableDefinitionNode, Type } from './ParseNodes';
+import Node, { Expression, ProgramNode, BlockStatementNode, FunctionLiteralNode, VariableDefinitionNode, TypeUsage } from './ParseNodes';
 
 export interface VariableData {
   name: string;
@@ -6,7 +6,7 @@ export interface VariableData {
   constant: boolean;
   exported: boolean;
   used: boolean;
-  type: Type;
+  type: TypeUsage;
 }
 export type VariableMap = Map<number, VariableData>;
 export type VariableStack = Map<string, number>;
@@ -25,7 +25,7 @@ export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
 export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {
   global: boolean;
   constant: boolean;
-  type: Type;
+  type: TypeUsage;
 }
 
 export type AnalyzerNode =

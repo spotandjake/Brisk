@@ -135,3 +135,14 @@
   + [ ] Runtime
     + [ ] Malloc
     + [ ] Free
+
+# Typing
+User Defined types 
+```ts
+type Number = i32 | i64 | f32 | f64 | Test;
+interface Test {
+  field: Number;
+  field: Test;
+}
+```
+user defined types must start with a capital letter, we need some way of resolving recursive types

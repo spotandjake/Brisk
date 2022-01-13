@@ -32,8 +32,10 @@ export const enum NodeType {
   ConstantLiteral,
   FunctionLiteral,
   // Types
+  InterfaceDefinition,
+  InterfaceField,
+  TypeUsage,
   FunctionType,
-  Type,
   // Vars
   VariableDefinition,
   VariableUsage,
@@ -93,7 +95,7 @@ export interface ImportStatementNode {
 export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
-  typeSignature: Type;
+  typeSignature: TypeUsage;
   variable: VariableDefinitionNode;
   source: StringLiteralNode;
   position: Position;
@@ -113,7 +115,7 @@ export interface DeclarationStatementNode {
   category: NodeCategory.Statement;
   declarationType: DeclarationTypes;
   name: VariableDefinitionNode;
-  varType: Type;
+  varType: TypeUsage;
   value: Expression;
   position: Position;
 }
@@ -263,25 +265,42 @@ export interface ConstantLiteralNode {
 export interface FunctionLiteralNode {
   nodeType: NodeType.FunctionLiteral;
   category: NodeCategory.Literal;
-  returnType: TypeNode;
+  returnType: TypeUsageNode;
   params: ParameterNode[];
   body: Statement;
   position: Position;
 }
+// Type Definition
+export type TypeDefinitionNode = InterfaceDefinitionNode;
+export interface InterfaceDefinitionNode {
+  nodeType: NodeType.InterfaceDefinition;
+  category: NodeCategory.Type;
+  name: string;
+  fields: InterfaceFieldNode[];
+  position: Position;
+}
+export interface InterfaceFieldNode {
+  nodeType: NodeType.InterfaceField;
+  category: NodeCategory.Type;
+  name: string;
+  fieldType: TypeUsage;
+  position: Position;
+}
 // Types
-export type Type = FunctionTypeNode | TypeNode;
-export interface FunctionTypeNode {
+export type TypeUsage = FunctionTypeNode | TypeUsageNode;
+export interface TypeUsageNode {
+  nodeType: NodeType.TypeUsage;
+  category: NodeCategory.Type;
+  name: string;
+  position: Position;
+}
+// Type Definition
+export interface FunctionTypeNode { // This is gonna need to be replaced
   nodeType: NodeType.FunctionType;
   category: NodeCategory.Type;
   name: 'Function';
-  params: TypeNode[];
-  returnType: TypeNode;
-  position: Position;
-}
-export interface TypeNode {
-  nodeType: NodeType.Type;
-  category: NodeCategory.Type;
-  name: string;
+  params: TypeUsageNode[];
+  returnType: TypeUsageNode;
   position: Position;
 }
 // Variables
@@ -318,7 +337,7 @@ export interface ParameterNode {
   nodeType: NodeType.Parameter;
   category: NodeCategory.Variable;
   name: VariableDefinitionNode;
-  paramType: TypeNode;
+  paramType: TypeUsageNode;
 }
 
 // Export Every Node

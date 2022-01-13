@@ -18,6 +18,8 @@ export const enum LexerTokenType {
   LetToken = 'LetToken',
   IfToken = 'IfToken',
   ElseToken = 'ElseToken',
+  InterfaceToken = 'InterfaceToken',
+  TypeToken = 'TypeToken',
   // Separators
   LeftParenthesis = 'LeftParen',
   RightParenthesis = 'RightParen',

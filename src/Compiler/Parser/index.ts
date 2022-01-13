@@ -54,6 +54,7 @@ class Parser extends EmbeddedActionsParser {
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
+      { ALT: () => this.SUBRULE(this.typeDefinitionStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
   });
@@ -177,7 +178,7 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE1(this.ws);
     const variable = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
-    const typeSignature = this.SUBRULE(this.wasmType);
+    const typeSignature = this.SUBRULE(this.typeUsage);
     this.SUBRULE2(this.ws);
     this.CONSUME(Tokens.TknFrom);
     this.SUBRULE3(this.ws);
@@ -711,16 +712,84 @@ class Parser extends EmbeddedActionsParser {
       }
     };
   });
+  // Type Definition
+  private typeDefinitionStatement = this.RULE('TypeDefinitionStatement', (): Nodes.TypeDefinitionNode => {
+    return this.OR([
+      { ALT: () => this.SUBRULE(this.interfaceDefinition) },
+    ]);
+  });
+  private interfaceDefinition = this.RULE('InterfaceDefinition', (): Nodes.InterfaceDefinitionNode => {
+    const fields: Nodes.InterfaceFieldNode[] = [];
+    const location = this.CONSUME(Tokens.TknInterface);
+    this.SUBRULE(this.ws);
+    const name = this.CONSUME(Tokens.TknIdentifier);
+    this.SUBRULE1(this.ws);
+    this.CONSUME(Tokens.TknLBrace);
+    this.SUBRULE(this.wss);
+    this.MANY(() => {
+      this.SUBRULE1(this.wss);
+      fields.push(this.SUBRULE(this.interfaceField));
+      this.SUBRULE2(this.wss);
+      this.CONSUME(Tokens.TknSemiColon);
+      this.SUBRULE3(this.wss);
+    });
+    this.CONSUME(Tokens.TknRBrace);
+    return {
+      nodeType: Nodes.NodeType.InterfaceDefinition,
+      category: Nodes.NodeCategory.Type,
+      name: name.image,
+      fields: fields,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  private interfaceField = this.RULE('InterfaceField', (): Nodes.InterfaceFieldNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    this.CONSUME(Tokens.TknColon);
+    this.SUBRULE(this.wss);
+    const fieldType = this.SUBRULE(this.typeIdentifier);
+    return {
+      nodeType: Nodes.NodeType.InterfaceField,
+      category: Nodes.NodeCategory.Type,
+      name: identifier.image,
+      fieldType: fieldType,
+      position: {
+        offset: identifier.startOffset,
+        line: identifier.startLine || 0,
+        col: identifier.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
   // Types
-  private wasmType = this.RULE('wasmType', (): Nodes.Type => {
+  // TODO: we need to rewrite this
+  private typeUsage = this.RULE('TypeUsage', (): Nodes.TypeUsage => {
     this.SUBRULE(this.typeStart);
     return this.OR([
       { ALT: () => this.SUBRULE(this.wasmFunctionSignature) },
       { ALT: () => this.SUBRULE(this.typeIdentifier) },
     ]);
   });
+  private typeIdentifier = this.RULE('TypeIdentifier', (): Nodes.TypeUsageNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    return {
+      nodeType: Nodes.NodeType.TypeUsage,
+      category: Nodes.NodeCategory.Type,
+      name: identifier.image,
+      position: {
+        offset: identifier.startOffset,
+        line: identifier.startLine || 0,
+        col: identifier.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
   private wasmFunctionSignature = this.RULE('WasmFunctionSignature', (): Nodes.FunctionTypeNode => {
-    const params: Nodes.TypeNode[] = [];
+    const params: Nodes.TypeUsageNode[] = [];
     const location = this.CONSUME(Tokens.TknLParen);
     this.SUBRULE(this.wss);
     this.MANY_SEP({
@@ -750,24 +819,10 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  private type = this.RULE('WasmType', (): Nodes.TypeNode => {
+  private type = this.RULE('WasmType', (): Nodes.TypeUsageNode => {
     const position = this.SUBRULE(this.typeStart);
     const nodeType = this.SUBRULE(this.typeIdentifier);
     return { ...nodeType, position: position };
-  });
-  private typeIdentifier = this.RULE('TypeIdentifier', (): Nodes.TypeNode => {
-    const identifier = this.CONSUME(Tokens.TknIdentifier);
-    return {
-      nodeType: Nodes.NodeType.Type,
-      category: Nodes.NodeCategory.Type,
-      name: identifier.image,
-      position: {
-        offset: identifier.startOffset,
-        line: identifier.startLine || 0,
-        col: identifier.startColumn || 0,
-        file: this.file,
-      }
-    };
   });
   private typeStart = this.RULE('TypeStart', (): Position => {
     const location = this.CONSUME(Tokens.TknColon);

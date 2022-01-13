@@ -3,6 +3,7 @@
 + [ ] + [ ] Improve Parser There are bugs
   + [ ] Fix Single line if statement
   + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
+  + [ ] Allow u to type using strong typing with () -> {} instead of just Function 
 # Tasks
 + [ ] Lexer
   + [ ] Add support for different types of numbers
