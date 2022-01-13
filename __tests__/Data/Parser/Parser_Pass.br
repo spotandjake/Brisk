@@ -3,12 +3,13 @@ import a from 'test';
 import wasm print: (String) -> Void from 'print';
 import wasm f: () -> Void from 'print';
 import wasm b: i32 from 'test';
+import wasm return: Number from 'test';
 // TODO: add Property access testing
 // This is a comment
 // if statement testing
 if (1 == 1) {
   print('If Test');
-} else if ('test') {
+} else if ('test' == 'test') {
   print('Else If Test');
 } else {
   print('Else Test');
@@ -20,21 +21,21 @@ if (true) {
   print('true');
 };
 
-if (false) print('test');
+// if (false) print('test');
 
 // Function Call Tests
 print('test');
 f();
-@wasm.i32.add(1, 1);
+@wasm.i32.add(1n, 1n);
 // Variable Declaration tests
-let c: Number = !1 + (1 + 1) + 1 + (1 == 1) + true;
+let c: Number = 1 + (1 + 1) + 1 + 1 + 1;
 c = 1;
 let d: Number = a;
-let e: Number = t.t;
-let f: Function = (g: Number): Number => {
+// let e: Number = t.t;
+let z: Function = (g: Number): Number => {
   return(g);
 };
 const h: Number = 1;
 
 // Export Tests
-export i;
+export h;

@@ -15,6 +15,8 @@ const checkValidType = (
   message = (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\``
 ) => {
   if (expected.name == 'Any' || got.name == 'Any') return;
+  // TODO: unknown type is only temporary
+  if (expected.name == 'Unknown' || got.name == 'Unknown') return;
   if (expected.name != got.name)
     BriskTypeError(message(typeNodeString(expected), typeNodeString(got)), position);
 };
@@ -36,8 +38,6 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
       return createTypeNode('Void', node.position);
     case NodeType.IfStatement: {
       const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.condition);
-      console.log(typeNode);
-      console.log(node.condition);
       checkValidType(createTypeNode('Boolean', node.position), typeNode, node.position);
       typeCheckNode(_variables, stack, <AnalyzerNode>node.body);
       if (node.alternative) typeCheckNode(_variables, stack, <AnalyzerNode>node.alternative);

@@ -98,7 +98,7 @@ export const TknString = createToken({
   label: 'String Literal',
   name: LexerTokenType.TknStringLiteral,
   categories: literalTokens,
-  pattern: /'.*'/
+  pattern: /'(?:[^\\'\n\r]|\\(?:[bfnrtv'\\]|u[0-9a-fA-F]{4}))*'/
 }); // String
 export const TknI32 = createToken({
   label: 'I32 Literal',

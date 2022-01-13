@@ -1,24 +1,41 @@
-import { IParserErrorMessageProvider, defaultParserErrorProvider } from 'chevrotain';
-const errorProvider: IParserErrorMessageProvider = {
-  buildMismatchTokenMessage: ({ expected, actual }) => {
-    // TODO: Error Numbers, Better Formatting
-    return `\x1b[31m\x1b[1merror[]\x1b[0m: expected ${expected.LABEL || expected.name}, found ${actual.tokenType.LABEL || actual.tokenType.name}`;
-  },
-  buildNotAllInputParsedMessage: (options) => {
-    // TODO: implement these
-    console.log('buildNotAllInputParsedMessage');
-    return `very bad dog! you still have some input remaining at offset:${options.firstRedundant.startOffset}`;
-  },
-  buildNoViableAltMessage: (options) => {
-    // TODO: implement these
-    console.log('buildNoViableAltMessage');
-    // defer to the default implementation for `buildNoViableAltMessage`
-    return defaultParserErrorProvider.buildNoViableAltMessage(options);
-  },
-  buildEarlyExitMessage: (options) => {
-    // TODO: implement these
-    console.log('buildEarlyExitMessage');
-    return `Early Exit: ${options.expectedIterationPaths[0][0].name}`;
-  }
+import { IParserErrorMessageProvider } from 'chevrotain';
+import { BriskParseError } from '../Errors/Compiler';
+const errorHandler = (file: string): IParserErrorMessageProvider => {
+  return {
+    buildMismatchTokenMessage: (options) => {
+      // TODO: Error Number and better errors
+      BriskParseError(`Failed to Parse Found: \`${options.actual.tokenType.LABEL}\`, Expected \`${options.expected.LABEL}\``, {
+        offset: options.actual.startOffset,
+        line: options.actual.startLine || 0,
+        col: options.actual.startColumn || 0,
+        file: file
+      });
+      return '';
+    },
+    buildNotAllInputParsedMessage: (options) => {
+      BriskParseError(`\x1b[31m\x1b[1merror[]\x1b[0m: Failed To Parse Input Invalid Token \`${options.firstRedundant.image}\``, {
+        offset: options.firstRedundant.startOffset,
+        line: options.firstRedundant.startLine || 0,
+        col: options.firstRedundant.startColumn || 0,
+        file: file
+      });
+      return '';
+    },
+    buildNoViableAltMessage: (options) => {
+      BriskParseError(`Failed to Parse Found: \`${options.actual[0].image}\`, Expected \`${options.ruleName}\``, {
+        offset: options.previous.endOffset || 0,
+        line: options.previous.endLine || 0,
+        col: options.previous.endColumn || 0,
+        file: file
+      });
+      return '';
+    },
+    buildEarlyExitMessage: (options) => {
+      // TODO: implement these
+      console.log('buildEarlyExitMessage Please Contact the Developer');
+      process.exit();
+      return `Early Exit: ${options.expectedIterationPaths[0][0].name}`;
+    }
+  };
 };
-export default errorProvider;
+export default errorHandler;

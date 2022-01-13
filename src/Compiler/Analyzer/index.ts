@@ -21,11 +21,29 @@ const analyzeNode = <T extends AllNodes>(
   // Determine Global Functions
   // Logic for analyzing the parse Tree
   switch (node.nodeType) {
-    case NodeType.Program:
+    case NodeType.Program: {
       stacks.push(stack);
       stackMap = new Map();
       closureMap = new Set();
       node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
+      // We want to make sure exports at the bottom and imports at the top
+      let prevNode, hitExportNode = false;
+      for (const statementNode of node.body) {
+        if (
+          (
+            statementNode.nodeType == NodeType.ImportStatement ||
+            statementNode.nodeType == NodeType.WasmImportStatement
+          ) && (
+            prevNode != undefined &&
+            prevNode.nodeType != NodeType.ImportStatement &&
+            prevNode.nodeType != NodeType.WasmImportStatement
+          )
+        ) BriskParseError('Import Statement must be at top of file', statementNode.position);
+        if (statementNode.nodeType == NodeType.ExportStatement) hitExportNode = true;
+        if (statementNode.nodeType != NodeType.ExportStatement && hitExportNode)
+          BriskParseError('Export Statement Must Be At The End Of File', statementNode.position);
+        prevNode = statementNode;
+      }
       // TODO: Remove ts-ignore Here
       // @ts-ignore
       node = <AnalyzedProgramNode>{
@@ -34,6 +52,7 @@ const analyzeNode = <T extends AllNodes>(
         stack: stackMap,
       };
       break;
+    }
     // Statements
     case NodeType.BlockStatement:
       stacks.push(stack);
@@ -93,6 +112,7 @@ const analyzeNode = <T extends AllNodes>(
       node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
       break;
     case NodeType.AssignmentStatement:
+      // TODO: we want to error if you are modifying a constant here
       node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
       node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
       break;

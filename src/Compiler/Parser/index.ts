@@ -1,7 +1,7 @@
 // Imports
 import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
-// import ErrorProvider from './ErrorProvider';
+import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
@@ -11,7 +11,7 @@ class Parser extends EmbeddedActionsParser {
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
       maxLookahead: 3,
-      // errorMessageProvider: ErrorProvider
+      errorMessageProvider: ErrorProvider(file)
     });
     this.file = file;
     this.performSelfAnalysis();
@@ -115,22 +115,32 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE2(this.wss);
     this.CONSUME(Tokens.TknRParen);
     this.SUBRULE3(this.wss);
-    const body = this.SUBRULE(this._statement);
-    const alternative = this.OR([
+    const { body, alternative } = this.OR([
       {
         ALT: () => {
-          this.SUBRULE(this.ws);
-          this.CONSUME(Tokens.TknElse);
-          this.SUBRULE1(this.ws);
-          return this.SUBRULE2(this._statement);
+          const body = this.SUBRULE(this.singleLineStatement);
+          const alternative = this.OPTION(() => {
+            this.CONSUME(Tokens.TknSemiColon);
+            this.SUBRULE(this.ws);
+            this.CONSUME(Tokens.TknElse);
+            this.SUBRULE1(this.ws);
+            return this.SUBRULE(this._statement);
+          });
+          return { body, alternative };
         }
       },
       {
         ALT: () => {
-          this.SUBRULE4(this.wss);
-          return undefined;
+          const body = this.SUBRULE(this.blockStatement);
+          const alternative = this.OPTION1(() => {
+            this.SUBRULE2(this.ws);
+            this.CONSUME1(Tokens.TknElse);
+            this.SUBRULE3(this.ws);
+            return this.SUBRULE1(this._statement);
+          });
+          return { body, alternative };
         }
-      },
+      }
     ]);
     return {
       nodeType: Nodes.NodeType.IfStatement,

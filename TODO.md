@@ -1,7 +1,8 @@
 # Tomorrow
-+ [ ] Improve Parser There are bugs
-  + [ ] New lines Between statements cause he rest not to parse
-+ [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
++ [ ] Start working on type system
++ [ ] + [ ] Improve Parser There are bugs
+  + [ ] Fix Single line if statement
+  + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
 # Tasks
 + [ ] Lexer
   + [ ] Add support for different types of numbers

@@ -10,7 +10,7 @@ const compile = (program: string, file: string) => {
   // 2. Parse
   const parsed = parse(lexed, file);
   if (parsed == undefined) {
-    console.log(lexed);
+    // console.log(lexed);
     throw new Error('Parsed was undefined');
   }
   // 3. Analyze ParseTree
