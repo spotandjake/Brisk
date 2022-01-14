@@ -293,10 +293,12 @@ export interface InterfaceDefinitionNode {
   position: Position;
 }
 // TypeLiteral
+export type PrimTypes = 'i32' | 'i64' | 'f32' | 'f64';
+export const primTypes: PrimTypes[] = ['i32', 'i64', 'f32', 'f64'];
 export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
   category: NodeCategory.Type;
-  name: 'i32' | 'i64' | 'f32' | 'f64';
+  name: PrimTypes;
   position: Position;
 }
 export interface FunctionSignatureLiteralNode {

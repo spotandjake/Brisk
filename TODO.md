@@ -6,8 +6,8 @@
     + [ ] We need to add objects or else Member accesses are a little useless.
     + [ ] Type Casting
     + [ ] Type Exports
-  + [ ] Type stack in analyzer
-    + [ ] Type Scoping
+  + [x] Type stack in analyzer
+    + [x] Type Scoping
   + [ ] Type check against that stack
     + [ ] Function to compare these types this is probably gonna require a complete rewrite.
     + [ ] We are gonna want to take into consideration type casting.
@@ -18,7 +18,7 @@
 + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
   + [ ] Import
   + [ ] Export
-  + [ ] Interfaces
++ [ ] Recursive Types and data
 # Tasks
 + [ ] Lexer
   + [ ] Add support for different types of numbers

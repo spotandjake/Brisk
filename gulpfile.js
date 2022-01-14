@@ -5,7 +5,10 @@ import swc from './rollup-plugins/swc/index.js';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import fs from 'fs';
 // Configs
-const compileTypeScriptFile = async (name, input, output) => {
+const compileTypeScriptFile = async (name, input, output, debug) => {
+  // Read Configuration
+  const config = JSON.parse(await fs.promises.readFile('./package.json', 'utf8'));
+  // Compile
   const bundle = await rollup.rollup({
     input: input,
     external: ['commander', 'chevrotain', 'fs', '@jest/globals'],
@@ -18,7 +21,17 @@ const compileTypeScriptFile = async (name, input, output) => {
           parser: {
             syntax: 'typescript'
           },
-          target: 'es2022'
+          target: 'es2022',
+          transform: {
+            constModules: {
+              globals: {
+                '@brisk/config': {
+                  __DEBUG__: `${debug}`,
+                  __VERSION__: `'${config.version}'`
+                }
+              }
+            }
+          }
         },
         minify: true,
         sourceMaps: true
@@ -57,7 +70,7 @@ gulp.task('build', async () => {
   // Clean the original
   await gulp.series('clean')();
   // Build the Compiler
-  await compileTypeScriptFile('brisk', './src/cli/index.ts', './dist/brisk.js');
+  await compileTypeScriptFile('brisk', './src/cli/index.ts', './dist/brisk.js', true);
   // Get new size
   const newCode = fs.existsSync('./dist/brisk.js') ? await fs.promises.readFile('./dist/brisk.js', 'utf-8') : '';
   const stats = {
@@ -95,5 +108,5 @@ gulp.task('mock', async () => {
   if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
   await fs.promises.mkdir(folder);
   // Build the Compiler
-  await compileTypeScriptFile('Brisk-Test-Data', './__tests__/Data.ts', './__tests__/dist/Data.js');
+  await compileTypeScriptFile('Brisk-Test-Data', './__tests__/Data.ts', './__tests__/dist/Data.js', false);
 });

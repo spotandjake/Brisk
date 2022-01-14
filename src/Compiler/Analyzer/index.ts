@@ -1,7 +1,7 @@
-import Node, { NodeType, NodeCategory, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
+import Node, { NodeType, NodeCategory, ProgramNode, DeclarationTypes, PrimTypes, primTypes } from '../Types/ParseNodes';
 import AnalyzerNode, { TypeMap, TypeStack, VariableData, VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
 import { BriskParseError } from '../Errors/Compiler';
-
+// TODO: we can rewrite this to be a lot cleaner and allow recursive types
 type AllNodes = AnalyzerNode | Node;
 const analyzeNode = <T extends AllNodes>(
   _types: TypeMap,
@@ -118,13 +118,15 @@ const analyzeNode = <T extends AllNodes>(
         ...node.name,
         global: parent != undefined && parent.nodeType == NodeType.Program,
         constant: node.declarationType == DeclarationTypes.Constant,
-        type: analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.varType),
+        type: node.varType,
       });
       node.value = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.value);
       break;
     case NodeType.AssignmentStatement:
-      // TODO: we want to error if you are modifying a constant here
       node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.name);
+      if ((<VariableData>_variables.get(<number>node.name.name)).constant) {
+        BriskParseError(`Cannot modify immutable variable \`${(<VariableData>_variables.get(<number>node.name.name)).name}\``, node.position);
+      }
       node.value = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.value);
       break;
     // Expressions
@@ -253,8 +255,7 @@ const analyzeNode = <T extends AllNodes>(
             break;
           }
         }
-        if (name == undefined) {
-          console.log(Node);
+        if (name == undefined && !primTypes.includes(<PrimTypes>node.name)) {
           BriskParseError(`Type ${node.name} is not defined.`, node.position);
         }
       }
