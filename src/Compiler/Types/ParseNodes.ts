@@ -32,10 +32,14 @@ export const enum NodeType {
   ConstantLiteral,
   FunctionLiteral,
   // Types
+  TypeAliasDefinition,
   InterfaceDefinition,
+  TypePrimLiteral,
+  FunctionSignatureLiteral,
+  InterfaceLiteral,
   InterfaceField,
   TypeUsage,
-  FunctionType,
+  TypeIdentifier,
   // Vars
   VariableDefinition,
   VariableUsage,
@@ -63,8 +67,8 @@ export interface ProgramNode {
 // Statements
 export type Statement =
   FlagNode | IfStatementNode | BlockStatementNode |
-  ImportStatementNode | WasmImportStatementNode | ExportStatementNode | DeclarationStatementNode | AssignmentStatementNode
-  ;
+  ImportStatementNode | WasmImportStatementNode | ExportStatementNode |
+  DeclarationStatementNode | AssignmentStatementNode | TypeDefinition;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -95,7 +99,7 @@ export interface ImportStatementNode {
 export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
-  typeSignature: TypeUsage;
+  typeSignature: TypeLiteral;
   variable: VariableDefinitionNode;
   source: StringLiteralNode;
   position: Position;
@@ -115,7 +119,7 @@ export interface DeclarationStatementNode {
   category: NodeCategory.Statement;
   declarationType: DeclarationTypes;
   name: VariableDefinitionNode;
-  varType: TypeUsage;
+  varType: TypeLiteral;
   value: Expression;
   position: Position;
 }
@@ -265,42 +269,68 @@ export interface ConstantLiteralNode {
 export interface FunctionLiteralNode {
   nodeType: NodeType.FunctionLiteral;
   category: NodeCategory.Literal;
-  returnType: TypeUsageNode;
+  returnType: TypeLiteral;
   params: ParameterNode[];
   body: Statement;
   position: Position;
 }
+// Types
+export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
+export type TypeLiteral = TypePrimLiteralNode | FunctionSignatureLiteralNode | InterfaceLiteralNode | TypeUsageNode;
 // Type Definition
-export type TypeDefinitionNode = InterfaceDefinitionNode;
+export interface TypeAliasDefinitionNode {
+  nodeType: NodeType.TypeAliasDefinition;
+  category: NodeCategory.Type;
+  name: string | number;
+  typeLiteral: TypeLiteral;
+  position: Position;
+}
 export interface InterfaceDefinitionNode {
   nodeType: NodeType.InterfaceDefinition;
   category: NodeCategory.Type;
-  name: string;
+  name: string | number;
+  typeLiteral: TypeLiteral;
+  position: Position;
+}
+// TypeLiteral
+export interface TypePrimLiteralNode {
+  nodeType: NodeType.TypePrimLiteral;
+  category: NodeCategory.Type;
+  name: 'i32' | 'i64' | 'f32' | 'f64';
+  position: Position;
+}
+export interface FunctionSignatureLiteralNode {
+  nodeType: NodeType.FunctionSignatureLiteral;
+  category: NodeCategory.Type;
+  params: TypeLiteral[];
+  returnType: TypeLiteral;
+  position: Position;
+}
+export interface InterfaceLiteralNode {
+  nodeType: NodeType.InterfaceLiteral;
+  category: NodeCategory.Type;
   fields: InterfaceFieldNode[];
   position: Position;
 }
+// TypeUsage
+export interface TypeUsageNode {
+  nodeType: NodeType.TypeUsage;
+  category: NodeCategory.Type;
+  name: string | number;
+  position: Position;
+}
+// General Type Stuff
 export interface InterfaceFieldNode {
   nodeType: NodeType.InterfaceField;
   category: NodeCategory.Type;
   name: string;
-  fieldType: TypeUsage;
+  fieldType: TypeLiteral;
   position: Position;
 }
-// Types
-export type TypeUsage = FunctionTypeNode | TypeUsageNode;
-export interface TypeUsageNode {
-  nodeType: NodeType.TypeUsage;
+export interface TypeIdentifierNode {
+  nodeType: NodeType.TypeIdentifier;
   category: NodeCategory.Type;
   name: string;
-  position: Position;
-}
-// Type Definition
-export interface FunctionTypeNode { // This is gonna need to be replaced
-  nodeType: NodeType.FunctionType;
-  category: NodeCategory.Type;
-  name: 'Function';
-  params: TypeUsageNode[];
-  returnType: TypeUsageNode;
   position: Position;
 }
 // Variables
@@ -337,9 +367,10 @@ export interface ParameterNode {
   nodeType: NodeType.Parameter;
   category: NodeCategory.Variable;
   name: VariableDefinitionNode;
-  paramType: TypeUsageNode;
+  paramType: TypeLiteral;
 }
 
 // Export Every Node
-type Node = ProgramNode | Statement | Expression | ParameterNode;
+type Node = ProgramNode | Statement | Expression | ParameterNode | TypeDefinition | TypeLiteral;
+
 export default Node;

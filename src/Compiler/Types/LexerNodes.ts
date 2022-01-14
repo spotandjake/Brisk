@@ -9,6 +9,7 @@ export const enum LexerTokenType {
   AssignmentOperators = 'AssignmentOperators',
   ArithmeticOperators = 'ArithmeticOperators',
   LogicalOperators = 'LogicalOperators',
+  TypeOperators = 'TypeOperators',
   // Keywords
   ImportToken = 'ImportToken',
   WasmToken = 'WasmToken',
@@ -50,6 +51,7 @@ export const enum LexerTokenType {
   TknDivision = 'TknDivision',
   TknMultiply = 'TknMultiply',
   TknPower = 'TknPower',
+  TknUnion = 'TypeUnion',
   // Literals
   TknStringLiteral = 'String',
   TknI32Literal = 'I32',

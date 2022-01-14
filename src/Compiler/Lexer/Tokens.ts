@@ -38,6 +38,11 @@ export const logicalOperators = createToken({
   pattern: Lexer.NA,
   categories: operators
 });
+export const typeOperators = createToken({
+  name: LexerTokenType.TypeOperators,
+  pattern: Lexer.NA,
+  categories: operators
+});
 // Comments
 export const TknComment = createToken({
   label: 'Comment',
@@ -323,6 +328,12 @@ export const TknPow = createToken({
   categories: arithmeticOperators,
   pattern: /\^/
 });
+export const TknUnion = createToken({
+  label: 'Type Union',
+  name: LexerTokenType.TknUnion,
+  categories: typeOperators,
+  pattern: /\|/
+});
 // Flags
 export const TknFlag = createToken({
   label: 'Flag',
@@ -398,6 +409,7 @@ export const Tokens = [
   TknDiv,
   TknMul,
   TknPow,
+  TknUnion,
   // Flags
   TknFlag,
   // Identifiers

@@ -1,9 +1,24 @@
 # Tomorrow
 + [ ] Start working on type system
-+ [ ] + [ ] Improve Parser There are bugs
+  + [ ] Refactor parser types into type literals and type 
+    + [ ] Union Types
+    + [ ] Enums
+    + [ ] We need to add objects or else Member accesses are a little useless.
+    + [ ] Type Casting
+    + [ ] Type Exports
+  + [ ] Type stack in analyzer
+    + [ ] Type Scoping
+  + [ ] Type check against that stack
+    + [ ] Function to compare these types this is probably gonna require a complete rewrite.
+    + [ ] We are gonna want to take into consideration type casting.
++ [ ] Improve Parser There are bugs
   + [ ] Fix Single line if statement
   + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
   + [ ] Allow u to type using strong typing with () -> {} instead of just Function 
++ [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
+  + [ ] Import
+  + [ ] Export
+  + [ ] Interfaces
 # Tasks
 + [ ] Lexer
   + [ ] Add support for different types of numbers

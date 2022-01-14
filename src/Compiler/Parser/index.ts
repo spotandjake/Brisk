@@ -54,7 +54,7 @@ class Parser extends EmbeddedActionsParser {
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
-      { ALT: () => this.SUBRULE(this.typeDefinitionStatement) },
+      { ALT: () => this.SUBRULE(this.typeDefinition) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
   });
@@ -178,7 +178,9 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE1(this.ws);
     const variable = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
-    const typeSignature = this.SUBRULE(this.typeUsage);
+    this.CONSUME(Tokens.TknColon);
+    this.SUBRULE1(this.wss);
+    const typeSignature = this.SUBRULE(this.typeLiteral);
     this.SUBRULE2(this.ws);
     this.CONSUME(Tokens.TknFrom);
     this.SUBRULE3(this.ws);
@@ -213,10 +215,12 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE(this.ws);
     const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE1(this.wss);
-    const varType = this.SUBRULE(this.type);
+    this.CONSUME(Tokens.TknColon);
     this.SUBRULE2(this.wss);
-    this.CONSUME(Tokens.assignmentOperators);
+    const varType = this.SUBRULE(this.typeLiteral);
     this.SUBRULE3(this.wss);
+    this.CONSUME(Tokens.assignmentOperators);
+    this.SUBRULE4(this.wss);
     const value = this.SUBRULE(this.expression);
     return {
       nodeType: Nodes.NodeType.DeclarationStatement,
@@ -238,10 +242,12 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE(this.ws);
     const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
-    const varType = this.SUBRULE(this.type);
+    this.CONSUME(Tokens.TknColon);
     this.SUBRULE1(this.wss);
-    this.CONSUME(Tokens.assignmentOperators);
+    const varType = this.SUBRULE(this.typeLiteral);
     this.SUBRULE2(this.wss);
+    this.CONSUME(Tokens.assignmentOperators);
+    this.SUBRULE3(this.wss);
     const value = this.SUBRULE(this.expression);
     return {
       nodeType: Nodes.NodeType.DeclarationStatement,
@@ -681,8 +687,10 @@ class Parser extends EmbeddedActionsParser {
         this.SUBRULE1(this.wss);
         const name = this.SUBRULE(this.variableDefinitionNode);
         this.SUBRULE2(this.wss);
-        const paramType = this.SUBRULE(this.type);
+        this.CONSUME(Tokens.TknColon);
         this.SUBRULE3(this.wss);
+        const paramType = this.SUBRULE(this.typeLiteral);
+        this.SUBRULE4(this.wss);
         params.push({
           nodeType: Nodes.NodeType.Parameter,
           category: Nodes.NodeCategory.Variable,
@@ -692,11 +700,13 @@ class Parser extends EmbeddedActionsParser {
       }
     });
     this.CONSUME(Tokens.TknRParen);
-    this.SUBRULE4(this.wss);
-    const returnType = this.SUBRULE1(this.type);
     this.SUBRULE5(this.wss);
-    this.CONSUME(Tokens.TknThickArrow);
+    this.CONSUME1(Tokens.TknColon);
     this.SUBRULE6(this.wss);
+    const returnType = this.SUBRULE1(this.typeLiteral);
+    this.SUBRULE7(this.wss);
+    this.CONSUME(Tokens.TknThickArrow);
+    this.SUBRULE8(this.wss);
     const body = this.SUBRULE(this._statement);
     return {
       nodeType: Nodes.NodeType.FunctionLiteral,
@@ -712,19 +722,95 @@ class Parser extends EmbeddedActionsParser {
       }
     };
   });
-  // Type Definition
-  private typeDefinitionStatement = this.RULE('TypeDefinitionStatement', (): Nodes.TypeDefinitionNode => {
+  // Types
+  private typeDefinition = this.RULE('TypeDefinition', (): Nodes.TypeDefinition => {
     return this.OR([
+      { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.interfaceDefinition) },
     ]);
   });
+  private typeLiteral = this.RULE('TypeLiteral', (): Nodes.TypeLiteral => {
+    return this.OR([
+      { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
+      { ALT: () => this.SUBRULE(this.InterfaceTypeLiteral) },
+      { ALT: () => this.SUBRULE(this.typeUsageNode) },
+    ]);
+  });
+  // Type Definition
+  private typeAlias = this.RULE('TypeAliasDefinition', (): Nodes.TypeAliasDefinitionNode => {
+    const location = this.CONSUME(Tokens.TknType);
+    this.SUBRULE(this.ws);
+    const name = this.CONSUME(Tokens.TknIdentifier);
+    this.SUBRULE1(this.ws);
+    this.CONSUME(Tokens.TknEqual);
+    this.SUBRULE1(this.wss);
+    const typeLiteral = this.SUBRULE(this.typeLiteral);
+    return {
+      nodeType: Nodes.NodeType.TypeAliasDefinition,
+      category: Nodes.NodeCategory.Type,
+      name: name.image,
+      typeLiteral: typeLiteral,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
   private interfaceDefinition = this.RULE('InterfaceDefinition', (): Nodes.InterfaceDefinitionNode => {
-    const fields: Nodes.InterfaceFieldNode[] = [];
     const location = this.CONSUME(Tokens.TknInterface);
     this.SUBRULE(this.ws);
     const name = this.CONSUME(Tokens.TknIdentifier);
     this.SUBRULE1(this.ws);
-    this.CONSUME(Tokens.TknLBrace);
+    const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
+    return {
+      nodeType: Nodes.NodeType.InterfaceDefinition,
+      category: Nodes.NodeCategory.Type,
+      name: name.image,
+      typeLiteral: interfaceLiteral,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      }
+    };
+  });
+  // TypeLiteral
+  private functionSignatureLiteral = this.RULE('functionSignatureLiteral', (): Nodes.FunctionSignatureLiteralNode => {
+    const params: Nodes.TypeLiteral[] = [];
+    const location = this.CONSUME(Tokens.TknLParen);
+    this.SUBRULE(this.wss);
+    this.MANY_SEP({
+      SEP: Tokens.TknComma,
+      DEF: () => {
+        this.SUBRULE1(this.wss);
+        params.push(this.SUBRULE(this.typeLiteral));
+        this.SUBRULE2(this.wss);
+      }
+    });
+    this.CONSUME(Tokens.TknRParen);
+    this.SUBRULE4(this.wss);
+    this.CONSUME(Tokens.TknThinArrow);
+    this.SUBRULE5(this.wss);
+    const returnType = this.SUBRULE1(this.typeLiteral);
+    return {
+      nodeType: Nodes.NodeType.FunctionSignatureLiteral,
+      category: Nodes.NodeCategory.Type,
+      params: params,
+      returnType: returnType,
+      position: {
+        offset: location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
+  private InterfaceTypeLiteral = this.RULE('InterfaceTypeLiteralNode', (): Nodes.InterfaceLiteralNode => {
+    const fields: Nodes.InterfaceFieldNode[] = [];
+    const location = this.CONSUME(Tokens.TknLBrace);
     this.SUBRULE(this.wss);
     this.MANY(() => {
       this.SUBRULE1(this.wss);
@@ -735,9 +821,8 @@ class Parser extends EmbeddedActionsParser {
     });
     this.CONSUME(Tokens.TknRBrace);
     return {
-      nodeType: Nodes.NodeType.InterfaceDefinition,
+      nodeType: Nodes.NodeType.InterfaceLiteral,
       category: Nodes.NodeCategory.Type,
-      name: name.image,
       fields: fields,
       position: {
         offset: location.startOffset,
@@ -751,7 +836,7 @@ class Parser extends EmbeddedActionsParser {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);
     this.SUBRULE(this.wss);
-    const fieldType = this.SUBRULE(this.typeIdentifier);
+    const fieldType = this.SUBRULE(this.typeLiteral);
     return {
       nodeType: Nodes.NodeType.InterfaceField,
       category: Nodes.NodeCategory.Type,
@@ -765,19 +850,21 @@ class Parser extends EmbeddedActionsParser {
       }
     };
   });
-  // Types
-  // TODO: we need to rewrite this
-  private typeUsage = this.RULE('TypeUsage', (): Nodes.TypeUsage => {
-    this.SUBRULE(this.typeStart);
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.wasmFunctionSignature) },
-      { ALT: () => this.SUBRULE(this.typeIdentifier) },
-    ]);
-  });
-  private typeIdentifier = this.RULE('TypeIdentifier', (): Nodes.TypeUsageNode => {
-    const identifier = this.CONSUME(Tokens.TknIdentifier);
+  // TypeUsage
+  private typeUsageNode = this.RULE('TypeUsage', (): Nodes.TypeUsageNode => {
+    const identifier = this.SUBRULE(this.typeIdentifier);
     return {
       nodeType: Nodes.NodeType.TypeUsage,
+      category: Nodes.NodeCategory.Type,
+      name: identifier.name,
+      position: identifier.position
+    };
+  });
+  // General Type Stuff
+  private typeIdentifier = this.RULE('TypeIdentifier', (): Nodes.TypeIdentifierNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    return {
+      nodeType: Nodes.NodeType.TypeIdentifier,
       category: Nodes.NodeCategory.Type,
       name: identifier.image,
       position: {
@@ -786,52 +873,6 @@ class Parser extends EmbeddedActionsParser {
         col: identifier.startColumn || 0,
         file: this.file,
       }
-    };
-  });
-  private wasmFunctionSignature = this.RULE('WasmFunctionSignature', (): Nodes.FunctionTypeNode => {
-    const params: Nodes.TypeUsageNode[] = [];
-    const location = this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
-    this.MANY_SEP({
-      SEP: Tokens.TknComma,
-      DEF: () => {
-        this.SUBRULE1(this.wss);
-        params.push(this.SUBRULE(this.typeIdentifier));
-        this.SUBRULE2(this.wss);
-      }
-    });
-    this.CONSUME(Tokens.TknRParen);
-    this.SUBRULE4(this.wss);
-    this.CONSUME(Tokens.TknThinArrow);
-    this.SUBRULE5(this.wss);
-    const returnType = this.SUBRULE1(this.typeIdentifier);
-    return {
-      nodeType: Nodes.NodeType.FunctionType,
-      category: Nodes.NodeCategory.Type,
-      name: 'Function',
-      params: params,
-      returnType: returnType,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
-  private type = this.RULE('WasmType', (): Nodes.TypeUsageNode => {
-    const position = this.SUBRULE(this.typeStart);
-    const nodeType = this.SUBRULE(this.typeIdentifier);
-    return { ...nodeType, position: position };
-  });
-  private typeStart = this.RULE('TypeStart', (): Position => {
-    const location = this.CONSUME(Tokens.TknColon);
-    this.SUBRULE(this.wss);
-    return {
-      offset: location.startOffset,
-      line: location.startLine || 0,
-      col: location.startColumn || 0,
-      file: this.file,
     };
   });
   // General Helpers

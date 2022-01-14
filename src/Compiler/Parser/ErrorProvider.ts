@@ -1,9 +1,9 @@
 import { IParserErrorMessageProvider } from 'chevrotain';
 import { BriskParseError } from '../Errors/Compiler';
 const errorHandler = (file: string): IParserErrorMessageProvider => {
+  // TODO: Error Number and better errors
   return {
     buildMismatchTokenMessage: (options) => {
-      // TODO: Error Number and better errors
       BriskParseError(`Failed to Parse Found: \`${options.actual.tokenType.LABEL}\`, Expected \`${options.expected.LABEL}\``, {
         offset: options.actual.startOffset,
         line: options.actual.startLine || 0,

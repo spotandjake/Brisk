@@ -1,9 +1,12 @@
 import Node, { NodeType, NodeCategory, ProgramNode, DeclarationTypes } from '../Types/ParseNodes';
-import AnalyzerNode, { VariableData, VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
+import AnalyzerNode, { TypeMap, TypeStack, VariableData, VariableMap, VariableStack, VariableClosure, AnalyzedProgramNode, AnalyzedBlockStatementNode, AnalyzedFunctionLiteralNode, AnalyzedVariableDefinitionNode } from '../Types/AnalyzerNodes';
 import { BriskParseError } from '../Errors/Compiler';
 
 type AllNodes = AnalyzerNode | Node;
 const analyzeNode = <T extends AllNodes>(
+  _types: TypeMap,
+  typeStacks: TypeStack[],
+  typeStack: TypeStack,
   _variables: VariableMap,
   stacks: VariableStack[],
   closure: VariableClosure,
@@ -14,6 +17,7 @@ const analyzeNode = <T extends AllNodes>(
   // Properties
   let stackMap = stack;
   let closureMap = closure;
+  let typeStackMap = typeStack;
   // What are we analyzing
   // Finding Closures
   // Determining Globals, Top level values
@@ -22,10 +26,12 @@ const analyzeNode = <T extends AllNodes>(
   // Logic for analyzing the parse Tree
   switch (node.nodeType) {
     case NodeType.Program: {
+      typeStacks.push(typeStack);
+      typeStackMap = new Map();
       stacks.push(stack);
       stackMap = new Map();
       closureMap = new Set();
-      node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
+      node.body = node.body.map(child => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, child));
       // We want to make sure exports at the bottom and imports at the top
       let prevNode, hitExportNode = false;
       for (const statementNode of node.body) {
@@ -48,6 +54,8 @@ const analyzeNode = <T extends AllNodes>(
       // @ts-ignore
       node = <AnalyzedProgramNode>{
         ...node,
+        types: _types,
+        typeStack: typeStackMap,
         variables: _variables,
         stack: stackMap,
       };
@@ -55,44 +63,47 @@ const analyzeNode = <T extends AllNodes>(
     }
     // Statements
     case NodeType.BlockStatement:
+      typeStacks.push(typeStack);
+      typeStackMap = new Map();
       stacks.push(stack);
       stackMap = new Map();
       closureMap = new Set();
-      node.body = node.body.map(child => analyzeNode(_variables, stacks, closureMap, stackMap, node, child));
+      node.body = node.body.map(child => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, child));
       // TODO: remove this ts-ignore
       //@ts-ignore
       node = <AnalyzedBlockStatementNode>{
         ...node,
+        typeStack: typeStackMap,
         stack: stackMap,
       };
       break;
     case NodeType.IfStatement:
-      node.condition = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.condition);
-      node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
+      node.condition = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.condition);
+      node.body = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.body);
       if (node.alternative)
-        node.alternative = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.alternative);
+        node.alternative = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.alternative);
       break;
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
       if (parent != undefined && parent.nodeType != NodeType.Program)
         BriskParseError('Import statements must be at the top level.', node.position);
-      node.variable = analyzeNode(_variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
+      node.variable = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
         ...node.variable,
         global: parent != undefined && parent.nodeType == NodeType.Program,
         constant: true,
-        type: (node.nodeType == NodeType.WasmImportStatement) ? node.typeSignature : {
+        type: (node.nodeType == NodeType.WasmImportStatement) ? node.typeSignature : analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, {
           nodeType: NodeType.TypeUsage,
           category: NodeCategory.Type,
-          name: 'Unknown',
+          name: 'Unknown',// TODO: determine how to type regular import
           position: node.position,
-        }, // TODO: determine how to type regular import
+        })
       });
       break;
     case NodeType.ExportStatement:
       // TODO: Allow exporting expressions
       if (parent != undefined && parent.nodeType != NodeType.Program)
         BriskParseError('Export statements must be at the top level.', node.position);
-      node.variable = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.variable);
+      node.variable = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.variable);
       if (node.variable.nodeType == NodeType.VariableUsage) {
         const name = <number>node.variable.name;
         _variables.set(name, {
@@ -103,47 +114,51 @@ const analyzeNode = <T extends AllNodes>(
       break;
     case NodeType.DeclarationStatement:
       // TODO: recursive values are gonna be a problem, i.e let test = test.test.test;
-      node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
+      node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
         ...node.name,
         global: parent != undefined && parent.nodeType == NodeType.Program,
         constant: node.declarationType == DeclarationTypes.Constant,
-        type: node.varType,
+        type: analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.varType),
       });
-      node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
+      node.value = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.value);
       break;
     case NodeType.AssignmentStatement:
       // TODO: we want to error if you are modifying a constant here
-      node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
-      node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
+      node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.name);
+      node.value = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.value);
       break;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
-      node.lhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.lhs);
-      node.rhs = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.rhs);
+      node.lhs = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.lhs);
+      node.rhs = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.rhs);
       break;
     case NodeType.LogicExpression:
     case NodeType.ParenthesisExpression:
-      node.value = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.value);
+      node.value = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.value);
       break;
     case NodeType.CallExpression:
-      node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
-      node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
+      node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.name);
+      node.args = node.args.map(arg => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, arg));
       break;
     case NodeType.WasmCallExpression:
-      node.args = node.args.map(arg => analyzeNode(_variables, stacks, closureMap, stackMap, node, arg));
+      node.args = node.args.map(arg => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, arg));
       break;
     // Literals
     // TODO: parse the literal types in here
     case NodeType.FunctionLiteral:
+      typeStacks.push(typeStack);
+      typeStackMap = new Map();
       stacks.push(stack);
       stackMap = new Map();
       closureMap = new Set();
-      node.params = node.params.map(param => analyzeNode(_variables, stacks, closureMap, stackMap, node, param));
-      node.body = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.body);
+      node.params = node.params.map(param => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, param));
+      node.body = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.body);
+      node.returnType = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.returnType);
       //@ts-ignore
       node = <AnalyzedFunctionLiteralNode>{
         ...node,
+        typeStack: typeStackMap,
         closure: closureMap,
         stack: stackMap,
       };
@@ -157,7 +172,7 @@ const analyzeNode = <T extends AllNodes>(
         constant: node.constant,
         exported: false,
         used: false,
-        type: node.type
+        type: analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.type)
       });
       stack.set(<string>node.name, _variables.size - 1);
       node.name = _variables.size - 1;
@@ -175,10 +190,9 @@ const analyzeNode = <T extends AllNodes>(
         let name: number | undefined;
         for (const parentStack of stacks.reverse()) {
           if (parentStack.has(<string>node.name)) {
-            const varName = <number>parentStack.get(<string>node.name);
-            node.name = varName;
-            closure.add(varName);
-            name = varName;
+            name = <number>parentStack.get(<string>node.name);
+            node.name = name;
+            closure.add(name);
             break;
           }
         }
@@ -192,16 +206,58 @@ const analyzeNode = <T extends AllNodes>(
       break;
     case NodeType.MemberAccess:
       // TODO: we need to deal with these properly
-      node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.name);
-      if (node.child) node.child = analyzeNode(_variables, stacks, closureMap, stackMap, node, node.child);
+      node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.name);
+      if (node.child) node.child = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.child);
       break;
     case NodeType.Parameter:
-      node.name = analyzeNode(_variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
+      node.name = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, <AnalyzedVariableDefinitionNode>{
         ...node.name,
         global: false,
         constant: true,
-        type: node.paramType,
+        type: analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.paramType),
       });
+      break;
+    // Types
+    case NodeType.TypeAliasDefinition:
+    case NodeType.InterfaceDefinition:
+      if (typeStack.has(<string>node.name))
+        BriskParseError(`Type ${node.name} is already defined.`, node.position);
+      _types.set(_types.size, {
+        name: <string>node.name,
+        exported: false,
+        type: analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.typeLiteral)
+      });
+      typeStack.set(<string>node.name, _types.size - 1);
+      node.name = _variables.size - 1;
+      break;
+    case NodeType.FunctionSignatureLiteral:
+      node.params = node.params.map(param => analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, param));
+      node.returnType = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, node.returnType);
+      break;
+    case NodeType.InterfaceLiteral:
+      node.fields = node.fields.map(field => {
+        field.fieldType = analyzeNode(_types, typeStacks, typeStackMap, _variables, stacks, closureMap, stackMap, node, field.fieldType);
+        return field;
+      });
+      break;
+    case NodeType.TypeUsage:
+      if (typeStack.has(<string>node.name)) {
+        node.name = <number>typeStack.get(<string>node.name);
+      } else {
+        // Search The Above Stacks
+        let name: number | undefined;
+        for (const parentStack of typeStacks.reverse()) {
+          if (parentStack.has(<string>node.name)) {
+            name = <number>parentStack.get(<string>node.name);
+            node.name = name;
+            break;
+          }
+        }
+        if (name == undefined) {
+          console.log(Node);
+          BriskParseError(`Type ${node.name} is not defined.`, node.position);
+        }
+      }
       break;
     // Ignore
     case NodeType.FlagStatement:
@@ -217,13 +273,13 @@ const analyzeNode = <T extends AllNodes>(
       break;
     // Other
     // Uncomment this when adding new nodes
-    // default:
-    //   BriskParseError('Analyzer: Unknown Node Type', node.position);
-    //   break;
+    default:
+      BriskParseError('Analyzer: Unknown Node Type', (<any>node).position);
+      break;
   }
   return node;
 };
 const analyze = (program: ProgramNode) =>
-  <AnalyzedProgramNode>analyzeNode(new Map(), [], new Set(), new Map(), undefined, program);
+  <AnalyzedProgramNode>analyzeNode(new Map(), [], new Map(), new Map(), [], new Set(), new Map(), undefined, program);
 
 export default analyze;
