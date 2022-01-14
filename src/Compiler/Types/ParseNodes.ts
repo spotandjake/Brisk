@@ -293,8 +293,9 @@ export interface InterfaceDefinitionNode {
   position: Position;
 }
 // TypeLiteral
-export type PrimTypes = 'i32' | 'i64' | 'f32' | 'f64';
-export const primTypes: PrimTypes[] = ['i32', 'i64', 'f32', 'f64'];
+// TODO: Port Number, String , Boolean into brisk
+export type PrimTypes = 'i32' | 'i64' | 'f32' | 'f64' | 'Boolean' | 'Void' | 'String' | 'Number';
+export const primTypes: PrimTypes[] = ['i32', 'i64', 'f32', 'f64', 'Boolean', 'Void', 'String', 'Number'];
 export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
   category: NodeCategory.Type;

@@ -1,5 +1,5 @@
 // Test Utils
-import { test, expect } from '@jest/globals';
+import { jest, test, expect } from '@jest/globals';
 import fs from 'fs';
 // Test Components
 import lex from '../../src/Compiler/Lexer/index';

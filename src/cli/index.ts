@@ -13,7 +13,6 @@ program.version(__VERSION__);
 program
   .argument('<file>', 'File to compile')
   .action(async (file) => {
-    // TODO: resolve file to the proper directory
     // Compile
     const fileContent = await fs.readFile(file, 'utf8');
     const output = compile(fileContent, file);

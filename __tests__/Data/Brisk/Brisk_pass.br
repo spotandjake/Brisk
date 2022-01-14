@@ -3,7 +3,7 @@ import a from 'test';
 import wasm print: (String) -> Void from 'print';
 import wasm f: () -> Void from 'print';
 import wasm b: i32 from 'test';
-import wasm return: Number from 'test';
+import wasm return: i32 from 'test';
 // TODO: add Property access testing
 // This is a comment
 // if statement testing
@@ -22,6 +22,13 @@ if (true) {
 };
 
 // if (false) print('test');
+// Type Testing
+interface Test {
+  field1: i32;
+  field2: (i32, i32) -> i32;
+  field3: i64;
+};
+type v = i32;
 
 // Function Call Tests
 print('test');
@@ -32,7 +39,7 @@ let c: Number = 1 + (1 + 1) + 1 + 1 + 1;
 c = 1;
 let d: Number = a;
 // let e: Number = t.t;
-let z: Function = (g: Number): Number => {
+let z: Function = (g: i32): i32 => {
   return(g);
 };
 const h: Number = 1;

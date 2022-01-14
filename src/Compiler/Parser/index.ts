@@ -5,12 +5,15 @@ import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
+//@ts-ignore
+import { __DEBUG__ } from '@brisk/config';
 // Parser
 class Parser extends EmbeddedActionsParser {
   private file: string;
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
       maxLookahead: 3,
+      skipValidations: __DEBUG__,
       errorMessageProvider: ErrorProvider(file)
     });
     this.file = file;
@@ -402,7 +405,6 @@ class Parser extends EmbeddedActionsParser {
         operator = Nodes.LogicalExpressionOperator.LogicalNot;
         break;
       default:
-        // TODO: Remover this, This should never be hit in the compiler
         operator = Nodes.LogicalExpressionOperator.LogicalNot;
     }
     const value = this.SUBRULE1(this.simpleExpression);
@@ -922,10 +924,7 @@ const parse = (lexingResult: ILexingResult, file: string) => {
   const parser = new Parser(Tokens.Tokens, file);
   // "input" is a setter which will reset the parser's state.
   parser.input = lexingResult.tokens;
-  if (parser.errors.length > 0) {
-    // TODO: Error Handling Seems To Be Broken Somehow
-    throw new Error('Parsing errors detected');
-  }
+  if (parser.errors.length > 0) throw new Error('Parsing errors detected');
   // =================================================================
   return parser.program();
 };
