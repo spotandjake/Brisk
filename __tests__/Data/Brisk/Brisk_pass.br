@@ -3,7 +3,7 @@ import a from 'test';
 import wasm print: (String) -> Void from 'print';
 import wasm f: () -> Void from 'print';
 import wasm b: i32 from 'test';
-import wasm return: i32 from 'test';
+import wasm return: (Any) -> Void from 'test';
 // TODO: add Property access testing
 // This is a comment
 // if statement testing

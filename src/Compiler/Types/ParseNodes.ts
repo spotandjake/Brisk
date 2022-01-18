@@ -46,7 +46,7 @@ export const enum NodeType {
   MemberAccess,
   Parameter,
   // WhiteSpace
-  WhiteSpace
+  WhiteSpace,
 }
 export const enum NodeCategory {
   General,
@@ -66,9 +66,15 @@ export interface ProgramNode {
 }
 // Statements
 export type Statement =
-  FlagNode | IfStatementNode | BlockStatementNode |
-  ImportStatementNode | WasmImportStatementNode | ExportStatementNode |
-  DeclarationStatementNode | AssignmentStatementNode | TypeDefinition;
+  | FlagNode
+  | IfStatementNode
+  | BlockStatementNode
+  | ImportStatementNode
+  | WasmImportStatementNode
+  | ExportStatementNode
+  | DeclarationStatementNode
+  | AssignmentStatementNode
+  | TypeDefinition;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -151,8 +157,13 @@ export const enum LogicalExpressionOperator {
 }
 // Expressions
 export type Expression =
-  ComparisonExpressionNode | ArithmeticExpressionNode | LogicExpressionNode | ParenthesisExpressionNode | CallExpressionNode | WasmCallExpressionNode | Atom
-  ;
+  | ComparisonExpressionNode
+  | ArithmeticExpressionNode
+  | LogicExpressionNode
+  | ParenthesisExpressionNode
+  | CallExpressionNode
+  | WasmCallExpressionNode
+  | Atom;
 
 export interface ComparisonExpressionNode {
   nodeType: NodeType.ComparisonExpression;
@@ -199,19 +210,18 @@ export interface WasmCallExpressionNode {
 }
 // Literals
 export type Atom =
-  StringLiteralNode |
-  I32LiteralNode |
-  I64LiteralNode |
-  U32LiteralNode |
-  U64LiteralNode |
-  F32LiteralNode |
-  F64LiteralNode |
-  NumberLiteralNode |
-  ConstantLiteralNode |
-  FunctionLiteralNode |
-  VariableUsageNode |
-  MemberAccessNode
-  ;
+  | StringLiteralNode
+  | I32LiteralNode
+  | I64LiteralNode
+  | U32LiteralNode
+  | U64LiteralNode
+  | F32LiteralNode
+  | F64LiteralNode
+  | NumberLiteralNode
+  | ConstantLiteralNode
+  | FunctionLiteralNode
+  | VariableUsageNode
+  | MemberAccessNode;
 export interface StringLiteralNode {
   nodeType: NodeType.StringLiteral;
   category: NodeCategory.Literal;
@@ -276,7 +286,11 @@ export interface FunctionLiteralNode {
 }
 // Types
 export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
-export type TypeLiteral = TypePrimLiteralNode | FunctionSignatureLiteralNode | InterfaceLiteralNode | TypeUsageNode;
+export type TypeLiteral =
+  | TypePrimLiteralNode
+  | FunctionSignatureLiteralNode
+  | InterfaceLiteralNode
+  | TypeUsageNode;
 // Type Definition
 export interface TypeAliasDefinitionNode {
   nodeType: NodeType.TypeAliasDefinition;
@@ -294,8 +308,33 @@ export interface InterfaceDefinitionNode {
 }
 // TypeLiteral
 // TODO: Port Number, String , Boolean into brisk
-export type PrimTypes = 'i32' | 'i64' | 'f32' | 'f64' | 'Boolean' | 'Void' | 'String' | 'Number';
-export const primTypes: PrimTypes[] = ['i32', 'i64', 'f32', 'f64', 'Boolean', 'Void', 'String', 'Number'];
+export type PrimTypes =
+  | 'u32'
+  | 'u64'
+  | 'i32'
+  | 'i64'
+  | 'f32'
+  | 'f64'
+  | 'Boolean'
+  | 'Void'
+  | 'String'
+  | 'Number'
+  | 'Function'
+  | 'Any';
+export const primTypes: PrimTypes[] = [
+  'u32',
+  'u64',
+  'i32',
+  'i64',
+  'f32',
+  'f64',
+  'Boolean',
+  'Void',
+  'String',
+  'Number',
+  'Function',
+  'Any',
+];
 export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
   category: NodeCategory.Type;

@@ -14,7 +14,7 @@ class Parser extends EmbeddedActionsParser {
     super(tokens, {
       maxLookahead: 3,
       skipValidations: __DEBUG__,
-      errorMessageProvider: ErrorProvider(file)
+      errorMessageProvider: ErrorProvider(file),
     });
     this.file = file;
     this.performSelfAnalysis();
@@ -28,10 +28,11 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: 0,
+        length: 0,
         line: 0,
         col: 0,
         file: this.file,
-      }
+      },
     };
   });
   private statementList = this.RULE('StatementList', (): Nodes.Statement[] => {
@@ -50,7 +51,7 @@ class Parser extends EmbeddedActionsParser {
     const statement = this.SUBRULE(this._statement);
     this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknSemiColon, {
-      ERR_MSG: 'expecting `;` at end of Statement'
+      ERR_MSG: 'expecting `;` at end of Statement',
     });
     return statement;
   });
@@ -70,10 +71,11 @@ class Parser extends EmbeddedActionsParser {
       value: flag.image,
       position: {
         offset: flag.startOffset,
+        length: <number>flag.endOffset - flag.startOffset,
         line: flag.startLine || 0,
         col: flag.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   // Statements
@@ -92,10 +94,11 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: open.startOffset,
+        length: <number>open.endOffset - open.startOffset,
         line: open.startLine || 0,
         col: open.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private singleLineStatement = this.RULE('SingleLineStatement', () => {
@@ -131,7 +134,7 @@ class Parser extends EmbeddedActionsParser {
             return this.SUBRULE(this._statement);
           });
           return { body, alternative };
-        }
+        },
       },
       {
         ALT: () => {
@@ -143,8 +146,8 @@ class Parser extends EmbeddedActionsParser {
             return this.SUBRULE1(this._statement);
           });
           return { body, alternative };
-        }
-      }
+        },
+      },
     ]);
     return {
       nodeType: Nodes.NodeType.IfStatement,
@@ -154,10 +157,11 @@ class Parser extends EmbeddedActionsParser {
       alternative: alternative,
       position: {
         offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
@@ -172,31 +176,34 @@ class Parser extends EmbeddedActionsParser {
       category: Nodes.NodeCategory.Statement,
       variable: variable, // TODO: we want to add support for destructuring imports
       source: source,
-      position: position
+      position: position,
     };
   });
-  private wasmImportStatement = this.RULE('WasmImportStatement', (): Nodes.WasmImportStatementNode => {
-    const position = this.SUBRULE(this.importStart);
-    this.CONSUME(Tokens.TknWasm);
-    this.SUBRULE1(this.ws);
-    const variable = this.SUBRULE(this.variableDefinitionNode);
-    this.SUBRULE(this.wss);
-    this.CONSUME(Tokens.TknColon);
-    this.SUBRULE1(this.wss);
-    const typeSignature = this.SUBRULE(this.typeLiteral);
-    this.SUBRULE2(this.ws);
-    this.CONSUME(Tokens.TknFrom);
-    this.SUBRULE3(this.ws);
-    const source = this.SUBRULE(this.stringLiteral);
-    return {
-      nodeType: Nodes.NodeType.WasmImportStatement,
-      category: Nodes.NodeCategory.Statement,
-      typeSignature: typeSignature,
-      variable: variable, // TODO: we want to add support for destructuring imports
-      source: source,
-      position: position
-    };
-  });
+  private wasmImportStatement = this.RULE(
+    'WasmImportStatement',
+    (): Nodes.WasmImportStatementNode => {
+      const position = this.SUBRULE(this.importStart);
+      this.CONSUME(Tokens.TknWasm);
+      this.SUBRULE1(this.ws);
+      const variable = this.SUBRULE(this.variableDefinitionNode);
+      this.SUBRULE(this.wss);
+      this.CONSUME(Tokens.TknColon);
+      this.SUBRULE1(this.wss);
+      const typeSignature = this.SUBRULE(this.typeLiteral);
+      this.SUBRULE2(this.ws);
+      this.CONSUME(Tokens.TknFrom);
+      this.SUBRULE3(this.ws);
+      const source = this.SUBRULE(this.stringLiteral);
+      return {
+        nodeType: Nodes.NodeType.WasmImportStatement,
+        category: Nodes.NodeCategory.Statement,
+        typeSignature: typeSignature,
+        variable: variable, // TODO: we want to add support for destructuring imports
+        source: source,
+        position: position,
+      };
+    }
+  );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
     this.SUBRULE(this.wss);
@@ -207,39 +214,44 @@ class Parser extends EmbeddedActionsParser {
       variable: variable, // Allow exporting groups of variables
       position: {
         offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      }
-    };
-  });
-  private constantDeclarationStatement = this.RULE('ConstantDeclaration', (): Nodes.DeclarationStatementNode => {
-    const location = this.CONSUME(Tokens.TknConst);
-    this.SUBRULE(this.ws);
-    const name = this.SUBRULE(this.variableDefinitionNode);
-    this.SUBRULE1(this.wss);
-    this.CONSUME(Tokens.TknColon);
-    this.SUBRULE2(this.wss);
-    const varType = this.SUBRULE(this.typeLiteral);
-    this.SUBRULE3(this.wss);
-    this.CONSUME(Tokens.assignmentOperators);
-    this.SUBRULE4(this.wss);
-    const value = this.SUBRULE(this.expression);
-    return {
-      nodeType: Nodes.NodeType.DeclarationStatement,
-      category: Nodes.NodeCategory.Statement,
-      declarationType: Nodes.DeclarationTypes.Constant,
-      name: name,
-      varType: varType,
-      value: value,
-      position: {
-        offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
       },
     };
   });
+  private constantDeclarationStatement = this.RULE(
+    'ConstantDeclaration',
+    (): Nodes.DeclarationStatementNode => {
+      const location = this.CONSUME(Tokens.TknConst);
+      this.SUBRULE(this.ws);
+      const name = this.SUBRULE(this.variableDefinitionNode);
+      this.SUBRULE1(this.wss);
+      this.CONSUME(Tokens.TknColon);
+      this.SUBRULE2(this.wss);
+      const varType = this.SUBRULE(this.typeLiteral);
+      this.SUBRULE3(this.wss);
+      this.CONSUME(Tokens.assignmentOperators);
+      this.SUBRULE4(this.wss);
+      const value = this.SUBRULE(this.expression);
+      return {
+        nodeType: Nodes.NodeType.DeclarationStatement,
+        category: Nodes.NodeCategory.Statement,
+        declarationType: Nodes.DeclarationTypes.Constant,
+        name: name,
+        varType: varType,
+        value: value,
+        position: {
+          offset: location.startOffset,
+          length: <number>location.endOffset - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
   private declarationStatement = this.RULE('Declaration', (): Nodes.DeclarationStatementNode => {
     const location = this.CONSUME(Tokens.TknLet);
     this.SUBRULE(this.ws);
@@ -261,139 +273,156 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
       },
     };
   });
-  private assignmentStatement = this.RULE('assignmentStatement', (): Nodes.AssignmentStatementNode => {
-    const name = this.SUBRULE(this.variable);
-    this.SUBRULE(this.wss);
-    this.CONSUME(Tokens.assignmentOperators);
-    this.SUBRULE1(this.wss);
-    const value = this.SUBRULE(this.expression);
-    return {
-      nodeType: Nodes.NodeType.AssignmentStatement,
-      category: Nodes.NodeCategory.Statement,
-      name: name,
-      value: value,
-      position: name.position,
-    };
-  });
+  private assignmentStatement = this.RULE(
+    'assignmentStatement',
+    (): Nodes.AssignmentStatementNode => {
+      const name = this.SUBRULE(this.variable);
+      this.SUBRULE(this.wss);
+      this.CONSUME(Tokens.assignmentOperators);
+      this.SUBRULE1(this.wss);
+      const value = this.SUBRULE(this.expression);
+      return {
+        nodeType: Nodes.NodeType.AssignmentStatement,
+        category: Nodes.NodeCategory.Statement,
+        name: name,
+        value: value,
+        position: name.position,
+      };
+    }
+  );
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.callExpression) },
-      { ALT: () => this.SUBRULE(this.wasmCallExpression) }
+      { ALT: () => this.SUBRULE(this.wasmCallExpression) },
     ]);
   });
   // Expressions
   private expression = this.RULE('Expression', (): Nodes.Expression => {
     return this.SUBRULE(this.comparisonExpression);
   });
-  private comparisonExpression = this.RULE('ComparisonExpression', (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-    const operators: Nodes.ComparisonExpressionOperator[] = [];
-    const expressions: Nodes.Expression[] = [];
-    const lhs = this.SUBRULE(this.arithmeticExpression);
-    this.SUBRULE(this.wss);
-    this.MANY(() => {
-      switch (this.CONSUME(Tokens.comparisonOperators).tokenType.name) {
-        case LexerTokenType.TknComparisonEqual:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
-          break;
-        case LexerTokenType.TknComparisonNotEqual:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonNotEqual);
-          break;
-        case LexerTokenType.TknComparisonLessThan:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThan);
-          break;
-        case LexerTokenType.TknComparisonGreaterThan:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThan);
-          break;
-        case LexerTokenType.TknComparisonLessThanOrEqual:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual);
-          break;
-        case LexerTokenType.TknComparisonGreaterThanOrEqual:
-          operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
-          break;
+  private comparisonExpression = this.RULE(
+    'ComparisonExpression',
+    (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
+      const operators: Nodes.ComparisonExpressionOperator[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.arithmeticExpression);
+      this.SUBRULE(this.wss);
+      this.MANY(() => {
+        switch (this.CONSUME(Tokens.comparisonOperators).tokenType.name) {
+          case LexerTokenType.TknComparisonEqual:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
+            break;
+          case LexerTokenType.TknComparisonNotEqual:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonNotEqual);
+            break;
+          case LexerTokenType.TknComparisonLessThan:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThan);
+            break;
+          case LexerTokenType.TknComparisonGreaterThan:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThan);
+            break;
+          case LexerTokenType.TknComparisonLessThanOrEqual:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual);
+            break;
+          case LexerTokenType.TknComparisonGreaterThanOrEqual:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
+            break;
+        }
+        this.SUBRULE1(this.wss);
+        expressions.push(this.SUBRULE1(this.arithmeticExpression));
+        this.SUBRULE2(this.wss);
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return expressions.reduce(
+          (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.ComparisonExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operator: operators[index],
+              rhs: currentValue,
+              position: prevValue.position,
+            };
+          },
+          lhs
+        );
       }
-      this.SUBRULE1(this.wss);
-      expressions.push(this.SUBRULE1(this.arithmeticExpression));
-      this.SUBRULE2(this.wss);
-    });
-    if (expressions.length == 0) {
-      return lhs;
-    } else {
-      return expressions.reduce((prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
-        return {
-          nodeType: Nodes.NodeType.ComparisonExpression,
-          category: Nodes.NodeCategory.Expression,
-          lhs: prevValue,
-          operator: operators[index],
-          rhs: currentValue,
-          position: prevValue.position
-        };
-      }, lhs);
     }
-  });
-  private arithmeticExpression = this.RULE('ArithmeticExpression', (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
-    const operators: Nodes.ArithmeticExpressionOperator[] = [];
-    const expressions: Nodes.Expression[] = [];
-    const lhs = this.SUBRULE(this.simpleExpression);
-    this.SUBRULE(this.wss);
-    this.MANY(() => {
-      switch (this.CONSUME(Tokens.arithmeticOperators).tokenType.name) {
-        case LexerTokenType.TknAdd:
-          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticAdd);
-          break;
-        case LexerTokenType.TknSubtract:
-          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
-          break;
-        case LexerTokenType.TknDivision:
-          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticDiv);
-          break;
-        case LexerTokenType.TknMultiply:
-          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticMul);
-          break;
-        case LexerTokenType.TknPower:
-          operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
-          break;
+  );
+  private arithmeticExpression = this.RULE(
+    'ArithmeticExpression',
+    (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
+      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.simpleExpression);
+      this.SUBRULE(this.wss);
+      this.MANY(() => {
+        switch (this.CONSUME(Tokens.arithmeticOperators).tokenType.name) {
+          case LexerTokenType.TknAdd:
+            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticAdd);
+            break;
+          case LexerTokenType.TknSubtract:
+            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
+            break;
+          case LexerTokenType.TknDivision:
+            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticDiv);
+            break;
+          case LexerTokenType.TknMultiply:
+            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticMul);
+            break;
+          case LexerTokenType.TknPower:
+            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
+            break;
+        }
+        this.SUBRULE1(this.wss);
+        expressions.push(this.SUBRULE1(this.simpleExpression));
+        this.SUBRULE2(this.wss);
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return expressions.reduce(
+          (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.ArithmeticExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operator: operators[index],
+              rhs: currentValue,
+              position: prevValue.position,
+            };
+          },
+          lhs
+        );
       }
-      this.SUBRULE1(this.wss);
-      expressions.push(this.SUBRULE1(this.simpleExpression));
-      this.SUBRULE2(this.wss);
-    });
-    if (expressions.length == 0) {
-      return lhs;
-    } else {
-      return expressions.reduce((prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-        return {
-          nodeType: Nodes.NodeType.ArithmeticExpression,
-          category: Nodes.NodeCategory.Expression,
-          lhs: prevValue,
-          operator: operators[index],
-          rhs: currentValue,
-          position: prevValue.position
-        };
-      }, lhs);
     }
-  });
+  );
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
     return this.OR([
       {
-        ALT: () => this.SUBRULE(this.logicalExpression)
+        ALT: () => this.SUBRULE(this.logicalExpression),
       },
       {
-        ALT: () => this.SUBRULE(this.parenthesisExpression)
+        ALT: () => this.SUBRULE(this.parenthesisExpression),
       },
       {
-        ALT: () => this.SUBRULE(this.atom), IGNORE_AMBIGUITIES: true
+        ALT: () => this.SUBRULE(this.atom),
+        IGNORE_AMBIGUITIES: true,
       },
       {
-        ALT: () => this.SUBRULE(this.callExpression)
+        ALT: () => this.SUBRULE(this.callExpression),
       },
       {
-        ALT: () => this.SUBRULE(this.wasmCallExpression)
+        ALT: () => this.SUBRULE(this.wasmCallExpression),
       },
     ]);
   });
@@ -415,28 +444,33 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: logicalOperatorToken.startOffset,
+        length: <number>logicalOperatorToken.endOffset - logicalOperatorToken.startOffset,
         line: logicalOperatorToken.startLine || 0,
         col: logicalOperatorToken.startColumn || 0,
         file: this.file,
       },
     };
   });
-  private parenthesisExpression = this.RULE('ParenthesisExpression', (): Nodes.ParenthesisExpressionNode => {
-    const location = this.CONSUME(Tokens.TknLParen);
-    const expression = this.SUBRULE(this.expression);
-    this.CONSUME(Tokens.TknRParen);
-    return {
-      nodeType: Nodes.NodeType.ParenthesisExpression,
-      category: Nodes.NodeCategory.Expression,
-      value: expression,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      }
-    };
-  });
+  private parenthesisExpression = this.RULE(
+    'ParenthesisExpression',
+    (): Nodes.ParenthesisExpressionNode => {
+      const location = this.CONSUME(Tokens.TknLParen);
+      const expression = this.SUBRULE(this.expression);
+      this.CONSUME(Tokens.TknRParen);
+      return {
+        nodeType: Nodes.NodeType.ParenthesisExpression,
+        category: Nodes.NodeCategory.Expression,
+        value: expression,
+        position: {
+          offset: location.startOffset,
+          length: <number>location.endOffset - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
   private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
     const args: Nodes.Expression[] = [];
     const name = this.SUBRULE(this.variable);
@@ -448,7 +482,7 @@ class Parser extends EmbeddedActionsParser {
         this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
         this.SUBRULE2(this.wss);
-      }
+      },
     });
     this.CONSUME(Tokens.TknRParen);
     return {
@@ -470,7 +504,7 @@ class Parser extends EmbeddedActionsParser {
         this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
         this.SUBRULE2(this.wss);
-      }
+      },
     });
     this.CONSUME(Tokens.TknRParen);
     return {
@@ -480,6 +514,7 @@ class Parser extends EmbeddedActionsParser {
       args: args,
       position: {
         offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -515,10 +550,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private i32Literal = this.RULE('I32Literal', (): Nodes.I32LiteralNode => {
@@ -529,10 +565,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private i64Literal = this.RULE('I64Literal', (): Nodes.I64LiteralNode => {
@@ -543,10 +580,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private u32Literal = this.RULE('U32Literal', (): Nodes.U32LiteralNode => {
@@ -557,10 +595,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private u64Literal = this.RULE('U64Literal', (): Nodes.U64LiteralNode => {
@@ -571,10 +610,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private f32Literal = this.RULE('F32Literal', (): Nodes.F32LiteralNode => {
@@ -585,10 +625,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private f64Literal = this.RULE('F64Literal', (): Nodes.F64LiteralNode => {
@@ -599,10 +640,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private numberLiteral = this.RULE('NumberLiteral', (): Nodes.NumberLiteralNode => {
@@ -613,10 +655,11 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private constantLiteral = this.RULE('ConstantLiteral', () => {
@@ -630,7 +673,7 @@ class Parser extends EmbeddedActionsParser {
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private variable = this.RULE('Variable', (): Nodes.Variable => {
@@ -639,20 +682,24 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.variableUsageNode) },
     ]);
   });
-  private variableDefinitionNode = this.RULE('VariableDefinitionNode', (): Nodes.VariableDefinitionNode => {
-    const identifier = this.CONSUME(Tokens.TknIdentifier);
-    return {
-      nodeType: Nodes.NodeType.VariableDefinition,
-      category: Nodes.NodeCategory.Variable,
-      name: identifier.image,
-      position: {
-        offset: identifier.startOffset,
-        line: identifier.startLine || 0,
-        col: identifier.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
+  private variableDefinitionNode = this.RULE(
+    'VariableDefinitionNode',
+    (): Nodes.VariableDefinitionNode => {
+      const identifier = this.CONSUME(Tokens.TknIdentifier);
+      return {
+        nodeType: Nodes.NodeType.VariableDefinition,
+        category: Nodes.NodeCategory.Variable,
+        name: identifier.image,
+        position: {
+          offset: identifier.startOffset,
+          length: <number>identifier.endOffset - identifier.startOffset,
+          line: identifier.startLine || 0,
+          col: identifier.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
   private variableUsageNode = this.RULE('VariableUsageNode', (): Nodes.VariableUsageNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     return {
@@ -661,6 +708,7 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
@@ -699,7 +747,7 @@ class Parser extends EmbeddedActionsParser {
           name: name,
           paramType: paramType,
         });
-      }
+      },
     });
     this.CONSUME(Tokens.TknRParen);
     this.SUBRULE5(this.wss);
@@ -718,10 +766,11 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   // Types
@@ -754,86 +803,99 @@ class Parser extends EmbeddedActionsParser {
       typeLiteral: typeLiteral,
       position: {
         offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
       },
     };
   });
-  private interfaceDefinition = this.RULE('InterfaceDefinition', (): Nodes.InterfaceDefinitionNode => {
-    const location = this.CONSUME(Tokens.TknInterface);
-    this.SUBRULE(this.ws);
-    const name = this.CONSUME(Tokens.TknIdentifier);
-    this.SUBRULE1(this.ws);
-    const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
-    return {
-      nodeType: Nodes.NodeType.InterfaceDefinition,
-      category: Nodes.NodeCategory.Type,
-      name: name.image,
-      typeLiteral: interfaceLiteral,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      }
-    };
-  });
+  private interfaceDefinition = this.RULE(
+    'InterfaceDefinition',
+    (): Nodes.InterfaceDefinitionNode => {
+      const location = this.CONSUME(Tokens.TknInterface);
+      this.SUBRULE(this.ws);
+      const name = this.CONSUME(Tokens.TknIdentifier);
+      this.SUBRULE1(this.ws);
+      const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
+      return {
+        nodeType: Nodes.NodeType.InterfaceDefinition,
+        category: Nodes.NodeCategory.Type,
+        name: name.image,
+        typeLiteral: interfaceLiteral,
+        position: {
+          offset: location.startOffset,
+          length: <number>location.endOffset - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
   // TypeLiteral
-  private functionSignatureLiteral = this.RULE('functionSignatureLiteral', (): Nodes.FunctionSignatureLiteralNode => {
-    const params: Nodes.TypeLiteral[] = [];
-    const location = this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
-    this.MANY_SEP({
-      SEP: Tokens.TknComma,
-      DEF: () => {
+  private functionSignatureLiteral = this.RULE(
+    'functionSignatureLiteral',
+    (): Nodes.FunctionSignatureLiteralNode => {
+      const params: Nodes.TypeLiteral[] = [];
+      const location = this.CONSUME(Tokens.TknLParen);
+      this.SUBRULE(this.wss);
+      this.MANY_SEP({
+        SEP: Tokens.TknComma,
+        DEF: () => {
+          this.SUBRULE1(this.wss);
+          params.push(this.SUBRULE(this.typeLiteral));
+          this.SUBRULE2(this.wss);
+        },
+      });
+      this.CONSUME(Tokens.TknRParen);
+      this.SUBRULE4(this.wss);
+      this.CONSUME(Tokens.TknThinArrow);
+      this.SUBRULE5(this.wss);
+      const returnType = this.SUBRULE1(this.typeLiteral);
+      return {
+        nodeType: Nodes.NodeType.FunctionSignatureLiteral,
+        category: Nodes.NodeCategory.Type,
+        params: params,
+        returnType: returnType,
+        position: {
+          offset: location.startOffset,
+          length: <number>location.endOffset - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
+  private InterfaceTypeLiteral = this.RULE(
+    'InterfaceTypeLiteralNode',
+    (): Nodes.InterfaceLiteralNode => {
+      const fields: Nodes.InterfaceFieldNode[] = [];
+      const location = this.CONSUME(Tokens.TknLBrace);
+      this.SUBRULE(this.wss);
+      this.MANY(() => {
         this.SUBRULE1(this.wss);
-        params.push(this.SUBRULE(this.typeLiteral));
+        fields.push(this.SUBRULE(this.interfaceField));
         this.SUBRULE2(this.wss);
-      }
-    });
-    this.CONSUME(Tokens.TknRParen);
-    this.SUBRULE4(this.wss);
-    this.CONSUME(Tokens.TknThinArrow);
-    this.SUBRULE5(this.wss);
-    const returnType = this.SUBRULE1(this.typeLiteral);
-    return {
-      nodeType: Nodes.NodeType.FunctionSignatureLiteral,
-      category: Nodes.NodeCategory.Type,
-      params: params,
-      returnType: returnType,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
-  private InterfaceTypeLiteral = this.RULE('InterfaceTypeLiteralNode', (): Nodes.InterfaceLiteralNode => {
-    const fields: Nodes.InterfaceFieldNode[] = [];
-    const location = this.CONSUME(Tokens.TknLBrace);
-    this.SUBRULE(this.wss);
-    this.MANY(() => {
-      this.SUBRULE1(this.wss);
-      fields.push(this.SUBRULE(this.interfaceField));
-      this.SUBRULE2(this.wss);
-      this.CONSUME(Tokens.TknSemiColon);
-      this.SUBRULE3(this.wss);
-    });
-    this.CONSUME(Tokens.TknRBrace);
-    return {
-      nodeType: Nodes.NodeType.InterfaceLiteral,
-      category: Nodes.NodeCategory.Type,
-      fields: fields,
-      position: {
-        offset: location.startOffset,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      }
-    };
-  });
+        this.CONSUME(Tokens.TknSemiColon);
+        this.SUBRULE3(this.wss);
+      });
+      this.CONSUME(Tokens.TknRBrace);
+      return {
+        nodeType: Nodes.NodeType.InterfaceLiteral,
+        category: Nodes.NodeCategory.Type,
+        fields: fields,
+        position: {
+          offset: location.startOffset,
+          length: <number>location.endOffset - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    }
+  );
   private interfaceField = this.RULE('InterfaceField', (): Nodes.InterfaceFieldNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);
@@ -846,10 +908,11 @@ class Parser extends EmbeddedActionsParser {
       fieldType: fieldType,
       position: {
         offset: identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   // TypeUsage
@@ -859,7 +922,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.TypeUsage,
       category: Nodes.NodeCategory.Type,
       name: identifier.name,
-      position: identifier.position
+      position: identifier.position,
     };
   });
   // General Type Stuff
@@ -871,10 +934,11 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   // General Helpers
@@ -883,6 +947,7 @@ class Parser extends EmbeddedActionsParser {
     this.SUBRULE(this.ws);
     return {
       offset: location.startOffset,
+      length: <number>location.endOffset - location.startOffset,
       line: location.startLine || 0,
       col: location.startColumn || 0,
       file: this.file,
@@ -899,7 +964,7 @@ class Parser extends EmbeddedActionsParser {
         line: space.startLine || 0,
         col: space.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
   private wss = this.RULE('OptionalWhiteSpace', (): Nodes.WhiteSpaceNode => {
@@ -911,10 +976,11 @@ class Parser extends EmbeddedActionsParser {
       value: spaces.map((space) => space.image).join(''),
       position: {
         offset: spaces[0]?.startOffset || 0,
+        length: <number>spaces.at(-1)?.endOffset - spaces[0]?.startOffset || 0,
         line: spaces[0]?.startLine || 0,
         col: spaces[0]?.startColumn || 0,
         file: this.file,
-      }
+      },
     };
   });
 }

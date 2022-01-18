@@ -1,13 +1,19 @@
+if (1n == 1n) {
+  const a: i32 = 1n;
+};
+// {
+//   const a: i32 = 1n;
+// };
 interface Test {
   field1: i32;
   field2: (i32, i32) -> i32;
   field3: i64;
 };
-type v = i32;
-type a = v;
-let a: a = 1n;
-a = 2n;
-const b: a = 1n;
+// type v = i32;
+// type a = v;
+// let a: a = 1n;
+// a = 2n;
+// const b: a = 1n;
 // import wasm print: (String) -> Void from 'print';
 // if (false) print('test');
 // else print('test');
@@ -46,9 +52,11 @@ const b: a = 1n;
 // let d: Number = a;
 // let t: Number = 1;
 // // let e: Number = t.t;
-// let z: Function = (g: Number): Number => {
-//   return(g);
-// };
+type Func = i32;
+let z: Func = (a: i32): Number => {
+  @wasm.return(a);
+};
+z(1n);
 // const h: Number = 1;
 
 // // Export Tests

@@ -16,7 +16,7 @@ const compile = (program: string, file: string) => {
   // 3. Analyze ParseTree
   const analyzed = analyze(parsed);
   // 4. Type Check
-  typeCheck(analyzed);
+  typeCheck(analyzed, program);
   // 5. Generate Code
   // 6. Return Code
   return analyzed;

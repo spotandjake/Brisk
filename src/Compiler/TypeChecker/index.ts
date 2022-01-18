@@ -1,26 +1,215 @@
-import { NodeType, NodeCategory, TypeUsage } from '../Types/ParseNodes';
+import {
+  NodeType,
+  NodeCategory,
+  TypeLiteral,
+  PrimTypes,
+  FunctionSignatureLiteralNode,
+  TypePrimLiteralNode,
+} from '../Types/ParseNodes';
 import { Position } from '../Types/Types';
-import { AnalyzerNode, AnalyzedExpression, VariableData, VariableMap, VariableStack, AnalyzedProgramNode } from '../Types/AnalyzerNodes';
+import {
+  AnalyzerNode,
+  AnalyzedExpression,
+  TypeData,
+  TypeMap,
+  TypeStack,
+  VariableData,
+  VariableMap,
+  VariableStack,
+  AnalyzedProgramNode,
+} from '../Types/AnalyzerNodes';
 import { BriskTypeError } from '../Errors/Compiler';
+import { instructions, WasmInstruction } from './WasmTypes';
 
-const typeNodeString = (typeNode: TypeUsage) =>
-  typeNode.nodeType == NodeType.TypeUsage ? typeNode.name : `(${typeNode.params.map(param => param.name).join(', ')}) -> ${typeNode.returnType.name}`;
-const createTypeNode = (name: string, position: Position): TypeUsage => {
-  return { nodeType: NodeType.TypeUsage, category: NodeCategory.Type, name: name, position: position };
+const createTypeNode = (name: PrimTypes, position: Position): TypePrimLiteralNode => ({
+  nodeType: NodeType.TypePrimLiteral,
+  category: NodeCategory.Type,
+  name: name,
+  position: position,
+});
+const resolveType = (
+  _types: TypeMap,
+  typeStack: TypeStack,
+  givenType: TypeLiteral
+): TypeLiteral => {
+  switch (givenType.nodeType) {
+    case NodeType.TypePrimLiteral:
+      return givenType;
+    case NodeType.FunctionSignatureLiteral:
+      givenType.params = givenType.params.map((param) => resolveType(_types, typeStack, param));
+      givenType.returnType = resolveType(_types, typeStack, givenType.returnType);
+      return givenType;
+    case NodeType.InterfaceLiteral:
+      givenType.fields = givenType.fields.map((field) => {
+        field.fieldType = resolveType(_types, typeStack, field.fieldType);
+        return field;
+      });
+      return givenType;
+    case NodeType.TypeUsage:
+      // TODO: I think we need to check the typeStack
+      if (_types.has(<number>givenType.name)) {
+        //@ts-ignore
+        return resolveType(_types, typeStack, _types.get(<number>givenType.name).type);
+      } else {
+        BriskTypeError(`Type \`${givenType.name}\` is not defined`, givenType.position);
+        return createTypeNode('Void', givenType.position);
+      }
+  }
+};
+const typeMatch = (
+  _types: TypeMap,
+  typeStack: TypeStack,
+  _got: TypeLiteral,
+  _expected: TypeLiteral
+): boolean => {
+  // Resolve The Types Down To Primitives
+  const got = resolveType(_types, typeStack, _got);
+  const expected = resolveType(_types, typeStack, _expected);
+  if (got.nodeType == NodeType.TypePrimLiteral && got.name == 'Any') return true;
+  if (expected.nodeType == NodeType.TypePrimLiteral && expected.name == 'Any') return true;
+  // Matching Logic
+  if (got.nodeType == expected.nodeType) {
+    // Check PrimLiteral Types Are Same
+    if (
+      got.nodeType == NodeType.TypePrimLiteral &&
+      expected.nodeType == NodeType.TypePrimLiteral &&
+      got.name == expected.name
+    )
+      return true;
+    if (
+      got.nodeType == NodeType.FunctionSignatureLiteral &&
+      expected.nodeType == NodeType.FunctionSignatureLiteral
+    ) {
+      // Check Function Signature Types Are Same
+      if (got.params.length != expected.params.length) return false;
+      for (let i = 0; i < got.params.length; i++) {
+        if (!typeMatch(_types, typeStack, got.params[i], expected.params[i])) return false;
+      }
+      return typeMatch(_types, typeStack, got.returnType, expected.returnType);
+    }
+    if (
+      got.nodeType == NodeType.InterfaceLiteral &&
+      expected.nodeType == NodeType.InterfaceLiteral
+    ) {
+      // Check Interface Types Are Same
+      if (got.fields.length != expected.fields.length) return false;
+      for (let i = 0; i < got.fields.length; i++) {
+        if (got.fields[i].name != expected.fields[i].name) return false;
+        if (!typeMatch(_types, typeStack, got.fields[i].fieldType, expected.fields[i].fieldType))
+          return false;
+      }
+      return true;
+    }
+    if (got.nodeType == NodeType.TypeUsage && expected.nodeType == NodeType.TypeUsage) {
+      if (got.name == expected.name) return true;
+    }
+  } else {
+    // Check Signature Vs Function
+    if (
+      got.nodeType == NodeType.FunctionSignatureLiteral &&
+      expected.nodeType == NodeType.TypePrimLiteral &&
+      expected.name == 'Function'
+    )
+      return true;
+    if (
+      expected.nodeType == NodeType.FunctionSignatureLiteral &&
+      got.nodeType == NodeType.TypePrimLiteral &&
+      got.name == 'Function'
+    )
+      return true;
+    // Check
+  }
+  return false;
+};
+const prettyName = (_types: TypeMap, typeStack: TypeStack, _givenType: TypeLiteral): string => {
+  const givenType = resolveType(_types, typeStack, _givenType);
+  if (givenType.nodeType == NodeType.FunctionSignatureLiteral) {
+    return `(${givenType.params
+      .map((param) => prettyName(_types, typeStack, param))
+      .join(', ')}) => ${prettyName(_types, typeStack, givenType.returnType)}`;
+  } else if (givenType.nodeType == NodeType.InterfaceLiteral) {
+    return `interface {\n${givenType.fields
+      .map((field) => `  ${field.name}: ${prettyName(_types, typeStack, field.fieldType)};\n`)
+      .join('')}}`; // TODO: Format This Nicely
+  } else {
+    return typeof givenType.name == 'number' && _types.has(givenType.name)
+      ? (<TypeData>_types.get(givenType.name)).name
+      : <string>givenType.name;
+  }
 };
 const checkValidType = (
-  expected: TypeUsage,
-  got: TypeUsage,
+  _types: TypeMap,
+  typeStack: TypeStack,
+  code: string,
+  expected: TypeLiteral,
+  got: TypeLiteral,
   position: Position,
-  message = (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\``
+  message = ''
 ) => {
-  if (expected.name == 'Any' || got.name == 'Any') return;
-  // TODO: unknown type is only temporary
-  if (expected.name == 'Unknown' || got.name == 'Unknown') return;
-  if (expected.name != got.name)
-    BriskTypeError(message(typeNodeString(expected), typeNodeString(got)), position);
+  if (!typeMatch(_types, typeStack, got, expected)) {
+    // Create Detailed Error Message
+    const width = process.stdout.columns || 80;
+    const offset = got.position.offset;
+
+    let startOfLine = code.lastIndexOf('\n', offset);
+    let endOfLine = code.indexOf('\n', offset);
+    if (endOfLine - startOfLine > width) {
+      const loopLength = endOfLine - startOfLine - width;
+      for (let i = 0; i <= loopLength; i++) {
+        if (startOfLine < offset) {
+          startOfLine++;
+        }
+        if (endOfLine > offset) {
+          endOfLine--;
+        }
+        if (endOfLine - startOfLine < width) break;
+      }
+    }
+    const line =
+      got.position.length == 0
+        ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
+        : `\x1b[0m${code.slice(startOfLine + 1, offset)}\x1b[31m\x1b[1m${code.slice(
+          offset,
+          offset + got.position.length + 1
+        )}\x1b[0m${code.slice(offset + got.position.length + 1, endOfLine)}`;
+    // After Message
+    const afterMessage = code.slice(
+      endOfLine + 1,
+      code.indexOf('\n', code.indexOf('\n', endOfLine + 1) + 1)
+    );
+    if (afterMessage.length >= width * 2) afterMessage.slice(width * 2);
+    // Build message
+    const msg = [
+      'Mismatch Type',
+      line,
+      `\x1b[31m\x1b[1m${' '.repeat(offset - startOfLine)}${'^'.repeat(
+        (got.position.length || 5) + 1
+      )} expected ${prettyName(_types, typeStack, got)} got ${prettyName(
+        _types,
+        typeStack,
+        expected
+      )}, ${message} \x1b[0m`
+        .split('\n')
+        .map((text, i) =>
+          i == 0
+            ? text
+            : `${' '.repeat(offset - startOfLine + ((got.position.length || 5) + 2))}${text}`
+        )
+        .join('\n'),
+      afterMessage,
+    ];
+    // =================================================================
+    BriskTypeError(msg.join('\n'), position);
+  }
 };
-const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: AnalyzerNode): TypeUsage => {
+const typeCheckNode = (
+  _types: TypeMap,
+  typeStack: TypeStack,
+  _variables: VariableMap,
+  stack: VariableStack,
+  node: AnalyzerNode,
+  code: string
+): TypeLiteral => {
   // Properties
   // What are we analyzing
   // Finding Closures
@@ -30,447 +219,189 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
   // Logic for analyzing the parse Tree
   switch (node.nodeType) {
     case NodeType.Program:
-      node.body.map(child => typeCheckNode(node.variables, node.stack, <AnalyzerNode>child));
-      return createTypeNode('Void', node.position);
-    // Statements
-    case NodeType.BlockStatement:
-      node.body.map(child => typeCheckNode(_variables, node.stack, <AnalyzerNode>child));
+      node.body.map((child) =>
+        typeCheckNode(
+          node.types,
+          node.typeStack,
+          node.variables,
+          node.stack,
+          <AnalyzerNode>child,
+          code
+        )
+      );
       return createTypeNode('Void', node.position);
     case NodeType.IfStatement: {
-      const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.condition);
-      checkValidType(createTypeNode('Boolean', node.position), typeNode, node.position);
-      typeCheckNode(_variables, stack, <AnalyzerNode>node.body);
-      if (node.alternative) typeCheckNode(_variables, stack, <AnalyzerNode>node.alternative);
+      const typeNode = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        <AnalyzedExpression>node.condition,
+        code
+      );
+      checkValidType(
+        _types,
+        typeStack,
+        code,
+        createTypeNode('Boolean', node.position),
+        typeNode,
+        node.position
+      );
+      typeCheckNode(_types, typeStack, _variables, stack, <AnalyzerNode>node.body, code);
+      if (node.alternative)
+        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzerNode>node.alternative, code);
       return createTypeNode('Void', node.position);
     }
+    // Statements
+    case NodeType.BlockStatement:
+      node.body.map((child) =>
+        typeCheckNode(_types, node.typeStack, _variables, node.stack, <AnalyzerNode>child, code)
+      );
+      return createTypeNode('Void', node.position);
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
     case NodeType.ExportStatement:
-      // TODO: this is gonna need to be used to get types from other files / cross file type checking
+      // TODO: We Need to Determine Get the type from these for creating a type map
       return createTypeNode('Void', node.position);
     case NodeType.DeclarationStatement: {
-      const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
-      checkValidType(node.varType, typeNode, node.position);
+      const typeNode = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        <AnalyzedExpression>node.value,
+        code
+      );
+      checkValidType(_types, typeStack, code, typeNode, node.varType, node.position);
       return createTypeNode('Void', node.position);
     }
     case NodeType.AssignmentStatement: {
-      const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
-      const expectedType = typeCheckNode(_variables, stack, node.name);
-      checkValidType(expectedType, typeNode, node.position);
+      const typeNode = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        <AnalyzedExpression>node.value,
+        code
+      );
+      const expectedType = typeCheckNode(_types, typeStack, _variables, stack, node.name, code);
+      checkValidType(_types, typeStack, code, expectedType, typeNode, node.position);
       return createTypeNode('Void', node.position);
     }
     // Expressions
     case NodeType.ComparisonExpression:
       checkValidType(
-        typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs),
-        typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs),
+        _types,
+        typeStack,
+        code,
+        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.lhs, code),
+        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
         node.position,
-        (expected: string, got: string) => `Expected Type \`${expected}\`, got \`${got}\`, lhs must match rhs`
+        'lhs must match rhs'
       );
       return createTypeNode('Boolean', node.position);
     case NodeType.ArithmeticExpression:
       checkValidType(
+        _types,
+        typeStack,
+        code,
         createTypeNode('Number', node.position),
-        typeCheckNode(_variables, stack, <AnalyzedExpression>node.lhs),
+        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.lhs, code),
         node.position
       );
       checkValidType(
+        _types,
+        typeStack,
+        code,
         createTypeNode('Number', node.position),
-        typeCheckNode(_variables, stack, <AnalyzedExpression>node.rhs),
+        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
         node.position
       );
       return createTypeNode('Number', node.position);
     case NodeType.LogicExpression: {
-      const typeNode = typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
-      checkValidType(createTypeNode('Boolean', node.position), typeNode, node.position);
+      const typeNode = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        <AnalyzedExpression>node.value,
+        code
+      );
+      checkValidType(
+        _types,
+        typeStack,
+        code,
+        createTypeNode('Boolean', node.position),
+        typeNode,
+        node.position
+      );
       return createTypeNode('Boolean', node.position);
     }
     case NodeType.ParenthesisExpression:
-      return typeCheckNode(_variables, stack, <AnalyzedExpression>node.value);
-    case NodeType.CallExpression:
-      // TODO: Type Check This, we will need union types and to determine the type in the analyzer
+      return typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        <AnalyzedExpression>node.value,
+        code
+      );
+    case NodeType.CallExpression: {
+      const functionReference = <VariableData>_variables.get(<number>node.name.name);
+      const functionType = resolveType(_types, typeStack, functionReference.type);
+      checkValidType(
+        _types,
+        typeStack,
+        code,
+        createTypeNode('Function', node.position),
+        functionReference.type,
+        node.position,
+        `${functionReference.name} is not a Function`
+      );
+      if (functionType.nodeType == NodeType.FunctionSignatureLiteral)
+        return functionType.returnType;
+      // TODO: better type checking here, we Never want to reach this in actual Development
       return createTypeNode('Any', node.position);
+    }
     case NodeType.WasmCallExpression:
       if (node.name.length == 0) {
         BriskTypeError('You must specify the function name', node.position);
         return createTypeNode('Void', node.position);
       } else {
-        const checkArgs = (expected: TypeUsage[], got: TypeUsage[]) => {
-          if (expected.length != got.length)
-            BriskTypeError(`Expected ${expected.length} arguments, got ${got.length} arguments`, node.position);
-          else expected.forEach((arg, i) => checkValidType(arg, got[i], node.position));
-        };
-        // TODO: Add atomic stuff, try to make this code a lot smaller
-        switch (node.name.slice(6)) {
-          // Global
-          // Memory
-          case 'memory.size':
-            checkArgs(
-              [],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'memory.grow':
-            checkArgs(
-              [createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          // TODO: implement memory.init, memory.copy, memory.fill
-          // i32
-          case 'i32.load':
-          case 'i32.load8_s':
-          case 'i32.load8_u':
-          case 'i32.load16_s':
-          case 'i32.load16_u':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.store':
-          case 'i32.store8':
-          case 'i32.store16':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          case 'i32.const':
-            checkArgs(
-              [createTypeNode('Number', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.clz':
-          case 'i32.ctz':
-          case 'i32.popcnt':
-          case 'i32.eqz':
-            checkArgs(
-              [createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.trunc_s.f32':
-          case 'i32.trunc_u.f32':
-          case 'i32.trunc_s_sat.f32':
-          case 'i32.trunc_u_sat.f32':
-          case 'i32.reinterpret':
-            checkArgs(
-              [createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.trunc_s.f64':
-          case 'i32.trunc_u.f64':
-          case 'i32.trunc_s_sat.f64':
-          case 'i32.trunc_u_sat.f64':
-            checkArgs(
-              [createTypeNode('f64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.wrap':
-            checkArgs(
-              [createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          case 'i32.extend8_s':
-          case 'i32.extend16_s':
-          case 'i32.add':
-          case 'i32.sub':
-          case 'i32.mul':
-          case 'i32.div_s':
-          case 'i32.div_u':
-          case 'i32.rem_s':
-          case 'i32.rem_u':
-          case 'i32.and':
-          case 'i32.or':
-          case 'i32.xor':
-          case 'i32.shl':
-          case 'i32.shr_u':
-          case 'i32.shr_s':
-          case 'i32.rotl':
-          case 'i32.rotr':
-          case 'i32.eq':
-          case 'i32.ne':
-          case 'i32.lt_s':
-          case 'i32.lt_u':
-          case 'i32.le_s':
-          case 'i32.le_u':
-          case 'i32.gt_s':
-          case 'i32.gt_u':
-          case 'i32.ge_s':
-          case 'i32.ge_u':
-            checkArgs(
-              [createTypeNode('i32', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i32', node.position);
-          // i64
-          case 'i64.load':
-          case 'i64.load8_s':
-          case 'i64.load8_u':
-          case 'i64.load16_s':
-          case 'i64.load16_u':
-          case 'i64.load32_s':
-          case 'i64.load32_u':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          case 'i64.store':
-          case 'i64.store8':
-          case 'i64.store16':
-          case 'i64.store32':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position), createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          case 'i64.const':
-            checkArgs(
-              [createTypeNode('Number', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          case 'i64.clz':
-          case 'i64.ctz':
-          case 'i64.popcnt':
-          case 'i64.eqz':
-            checkArgs(
-              [createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          case 'i64.trunc_s.f32':
-          case 'i64.trunc_u.f32':
-          case 'i64.trunc_s_sat.f32':
-          case 'i64.trunc_u_sat.f32':
-          case 'i64.reinterpret':
-            checkArgs(
-              [createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          case 'i64.trunc_s.f64':
-          case 'i64.trunc_u.f64':
-          case 'i64.trunc_s_sat.f64':
-          case 'i64.trunc_u_sat.f64':
-            checkArgs(
-              [createTypeNode('f64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          case 'i64.extend8_s':
-          case 'i64.extend16_s':
-          case 'i64.extend32_s':
-          case 'i64.extend_s':
-          case 'i64.extend_u':
-          case 'i64.add':
-          case 'i64.sub':
-          case 'i64.mul':
-          case 'i64.div_s':
-          case 'i64.div_u':
-          case 'i64.rem_s':
-          case 'i64.rem_u':
-          case 'i64.and':
-          case 'i64.or':
-          case 'i64.xor':
-          case 'i64.shl':
-          case 'i64.shr_u':
-          case 'i64.shr_s':
-          case 'i64.rotl':
-          case 'i64.rotr':
-          case 'i64.eq':
-          case 'i64.ne':
-          case 'i64.lt_s':
-          case 'i64.lt_u':
-          case 'i64.le_s':
-          case 'i64.le_u':
-          case 'i64.gt_s':
-          case 'i64.gt_u':
-          case 'i64.ge_s':
-          case 'i64.ge_u':
-            checkArgs(
-              [createTypeNode('i64', node.position), createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('i64', node.position);
-          // f32
-          case 'f32.load':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.store':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position), createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          case 'f32.const':
-          case 'f32.const_bits':
-            checkArgs(
-              [createTypeNode('Number', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.neg':
-          case 'f32.abs':
-          case 'f32.ceil':
-          case 'f32.floor':
-          case 'f32.trunc':
-          case 'f32.nearest':
-          case 'f32.sqrt':
-            checkArgs(
-              [createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.reinterpret':
-          case 'f32.convert_s.i32':
-          case 'f32.convert_u.i32':
-            checkArgs(
-              [createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.convert_s.64':
-          case 'f32.convert_u.64':
-            checkArgs(
-              [createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.demote':
-            checkArgs(
-              [createTypeNode('f64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          case 'f32.add':
-          case 'f32.sub':
-          case 'f32.mul':
-          case 'f32.div':
-          case 'f32.copysign':
-          case 'f32.min':
-          case 'f32.max':
-          case 'f32.eq':
-          case 'f32.ne':
-          case 'f32.lt':
-          case 'f32.le':
-          case 'f32.gt':
-          case 'f32.ge':
-            checkArgs(
-              [createTypeNode('f32', node.position), createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          // f64
-          case 'f64.load':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.store':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position), createTypeNode('i32', node.position), createTypeNode('f64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          case 'f64.const':
-            checkArgs(
-              [createTypeNode('Number', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.const_bits':
-            checkArgs(
-              [createTypeNode('Number', node.position), createTypeNode('Number', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.neg':
-          case 'f64.abs':
-          case 'f64.ceil':
-          case 'f64.floor':
-          case 'f64.trunc':
-          case 'f64.nearest':
-          case 'f64.sqrt':
-            checkArgs(
-              [createTypeNode('f64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.convert_s.i32':
-          case 'f64.convert_u.i32':
-            checkArgs(
-              [createTypeNode('i32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.reinterpret':
-          case 'f64.convert_s.64':
-          case 'f64.convert_u.64':
-            checkArgs(
-              [createTypeNode('i64', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.promote':
-            checkArgs(
-              [createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f64', node.position);
-          case 'f64.add':
-          case 'f64.sub':
-          case 'f64.mul':
-          case 'f64.div':
-          case 'f64.copysign':
-          case 'f64.min':
-          case 'f64.max':
-          case 'f64.eq':
-          case 'f64.ne':
-          case 'f64.lt':
-          case 'f64.le':
-          case 'f64.gt':
-          case 'f64.ge':
-            checkArgs(
-              [createTypeNode('f32', node.position), createTypeNode('f32', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('f32', node.position);
-          // General Projects
-          case 'drop':
-            checkArgs(
-              [createTypeNode('Any', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          case 'return':
-            // TODO: this isnt meant to be any it is meant to be specific to the function
-            checkArgs(
-              [createTypeNode('Any', node.position)],
-              node.args.map(arg => typeCheckNode(_variables, stack, <AnalyzedExpression>arg))
-            );
-            return createTypeNode('Void', node.position);
-          // Other
-          default:
+        const instructionPath = node.name.slice(6).split('.');
+        let _instructions:
+          | ((position: Position) => FunctionSignatureLiteralNode)
+          | WasmInstruction = instructions;
+        for (const pathSegment of instructionPath) {
+          if (typeof _instructions == 'function') {
             BriskTypeError(`Unknown Wasm Instruction \`${node.name}\``, node.position);
-            return createTypeNode('Void', node.position);
+          } else if (
+            typeof _instructions == 'object' &&
+            _instructions != null &&
+            _instructions.hasOwnProperty(pathSegment)
+          ) {
+            _instructions = _instructions[pathSegment];
+          }
+        }
+        if (typeof _instructions == 'function') {
+          return _instructions(node.position);
+        } else {
+          BriskTypeError(`Unknown Wasm Instruction \`${node.name}\``, node.position);
+          return createTypeNode('Void', node.position);
         }
       }
     // Literals
     case NodeType.FunctionLiteral:
-      node.params.forEach(param => typeCheckNode(_variables, node.stack, param));
-      typeCheckNode(_variables, node.stack, <AnalyzerNode>node.body);
-      return createTypeNode('Function', node.position);
+      typeCheckNode(_types, node.typeStack, _variables, node.stack, <AnalyzerNode>node.body, code);
+      return {
+        nodeType: NodeType.FunctionSignatureLiteral,
+        category: NodeCategory.Type,
+        params: node.params.map((param) =>
+          typeCheckNode(_types, node.typeStack, _variables, node.stack, param, code)
+        ),
+        returnType: node.returnType,
+        position: node.position,
+      };
     case NodeType.StringLiteral:
       return createTypeNode('String', node.position);
     case NodeType.I32Literal:
@@ -490,14 +421,21 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
     case NodeType.ConstantLiteral:
       if (node.value == 'true' || node.value == 'false') {
         return createTypeNode('Boolean', node.position);
+      } else if (node.value != 'void') {
+        BriskTypeError(`Unknown Constant Literal \`${node.value}\``, node.position);
       }
       // Then it is void
       return createTypeNode('Void', node.position);
+    // Types
+    case NodeType.TypeAliasDefinition:
+      return createTypeNode('Void', node.position);
+    case NodeType.InterfaceDefinition:
+      return createTypeNode('Void', node.position);
     // Variables
     case NodeType.VariableUsage:
-      return (<VariableData><unknown>_variables.get(<number>node.name)).type;
+      return (<VariableData>(<unknown>_variables.get(<number>node.name))).type;
     case NodeType.MemberAccess:
-      // TODO: We need to build ways to store these and figure out how we are gonna store objects
+      // TODO: We Need To Program This
       BriskTypeError('Add Support for member access types', node.position);
       return createTypeNode('Void', node.position);
     case NodeType.Parameter:
@@ -506,13 +444,12 @@ const typeCheckNode = (_variables: VariableMap, stack: VariableStack, node: Anal
     case NodeType.FlagStatement:
       return createTypeNode('Void', node.position);
     // Other
-    // Uncomment this when adding new nodes
     default:
-      BriskTypeError('TypeChecker: Unknown Node Type', node.position);
+      BriskTypeError(`TypeChecker: Unknown Node Type: ${node.nodeType}`, node.position);
       return createTypeNode('Void', node.position);
   }
 };
-const typeCheck = (program: AnalyzedProgramNode) => {
-  typeCheckNode(program.variables, program.stack, program);
+const typeCheck = (program: AnalyzedProgramNode, code: string) => {
+  typeCheckNode(program.types, program.typeStack, program.variables, program.stack, program, code);
 };
 export default typeCheck;

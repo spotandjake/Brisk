@@ -30,7 +30,8 @@
       }
     },
     "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
+      "^(\\.{1,2}/.*)\\.js$": "$1",
+      "^@brisk/(.*)$": "<rootDir>/__tests__/mocks/$1"
     },
     "testMatch": [
       "**/__tests__/**/*.test.ts"
@@ -43,7 +44,7 @@
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
-    "eslint": "^8.6.0",
+    "eslint": "7.32.0",
     "gulp": "^4.0.2",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",

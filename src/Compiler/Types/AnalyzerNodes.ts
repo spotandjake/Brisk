@@ -1,4 +1,11 @@
-import Node, { Expression, ProgramNode, BlockStatementNode, FunctionLiteralNode, VariableDefinitionNode, TypeLiteral } from './ParseNodes';
+import Node, {
+  Expression,
+  ProgramNode,
+  BlockStatementNode,
+  FunctionLiteralNode,
+  VariableDefinitionNode,
+  TypeLiteral,
+} from './ParseNodes';
 
 export interface TypeData {
   name: string;
@@ -40,9 +47,12 @@ export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {
 }
 
 export type AnalyzerNode =
-  AnalyzedProgramNode | AnalyzedBlockStatementNode | AnalyzedFunctionLiteralNode |
-  AnalyzedVariableDefinitionNode |
-  Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode | VariableDefinitionNode>
-  ;
-export type AnalyzedExpression = AnalyzedFunctionLiteralNode | Exclude<Expression, FunctionLiteralNode>;
+  | AnalyzedProgramNode
+  | AnalyzedBlockStatementNode
+  | AnalyzedFunctionLiteralNode
+  | AnalyzedVariableDefinitionNode
+  | Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode | VariableDefinitionNode>;
+export type AnalyzedExpression =
+  | AnalyzedFunctionLiteralNode
+  | Exclude<Expression, FunctionLiteralNode>;
 export default AnalyzerNode;

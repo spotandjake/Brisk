@@ -17,10 +17,10 @@ rules:
   no-unreachable: warn
   no-eval: warn
   vars-on-top: warn
-  '@typescript-eslint/no-unused-vars': 
+  '@typescript-eslint/no-unused-vars':
     - warn
     - args: none
-  indent: 
+  indent:
     - warn
     - 2
     - SwitchCase: 1
@@ -35,3 +35,4 @@ rules:
   prefer-const: warn
   prefer-template: error
   no-prototype-builtins: 0
+  max-len: ['warn', 100, 2, { 'ignoreComments': true, 'ignoreStrings': true }]
