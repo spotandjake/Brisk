@@ -13,7 +13,7 @@ class Parser extends EmbeddedActionsParser {
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
       maxLookahead: 3,
-      skipValidations: __DEBUG__,
+      skipValidations: !__DEBUG__,
       errorMessageProvider: ErrorProvider(file),
     });
     this.file = file;
@@ -424,7 +424,32 @@ class Parser extends EmbeddedActionsParser {
       {
         ALT: () => this.SUBRULE(this.wasmCallExpression),
       },
+      {
+        ALT: () => this.SUBRULE(this.castExpression),
+      },
     ]);
+  });
+  private castExpression = this.RULE('CaseExpression', (): Nodes.TypeCastExpressionNode => {
+    const location = this.CONSUME(Tokens.TknComparisonLessThan);
+    this.SUBRULE(this.wss);
+    const castType = this.SUBRULE(this.typeLiteral);
+    this.SUBRULE1(this.wss);
+    this.CONSUME(Tokens.TknComparisonGreaterThan);
+    this.SUBRULE2(this.wss);
+    const value = this.SUBRULE(this.simpleExpression);
+    return {
+      nodeType: Nodes.NodeType.TypeCastExpression,
+      category: Nodes.NodeCategory.Expression,
+      castType: castType,
+      value: value,
+      position: {
+        offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
   });
   private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
     const logicalOperatorToken = this.CONSUME(Tokens.logicalOperators);
@@ -781,11 +806,7 @@ class Parser extends EmbeddedActionsParser {
     ]);
   });
   private typeLiteral = this.RULE('TypeLiteral', (): Nodes.TypeLiteral => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
-      { ALT: () => this.SUBRULE(this.InterfaceTypeLiteral) },
-      { ALT: () => this.SUBRULE(this.typeUsageNode) },
-    ]);
+    return this.SUBRULE(this.typeUnionLiteral);
   });
   // Type Definition
   private typeAlias = this.RULE('TypeAliasDefinition', (): Nodes.TypeAliasDefinitionNode => {
@@ -834,6 +855,58 @@ class Parser extends EmbeddedActionsParser {
     }
   );
   // TypeLiteral
+  private typeUnionLiteral = this.RULE(
+    'TypeUnionLiteral',
+    (): Nodes.TypeLiteral | Nodes.TypeUnionLiteralNode => {
+      const types: Nodes.TypeLiteral[] = [];
+      const lhs = this.SUBRULE(this._typeLiteral);
+      this.SUBRULE(this.wss);
+      this.MANY(() => {
+        this.CONSUME(Tokens.TknUnion);
+        this.SUBRULE1(this.wss);
+        types.push(this.SUBRULE1(this._typeLiteral));
+        this.SUBRULE2(this.wss);
+      });
+      if (types.length == 0) {
+        return lhs;
+      } else {
+        return {
+          nodeType: Nodes.NodeType.TypeUnionLiteral,
+          category: Nodes.NodeCategory.Type,
+          types: [lhs, ...types],
+          position: lhs.position,
+        };
+      }
+    }
+  );
+  private _typeLiteral = this.RULE('_TypeLiteral', (): Nodes.TypeLiteral => {
+    return this.OR([
+      // TODO: fix this
+      // { ALT: () => this.SUBRULE(this.parenthesisType), IGNORE_AMBIGUITIES: true },
+      { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
+      { ALT: () => this.SUBRULE(this.InterfaceTypeLiteral) },
+      { ALT: () => this.SUBRULE(this.typeUsageNode) },
+    ]);
+  });
+  private parenthesisType = this.RULE('ParenthesisType', (): Nodes.ParenthesisTypeLiteralNode => {
+    const location = this.CONSUME(Tokens.TknLParen);
+    this.SUBRULE(this.wss);
+    const value = this.SUBRULE(this.typeLiteral);
+    this.SUBRULE1(this.wss);
+    this.CONSUME(Tokens.TknRParen);
+    return {
+      nodeType: Nodes.NodeType.ParenthesisTypeLiteral,
+      category: Nodes.NodeCategory.Type,
+      value: value,
+      position: {
+        offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
   private functionSignatureLiteral = this.RULE(
     'functionSignatureLiteral',
     (): Nodes.FunctionSignatureLiteralNode => {

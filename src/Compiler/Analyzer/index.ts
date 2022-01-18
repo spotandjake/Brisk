@@ -549,6 +549,34 @@ const analyzeNode = <T extends AllNodes>(
       typeStack.set(<string>node.name, _types.size - 1);
       node.name = _variables.size - 1;
       break;
+    case NodeType.TypeUnionLiteral:
+      node.types = node.types.map((t) =>
+        analyzeNode(
+          _types,
+          typeStacks,
+          typeStackMap,
+          _variables,
+          stacks,
+          closureMap,
+          stackMap,
+          node,
+          t
+        )
+      );
+      break;
+    case NodeType.ParenthesisTypeLiteral:
+      node.value = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        node.value
+      );
+      break;
     case NodeType.FunctionSignatureLiteral:
       node.params = node.params.map((param) =>
         analyzeNode(
@@ -628,6 +656,7 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
     case NodeType.TypePrimLiteral:
+    case NodeType.TypeCastExpression:
       break;
     // Other
     // Uncomment this when adding new nodes

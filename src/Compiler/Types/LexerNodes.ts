@@ -5,6 +5,7 @@ export const enum LexerTokenType {
   Literals = 'Literals',
   Separators = 'Separators',
   Operators = 'Operators',
+  Reserved = 'Reserved',
   ComparisonOperators = 'ComparisonOperators',
   AssignmentOperators = 'AssignmentOperators',
   ArithmeticOperators = 'ArithmeticOperators',
@@ -63,6 +64,15 @@ export const enum LexerTokenType {
   TknNumberLiteral = 'Number',
   TknConstantLiteral = 'Constant',
   TknWasmCall = 'Wasm Instruction Call',
+  // Reserved Tokens
+  TknEnum = 'TknEnum',
+  TknMatch = 'TknMatch',
+  TknClass = 'TknClass',
+  TknImplements = 'TknImplements',
+  TknFor = 'TknFor',
+  TknWhile = 'TknWhile',
+  TknAwait = 'TknAwait',
+  TknAsync = 'TknAsync',
   // Other
 
   TknFlag = 'TknFlag',

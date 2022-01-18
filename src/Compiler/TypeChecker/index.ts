@@ -35,6 +35,18 @@ const resolveType = (
   switch (givenType.nodeType) {
     case NodeType.TypePrimLiteral:
       return givenType;
+    case NodeType.TypeUnionLiteral: {
+      givenType.types = givenType.types.map((t) => resolveType(_types, typeStack, t));
+      const types: TypeLiteral[] = [];
+      for (const subType of givenType.types) {
+        if (!types.some((_subType) => typeMatch(_types, typeStack, _subType, subType)))
+          types.push(subType);
+      }
+      givenType.types = types;
+      return givenType;
+    }
+    case NodeType.ParenthesisTypeLiteral:
+      return resolveType(_types, typeStack, givenType.value);
     case NodeType.FunctionSignatureLiteral:
       givenType.params = givenType.params.map((param) => resolveType(_types, typeStack, param));
       givenType.returnType = resolveType(_types, typeStack, givenType.returnType);
@@ -67,6 +79,25 @@ const typeMatch = (
   const expected = resolveType(_types, typeStack, _expected);
   if (got.nodeType == NodeType.TypePrimLiteral && got.name == 'Any') return true;
   if (expected.nodeType == NodeType.TypePrimLiteral && expected.name == 'Any') return true;
+  // Deal with union types
+  if (got.nodeType == NodeType.TypeUnionLiteral && expected.nodeType == NodeType.TypeUnionLiteral) {
+    if (expected.types.length > got.types.length) return false;
+    for (const _subType of expected.types) {
+      const subType = resolveType(_types, typeStack, _subType);
+      if (!got.types.some((t) => typeMatch(_types, typeStack, t, subType))) return false;
+    }
+    return true;
+  }
+  if (got.nodeType == NodeType.TypeUnionLiteral) {
+    for (const subType of got.types) {
+      if (typeMatch(_types, typeStack, subType, expected)) return true;
+    }
+  }
+  if (expected.nodeType == NodeType.TypeUnionLiteral) {
+    for (const subType of expected.types) {
+      if (typeMatch(_types, typeStack, subType, got)) return true;
+    }
+  }
   // Matching Logic
   if (got.nodeType == expected.nodeType) {
     // Check PrimLiteral Types Are Same
@@ -123,7 +154,9 @@ const typeMatch = (
 };
 const prettyName = (_types: TypeMap, typeStack: TypeStack, _givenType: TypeLiteral): string => {
   const givenType = resolveType(_types, typeStack, _givenType);
-  if (givenType.nodeType == NodeType.FunctionSignatureLiteral) {
+  if (_givenType.nodeType == NodeType.ParenthesisTypeLiteral) {
+    return `(${prettyName(_types, typeStack, _givenType.value)})`;
+  } else if (givenType.nodeType == NodeType.FunctionSignatureLiteral) {
     return `(${givenType.params
       .map((param) => prettyName(_types, typeStack, param))
       .join(', ')}) => ${prettyName(_types, typeStack, givenType.returnType)}`;
@@ -131,6 +164,10 @@ const prettyName = (_types: TypeMap, typeStack: TypeStack, _givenType: TypeLiter
     return `interface {\n${givenType.fields
       .map((field) => `  ${field.name}: ${prettyName(_types, typeStack, field.fieldType)};\n`)
       .join('')}}`; // TODO: Format This Nicely
+  } else if (givenType.nodeType == NodeType.TypeUnionLiteral) {
+    return `${givenType.types.map((t) => prettyName(_types, typeStack, t)).join(' | ')}`;
+  } else if (givenType.nodeType == NodeType.ParenthesisTypeLiteral) {
+    return `(${prettyName(_types, typeStack, givenType.value)})`;
   } else {
     return typeof givenType.name == 'number' && _types.has(givenType.name)
       ? (<TypeData>_types.get(givenType.name)).name
@@ -318,6 +355,10 @@ const typeCheckNode = (
         node.position
       );
       return createTypeNode('Number', node.position);
+    case NodeType.TypeCastExpression:
+      // TODO: Add Logic For This
+      BriskTypeError('Add Logic For TypeCasting', node.position);
+      return createTypeNode('Void', node.position);
     case NodeType.LogicExpression: {
       const typeNode = typeCheckNode(
         _types,

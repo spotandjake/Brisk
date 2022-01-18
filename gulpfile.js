@@ -16,10 +16,10 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
       swc({
         jsc: {
           minify: {
-            mangle: true
+            mangle: true,
           },
           parser: {
-            syntax: 'typescript'
+            syntax: 'typescript',
           },
           target: 'es2022',
           transform: {
@@ -27,21 +27,21 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
               globals: {
                 '@brisk/config': {
                   __DEBUG__: `${debug}`,
-                  __VERSION__: `'${config.version}'`
-                }
-              }
-            }
-          }
+                  __VERSION__: `'${config.version}'`,
+                },
+              },
+            },
+          },
         },
         minify: true,
-        sourceMaps: true
+        sourceMaps: true,
       }),
       nodeResolve({
         extensions: ['.js', '.ts', '.mjs', '.json'],
         preferBuilitns: true,
-        modulesOnly: true
-      })
-    ]
+        modulesOnly: true,
+      }),
+    ],
   });
   await bundle.write({
     file: output,
@@ -52,7 +52,7 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
     preferConst: true,
     generatedCode: {
       constBindings: true,
-      objectShorthand: true
+      objectShorthand: true,
     },
     sourcemap: true,
   });
@@ -60,41 +60,51 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
 // Gulp Tasks
 gulp.task('build', async () => {
   // Get the size of the original bundle
-  const oldCode = fs.existsSync('./dist/brisk.js') ? await fs.promises.readFile('./dist/brisk.js', 'utf-8') : '';
+  const oldCode = fs.existsSync('./dist/brisk.js')
+    ? await fs.promises.readFile('./dist/brisk.js', 'utf-8')
+    : '';
   const previousStats = {
     chars: oldCode.length,
     lines: oldCode.split('\n').length,
-    blanks: oldCode.split('\n').filter(n => n.trim() == '').length,
-    comments: oldCode.split('\n').filter(n => n.trim().startsWith('//')).length
+    blanks: oldCode.split('\n').filter((n) => n.trim() == '').length,
+    comments: oldCode.split('\n').filter((n) => n.trim().startsWith('//')).length,
   };
   // Clean the original
   await gulp.series('clean')();
   // Build the Compiler
   await compileTypeScriptFile('brisk', './src/cli/index.ts', './dist/brisk.js', true);
   // Get new size
-  const newCode = fs.existsSync('./dist/brisk.js') ? await fs.promises.readFile('./dist/brisk.js', 'utf-8') : '';
+  const newCode = fs.existsSync('./dist/brisk.js')
+    ? await fs.promises.readFile('./dist/brisk.js', 'utf-8')
+    : '';
   const stats = {
     chars: newCode.length,
     lines: newCode.split('\n').length,
-    blanks: newCode.split('\n').filter(n => n.trim() == '').length,
-    comments: newCode.split('\n').filter(n => n.trim().startsWith('//')).length
+    blanks: newCode.split('\n').filter((n) => n.trim() == '').length,
+    comments: newCode.split('\n').filter((n) => n.trim().startsWith('//')).length,
   };
   console.table({
     previous: {
       ...previousStats,
-      code: previousStats.lines - previousStats.blanks - previousStats.comments
+      code: previousStats.lines - previousStats.blanks - previousStats.comments,
     },
     current: {
       ...stats,
-      code: stats.lines - stats.blanks - stats.comments
+      code: stats.lines - stats.blanks - stats.comments,
     },
     reduction: {
       chars: previousStats.chars - newCode.length,
       lines: previousStats.lines - newCode.split('\n').length,
-      blanks: previousStats.blanks - newCode.split('\n').filter(n => n.trim() == '').length,
-      comments: previousStats.comments - newCode.split('\n').filter(n => n.trim().startsWith('//')).length,
-      code: (previousStats.lines - previousStats.blanks - previousStats.comments) - (stats.lines - stats.blanks - stats.comments)
-    }
+      blanks: previousStats.blanks - newCode.split('\n').filter((n) => n.trim() == '').length,
+      comments:
+        previousStats.comments -
+        newCode.split('\n').filter((n) => n.trim().startsWith('//')).length,
+      code:
+        previousStats.lines -
+        previousStats.blanks -
+        previousStats.comments -
+        (stats.lines - stats.blanks - stats.comments),
+    },
   });
 });
 gulp.task('clean', async () => {
@@ -108,5 +118,10 @@ gulp.task('mock', async () => {
   if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
   await fs.promises.mkdir(folder);
   // Build the Compiler
-  await compileTypeScriptFile('Brisk-Test-Data', './__tests__/Data.ts', './__tests__/dist/Data.js', false);
+  await compileTypeScriptFile(
+    'Brisk-Test-Data',
+    './__tests__/Data.ts',
+    './__tests__/dist/Data.js',
+    false
+  );
 });

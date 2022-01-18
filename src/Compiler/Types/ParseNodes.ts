@@ -16,6 +16,7 @@ export const enum NodeType {
   // Expressions
   ComparisonExpression,
   ArithmeticExpression,
+  TypeCastExpression,
   LogicExpression,
   ParenthesisExpression,
   CallExpression,
@@ -35,6 +36,8 @@ export const enum NodeType {
   TypeAliasDefinition,
   InterfaceDefinition,
   TypePrimLiteral,
+  TypeUnionLiteral,
+  ParenthesisTypeLiteral,
   FunctionSignatureLiteral,
   InterfaceLiteral,
   InterfaceField,
@@ -159,6 +162,7 @@ export const enum LogicalExpressionOperator {
 export type Expression =
   | ComparisonExpressionNode
   | ArithmeticExpressionNode
+  | TypeCastExpressionNode
   | LogicExpressionNode
   | ParenthesisExpressionNode
   | CallExpressionNode
@@ -179,6 +183,13 @@ export interface ArithmeticExpressionNode {
   lhs: Expression;
   operator: ArithmeticExpressionOperator;
   rhs: Expression;
+  position: Position;
+}
+export interface TypeCastExpressionNode {
+  nodeType: NodeType.TypeCastExpression;
+  category: NodeCategory.Expression;
+  castType: TypeLiteral;
+  value: Expression;
   position: Position;
 }
 export interface LogicExpressionNode {
@@ -288,6 +299,8 @@ export interface FunctionLiteralNode {
 export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
 export type TypeLiteral =
   | TypePrimLiteralNode
+  | TypeUnionLiteralNode
+  | ParenthesisTypeLiteralNode
   | FunctionSignatureLiteralNode
   | InterfaceLiteralNode
   | TypeUsageNode;
@@ -339,6 +352,18 @@ export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
   category: NodeCategory.Type;
   name: PrimTypes;
+  position: Position;
+}
+export interface TypeUnionLiteralNode {
+  nodeType: NodeType.TypeUnionLiteral;
+  category: NodeCategory.Type;
+  types: TypeLiteral[];
+  position: Position;
+}
+export interface ParenthesisTypeLiteralNode {
+  nodeType: NodeType.ParenthesisTypeLiteral;
+  category: NodeCategory.Type;
+  value: TypeLiteral;
   position: Position;
 }
 export interface FunctionSignatureLiteralNode {

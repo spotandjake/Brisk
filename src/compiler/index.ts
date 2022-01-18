@@ -6,7 +6,7 @@ import typeCheck from './TypeChecker/index';
 const compile = (program: string, file: string) => {
   // Compilation Steps
   // 1. Lex
-  const lexed = lex(program);
+  const lexed = lex(program, file);
   // 2. Parse
   const parsed = parse(lexed, file);
   if (parsed == undefined) {

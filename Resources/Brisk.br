@@ -4,11 +4,11 @@ if (1n == 1n) {
 // {
 //   const a: i32 = 1n;
 // };
-interface Test {
-  field1: i32;
-  field2: (i32, i32) -> i32;
-  field3: i64;
-};
+// interface Test {
+//   field1: i32;
+//   field2: (i32, i32) -> i32;
+//   field3: i64;
+// };
 // type v = i32;
 // type a = v;
 // let a: a = 1n;
@@ -52,11 +52,24 @@ interface Test {
 // let d: Number = a;
 // let t: Number = 1;
 // // let e: Number = t.t;
-type Func = i32;
-let z: Func = (a: i32): Number => {
-  @wasm.return(a);
+// type Func = Function;
+// let z: Func = (a: i32): Number => {
+//   @wasm.return(a);
+// };
+// z(1n);
+// TODO: Test
+type Dat = (i32) -> Number | i64;
+const n: Dat = (a: i32): Number | i32 => {
+  let i: i32 = 1n;
 };
-z(1n);
+enum
+// type Data = i32 | i64 | Number;
+// type Data = ((i32) -> i32 | Number);
+// type Data = (i32) -> i32 | Number;
+// const n: Data = 1n;
+// const t: (Number) -> Number = (x: i32): Number => {
+//   let n: Number = x + 1;
+// };
 // const h: Number = 1;
 
 // // Export Tests
