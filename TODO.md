@@ -32,10 +32,17 @@
   + [ ] Fuzzy Tests
   + [ ] Improve Tests
   + [ ] Fix `// TODO:`
-+ [ ] Tasks For Sunday
++ [ ] Tasks For Sunday & Monday
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
+  + [ ] Determine Syntax For Wasm Reference Types
   + [ ] Start CodeGen
+    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
++ [ ] Tasks for Tuesday
+  + [ ] Look Into Writing Linker
+    + [ ] Find Way To Parse Without Binaryen
+    + [ ] Find Way To Compile Without Binaryen
+    + [ ] Find Way To Optimize Without Binaryen
 # General Tasks / Some Are Duplicated Of Above
 + [ ] Start working on type system
   + [ ] Refactor parser types into type literals and type 
@@ -131,6 +138,7 @@
           + [x] Numeric Separators
         + [ ] Objects
         + [ ] Arrays
+        + [ ] Wasm Interface Types Interaction
       + [ ] Types
         + [ ] Type Literals
           + [ ] Interfaces
