@@ -1,5 +1,5 @@
 // Test Utils
-import { jest, test, expect } from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import { ILexingResult } from 'chevrotain';
 import fs from 'fs';
 // Test Components
@@ -17,7 +17,7 @@ test('Parser: Main Pass', () => {
         ...tkn,
         tokenType: Tokens.find((token) => token.name === tkn.tokenType),
       };
-    })
+    }),
   };
   expect(parse(Parser_Main, 'file')).toMatchSnapshot();
 });
@@ -31,7 +31,7 @@ test('Parser: Literals Pass', () => {
         ...tkn,
         tokenType: Tokens.find((token) => token.name === tkn.tokenType),
       };
-    })
+    }),
   };
   expect(parse(Parser_Main, 'file')).toMatchSnapshot();
 });

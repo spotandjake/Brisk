@@ -1,5 +1,5 @@
 // Test Utils
-import { jest, test, expect } from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import fs from 'fs';
 // Test Components
 import lex from '../../src/Compiler/Lexer/index';
@@ -10,14 +10,14 @@ const Export_Pass = fs.readFileSync('./__tests__/Data/Lexer/Export_Pass.br', 'ut
 const Literals_Pass = fs.readFileSync('./__tests__/Data/Lexer/Literals_pass.br', 'utf8');
 // Lexer Tests
 test('Lexer: Pass', () => {
-  expect(lex(Lexer_Pass)).toMatchSnapshot();
+  expect(lex(Lexer_Pass, 'file')).toMatchSnapshot();
 });
 test('Lexer: Import Pass', () => {
-  expect(lex(Import_Pass)).toMatchSnapshot();
+  expect(lex(Import_Pass, 'file')).toMatchSnapshot();
 });
 test('Lexer: Export Pass', () => {
-  expect(lex(Export_Pass)).toMatchSnapshot();
+  expect(lex(Export_Pass, 'file')).toMatchSnapshot();
 });
 test('Lexer: Literals Pass', () => {
-  expect(lex(Literals_Pass)).toMatchSnapshot();
+  expect(lex(Literals_Pass, 'file')).toMatchSnapshot();
 });

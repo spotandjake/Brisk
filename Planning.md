@@ -146,3 +146,19 @@ interface Test {
 }
 ```
 user defined types must start with a capital letter, we need some way of resolving recursive types
+
+# Bootstrapping
++ [ ] Before We Can BootStrap
+  + [ ] Replace Binaryen
+    + [ ] Look into https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js
+  + [ ] Replace Chevrotain
+    + [ ] Lexer
+      + [ ] Custom Lexer
+    + [ ] Parser
+      + [ ] Custom Parser
+  + [ ] Must Hit MVP
+  + [ ] Convert Most of brisk into brisk macros and runtime / compiler features
+    + [ ] We want to do this to increase the value of the language while lowering the complexity of the compiler
+    + [ ] what does this mean
+      + [ ] Defining things such as The Number data type directly in brisk
+      + [ ] Converting Closures to be compiled macros that are given operators

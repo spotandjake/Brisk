@@ -5,6 +5,7 @@ import {
   PrimTypes,
   FunctionSignatureLiteralNode,
   TypePrimLiteralNode,
+  TypeUnionLiteralNode,
 } from '../Types/ParseNodes';
 import { Position } from '../Types/Types';
 import {
@@ -21,12 +22,26 @@ import {
 import { BriskTypeError } from '../Errors/Compiler';
 import { instructions, WasmInstruction } from './WasmTypes';
 
-const createTypeNode = (name: PrimTypes, position: Position): TypePrimLiteralNode => ({
-  nodeType: NodeType.TypePrimLiteral,
-  category: NodeCategory.Type,
-  name: name,
-  position: position,
-});
+const createTypeNode = (
+  name: PrimTypes | PrimTypes[],
+  position: Position
+): TypePrimLiteralNode | TypeUnionLiteralNode => {
+  if (Array.isArray(name)) {
+    return {
+      nodeType: NodeType.TypeUnionLiteral,
+      category: NodeCategory.Type,
+      types: name.map((n) => createTypeNode(n, position)),
+      position,
+    };
+  } else {
+    return {
+      nodeType: NodeType.TypePrimLiteral,
+      category: NodeCategory.Type,
+      name: name,
+      position: position,
+    };
+  }
+};
 const resolveType = (
   _types: TypeMap,
   typeStack: TypeStack,
@@ -58,7 +73,6 @@ const resolveType = (
       });
       return givenType;
     case NodeType.TypeUsage:
-      // TODO: I think we need to check the typeStack
       if (_types.has(<number>givenType.name)) {
         //@ts-ignore
         return resolveType(_types, typeStack, _types.get(<number>givenType.name).type);
@@ -186,7 +200,7 @@ const checkValidType = (
   if (!typeMatch(_types, typeStack, got, expected)) {
     // Create Detailed Error Message
     const width = process.stdout.columns || 80;
-    const offset = got.position.offset;
+    const offset = position.offset;
 
     let startOfLine = code.lastIndexOf('\n', offset);
     let endOfLine = code.indexOf('\n', offset);
@@ -203,12 +217,12 @@ const checkValidType = (
       }
     }
     const line =
-      got.position.length == 0
+      position.length == 0
         ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
         : `\x1b[0m${code.slice(startOfLine + 1, offset)}\x1b[31m\x1b[1m${code.slice(
           offset,
-          offset + got.position.length + 1
-        )}\x1b[0m${code.slice(offset + got.position.length + 1, endOfLine)}`;
+          offset + position.length
+        )}\x1b[0m${code.slice(offset + position.length, endOfLine)}`;
     // After Message
     const afterMessage = code.slice(
       endOfLine + 1,
@@ -217,20 +231,20 @@ const checkValidType = (
     if (afterMessage.length >= width * 2) afterMessage.slice(width * 2);
     // Build message
     const msg = [
-      'Mismatch Type',
+      'Type Mismatch',
       line,
-      `\x1b[31m\x1b[1m${' '.repeat(offset - startOfLine)}${'^'.repeat(
-        (got.position.length || 5) + 1
-      )} expected ${prettyName(_types, typeStack, got)} got ${prettyName(
+      `\x1b[31m\x1b[1m${' '.repeat(offset - startOfLine - 1)}${'^'.repeat(
+        position.length || 5
+      )} expected ${prettyName(_types, typeStack, expected)} got ${prettyName(
         _types,
         typeStack,
-        expected
+        got
       )}, ${message} \x1b[0m`
         .split('\n')
         .map((text, i) =>
           i == 0
             ? text
-            : `${' '.repeat(offset - startOfLine + ((got.position.length || 5) + 2))}${text}`
+            : `${' '.repeat(offset - startOfLine + ((position.length || 5) + 2))}${text}`
         )
         .join('\n'),
       afterMessage,
@@ -298,7 +312,7 @@ const typeCheckNode = (
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
     case NodeType.ExportStatement:
-      // TODO: We Need to Determine Get the type from these for creating a type map
+      // TODO: We Need to Get the type from these for creating a type map
       return createTypeNode('Void', node.position);
     case NodeType.DeclarationStatement: {
       const typeNode = typeCheckNode(
@@ -309,7 +323,7 @@ const typeCheckNode = (
         <AnalyzedExpression>node.value,
         code
       );
-      checkValidType(_types, typeStack, code, typeNode, node.varType, node.position);
+      checkValidType(_types, typeStack, code, node.varType, typeNode, node.value.position);
       return createTypeNode('Void', node.position);
     }
     case NodeType.AssignmentStatement: {
@@ -333,28 +347,38 @@ const typeCheckNode = (
         code,
         typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.lhs, code),
         typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
-        node.position,
+        node.rhs.position,
         'lhs must match rhs'
       );
       return createTypeNode('Boolean', node.position);
-    case NodeType.ArithmeticExpression:
-      checkValidType(
+    case NodeType.ArithmeticExpression: {
+      const lhs = typeCheckNode(
         _types,
         typeStack,
-        code,
-        createTypeNode('Number', node.position),
-        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.lhs, code),
-        node.position
+        _variables,
+        stack,
+        <AnalyzedExpression>node.lhs,
+        code
       );
       checkValidType(
         _types,
         typeStack,
         code,
-        createTypeNode('Number', node.position),
+        createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64', 'u32', 'u64'], node.position),
+        lhs,
+        node.lhs.position
+      );
+      checkValidType(
+        _types,
+        typeStack,
+        code,
+        lhs,
         typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
-        node.position
+        node.rhs.position,
+        'lhs must match rhs'
       );
-      return createTypeNode('Number', node.position);
+      return lhs;
+    }
     case NodeType.TypeCastExpression:
       // TODO: Add Logic For This
       BriskTypeError('Add Logic For TypeCasting', node.position);

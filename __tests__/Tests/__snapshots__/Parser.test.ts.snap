@@ -9,17 +9,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 2,
         "offset": 19,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 15,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 2,
           "offset": 33,
         },
@@ -28,11 +28,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 2,
           "offset": 26,
         },
@@ -44,17 +44,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 3,
         "offset": 42,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 42,
           "file": "file",
-          "length": 6,
+          "length": 7,
           "line": 3,
           "offset": 83,
         },
@@ -62,16 +62,16 @@ Object {
       },
       "typeSignature": Object {
         "category": 4,
-        "nodeType": 28,
+        "nodeType": 31,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 31,
+            "nodeType": 34,
             "position": Object {
               "col": 21,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 3,
               "offset": 62,
             },
@@ -80,18 +80,18 @@ Object {
         "position": Object {
           "col": 20,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 3,
           "offset": 61,
         },
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 32,
             "file": "file",
-            "length": 3,
+            "length": 4,
             "line": 3,
             "offset": 73,
           },
@@ -100,11 +100,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 3,
           "offset": 54,
         },
@@ -116,17 +116,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 4,
         "offset": 93,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 32,
           "file": "file",
-          "length": 6,
+          "length": 7,
           "line": 4,
           "offset": 124,
         },
@@ -134,23 +134,23 @@ Object {
       },
       "typeSignature": Object {
         "category": 4,
-        "nodeType": 28,
+        "nodeType": 31,
         "params": Array [],
         "position": Object {
           "col": 16,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 4,
           "offset": 108,
         },
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 22,
             "file": "file",
-            "length": 3,
+            "length": 4,
             "line": 4,
             "offset": 114,
           },
@@ -159,11 +159,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 4,
           "offset": 105,
         },
@@ -175,17 +175,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 5,
         "offset": 134,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 25,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 5,
           "offset": 158,
         },
@@ -194,11 +194,11 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 16,
           "file": "file",
-          "length": 2,
+          "length": 3,
           "line": 5,
           "offset": 149,
         },
@@ -206,11 +206,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "b",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 5,
           "offset": 146,
         },
@@ -222,17 +222,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 6,
         "offset": 167,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 33,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 199,
         },
@@ -241,11 +241,11 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 21,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 187,
         },
@@ -253,11 +253,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "return",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 179,
         },
@@ -271,11 +271,11 @@ Object {
               "args": Array [
                 Object {
                   "category": 3,
-                  "nodeType": 15,
+                  "nodeType": 16,
                   "position": Object {
                     "col": 9,
                     "file": "file",
-                    "length": 10,
+                    "length": 11,
                     "line": 15,
                     "offset": 405,
                   },
@@ -286,20 +286,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 4,
+                  "length": 5,
                   "line": 15,
                   "offset": 399,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 15,
                 "offset": 399,
               },
@@ -310,7 +310,7 @@ Object {
           "position": Object {
             "col": 8,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 14,
             "offset": 394,
           },
@@ -321,11 +321,11 @@ Object {
               "args": Array [
                 Object {
                   "category": 3,
-                  "nodeType": 15,
+                  "nodeType": 16,
                   "position": Object {
                     "col": 9,
                     "file": "file",
-                    "length": 13,
+                    "length": 14,
                     "line": 13,
                     "offset": 369,
                   },
@@ -336,20 +336,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 4,
+                  "length": 5,
                   "line": 13,
                   "offset": 363,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 13,
                 "offset": 363,
               },
@@ -360,7 +360,7 @@ Object {
           "position": Object {
             "col": 30,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 12,
             "offset": 358,
           },
@@ -370,11 +370,11 @@ Object {
           "category": 2,
           "lhs": Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 12,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 12,
               "offset": 340,
             },
@@ -385,17 +385,17 @@ Object {
           "position": Object {
             "col": 12,
             "file": "file",
-            "length": 5,
+            "length": 18,
             "line": 12,
             "offset": 340,
           },
           "rhs": Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 22,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 12,
               "offset": 350,
             },
@@ -406,7 +406,7 @@ Object {
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 1,
+          "length": 2,
           "line": 12,
           "offset": 336,
         },
@@ -417,11 +417,11 @@ Object {
             "args": Array [
               Object {
                 "category": 3,
-                "nodeType": 15,
+                "nodeType": 16,
                 "position": Object {
                   "col": 9,
                   "file": "file",
-                  "length": 8,
+                  "length": 9,
                   "line": 11,
                   "offset": 316,
                 },
@@ -432,20 +432,20 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 34,
+              "nodeType": 37,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 11,
                 "offset": 310,
               },
             },
-            "nodeType": 13,
+            "nodeType": 14,
             "position": Object {
               "col": 3,
               "file": "file",
-              "length": 4,
+              "length": 5,
               "line": 11,
               "offset": 310,
             },
@@ -456,7 +456,7 @@ Object {
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 10,
           "offset": 305,
         },
@@ -466,11 +466,11 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 5,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 10,
             "offset": 297,
           },
@@ -481,17 +481,17 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 8,
           "line": 10,
           "offset": 297,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 10,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 10,
             "offset": 302,
           },
@@ -502,7 +502,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 10,
         "offset": 293,
       },
@@ -512,11 +512,11 @@ Object {
         "args": Array [
           Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 12,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 18,
               "offset": 463,
             },
@@ -527,20 +527,20 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 34,
+          "nodeType": 37,
           "position": Object {
             "col": 6,
             "file": "file",
-            "length": 4,
+            "length": 5,
             "line": 18,
             "offset": 457,
           },
         },
-        "nodeType": 13,
+        "nodeType": 14,
         "position": Object {
           "col": 6,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 18,
           "offset": 457,
         },
@@ -549,11 +549,11 @@ Object {
         "args": Array [
           Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 19,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 17,
               "offset": 442,
             },
@@ -564,20 +564,20 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 34,
+          "nodeType": 37,
           "position": Object {
             "col": 13,
             "file": "file",
-            "length": 4,
+            "length": 5,
             "line": 17,
             "offset": 436,
           },
         },
-        "nodeType": 13,
+        "nodeType": 14,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 17,
           "offset": 436,
         },
@@ -587,11 +587,11 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 5,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 17,
             "offset": 428,
           },
@@ -602,17 +602,17 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 8,
           "line": 17,
           "offset": 428,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 10,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 17,
             "offset": 433,
           },
@@ -623,7 +623,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 17,
         "offset": 424,
       },
@@ -636,11 +636,11 @@ Object {
             "args": Array [
               Object {
                 "category": 3,
-                "nodeType": 15,
+                "nodeType": 16,
                 "position": Object {
                   "col": 9,
                   "file": "file",
-                  "length": 5,
+                  "length": 6,
                   "line": 21,
                   "offset": 496,
                 },
@@ -651,20 +651,20 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 34,
+              "nodeType": 37,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 21,
                 "offset": 490,
               },
             },
-            "nodeType": 13,
+            "nodeType": 14,
             "position": Object {
               "col": 3,
               "file": "file",
-              "length": 4,
+              "length": 5,
               "line": 21,
               "offset": 490,
             },
@@ -675,7 +675,7 @@ Object {
         "position": Object {
           "col": 11,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 20,
           "offset": 485,
         },
@@ -683,7 +683,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 24,
         "position": Object {
           "col": 5,
           "file": "file",
@@ -696,7 +696,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 20,
         "offset": 475,
       },
@@ -705,11 +705,11 @@ Object {
       "args": Array [
         Object {
           "category": 3,
-          "nodeType": 15,
+          "nodeType": 16,
           "position": Object {
             "col": 7,
             "file": "file",
-            "length": 5,
+            "length": 6,
             "line": 27,
             "offset": 574,
           },
@@ -720,20 +720,20 @@ Object {
       "name": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 27,
           "offset": 568,
         },
       },
-      "nodeType": 13,
+      "nodeType": 14,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 4,
+        "length": 5,
         "line": 27,
         "offset": 568,
       },
@@ -744,20 +744,20 @@ Object {
       "name": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 28,
           "offset": 584,
         },
       },
-      "nodeType": 13,
+      "nodeType": 14,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 0,
+        "length": 1,
         "line": 28,
         "offset": 584,
       },
@@ -766,11 +766,11 @@ Object {
       "args": Array [
         Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 17,
           "position": Object {
             "col": 15,
             "file": "file",
-            "length": 1,
+            "length": 2,
             "line": 29,
             "offset": 604,
           },
@@ -778,11 +778,11 @@ Object {
         },
         Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 17,
           "position": Object {
             "col": 19,
             "file": "file",
-            "length": 1,
+            "length": 2,
             "line": 29,
             "offset": 608,
           },
@@ -791,11 +791,11 @@ Object {
       ],
       "category": 2,
       "name": "@wasm.i32.add",
-      "nodeType": 14,
+      "nodeType": 15,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 12,
+        "length": 13,
         "line": 29,
         "offset": 590,
       },
@@ -806,11 +806,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "c",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 31,
           "offset": 649,
         },
@@ -819,7 +819,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 31,
         "offset": 645,
       },
@@ -833,11 +833,11 @@ Object {
               "category": 2,
               "lhs": Object {
                 "category": 3,
-                "nodeType": 22,
+                "nodeType": 23,
                 "position": Object {
                   "col": 17,
                   "file": "file",
-                  "length": 0,
+                  "length": 1,
                   "line": 31,
                   "offset": 661,
                 },
@@ -848,17 +848,17 @@ Object {
               "position": Object {
                 "col": 17,
                 "file": "file",
-                "length": 0,
+                "length": 9,
                 "line": 31,
                 "offset": 661,
               },
               "rhs": Object {
                 "category": 2,
-                "nodeType": 12,
+                "nodeType": 13,
                 "position": Object {
                   "col": 21,
                   "file": "file",
-                  "length": 0,
+                  "length": 7,
                   "line": 31,
                   "offset": 665,
                 },
@@ -866,11 +866,11 @@ Object {
                   "category": 2,
                   "lhs": Object {
                     "category": 3,
-                    "nodeType": 22,
+                    "nodeType": 23,
                     "position": Object {
                       "col": 22,
                       "file": "file",
-                      "length": 0,
+                      "length": 1,
                       "line": 31,
                       "offset": 666,
                     },
@@ -881,17 +881,17 @@ Object {
                   "position": Object {
                     "col": 22,
                     "file": "file",
-                    "length": 0,
+                    "length": 5,
                     "line": 31,
                     "offset": 666,
                   },
                   "rhs": Object {
                     "category": 3,
-                    "nodeType": 22,
+                    "nodeType": 23,
                     "position": Object {
                       "col": 26,
                       "file": "file",
-                      "length": 0,
+                      "length": 1,
                       "line": 31,
                       "offset": 670,
                     },
@@ -905,17 +905,17 @@ Object {
             "position": Object {
               "col": 17,
               "file": "file",
-              "length": 0,
+              "length": 11,
               "line": 31,
               "offset": 661,
             },
             "rhs": Object {
               "category": 3,
-              "nodeType": 22,
+              "nodeType": 23,
               "position": Object {
                 "col": 31,
                 "file": "file",
-                "length": 0,
+                "length": 1,
                 "line": 31,
                 "offset": 675,
               },
@@ -927,17 +927,17 @@ Object {
           "position": Object {
             "col": 17,
             "file": "file",
-            "length": 0,
+            "length": 13,
             "line": 31,
             "offset": 661,
           },
           "rhs": Object {
             "category": 3,
-            "nodeType": 22,
+            "nodeType": 23,
             "position": Object {
               "col": 35,
               "file": "file",
-              "length": 0,
+              "length": 1,
               "line": 31,
               "offset": 679,
             },
@@ -949,17 +949,17 @@ Object {
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 0,
+          "length": 24,
           "line": 31,
           "offset": 661,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 39,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 31,
             "offset": 683,
           },
@@ -969,11 +969,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 31,
           "offset": 652,
         },
@@ -984,11 +984,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "c",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 32,
           "offset": 687,
         },
@@ -997,17 +997,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 0,
+        "length": 1,
         "line": 32,
         "offset": 687,
       },
       "value": Object {
         "category": 3,
-        "nodeType": 22,
+        "nodeType": 23,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 32,
           "offset": 691,
         },
@@ -1020,11 +1020,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "d",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 33,
           "offset": 699,
         },
@@ -1033,18 +1033,18 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 33,
         "offset": 695,
       },
       "value": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 33,
           "offset": 711,
         },
@@ -1052,11 +1052,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 33,
           "offset": 702,
         },
@@ -1068,11 +1068,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "z",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 35,
           "offset": 744,
         },
@@ -1081,7 +1081,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 35,
         "offset": 740,
       },
@@ -1093,11 +1093,11 @@ Object {
                 Object {
                   "category": 5,
                   "name": "g",
-                  "nodeType": 34,
+                  "nodeType": 37,
                   "position": Object {
                     "col": 10,
                     "file": "file",
-                    "length": 0,
+                    "length": 1,
                     "line": 36,
                     "offset": 793,
                   },
@@ -1107,20 +1107,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "return",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 5,
+                  "length": 6,
                   "line": 36,
                   "offset": 786,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 5,
+                "length": 6,
                 "line": 36,
                 "offset": 786,
               },
@@ -1131,37 +1131,37 @@ Object {
           "position": Object {
             "col": 42,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 35,
             "offset": 781,
           },
         },
         "category": 3,
-        "nodeType": 24,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 5,
             "name": Object {
               "category": 5,
               "name": "g",
-              "nodeType": 33,
+              "nodeType": 36,
               "position": Object {
                 "col": 20,
                 "file": "file",
-                "length": 0,
+                "length": 1,
                 "line": 35,
                 "offset": 759,
               },
             },
-            "nodeType": 36,
+            "nodeType": 39,
             "paramType": Object {
               "category": 4,
               "name": "Number",
-              "nodeType": 31,
+              "nodeType": 34,
               "position": Object {
                 "col": 23,
                 "file": "file",
-                "length": 5,
+                "length": 6,
                 "line": 35,
                 "offset": 762,
               },
@@ -1171,18 +1171,18 @@ Object {
         "position": Object {
           "col": 19,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 35,
           "offset": 758,
         },
         "returnType": Object {
           "category": 4,
           "name": "Number",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 32,
             "file": "file",
-            "length": 5,
+            "length": 6,
             "line": 35,
             "offset": 771,
           },
@@ -1191,11 +1191,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 7,
+          "length": 8,
           "line": 35,
           "offset": 747,
         },
@@ -1207,11 +1207,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "h",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 7,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 38,
           "offset": 808,
         },
@@ -1220,17 +1220,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 4,
+        "length": 5,
         "line": 38,
         "offset": 802,
       },
       "value": Object {
         "category": 3,
-        "nodeType": 22,
+        "nodeType": 23,
         "position": Object {
           "col": 19,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 38,
           "offset": 820,
         },
@@ -1239,11 +1239,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 10,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 38,
           "offset": 811,
         },
@@ -1255,18 +1255,18 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 6,
         "line": 41,
         "offset": 843,
       },
       "variable": Object {
         "category": 5,
         "name": "h",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 41,
           "offset": 850,
         },
@@ -1294,17 +1294,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 2,
         "offset": 19,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 15,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 2,
           "offset": 33,
         },
@@ -1313,11 +1313,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 2,
           "offset": 26,
         },
@@ -1329,17 +1329,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 3,
         "offset": 42,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 42,
           "file": "file",
-          "length": 6,
+          "length": 7,
           "line": 3,
           "offset": 83,
         },
@@ -1347,16 +1347,16 @@ Object {
       },
       "typeSignature": Object {
         "category": 4,
-        "nodeType": 28,
+        "nodeType": 31,
         "params": Array [
           Object {
             "category": 4,
             "name": "String",
-            "nodeType": 31,
+            "nodeType": 34,
             "position": Object {
               "col": 21,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 3,
               "offset": 62,
             },
@@ -1365,18 +1365,18 @@ Object {
         "position": Object {
           "col": 20,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 3,
           "offset": 61,
         },
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 32,
             "file": "file",
-            "length": 3,
+            "length": 4,
             "line": 3,
             "offset": 73,
           },
@@ -1385,11 +1385,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 3,
           "offset": 54,
         },
@@ -1401,17 +1401,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 4,
         "offset": 93,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 32,
           "file": "file",
-          "length": 6,
+          "length": 7,
           "line": 4,
           "offset": 124,
         },
@@ -1419,23 +1419,23 @@ Object {
       },
       "typeSignature": Object {
         "category": 4,
-        "nodeType": 28,
+        "nodeType": 31,
         "params": Array [],
         "position": Object {
           "col": 16,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 4,
           "offset": 108,
         },
         "returnType": Object {
           "category": 4,
           "name": "Void",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 22,
             "file": "file",
-            "length": 3,
+            "length": 4,
             "line": 4,
             "offset": 114,
           },
@@ -1444,11 +1444,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 4,
           "offset": 105,
         },
@@ -1460,17 +1460,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 5,
         "offset": 134,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 25,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 5,
           "offset": 158,
         },
@@ -1479,11 +1479,11 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "i32",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 16,
           "file": "file",
-          "length": 2,
+          "length": 3,
           "line": 5,
           "offset": 149,
         },
@@ -1491,11 +1491,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "b",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 5,
           "offset": 146,
         },
@@ -1507,17 +1507,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 0,
         "line": 6,
         "offset": 167,
       },
       "source": Object {
         "category": 3,
-        "nodeType": 15,
+        "nodeType": 16,
         "position": Object {
           "col": 33,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 199,
         },
@@ -1526,11 +1526,11 @@ Object {
       "typeSignature": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 21,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 187,
         },
@@ -1538,11 +1538,11 @@ Object {
       "variable": Object {
         "category": 5,
         "name": "return",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 6,
           "offset": 179,
         },
@@ -1556,11 +1556,11 @@ Object {
               "args": Array [
                 Object {
                   "category": 3,
-                  "nodeType": 15,
+                  "nodeType": 16,
                   "position": Object {
                     "col": 9,
                     "file": "file",
-                    "length": 10,
+                    "length": 11,
                     "line": 15,
                     "offset": 405,
                   },
@@ -1571,20 +1571,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 4,
+                  "length": 5,
                   "line": 15,
                   "offset": 399,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 15,
                 "offset": 399,
               },
@@ -1595,7 +1595,7 @@ Object {
           "position": Object {
             "col": 8,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 14,
             "offset": 394,
           },
@@ -1606,11 +1606,11 @@ Object {
               "args": Array [
                 Object {
                   "category": 3,
-                  "nodeType": 15,
+                  "nodeType": 16,
                   "position": Object {
                     "col": 9,
                     "file": "file",
-                    "length": 13,
+                    "length": 14,
                     "line": 13,
                     "offset": 369,
                   },
@@ -1621,20 +1621,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "print",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 4,
+                  "length": 5,
                   "line": 13,
                   "offset": 363,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 13,
                 "offset": 363,
               },
@@ -1645,7 +1645,7 @@ Object {
           "position": Object {
             "col": 30,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 12,
             "offset": 358,
           },
@@ -1655,11 +1655,11 @@ Object {
           "category": 2,
           "lhs": Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 12,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 12,
               "offset": 340,
             },
@@ -1670,17 +1670,17 @@ Object {
           "position": Object {
             "col": 12,
             "file": "file",
-            "length": 5,
+            "length": 18,
             "line": 12,
             "offset": 340,
           },
           "rhs": Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 22,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 12,
               "offset": 350,
             },
@@ -1691,7 +1691,7 @@ Object {
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 1,
+          "length": 2,
           "line": 12,
           "offset": 336,
         },
@@ -1702,11 +1702,11 @@ Object {
             "args": Array [
               Object {
                 "category": 3,
-                "nodeType": 15,
+                "nodeType": 16,
                 "position": Object {
                   "col": 9,
                   "file": "file",
-                  "length": 8,
+                  "length": 9,
                   "line": 11,
                   "offset": 316,
                 },
@@ -1717,20 +1717,20 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 34,
+              "nodeType": 37,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 11,
                 "offset": 310,
               },
             },
-            "nodeType": 13,
+            "nodeType": 14,
             "position": Object {
               "col": 3,
               "file": "file",
-              "length": 4,
+              "length": 5,
               "line": 11,
               "offset": 310,
             },
@@ -1741,7 +1741,7 @@ Object {
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 10,
           "offset": 305,
         },
@@ -1751,11 +1751,11 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 5,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 10,
             "offset": 297,
           },
@@ -1766,17 +1766,17 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 8,
           "line": 10,
           "offset": 297,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 10,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 10,
             "offset": 302,
           },
@@ -1787,7 +1787,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 10,
         "offset": 293,
       },
@@ -1797,11 +1797,11 @@ Object {
         "args": Array [
           Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 12,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 18,
               "offset": 463,
             },
@@ -1812,20 +1812,20 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 34,
+          "nodeType": 37,
           "position": Object {
             "col": 6,
             "file": "file",
-            "length": 4,
+            "length": 5,
             "line": 18,
             "offset": 457,
           },
         },
-        "nodeType": 13,
+        "nodeType": 14,
         "position": Object {
           "col": 6,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 18,
           "offset": 457,
         },
@@ -1834,11 +1834,11 @@ Object {
         "args": Array [
           Object {
             "category": 3,
-            "nodeType": 15,
+            "nodeType": 16,
             "position": Object {
               "col": 19,
               "file": "file",
-              "length": 5,
+              "length": 6,
               "line": 17,
               "offset": 442,
             },
@@ -1849,20 +1849,20 @@ Object {
         "name": Object {
           "category": 5,
           "name": "print",
-          "nodeType": 34,
+          "nodeType": 37,
           "position": Object {
             "col": 13,
             "file": "file",
-            "length": 4,
+            "length": 5,
             "line": 17,
             "offset": 436,
           },
         },
-        "nodeType": 13,
+        "nodeType": 14,
         "position": Object {
           "col": 13,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 17,
           "offset": 436,
         },
@@ -1872,11 +1872,11 @@ Object {
         "category": 2,
         "lhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 5,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 17,
             "offset": 428,
           },
@@ -1887,17 +1887,17 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 8,
           "line": 17,
           "offset": 428,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 10,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 17,
             "offset": 433,
           },
@@ -1908,7 +1908,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 17,
         "offset": 424,
       },
@@ -1921,11 +1921,11 @@ Object {
             "args": Array [
               Object {
                 "category": 3,
-                "nodeType": 15,
+                "nodeType": 16,
                 "position": Object {
                   "col": 9,
                   "file": "file",
-                  "length": 5,
+                  "length": 6,
                   "line": 21,
                   "offset": 496,
                 },
@@ -1936,20 +1936,20 @@ Object {
             "name": Object {
               "category": 5,
               "name": "print",
-              "nodeType": 34,
+              "nodeType": 37,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 4,
+                "length": 5,
                 "line": 21,
                 "offset": 490,
               },
             },
-            "nodeType": 13,
+            "nodeType": 14,
             "position": Object {
               "col": 3,
               "file": "file",
-              "length": 4,
+              "length": 5,
               "line": 21,
               "offset": 490,
             },
@@ -1960,7 +1960,7 @@ Object {
         "position": Object {
           "col": 11,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 20,
           "offset": 485,
         },
@@ -1968,7 +1968,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 24,
         "position": Object {
           "col": 5,
           "file": "file",
@@ -1981,7 +1981,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 1,
+        "length": 2,
         "line": 20,
         "offset": 475,
       },
@@ -1990,11 +1990,11 @@ Object {
       "args": Array [
         Object {
           "category": 3,
-          "nodeType": 15,
+          "nodeType": 16,
           "position": Object {
             "col": 7,
             "file": "file",
-            "length": 5,
+            "length": 6,
             "line": 27,
             "offset": 574,
           },
@@ -2005,20 +2005,20 @@ Object {
       "name": Object {
         "category": 5,
         "name": "print",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 4,
+          "length": 5,
           "line": 27,
           "offset": 568,
         },
       },
-      "nodeType": 13,
+      "nodeType": 14,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 4,
+        "length": 5,
         "line": 27,
         "offset": 568,
       },
@@ -2029,20 +2029,20 @@ Object {
       "name": Object {
         "category": 5,
         "name": "f",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 28,
           "offset": 584,
         },
       },
-      "nodeType": 13,
+      "nodeType": 14,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 0,
+        "length": 1,
         "line": 28,
         "offset": 584,
       },
@@ -2051,11 +2051,11 @@ Object {
       "args": Array [
         Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 17,
           "position": Object {
             "col": 15,
             "file": "file",
-            "length": 1,
+            "length": 2,
             "line": 29,
             "offset": 604,
           },
@@ -2063,11 +2063,11 @@ Object {
         },
         Object {
           "category": 3,
-          "nodeType": 16,
+          "nodeType": 17,
           "position": Object {
             "col": 19,
             "file": "file",
-            "length": 1,
+            "length": 2,
             "line": 29,
             "offset": 608,
           },
@@ -2076,11 +2076,11 @@ Object {
       ],
       "category": 2,
       "name": "@wasm.i32.add",
-      "nodeType": 14,
+      "nodeType": 15,
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 12,
+        "length": 13,
         "line": 29,
         "offset": 590,
       },
@@ -2091,11 +2091,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "c",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 31,
           "offset": 649,
         },
@@ -2104,7 +2104,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 31,
         "offset": 645,
       },
@@ -2118,11 +2118,11 @@ Object {
               "category": 2,
               "lhs": Object {
                 "category": 3,
-                "nodeType": 22,
+                "nodeType": 23,
                 "position": Object {
                   "col": 17,
                   "file": "file",
-                  "length": 0,
+                  "length": 1,
                   "line": 31,
                   "offset": 661,
                 },
@@ -2133,17 +2133,17 @@ Object {
               "position": Object {
                 "col": 17,
                 "file": "file",
-                "length": 0,
+                "length": 9,
                 "line": 31,
                 "offset": 661,
               },
               "rhs": Object {
                 "category": 2,
-                "nodeType": 12,
+                "nodeType": 13,
                 "position": Object {
                   "col": 21,
                   "file": "file",
-                  "length": 0,
+                  "length": 7,
                   "line": 31,
                   "offset": 665,
                 },
@@ -2151,11 +2151,11 @@ Object {
                   "category": 2,
                   "lhs": Object {
                     "category": 3,
-                    "nodeType": 22,
+                    "nodeType": 23,
                     "position": Object {
                       "col": 22,
                       "file": "file",
-                      "length": 0,
+                      "length": 1,
                       "line": 31,
                       "offset": 666,
                     },
@@ -2166,17 +2166,17 @@ Object {
                   "position": Object {
                     "col": 22,
                     "file": "file",
-                    "length": 0,
+                    "length": 5,
                     "line": 31,
                     "offset": 666,
                   },
                   "rhs": Object {
                     "category": 3,
-                    "nodeType": 22,
+                    "nodeType": 23,
                     "position": Object {
                       "col": 26,
                       "file": "file",
-                      "length": 0,
+                      "length": 1,
                       "line": 31,
                       "offset": 670,
                     },
@@ -2190,17 +2190,17 @@ Object {
             "position": Object {
               "col": 17,
               "file": "file",
-              "length": 0,
+              "length": 11,
               "line": 31,
               "offset": 661,
             },
             "rhs": Object {
               "category": 3,
-              "nodeType": 22,
+              "nodeType": 23,
               "position": Object {
                 "col": 31,
                 "file": "file",
-                "length": 0,
+                "length": 1,
                 "line": 31,
                 "offset": 675,
               },
@@ -2212,17 +2212,17 @@ Object {
           "position": Object {
             "col": 17,
             "file": "file",
-            "length": 0,
+            "length": 13,
             "line": 31,
             "offset": 661,
           },
           "rhs": Object {
             "category": 3,
-            "nodeType": 22,
+            "nodeType": 23,
             "position": Object {
               "col": 35,
               "file": "file",
-              "length": 0,
+              "length": 1,
               "line": 31,
               "offset": 679,
             },
@@ -2234,17 +2234,17 @@ Object {
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 0,
+          "length": 24,
           "line": 31,
           "offset": 661,
         },
         "rhs": Object {
           "category": 3,
-          "nodeType": 22,
+          "nodeType": 23,
           "position": Object {
             "col": 39,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 31,
             "offset": 683,
           },
@@ -2254,11 +2254,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 31,
           "offset": 652,
         },
@@ -2269,11 +2269,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "c",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 32,
           "offset": 687,
         },
@@ -2282,17 +2282,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 0,
+        "length": 1,
         "line": 32,
         "offset": 687,
       },
       "value": Object {
         "category": 3,
-        "nodeType": 22,
+        "nodeType": 23,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 32,
           "offset": 691,
         },
@@ -2305,11 +2305,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "d",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 33,
           "offset": 699,
         },
@@ -2318,18 +2318,18 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 33,
         "offset": 695,
       },
       "value": Object {
         "category": 5,
         "name": "a",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 33,
           "offset": 711,
         },
@@ -2337,11 +2337,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 33,
           "offset": 702,
         },
@@ -2353,11 +2353,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "z",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 35,
           "offset": 744,
         },
@@ -2366,7 +2366,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 2,
+        "length": 3,
         "line": 35,
         "offset": 740,
       },
@@ -2378,11 +2378,11 @@ Object {
                 Object {
                   "category": 5,
                   "name": "g",
-                  "nodeType": 34,
+                  "nodeType": 37,
                   "position": Object {
                     "col": 10,
                     "file": "file",
-                    "length": 0,
+                    "length": 1,
                     "line": 36,
                     "offset": 793,
                   },
@@ -2392,20 +2392,20 @@ Object {
               "name": Object {
                 "category": 5,
                 "name": "return",
-                "nodeType": 34,
+                "nodeType": 37,
                 "position": Object {
                   "col": 3,
                   "file": "file",
-                  "length": 5,
+                  "length": 6,
                   "line": 36,
                   "offset": 786,
                 },
               },
-              "nodeType": 13,
+              "nodeType": 14,
               "position": Object {
                 "col": 3,
                 "file": "file",
-                "length": 5,
+                "length": 6,
                 "line": 36,
                 "offset": 786,
               },
@@ -2416,37 +2416,37 @@ Object {
           "position": Object {
             "col": 42,
             "file": "file",
-            "length": 0,
+            "length": 1,
             "line": 35,
             "offset": 781,
           },
         },
         "category": 3,
-        "nodeType": 24,
+        "nodeType": 25,
         "params": Array [
           Object {
             "category": 5,
             "name": Object {
               "category": 5,
               "name": "g",
-              "nodeType": 33,
+              "nodeType": 36,
               "position": Object {
                 "col": 20,
                 "file": "file",
-                "length": 0,
+                "length": 1,
                 "line": 35,
                 "offset": 759,
               },
             },
-            "nodeType": 36,
+            "nodeType": 39,
             "paramType": Object {
               "category": 4,
               "name": "Number",
-              "nodeType": 31,
+              "nodeType": 34,
               "position": Object {
                 "col": 23,
                 "file": "file",
-                "length": 5,
+                "length": 6,
                 "line": 35,
                 "offset": 762,
               },
@@ -2456,18 +2456,18 @@ Object {
         "position": Object {
           "col": 19,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 35,
           "offset": 758,
         },
         "returnType": Object {
           "category": 4,
           "name": "Number",
-          "nodeType": 31,
+          "nodeType": 34,
           "position": Object {
             "col": 32,
             "file": "file",
-            "length": 5,
+            "length": 6,
             "line": 35,
             "offset": 771,
           },
@@ -2476,11 +2476,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Function",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 7,
+          "length": 8,
           "line": 35,
           "offset": 747,
         },
@@ -2492,11 +2492,11 @@ Object {
       "name": Object {
         "category": 5,
         "name": "h",
-        "nodeType": 33,
+        "nodeType": 36,
         "position": Object {
           "col": 7,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 38,
           "offset": 808,
         },
@@ -2505,17 +2505,17 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 4,
+        "length": 5,
         "line": 38,
         "offset": 802,
       },
       "value": Object {
         "category": 3,
-        "nodeType": 22,
+        "nodeType": 23,
         "position": Object {
           "col": 19,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 38,
           "offset": 820,
         },
@@ -2524,11 +2524,11 @@ Object {
       "varType": Object {
         "category": 4,
         "name": "Number",
-        "nodeType": 31,
+        "nodeType": 34,
         "position": Object {
           "col": 10,
           "file": "file",
-          "length": 5,
+          "length": 6,
           "line": 38,
           "offset": 811,
         },
@@ -2540,18 +2540,18 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 5,
+        "length": 6,
         "line": 41,
         "offset": 843,
       },
       "variable": Object {
         "category": 5,
         "name": "h",
-        "nodeType": 34,
+        "nodeType": 37,
         "position": Object {
           "col": 8,
           "file": "file",
-          "length": 0,
+          "length": 1,
           "line": 41,
           "offset": 850,
         },

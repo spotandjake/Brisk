@@ -1,39 +1,58 @@
-# Tomorrow
+# Current
++ [ ] Tasks For Wednesday
+  + [ ] Order Of Operations / Operator Precedence
+  + [ ] Implement Order Of Operations
+  + [ ] Preferably In Parser
+  + [ ] Updating Planning Doc
+  + [ ] Check Function Type Matches Function Returns
+    + [ ] Implement Return As A Keyword
+  + [ ] Analyzer Verification Of Literals
+    + [ ] Check That Numbers are within bounds
+  + [ ] Fix Parenthesis Types
+  + [ ] resolve Grammar Ambiguities
+    + [ ] Object vs Block Statement
+    + [ ] FunctionSignature Vs ParenthesisTypeLiteral
+    + [ ] Function Vs ParenthesisExpression
+  + [ ] Remove Semantic Meaning Of WhiteSpaces
+  + [ ] Generic Types
+  + [ ] Adt Enums
+  + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
+    + [ ] Import
+    + [ ] Export
++ [ ] Tasks For Thursday
+  + [ ] Reduce Complexity Of Possible Recursion in TypeChecker ResolveType and matchType
+  + [ ] Reprogram Analyzer, Reduce Complexity Increase Safety
+  + [ ] Improve Parser There are bugs
+    + [ ] Fix Single line if statement
+    + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
+  + [ ] Allow Exporting Types
++ [ ] Tasks For Friday & Saturday
+  + [ ] Better Error Messages
+  + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
+  + [ ] Fuzzy Tests
+  + [ ] Improve Tests
+  + [ ] Fix `// TODO:`
++ [ ] Tasks For Sunday
+  + [ ] Implement wasm multivalue types and syntax
+    + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
+  + [ ] Start CodeGen
+# General Tasks / Some Are Duplicated Of Above
 + [ ] Start working on type system
   + [ ] Refactor parser types into type literals and type 
     + [ ] ADT Enums
     + [ ] We need to add objects or else Member accesses are a little useless.
     + [ ] Fix Analyzing Of MemberAccesses
-    + [ ] Type Exports
-+ [ ] Improve Parser There are bugs
-  + [ ] Fix Single line if statement
-  + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
-+ [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
-  + [ ] Import
-  + [ ] Export
 + [ ] Recursive Types and data
-+ [ ] resolve Grammar Ambiguities
-  + [ ] Object vs Block Statement
-  + [ ] FunctionSignature Vs ParenthesisTypeLiteral
-  + [ ] Function Vs ParenthesisExpression
-+ [ ] Implement Order Of Operations
-+ [ ] Implement wasm multivalue types and syntax
-+ [ ] Fix TypeChecker Errors, They display the error at the type definition instead of the actual error grounds
-+ [ ] Reduce Complexity Of Possible Recursion in TypeChecker ResolveType and matchType
+
 # Tasks
-+ [ ] Lexer
-  + [ ] Add support for different types of numbers
-    + [ ] hex, oct, bin
++ [x] Lexer
 + [ ] Parser
   + [ ] Improve Type System
     + [ ] add enums
-    + [ ] Type Definitions
-      + [ ] union types
     + [ ] support recursive types
     + [ ] generics
   + [ ] Add Destructuring
   + [ ] Add Objects
-  + [ ] Parser Error Messages
 + [ ] Analyzer
   + [ ] Deal With MemberAccess
   + [ ] Parseliterals
@@ -43,7 +62,6 @@
   + [ ] Add TypeChecking For Imports
   + [ ] Add TypeChecking For Function Calls
   + [ ] Add Better TypeChecking On Wasm Calls
-  + [ ] Complete Other TODO
   + [ ] Deal With MemberAccess
 + [ ] Compiler
 + [ ] lsp
@@ -65,11 +83,11 @@
     + [ ] Compile
     + [ ] Run
   + [ ] Compiler
-    + [ ] Lexer
-      + [ ] Keywords
-      + [ ] Operators
-      + [ ] Numbers
-      + [ ] General
+    + [x] Lexer
+      + [x] Keywords
+      + [x] Operators
+      + [x] Numbers
+      + [x] General
     + [ ] Parser
       + [ ] Literals
         + [x] Functions
@@ -82,39 +100,35 @@
           + [ ] Template Literals
         + [ ] Numbers
           + [x] Decimal Numbers
-          + [ ] Exponential
-          + [ ] Binary
-          + [ ] Octal
-          + [ ] HexaDecimal
-          + [ ] Numeric Separators
-        + [ ] i32
+          + [x] Exponential
+          + [x] Binary
+          + [x] Octal
+          + [x] HexaDecimal
+          + [x] Numeric Separators
+          + [ ] Rationals
+            + [ ] i.e 1/2
+        + [x] i32
           + [x] Decimal Numbers
-          + [ ] Exponential
-          + [ ] Binary
-          + [ ] Octal
-          + [ ] HexaDecimal
-          + [ ] Numeric Separators
-        + [ ] i64
+          + [x] Binary
+          + [x] Octal
+          + [x] HexaDecimal
+          + [x] Numeric Separators
+        + [x] i64
           + [x] Decimal Numbers
-          + [ ] Exponential
-          + [ ] Binary
-          + [ ] Octal
-          + [ ] HexaDecimal
-          + [ ] Numeric Separators
-        + [ ] f32
+          + [x] Binary
+          + [x] Octal
+          + [x] HexaDecimal
+          + [x] Numeric Separators
+        + [x] f32
           + [x] Decimal Numbers
-          + [ ] Exponential
-          + [ ] Binary
-          + [ ] Octal
-          + [ ] HexaDecimal
-          + [ ] Numeric Separators
-        + [ ] f64
+          + [x] Binary
+          + [x] Octal
+          + [x] Numeric Separators
+        + [x] f64
           + [x] Decimal Numbers
-          + [ ] Exponential
-          + [ ] Binary
-          + [ ] Octal
-          + [ ] HexaDecimal
-          + [ ] Numeric Separators
+          + [x] Binary
+          + [x] Octal
+          + [x] Numeric Separators
         + [ ] Objects
         + [ ] Arrays
       + [ ] Types
@@ -122,18 +136,20 @@
           + [ ] Interfaces
             + [x] General Interface Parsing
             + [ ] Mutable Fields
-          + [ ] Type Variables
+          + [x] Type Variables
           + [ ] Generics
-          + [ ] Enum Parenthesis
+          + [ ] Parenthesis TypeLiterals
             + [x] General Syntax
             + [ ] Parsing
           + [x] Union Types
           + [x] Function Signatures
-          + [ ] 
         + [x] Type Aliases
         + [x] Type Interfaces
         + [ ] Enums
-          + [ ] Decide On Adt Enums Or Regular Enums
+          + [x] Decide On Adt Enums Or Regular Enums
+          + [ ] Implement Syntax For ADT Enums
+          + [ ] Implement Analysis For ADT Enums
+          + [ ] Implement Type Checking For ADT Enums
       + [ ] Expressions
         + [ ] Fix Operator Precedence In Parsing
         + [ ] Comparisons
@@ -180,8 +196,8 @@
       + [x] Discover Unused Variables
       + [x] Type Stack
       + [x] Find Globals
-      + [ ] Simplify Constants
       + [ ] Constant Propagation
+      + [ ] Simplify Constants
       + [ ] Parse Literals
     + [ ] TypeChecker
       + [ ] Member Access Typing
@@ -190,6 +206,9 @@
       + [ ] Recursive Types
       + [ ] Imports
       + [ ] Check Function Type Matches Function Return
+        + [ ] Determine That We Reach The Return As Well
+      + [ ] Start Creating Type Guards
+        + [ ] And Syntax For Creating Custom Type Guards
       + [x] Union Types
       + [x] Interfaces
       + [x] Type Aliases

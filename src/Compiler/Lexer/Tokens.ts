@@ -1,5 +1,135 @@
-import { Lexer, createToken } from 'chevrotain';
+import { Lexer, createToken, IToken, CustomPatternMatcherReturn } from 'chevrotain';
 import { LexerTokenType } from '../Types/LexerNodes';
+// =================================================================
+const enum NumberType {
+  I32,
+  I64,
+  U32,
+  U64,
+  F32,
+  F64,
+  Number,
+}
+const enum NumberStyle {
+  Decimal,
+  Exponential,
+  Binary,
+  Octal,
+  Hexadecimal,
+}
+const matchNumber = (numberType: NumberType) => {
+  // Matching
+  return (
+    str: string,
+    startOffset: number,
+    tokens: IToken[],
+    groups: {
+      [groupName: string]: IToken[];
+    }
+  ): CustomPatternMatcherReturn | null => {
+    // Matching
+    let currentChar = str.charAt(startOffset);
+    if (
+      currentChar == '+' ||
+      currentChar == '-' ||
+      currentChar == '.' ||
+      (currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57)
+    ) {
+      // Configuration
+      const AllowDecimal =
+        numberType == NumberType.Number ||
+        numberType == NumberType.F32 ||
+        numberType == NumberType.F64;
+      const AllowSign =
+        numberType == NumberType.Number ||
+        numberType == NumberType.I32 ||
+        numberType == NumberType.I64 ||
+        numberType == NumberType.F32 ||
+        numberType == NumberType.F64;
+      if (!AllowDecimal && currentChar == '.') return null;
+      if (!AllowSign && (currentChar == '-' || currentChar == '+')) return null;
+      // Parsing
+      let endOffset = startOffset,
+        numberStyle = NumberStyle.Decimal,
+        length = 0;
+      // Determine Sign
+      if (currentChar == '+' || currentChar == '-') {
+        endOffset++;
+        currentChar = str.charAt(endOffset);
+      }
+      // Determine What Type Of Number We Are Parsing
+      if (currentChar == '0') {
+        endOffset++;
+        currentChar = str.charAt(endOffset);
+        // This could be binary, Hexadecimal, Octal
+        if (currentChar == 'b' || currentChar == 'B') numberStyle = NumberStyle.Binary; // Binary
+        if (currentChar == 'o' || currentChar == 'O') numberStyle = NumberStyle.Octal; // Octal
+        if (
+          (currentChar == 'x' || currentChar == 'X') &&
+          !(numberType == NumberType.F32 || numberType == NumberType.F64)
+        )
+          numberStyle = NumberStyle.Hexadecimal; // Hexadecimal
+        if (numberStyle != NumberStyle.Decimal) endOffset++;
+      }
+      // Parse Number
+      let hitDecimalPoint = !AllowDecimal,
+        lastCharacter = '';
+      for (; endOffset < str.length; endOffset++) {
+        // Set Current Character
+        currentChar = str.charAt(endOffset);
+        // Start Parsing
+        if (currentChar == '_' && lastCharacter != '_') continue;
+        // Parse Decimal & Exponential
+        if (numberStyle == NumberStyle.Decimal) {
+          if (currentChar == 'e' || currentChar == 'E') {
+            if (numberType != NumberType.Number) return null;
+            if (AllowDecimal) hitDecimalPoint = false;
+            if (str.charAt(endOffset + 1) == '+' || str.charAt(endOffset + 1) == '-') {
+              endOffset++;
+            }
+            continue;
+          }
+          if (currentChar == '.' && !hitDecimalPoint) {
+            hitDecimalPoint = true;
+            continue;
+          }
+          if (!(currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57)) break;
+        }
+        // Parse Binary,Octal,Hexadecimal
+        if (numberStyle == NumberStyle.Binary && !(currentChar == '0' || currentChar == '1')) break;
+        if (
+          numberStyle == NumberStyle.Octal &&
+          !(currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 55)
+        )
+          break;
+        if (
+          numberStyle == NumberStyle.Hexadecimal &&
+          !(
+            (currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57) ||
+            (currentChar.charCodeAt(0) >= 65 && currentChar.charCodeAt(0) <= 70) ||
+            (currentChar.charCodeAt(0) >= 97 && currentChar.charCodeAt(0) <= 102)
+          )
+        )
+          break;
+        // Set Last Character
+        lastCharacter = currentChar;
+        length++;
+      }
+      // Check we actually have our tag
+      if (numberType == NumberType.I32 && str.charAt(endOffset) != 'n') return null;
+      if (numberType == NumberType.I64 && str.charAt(endOffset) != 'N') return null;
+      if (numberType == NumberType.F32 && str.charAt(endOffset) != 'f') return null;
+      if (numberType == NumberType.F64 && str.charAt(endOffset) != 'F') return null;
+      if (numberType == NumberType.U32 && str.charAt(endOffset) != 'u') return null;
+      if (numberType == NumberType.U64 && str.charAt(endOffset) != 'U') return null;
+      // Increment
+      if (numberType != NumberType.Number) endOffset++;
+      // Return Results
+      if (length != 0) return [str.slice(startOffset, endOffset)];
+    }
+    return null;
+  };
+};
 // =================================================================
 // Categories
 export const keywordTokens = createToken({
@@ -51,6 +181,7 @@ export const typeOperators = createToken({
 export const TknComment = createToken({
   label: 'Comment',
   name: LexerTokenType.TknComment,
+  group: Lexer.SKIPPED,
   pattern: /\/\/.*/,
 }); // Comment
 // Keywords
@@ -125,43 +256,57 @@ export const TknI32 = createToken({
   label: 'I32 Literal',
   name: LexerTokenType.TknI32Literal,
   categories: literalTokens,
-  pattern: /[-|+]?[0-9]+n/,
+  pattern: matchNumber(NumberType.I32),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+'],
 }); // I32
 export const TknI64 = createToken({
   label: 'I64 Literal',
   name: LexerTokenType.TknI64Literal,
   categories: literalTokens,
-  pattern: /[-|+]?[0-9]+N/,
+  pattern: matchNumber(NumberType.I64),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+'],
 }); // I64
 export const TknU32 = createToken({
   label: 'U32 Literal',
   name: LexerTokenType.TknU32Literal,
   categories: literalTokens,
-  pattern: /[0-9]+u/,
+  pattern: matchNumber(NumberType.U32),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 }); // U32
 export const TknU64 = createToken({
   label: 'U64 Literal',
   name: LexerTokenType.TknU64Literal,
   categories: literalTokens,
-  pattern: /[0-9]+U/,
+  pattern: matchNumber(NumberType.U64),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 }); // U64
 export const TknF32 = createToken({
   label: 'F32 Literal',
   name: LexerTokenType.TknF32Literal,
   categories: literalTokens,
-  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)f/,
+  pattern: matchNumber(NumberType.F32),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
 }); // F32
 export const TknF64 = createToken({
   label: 'F64 Literal',
   name: LexerTokenType.TknF64Literal,
   categories: literalTokens,
-  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)F/,
+  pattern: matchNumber(NumberType.F64),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
 }); // F64
 export const TknNumber = createToken({
   label: 'Number Literal',
   name: LexerTokenType.TknNumberLiteral,
   categories: literalTokens,
-  pattern: /[-|+]?[0-9]*(?:\.?[0-9]+)/,
+  pattern: matchNumber(NumberType.Number),
+  line_breaks: false,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
 }); // Number
 export const TknConstant = createToken({
   label: 'Constant Literal',
@@ -333,7 +478,7 @@ export const TknPow = createToken({
   pattern: /\^/,
 });
 export const TknUnion = createToken({
-  label: 'Type Union',
+  label: 'Tkn Type Union',
   name: LexerTokenType.TknUnion,
   categories: typeOperators,
   pattern: /\|/,

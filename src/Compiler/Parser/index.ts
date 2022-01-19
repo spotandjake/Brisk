@@ -3,7 +3,6 @@ import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrot
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
-import { Position } from '../Types/Types';
 import * as Nodes from '../Types/ParseNodes';
 //@ts-ignore
 import { __DEBUG__ } from '@brisk/config';
@@ -12,7 +11,8 @@ class Parser extends EmbeddedActionsParser {
   private file: string;
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
-      maxLookahead: 3,
+      // TODO: Lower This To One
+      maxLookahead: 2,
       skipValidations: !__DEBUG__,
       errorMessageProvider: ErrorProvider(file),
     });
@@ -28,7 +28,7 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: 0,
-        length: 0,
+        length: 0, // TODO: Get Length For This
         line: 0,
         col: 0,
         file: this.file,
@@ -71,7 +71,7 @@ class Parser extends EmbeddedActionsParser {
       value: flag.image,
       position: {
         offset: flag.startOffset,
-        length: <number>flag.endOffset - flag.startOffset,
+        length: <number>flag.endOffset - flag.startOffset + 1,
         line: flag.startLine || 0,
         col: flag.startColumn || 0,
         file: this.file,
@@ -94,7 +94,7 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: open.startOffset,
-        length: <number>open.endOffset - open.startOffset,
+        length: <number>open.endOffset - open.startOffset + 1,
         line: open.startLine || 0,
         col: open.startColumn || 0,
         file: this.file,
@@ -102,16 +102,18 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private singleLineStatement = this.RULE('SingleLineStatement', () => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.ifStatement) },
-      { ALT: () => this.SUBRULE(this.importStatement) },
-      { ALT: () => this.SUBRULE(this.wasmImportStatement) },
-      { ALT: () => this.SUBRULE(this.exportStatement) },
-      { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
-      { ALT: () => this.SUBRULE(this.declarationStatement) },
-      { ALT: () => this.SUBRULE(this.assignmentStatement) },
-      { ALT: () => this.SUBRULE(this.expressionStatement), IGNORE_AMBIGUITIES: true },
-    ]);
+    return this.OR({
+      IGNORE_AMBIGUITIES: true,
+      DEF: [
+        { ALT: () => this.SUBRULE(this.ifStatement) },
+        { ALT: () => this.SUBRULE(this.importStatement) },
+        { ALT: () => this.SUBRULE(this.exportStatement) },
+        { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
+        { ALT: () => this.SUBRULE(this.declarationStatement) },
+        { ALT: () => this.SUBRULE(this.assignmentStatement) },
+        { ALT: () => this.SUBRULE(this.expressionStatement) },
+      ],
+    });
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
     const location = this.CONSUME(Tokens.TknIf);
@@ -128,9 +130,9 @@ class Parser extends EmbeddedActionsParser {
           const body = this.SUBRULE(this.singleLineStatement);
           const alternative = this.OPTION(() => {
             this.CONSUME(Tokens.TknSemiColon);
-            this.SUBRULE(this.ws);
+            this.SUBRULE4(this.wss);
             this.CONSUME(Tokens.TknElse);
-            this.SUBRULE1(this.ws);
+            this.SUBRULE5(this.wss);
             return this.SUBRULE(this._statement);
           });
           return { body, alternative };
@@ -140,9 +142,9 @@ class Parser extends EmbeddedActionsParser {
         ALT: () => {
           const body = this.SUBRULE(this.blockStatement);
           const alternative = this.OPTION1(() => {
-            this.SUBRULE2(this.ws);
+            this.SUBRULE6(this.wss);
             this.CONSUME1(Tokens.TknElse);
-            this.SUBRULE3(this.ws);
+            this.SUBRULE7(this.wss);
             return this.SUBRULE1(this._statement);
           });
           return { body, alternative };
@@ -157,51 +159,74 @@ class Parser extends EmbeddedActionsParser {
       alternative: alternative,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
       },
     };
   });
-  private importStatement = this.RULE('ImportStatement', (): Nodes.ImportStatementNode => {
-    const position = this.SUBRULE(this.importStart);
-    const variable = this.SUBRULE(this.variableDefinitionNode);
-    this.SUBRULE1(this.ws);
-    this.CONSUME(Tokens.TknFrom);
-    this.SUBRULE2(this.ws);
-    const source = this.SUBRULE(this.stringLiteral);
-    return {
-      nodeType: Nodes.NodeType.ImportStatement,
-      category: Nodes.NodeCategory.Statement,
-      variable: variable, // TODO: we want to add support for destructuring imports
-      source: source,
-      position: position,
-    };
-  });
-  private wasmImportStatement = this.RULE(
-    'WasmImportStatement',
-    (): Nodes.WasmImportStatementNode => {
-      const position = this.SUBRULE(this.importStart);
-      this.CONSUME(Tokens.TknWasm);
-      this.SUBRULE1(this.ws);
-      const variable = this.SUBRULE(this.variableDefinitionNode);
+  private importStatement = this.RULE(
+    'ImportStatement',
+    (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
+      let typeSignature: Nodes.TypeLiteral | undefined;
+      const location = this.CONSUME(Tokens.TknImport);
       this.SUBRULE(this.wss);
-      this.CONSUME(Tokens.TknColon);
-      this.SUBRULE1(this.wss);
-      const typeSignature = this.SUBRULE(this.typeLiteral);
-      this.SUBRULE2(this.ws);
+      const variable = this.OR([
+        {
+          ALT: () => {
+            return this.SUBRULE(this.variableDefinitionNode);
+          },
+        },
+        {
+          ALT: () => {
+            this.CONSUME(Tokens.TknWasm);
+            this.SUBRULE1(this.wss);
+            const variable = this.SUBRULE1(this.variableDefinitionNode);
+            this.SUBRULE2(this.wss);
+            this.CONSUME(Tokens.TknColon);
+            this.SUBRULE3(this.wss);
+            typeSignature = this.SUBRULE(this.typeLiteral);
+            return variable;
+          },
+        },
+      ]);
+      this.SUBRULE4(this.wss);
       this.CONSUME(Tokens.TknFrom);
-      this.SUBRULE3(this.ws);
+      this.SUBRULE5(this.wss);
       const source = this.SUBRULE(this.stringLiteral);
-      return {
-        nodeType: Nodes.NodeType.WasmImportStatement,
-        category: Nodes.NodeCategory.Statement,
-        typeSignature: typeSignature,
-        variable: variable, // TODO: we want to add support for destructuring imports
-        source: source,
-        position: position,
-      };
+      if (typeSignature == undefined) {
+        // TODO: we want to add support for destructuring imports
+        // TODO: Fix Length
+        return {
+          nodeType: Nodes.NodeType.ImportStatement,
+          category: Nodes.NodeCategory.Statement,
+          variable: variable,
+          source: source,
+          position: {
+            offset: location.startOffset,
+            length: 0,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      } else {
+        return {
+          nodeType: Nodes.NodeType.WasmImportStatement,
+          category: Nodes.NodeCategory.Statement,
+          typeSignature: typeSignature,
+          variable: variable,
+          source: source,
+          position: {
+            offset: location.startOffset,
+            length: 0,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      }
     }
   );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
@@ -214,7 +239,7 @@ class Parser extends EmbeddedActionsParser {
       variable: variable, // Allow exporting groups of variables
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -225,7 +250,7 @@ class Parser extends EmbeddedActionsParser {
     'ConstantDeclaration',
     (): Nodes.DeclarationStatementNode => {
       const location = this.CONSUME(Tokens.TknConst);
-      this.SUBRULE(this.ws);
+      this.SUBRULE(this.wss);
       const name = this.SUBRULE(this.variableDefinitionNode);
       this.SUBRULE1(this.wss);
       this.CONSUME(Tokens.TknColon);
@@ -244,7 +269,7 @@ class Parser extends EmbeddedActionsParser {
         value: value,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset,
+          length: <number>location.endOffset - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -254,15 +279,15 @@ class Parser extends EmbeddedActionsParser {
   );
   private declarationStatement = this.RULE('Declaration', (): Nodes.DeclarationStatementNode => {
     const location = this.CONSUME(Tokens.TknLet);
-    this.SUBRULE(this.ws);
-    const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE(this.wss);
-    this.CONSUME(Tokens.TknColon);
+    const name = this.SUBRULE(this.variableDefinitionNode);
     this.SUBRULE1(this.wss);
-    const varType = this.SUBRULE(this.typeLiteral);
+    this.CONSUME(Tokens.TknColon);
     this.SUBRULE2(this.wss);
-    this.CONSUME(Tokens.assignmentOperators);
+    const varType = this.SUBRULE(this.typeLiteral);
     this.SUBRULE3(this.wss);
+    this.CONSUME(Tokens.assignmentOperators);
+    this.SUBRULE4(this.wss);
     const value = this.SUBRULE(this.expression);
     return {
       nodeType: Nodes.NodeType.DeclarationStatement,
@@ -273,7 +298,7 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -310,12 +335,15 @@ class Parser extends EmbeddedActionsParser {
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
+      let length = 0;
       const operators: Nodes.ComparisonExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticExpression);
-      this.SUBRULE(this.wss);
+      length += this.SUBRULE(this.wss).position?.length || 0;
       this.MANY(() => {
-        switch (this.CONSUME(Tokens.comparisonOperators).tokenType.name) {
+        const operator = this.CONSUME(Tokens.comparisonOperators);
+        length += operator.image.length;
+        switch (operator.tokenType.name) {
           case LexerTokenType.TknComparisonEqual:
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
             break;
@@ -335,38 +363,48 @@ class Parser extends EmbeddedActionsParser {
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
             break;
         }
-        this.SUBRULE1(this.wss);
+        length += this.SUBRULE1(this.wss).position?.length || 0;
         expressions.push(this.SUBRULE1(this.arithmeticExpression));
-        this.SUBRULE2(this.wss);
+        length += this.SUBRULE2(this.wss).position?.length || 0;
       });
       if (expressions.length == 0) {
         return lhs;
       } else {
-        return expressions.reduce(
-          (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
-            return {
-              nodeType: Nodes.NodeType.ComparisonExpression,
-              category: Nodes.NodeCategory.Expression,
-              lhs: prevValue,
-              operator: operators[index],
-              rhs: currentValue,
-              position: prevValue.position,
-            };
-          },
-          lhs
-        );
+        return this.ACTION(() => {
+          const expr = expressions.reduce(
+            (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
+              return {
+                nodeType: Nodes.NodeType.ComparisonExpression,
+                category: Nodes.NodeCategory.Expression,
+                lhs: prevValue,
+                operator: operators[index],
+                rhs: currentValue,
+                position: {
+                  ...prevValue.position,
+                  length: prevValue.position.length + currentValue.position.length + length,
+                },
+              };
+            },
+            lhs
+          );
+          expr.position.length = expr.position.length += length;
+          return expr;
+        });
       }
     }
   );
   private arithmeticExpression = this.RULE(
     'ArithmeticExpression',
     (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
+      let length = 0;
       const operators: Nodes.ArithmeticExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.simpleExpression);
-      this.SUBRULE(this.wss);
+      length += this.SUBRULE(this.wss).position?.length ?? 0;
       this.MANY(() => {
-        switch (this.CONSUME(Tokens.arithmeticOperators).tokenType.name) {
+        const operator = this.CONSUME(Tokens.arithmeticOperators);
+        length += operator.image.length;
+        switch (operator.tokenType.name) {
           case LexerTokenType.TknAdd:
             operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticAdd);
             break;
@@ -383,51 +421,61 @@ class Parser extends EmbeddedActionsParser {
             operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
             break;
         }
-        this.SUBRULE1(this.wss);
+        length += this.SUBRULE1(this.wss).position?.length ?? 0;
         expressions.push(this.SUBRULE1(this.simpleExpression));
-        this.SUBRULE2(this.wss);
+        length += this.SUBRULE2(this.wss).position?.length ?? 0;
       });
       if (expressions.length == 0) {
         return lhs;
       } else {
-        return expressions.reduce(
-          (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-            return {
-              nodeType: Nodes.NodeType.ArithmeticExpression,
-              category: Nodes.NodeCategory.Expression,
-              lhs: prevValue,
-              operator: operators[index],
-              rhs: currentValue,
-              position: prevValue.position,
-            };
-          },
-          lhs
-        );
+        return this.ACTION(() => {
+          const expr = expressions.reduce(
+            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
+              return {
+                nodeType: Nodes.NodeType.ArithmeticExpression,
+                category: Nodes.NodeCategory.Expression,
+                lhs: prevValue,
+                operator: operators[index],
+                rhs: currentValue,
+                position: {
+                  ...prevValue.position,
+                  length: prevValue.position.length + currentValue.position.length + 1,
+                },
+              };
+            },
+            lhs
+          );
+          expr.position.length = expr.position.length += length;
+          return expr;
+        });
       }
     }
   );
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
-    return this.OR([
-      {
-        ALT: () => this.SUBRULE(this.logicalExpression),
-      },
-      {
-        ALT: () => this.SUBRULE(this.parenthesisExpression),
-      },
-      {
-        ALT: () => this.SUBRULE(this.atom),
-        IGNORE_AMBIGUITIES: true,
-      },
-      {
-        ALT: () => this.SUBRULE(this.callExpression),
-      },
-      {
-        ALT: () => this.SUBRULE(this.wasmCallExpression),
-      },
-      {
-        ALT: () => this.SUBRULE(this.castExpression),
-      },
-    ]);
+    return this.OR({
+      MAX_LOOKAHEAD: 3,
+      IGNORE_AMBIGUITIES: true,
+      DEF: [
+        {
+          ALT: () => this.SUBRULE(this.logicalExpression),
+        },
+        {
+          ALT: () => this.SUBRULE(this.parenthesisExpression),
+        },
+        {
+          ALT: () => this.SUBRULE(this.atom),
+        },
+        {
+          ALT: () => this.SUBRULE(this.callExpression),
+        },
+        {
+          ALT: () => this.SUBRULE(this.wasmCallExpression),
+        },
+        {
+          ALT: () => this.SUBRULE(this.castExpression),
+        },
+      ],
+    });
   });
   private castExpression = this.RULE('CaseExpression', (): Nodes.TypeCastExpressionNode => {
     const location = this.CONSUME(Tokens.TknComparisonLessThan);
@@ -444,7 +492,7 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -469,7 +517,7 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: logicalOperatorToken.startOffset,
-        length: <number>logicalOperatorToken.endOffset - logicalOperatorToken.startOffset,
+        length: <number>logicalOperatorToken.endOffset - logicalOperatorToken.startOffset + 1,
         line: logicalOperatorToken.startLine || 0,
         col: logicalOperatorToken.startColumn || 0,
         file: this.file,
@@ -488,7 +536,7 @@ class Parser extends EmbeddedActionsParser {
         value: expression,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset,
+          length: 2 + expression.position?.length || 0,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -539,7 +587,7 @@ class Parser extends EmbeddedActionsParser {
       args: args,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -575,7 +623,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -590,7 +638,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -605,7 +653,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -620,7 +668,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -635,7 +683,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -650,7 +698,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -665,7 +713,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -680,7 +728,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -702,10 +750,13 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private variable = this.RULE('Variable', (): Nodes.Variable => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.memberAccessNode) },
-      { ALT: () => this.SUBRULE(this.variableUsageNode) },
-    ]);
+    return this.OR({
+      MAX_LOOKAHEAD: 2,
+      DEF: [
+        { ALT: () => this.SUBRULE(this.memberAccessNode) },
+        { ALT: () => this.SUBRULE(this.variableUsageNode) },
+      ],
+    });
   });
   private variableDefinitionNode = this.RULE(
     'VariableDefinitionNode',
@@ -717,7 +768,7 @@ class Parser extends EmbeddedActionsParser {
         name: identifier.image,
         position: {
           offset: identifier.startOffset,
-          length: <number>identifier.endOffset - identifier.startOffset,
+          length: <number>identifier.endOffset - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
           file: this.file,
@@ -733,7 +784,7 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
@@ -791,7 +842,7 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -811,11 +862,11 @@ class Parser extends EmbeddedActionsParser {
   // Type Definition
   private typeAlias = this.RULE('TypeAliasDefinition', (): Nodes.TypeAliasDefinitionNode => {
     const location = this.CONSUME(Tokens.TknType);
-    this.SUBRULE(this.ws);
+    this.SUBRULE(this.wss);
     const name = this.CONSUME(Tokens.TknIdentifier);
-    this.SUBRULE1(this.ws);
-    this.CONSUME(Tokens.TknEqual);
     this.SUBRULE1(this.wss);
+    this.CONSUME(Tokens.TknEqual);
+    this.SUBRULE2(this.wss);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
     return {
       nodeType: Nodes.NodeType.TypeAliasDefinition,
@@ -824,7 +875,7 @@ class Parser extends EmbeddedActionsParser {
       typeLiteral: typeLiteral,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -835,9 +886,9 @@ class Parser extends EmbeddedActionsParser {
     'InterfaceDefinition',
     (): Nodes.InterfaceDefinitionNode => {
       const location = this.CONSUME(Tokens.TknInterface);
-      this.SUBRULE(this.ws);
+      this.SUBRULE(this.wss);
       const name = this.CONSUME(Tokens.TknIdentifier);
-      this.SUBRULE1(this.ws);
+      this.SUBRULE1(this.wss);
       const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
       return {
         nodeType: Nodes.NodeType.InterfaceDefinition,
@@ -846,7 +897,7 @@ class Parser extends EmbeddedActionsParser {
         typeLiteral: interfaceLiteral,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset,
+          length: <number>location.endOffset - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -900,7 +951,7 @@ class Parser extends EmbeddedActionsParser {
       value: value,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -933,7 +984,7 @@ class Parser extends EmbeddedActionsParser {
         returnType: returnType,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset,
+          length: <number>location.endOffset - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -961,7 +1012,7 @@ class Parser extends EmbeddedActionsParser {
         fields: fields,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset,
+          length: <number>location.endOffset - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -981,7 +1032,7 @@ class Parser extends EmbeddedActionsParser {
       fieldType: fieldType,
       position: {
         offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
@@ -1007,7 +1058,7 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
@@ -1015,31 +1066,6 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   // General Helpers
-  private importStart = this.RULE('Import', (): Position => {
-    const location = this.CONSUME(Tokens.TknImport);
-    this.SUBRULE(this.ws);
-    return {
-      offset: location.startOffset,
-      length: <number>location.endOffset - location.startOffset,
-      line: location.startLine || 0,
-      col: location.startColumn || 0,
-      file: this.file,
-    };
-  });
-  private ws = this.RULE('WhiteSpace', () => {
-    const space = this.CONSUME(Tokens.TknWhitespace);
-    return {
-      nodeType: Nodes.NodeType.WhiteSpace,
-      category: Nodes.NodeCategory.WhiteSpace,
-      value: space.image,
-      position: {
-        offset: space.startOffset,
-        line: space.startLine || 0,
-        col: space.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
   private wss = this.RULE('OptionalWhiteSpace', (): Nodes.WhiteSpaceNode => {
     const spaces: IToken[] = [];
     this.MANY(() => spaces.push(this.CONSUME(Tokens.TknWhitespace)));
@@ -1049,7 +1075,7 @@ class Parser extends EmbeddedActionsParser {
       value: spaces.map((space) => space.image).join(''),
       position: {
         offset: spaces[0]?.startOffset || 0,
-        length: <number>spaces.at(-1)?.endOffset - spaces[0]?.startOffset || 0,
+        length: <number>spaces.at(-1)?.endOffset - spaces[0]?.startOffset + 1 || 0,
         line: spaces[0]?.startLine || 0,
         col: spaces[0]?.startColumn || 0,
         file: this.file,
