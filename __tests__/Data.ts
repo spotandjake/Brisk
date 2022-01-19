@@ -16,5 +16,11 @@ const serializeInput = (lexStream: ILexingResult): string => {
   return JSON.stringify({ ...lexStream, tokens: tokens });
 };
 // Generate Data for parser tests
-fs.writeFileSync('./__tests__/Data/Parser/Parser_Pass.json', serializeInput(lex(Parser_Pass)));
-fs.writeFileSync('./__tests__/Data/Parser/Literals_Pass.json', serializeInput(lex(Literals_pass)));
+fs.writeFileSync(
+  './__tests__/Data/Parser/Parser_Pass.json',
+  serializeInput(lex(Parser_Pass, 'file'))
+);
+fs.writeFileSync(
+  './__tests__/Data/Parser/Literals_Pass.json',
+  serializeInput(lex(Literals_pass, 'file'))
+);
