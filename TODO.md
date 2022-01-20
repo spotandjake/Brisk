@@ -1,32 +1,31 @@
 # Current
-+ [ ] Tasks For Wednesday
-  + [ ] Order Of Operations / Operator Precedence
-  + [ ] Implement Order Of Operations
-  + [ ] Preferably In Parser
-  + [ ] Updating Planning Doc
++ [ ] Tasks For Thursday
+  + [ ] Remove Semantic Meaning Of WhiteSpaces
+    + [ ] Create A Test where we parse with whitespace and without whitespace and verify the output is the same
   + [ ] Check Function Type Matches Function Returns
-    + [ ] Implement Return As A Keyword
+  + [ ] Implement Return As A Keyword
+  + [ ] Order Of Operations / Operator Precedence
   + [ ] Analyzer Verification Of Literals
     + [ ] Check That Numbers are within bounds
-  + [ ] Fix Parenthesis Types
+  + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
+    + [ ] Import
+    + [ ] Export
   + [ ] resolve Grammar Ambiguities
     + [ ] Object vs Block Statement
     + [ ] FunctionSignature Vs ParenthesisTypeLiteral
     + [ ] Function Vs ParenthesisExpression
-  + [ ] Remove Semantic Meaning Of WhiteSpaces
+    + [ ] Fix Parenthesis Types
   + [ ] Generic Types
   + [ ] Adt Enums
-  + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
-    + [ ] Import
-    + [ ] Export
-+ [ ] Tasks For Thursday
++ [ ] Tasks For Friday
   + [ ] Reduce Complexity Of Possible Recursion in TypeChecker ResolveType and matchType
   + [ ] Reprogram Analyzer, Reduce Complexity Increase Safety
   + [ ] Improve Parser There are bugs
     + [ ] Fix Single line if statement
     + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
   + [ ] Allow Exporting Types
-+ [ ] Tasks For Friday & Saturday
++ [ ] Tasks For Saturday
+  + [ ] Start Writing Our Wasm Builder
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fuzzy Tests
