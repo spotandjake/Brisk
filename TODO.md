@@ -1,14 +1,14 @@
 # Current
 + [ ] Tasks For Friday
-  + [ ] Compiler Support for f64, u64 and i64
-    + [ ] Javascript numbers are limited so we probably need to represent these using lower bits and upper bits or something like that
+  + [ ] Analyzer Verification Of Literals
+    + [ ] Compiler Support for f64, u64 and i64
+      + [ ] Javascript numbers are limited so we probably need to represent these using lower bits and upper bits or something like that, Consider using BigInt for i64 and u64 but that isnt gonna work for f64 so it may be smarter to use upper and lower bits which will work well anyways because we can compile upper and lower bits to wasm a lot easier
+    + [ ] Check That Numbers are within bounds
   + [ ] Remove Semantic Meaning Of WhiteSpaces
     + [ ] Create A Test where we parse with whitespace and without whitespace and verify the output is the same
   + [ ] Check Function Type Matches Function Returns
   + [ ] Implement Return As A Keyword
   + [ ] Order Of Operations / Operator Precedence
-  + [ ] Analyzer Verification Of Literals
-    + [ ] Check That Numbers are within bounds
   + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
     + [ ] Import
     + [ ] Export
