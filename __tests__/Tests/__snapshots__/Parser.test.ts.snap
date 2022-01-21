@@ -385,7 +385,7 @@ Object {
           "position": Object {
             "col": 12,
             "file": "file",
-            "length": 18,
+            "length": 16,
             "line": 12,
             "offset": 340,
           },
@@ -467,6 +467,7 @@ Object {
         "lhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -481,13 +482,14 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 8,
+          "length": 6,
           "line": 10,
           "offset": 297,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -588,6 +590,7 @@ Object {
         "lhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -602,13 +605,14 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 8,
+          "length": 6,
           "line": 17,
           "offset": 428,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -767,6 +771,7 @@ Object {
         Object {
           "category": 3,
           "nodeType": 17,
+          "number": 0,
           "position": Object {
             "col": 15,
             "file": "file",
@@ -779,6 +784,7 @@ Object {
         Object {
           "category": 3,
           "nodeType": 17,
+          "number": 0,
           "position": Object {
             "col": 19,
             "file": "file",
@@ -834,6 +840,7 @@ Object {
               "lhs": Object {
                 "category": 3,
                 "nodeType": 23,
+                "number": 0,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -848,7 +855,7 @@ Object {
               "position": Object {
                 "col": 17,
                 "file": "file",
-                "length": 9,
+                "length": 8,
                 "line": 31,
                 "offset": 661,
               },
@@ -858,7 +865,7 @@ Object {
                 "position": Object {
                   "col": 21,
                   "file": "file",
-                  "length": 7,
+                  "length": 6,
                   "line": 31,
                   "offset": 665,
                 },
@@ -867,6 +874,7 @@ Object {
                   "lhs": Object {
                     "category": 3,
                     "nodeType": 23,
+                    "number": 0,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -881,13 +889,14 @@ Object {
                   "position": Object {
                     "col": 22,
                     "file": "file",
-                    "length": 5,
+                    "length": 4,
                     "line": 31,
                     "offset": 666,
                   },
                   "rhs": Object {
                     "category": 3,
                     "nodeType": 23,
+                    "number": 0,
                     "position": Object {
                       "col": 26,
                       "file": "file",
@@ -905,13 +914,14 @@ Object {
             "position": Object {
               "col": 17,
               "file": "file",
-              "length": 11,
+              "length": 10,
               "line": 31,
               "offset": 661,
             },
             "rhs": Object {
               "category": 3,
               "nodeType": 23,
+              "number": 0,
               "position": Object {
                 "col": 31,
                 "file": "file",
@@ -927,13 +937,14 @@ Object {
           "position": Object {
             "col": 17,
             "file": "file",
-            "length": 13,
+            "length": 12,
             "line": 31,
             "offset": 661,
           },
           "rhs": Object {
             "category": 3,
             "nodeType": 23,
+            "number": 0,
             "position": Object {
               "col": 35,
               "file": "file",
@@ -949,13 +960,14 @@ Object {
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 24,
+          "length": 18,
           "line": 31,
           "offset": 661,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 39,
             "file": "file",
@@ -1004,6 +1016,7 @@ Object {
       "value": Object {
         "category": 3,
         "nodeType": 23,
+        "number": 0,
         "position": Object {
           "col": 5,
           "file": "file",
@@ -1227,6 +1240,7 @@ Object {
       "value": Object {
         "category": 3,
         "nodeType": 23,
+        "number": 0,
         "position": Object {
           "col": 19,
           "file": "file",
@@ -1670,7 +1684,7 @@ Object {
           "position": Object {
             "col": 12,
             "file": "file",
-            "length": 18,
+            "length": 16,
             "line": 12,
             "offset": 340,
           },
@@ -1752,6 +1766,7 @@ Object {
         "lhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1766,13 +1781,14 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 8,
+          "length": 6,
           "line": 10,
           "offset": 297,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -1873,6 +1889,7 @@ Object {
         "lhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 5,
             "file": "file",
@@ -1887,13 +1904,14 @@ Object {
         "position": Object {
           "col": 5,
           "file": "file",
-          "length": 8,
+          "length": 6,
           "line": 17,
           "offset": 428,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 10,
             "file": "file",
@@ -2052,6 +2070,7 @@ Object {
         Object {
           "category": 3,
           "nodeType": 17,
+          "number": 0,
           "position": Object {
             "col": 15,
             "file": "file",
@@ -2064,6 +2083,7 @@ Object {
         Object {
           "category": 3,
           "nodeType": 17,
+          "number": 0,
           "position": Object {
             "col": 19,
             "file": "file",
@@ -2119,6 +2139,7 @@ Object {
               "lhs": Object {
                 "category": 3,
                 "nodeType": 23,
+                "number": 0,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -2133,7 +2154,7 @@ Object {
               "position": Object {
                 "col": 17,
                 "file": "file",
-                "length": 9,
+                "length": 8,
                 "line": 31,
                 "offset": 661,
               },
@@ -2143,7 +2164,7 @@ Object {
                 "position": Object {
                   "col": 21,
                   "file": "file",
-                  "length": 7,
+                  "length": 6,
                   "line": 31,
                   "offset": 665,
                 },
@@ -2152,6 +2173,7 @@ Object {
                   "lhs": Object {
                     "category": 3,
                     "nodeType": 23,
+                    "number": 0,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -2166,13 +2188,14 @@ Object {
                   "position": Object {
                     "col": 22,
                     "file": "file",
-                    "length": 5,
+                    "length": 4,
                     "line": 31,
                     "offset": 666,
                   },
                   "rhs": Object {
                     "category": 3,
                     "nodeType": 23,
+                    "number": 0,
                     "position": Object {
                       "col": 26,
                       "file": "file",
@@ -2190,13 +2213,14 @@ Object {
             "position": Object {
               "col": 17,
               "file": "file",
-              "length": 11,
+              "length": 10,
               "line": 31,
               "offset": 661,
             },
             "rhs": Object {
               "category": 3,
               "nodeType": 23,
+              "number": 0,
               "position": Object {
                 "col": 31,
                 "file": "file",
@@ -2212,13 +2236,14 @@ Object {
           "position": Object {
             "col": 17,
             "file": "file",
-            "length": 13,
+            "length": 12,
             "line": 31,
             "offset": 661,
           },
           "rhs": Object {
             "category": 3,
             "nodeType": 23,
+            "number": 0,
             "position": Object {
               "col": 35,
               "file": "file",
@@ -2234,13 +2259,14 @@ Object {
         "position": Object {
           "col": 17,
           "file": "file",
-          "length": 24,
+          "length": 18,
           "line": 31,
           "offset": 661,
         },
         "rhs": Object {
           "category": 3,
           "nodeType": 23,
+          "number": 0,
           "position": Object {
             "col": 39,
             "file": "file",
@@ -2289,6 +2315,7 @@ Object {
       "value": Object {
         "category": 3,
         "nodeType": 23,
+        "number": 0,
         "position": Object {
           "col": 5,
           "file": "file",
@@ -2512,6 +2539,7 @@ Object {
       "value": Object {
         "category": 3,
         "nodeType": 23,
+        "number": 0,
         "position": Object {
           "col": 19,
           "file": "file",

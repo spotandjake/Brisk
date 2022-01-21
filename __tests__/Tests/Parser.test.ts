@@ -9,7 +9,6 @@ import parse from '../../src/Compiler/Parser/index';
 // Lexer Tests
 test('Parser: Main Pass', () => {
   const data = JSON.parse(fs.readFileSync('./__tests__/Data/Parser/Parser_Pass.json', 'utf8'));
-  // console.log(Tokens);
   const Parser_Main: ILexingResult = {
     ...data,
     tokens: data.tokens.map((tkn: any) => {
@@ -23,7 +22,6 @@ test('Parser: Main Pass', () => {
 });
 test('Parser: Literals Pass', () => {
   const data = JSON.parse(fs.readFileSync('./__tests__/Data/Parser/Literals_Pass.json', 'utf8'));
-  // console.log(Tokens);
   const Parser_Main: ILexingResult = {
     ...data,
     tokens: data.tokens.map((tkn: any) => {

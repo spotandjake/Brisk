@@ -369,6 +369,15 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     // Literals
+    case NodeType.I32Literal:
+    case NodeType.I64Literal:
+    case NodeType.U32Literal:
+    case NodeType.U64Literal:
+    case NodeType.F32Literal:
+    case NodeType.F64Literal:
+    case NodeType.NumberLiteral:
+      // console.log(node);
+      break;
     // TODO: parse the literal types in here
     case NodeType.FunctionLiteral:
       typeStacks.push(typeStack);
@@ -647,13 +656,6 @@ const analyzeNode = <T extends AllNodes>(
     // Ignore
     case NodeType.FlagStatement:
     case NodeType.StringLiteral:
-    case NodeType.I32Literal:
-    case NodeType.I64Literal:
-    case NodeType.U32Literal:
-    case NodeType.U64Literal:
-    case NodeType.F32Literal:
-    case NodeType.F64Literal:
-    case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
     case NodeType.TypePrimLiteral:
     case NodeType.TypeCastExpression:

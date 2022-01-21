@@ -1,5 +1,7 @@
 # Current
-+ [ ] Tasks For Thursday
++ [ ] Tasks For Friday
+  + [ ] Compiler Support for f64, u64 and i64
+    + [ ] Javascript numbers are limited so we probably need to represent these using lower bits and upper bits or something like that
   + [ ] Remove Semantic Meaning Of WhiteSpaces
     + [ ] Create A Test where we parse with whitespace and without whitespace and verify the output is the same
   + [ ] Check Function Type Matches Function Returns
@@ -17,21 +19,21 @@
     + [ ] Fix Parenthesis Types
   + [ ] Generic Types
   + [ ] Adt Enums
-+ [ ] Tasks For Friday
++ [ ] Tasks For Saturday
   + [ ] Reduce Complexity Of Possible Recursion in TypeChecker ResolveType and matchType
   + [ ] Reprogram Analyzer, Reduce Complexity Increase Safety
   + [ ] Improve Parser There are bugs
     + [ ] Fix Single line if statement
     + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
   + [ ] Allow Exporting Types
-+ [ ] Tasks For Saturday
++ [ ] Tasks For Sunday
   + [ ] Start Writing Our Wasm Builder
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fuzzy Tests
   + [ ] Improve Tests
   + [ ] Fix `// TODO:`
-+ [ ] Tasks For Sunday & Monday
++ [ ] Tasks For Monday
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
   + [ ] Determine Syntax For Wasm Reference Types

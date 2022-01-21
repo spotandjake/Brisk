@@ -636,6 +636,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.I32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -651,6 +652,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.I64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -666,6 +668,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.U32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -681,6 +684,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.U64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -696,6 +700,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.F32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -711,6 +716,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.F64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -726,6 +732,7 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.NumberLiteral,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
+      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,

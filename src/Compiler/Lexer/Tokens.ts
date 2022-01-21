@@ -11,11 +11,11 @@ const enum NumberType {
   Number,
 }
 const enum NumberStyle {
-  Decimal,
-  Exponential,
-  Binary,
-  Octal,
-  Hexadecimal,
+  Decimal = 10,
+  Exponential = 0,
+  Binary = 2,
+  Octal = 8,
+  Hexadecimal = 16,
 }
 const matchNumber = (numberType: NumberType) => {
   // Matching
@@ -51,9 +51,12 @@ const matchNumber = (numberType: NumberType) => {
       // Parsing
       let endOffset = startOffset,
         numberStyle = NumberStyle.Decimal,
-        length = 0;
+        length = 0,
+        value = 0,
+        sign = 1;
       // Determine Sign
       if (currentChar == '+' || currentChar == '-') {
+        if (currentChar == '-') sign = -1;
         endOffset++;
         currentChar = str.charAt(endOffset);
       }
@@ -77,6 +80,7 @@ const matchNumber = (numberType: NumberType) => {
       for (; endOffset < str.length; endOffset++) {
         // Set Current Character
         currentChar = str.charAt(endOffset);
+        const charCode = currentChar.charCodeAt(0);
         // Start Parsing
         if (currentChar == '_' && lastCharacter != '_') continue;
         // Parse Decimal & Exponential
@@ -93,24 +97,32 @@ const matchNumber = (numberType: NumberType) => {
             hitDecimalPoint = true;
             continue;
           }
-          if (!(currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57)) break;
+          if (!(charCode >= 48 && charCode <= 57)) break;
         }
         // Parse Binary,Octal,Hexadecimal
         if (numberStyle == NumberStyle.Binary && !(currentChar == '0' || currentChar == '1')) break;
-        if (
-          numberStyle == NumberStyle.Octal &&
-          !(currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 55)
-        )
-          break;
+        if (numberStyle == NumberStyle.Octal && !(charCode >= 48 && charCode <= 55)) break;
         if (
           numberStyle == NumberStyle.Hexadecimal &&
           !(
-            (currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57) ||
-            (currentChar.charCodeAt(0) >= 65 && currentChar.charCodeAt(0) <= 70) ||
-            (currentChar.charCodeAt(0) >= 97 && currentChar.charCodeAt(0) <= 102)
+            (charCode >= 48 && charCode <= 57) ||
+            (charCode >= 65 && charCode <= 70) ||
+            (charCode >= 97 && charCode <= 102)
           )
         )
           break;
+        // Actually Parse it into a number
+        const radix = numberStyle;
+        if (charCode >= 97 && charCode <= 122) {
+          // Deal with lowercase letters
+          value = value * radix + (charCode - 87);
+        } else if (charCode >= 65 && charCode <= 90) {
+          // Deal with uppercase letters
+          value = value * radix + (charCode - 55);
+        } else if (charCode >= 48 && charCode <= 57) {
+          // Deal with regular numbers
+          value = value * radix + (charCode - 48);
+        }
         // Set Last Character
         lastCharacter = currentChar;
         length++;
@@ -125,7 +137,17 @@ const matchNumber = (numberType: NumberType) => {
       // Increment
       if (numberType != NumberType.Number) endOffset++;
       // Return Results
-      if (length != 0) return [str.slice(startOffset, endOffset)];
+      if (length != 0) {
+        // Set the result
+        const result: CustomPatternMatcherReturn = [str.slice(startOffset, endOffset)];
+        // Add metaData
+        result.payload = {
+          raw: str.slice(startOffset, endOffset),
+          parsed: value * sign,
+        };
+        // Return the result
+        return result;
+      }
     }
     return null;
   };

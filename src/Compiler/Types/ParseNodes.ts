@@ -243,42 +243,49 @@ export interface I32LiteralNode {
   nodeType: NodeType.I32Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface I64LiteralNode {
   nodeType: NodeType.I64Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface U32LiteralNode {
   nodeType: NodeType.U32Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface U64LiteralNode {
   nodeType: NodeType.U64Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface F32LiteralNode {
   nodeType: NodeType.F32Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface F64LiteralNode {
   nodeType: NodeType.F64Literal;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface NumberLiteralNode {
   nodeType: NodeType.NumberLiteral;
   category: NodeCategory.Literal;
   value: string;
+  number: number;
   position: Position;
 }
 export interface ConstantLiteralNode {
