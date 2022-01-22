@@ -1,7 +1,5 @@
 # Current
 + [ ] Tasks For Friday
-  + [ ] Look Into How We Can Embed Types Efficiently Into Our Wasm Exports
-  + [ ] Consider Implementing Wasm Multivalue Syntax
   + [ ] Start Writing Our Wasm Builder
     + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Saturday
@@ -25,6 +23,7 @@
     + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
     + [ ] Consider ADT Enums And Generic Types
     + [ ] Implement Nicer Errors For This
+    + [ ] Implement Rational Numbers
 + [ ] Tasks For Sunday
   + [ ] Write New Tests Based On The Improvements To The Compiler
   + [ ] Better Error Messages
