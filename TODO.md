@@ -1,56 +1,47 @@
 # Current
 + [ ] Tasks For Friday
-  + [ ] Analyzer Verification Of Literals
-    + [ ] Compiler Support for f64, u64 and i64
-      + [ ] Javascript numbers are limited so we probably need to represent these using lower bits and upper bits or something like that, Consider using BigInt for i64 and u64 but that isnt gonna work for f64 so it may be smarter to use upper and lower bits which will work well anyways because we can compile upper and lower bits to wasm a lot easier
-    + [ ] Check That Numbers are within bounds
-  + [ ] Remove Semantic Meaning Of WhiteSpaces
-    + [ ] Create A Test where we parse with whitespace and without whitespace and verify the output is the same
-  + [ ] Check Function Type Matches Function Returns
-  + [ ] Implement Return As A Keyword
-  + [ ] Order Of Operations / Operator Precedence
-  + [ ] New Top Level statement type that includes things imports and exports so they cannot physically go in deeper code
-    + [ ] Import
-    + [ ] Export
-  + [ ] resolve Grammar Ambiguities
-    + [ ] Object vs Block Statement
-    + [ ] FunctionSignature Vs ParenthesisTypeLiteral
-    + [ ] Function Vs ParenthesisExpression
-    + [ ] Fix Parenthesis Types
-  + [ ] Generic Types
-  + [ ] Adt Enums
-+ [ ] Tasks For Saturday
-  + [ ] Reduce Complexity Of Possible Recursion in TypeChecker ResolveType and matchType
-  + [ ] Reprogram Analyzer, Reduce Complexity Increase Safety
-  + [ ] Improve Parser There are bugs
-    + [ ] Fix Single line if statement
-    + [ ] Fix Member Access Nodes / Implement them in analyzer and type checker
-  + [ ] Allow Exporting Types
-+ [ ] Tasks For Sunday
+  + [ ] Look Into How We Can Embed Types Efficiently Into Our Wasm Exports
+  + [ ] Consider Implementing Wasm Multivalue Syntax
   + [ ] Start Writing Our Wasm Builder
+    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
++ [ ] Tasks For Saturday
+  + [ ] Rewrite Lexer To Be A Custom Lexer
+  + [ ] Rewrite Parser To Perform Better
+    + [ ] Reduce Complexity Fix Order Of Operations
+    + [ ] Fix Node Lengths
+    + [ ] Allow You To Call Functions On Any Things Like Other Function Calls
+    + [ ] Determine The Rules For This
+    + [ ] Simplify Grammar
+    + [ ] ReImplement Operation Expressions To Allow Us To Implement Operator Precedence
+    + [ ] Fix Single line if statement
+    + [ ] Implement Match Syntax, Implement Enum Syntax, Implement Generics Syntax
+    + [ ] Implement Objects
+    + [ ] Allow Exporting Any Expression Or Type
+    + [ ] Implement Destructuring And Spread Syntax, Along With Optional Parameters
+  + [ ] Rewrite Type Checker And Analyzer
+    + [ ] Support Member Access Calls
+    + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
+    + [ ] Reduce Complexity Of Both The TypeChecker And Analyzer
+    + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
+    + [ ] Consider ADT Enums And Generic Types
+    + [ ] Implement Nicer Errors For This
++ [ ] Tasks For Sunday
+  + [ ] Write New Tests Based On The Improvements To The Compiler
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
-  + [ ] Fuzzy Tests
-  + [ ] Improve Tests
   + [ ] Fix `// TODO:`
+  + [ ] Start Writing CodeGen
+    + [ ] Implement Support For Arbitrary Precision Numbers In Compiler
+      + [ ] This is needed for proper compilation of things like i64, u64, f64 and THe Number Type
 + [ ] Tasks For Monday
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
   + [ ] Determine Syntax For Wasm Reference Types
-  + [ ] Start CodeGen
-    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks for Tuesday
   + [ ] Look Into Writing Linker
     + [ ] Find Way To Parse Without Binaryen
     + [ ] Find Way To Compile Without Binaryen
     + [ ] Find Way To Optimize Without Binaryen
-# General Tasks / Some Are Duplicated Of Above
-+ [ ] Start working on type system
-  + [ ] Refactor parser types into type literals and type 
-    + [ ] ADT Enums
-    + [ ] We need to add objects or else Member accesses are a little useless.
-    + [ ] Fix Analyzing Of MemberAccesses
-+ [ ] Recursive Types and data
 
 # Tasks
 + [x] Lexer
@@ -108,7 +99,6 @@
           + [ ] Template Literals
         + [ ] Numbers
           + [x] Decimal Numbers
-          + [x] Exponential
           + [x] Binary
           + [x] Octal
           + [x] HexaDecimal
@@ -148,8 +138,6 @@
           + [x] Type Variables
           + [ ] Generics
           + [ ] Parenthesis TypeLiterals
-            + [x] General Syntax
-            + [ ] Parsing
           + [x] Union Types
           + [x] Function Signatures
         + [x] Type Aliases

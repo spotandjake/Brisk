@@ -31,6 +31,7 @@ const analyzeNode = <T extends AllNodes>(
   closure: VariableClosure,
   stack: VariableStack,
   parent: AllNodes | undefined,
+  parentNode: AllNodes | undefined,
   node: T
 ): T => {
   // Properties
@@ -60,6 +61,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          node,
           child
         )
       );
@@ -71,6 +73,7 @@ const analyzeNode = <T extends AllNodes>(
           (statementNode.nodeType == NodeType.ImportStatement ||
             statementNode.nodeType == NodeType.WasmImportStatement) &&
           prevNode != undefined &&
+          prevNode.category != NodeCategory.Type &&
           prevNode.nodeType != NodeType.ImportStatement &&
           prevNode.nodeType != NodeType.WasmImportStatement
         )
@@ -108,6 +111,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           child
         )
       );
@@ -129,6 +133,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.condition
       );
       node.body = analyzeNode(
@@ -140,6 +145,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.body
       );
       if (node.alternative)
@@ -152,13 +158,12 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           node.alternative
         );
       break;
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
-      if (parent != undefined && parent.nodeType != NodeType.Program)
-        BriskParseError('Import statements must be at the top level.', node.position);
       node.variable = analyzeNode(
         _types,
         typeStacks,
@@ -168,6 +173,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         <AnalyzedVariableDefinitionNode>{
           ...node.variable,
           global: parent != undefined && parent.nodeType == NodeType.Program,
@@ -184,6 +190,7 @@ const analyzeNode = <T extends AllNodes>(
                 closureMap,
                 stackMap,
                 node,
+                parentNode,
                 {
                   nodeType: NodeType.TypePrimLiteral,
                   category: NodeCategory.Type,
@@ -195,9 +202,7 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     case NodeType.ExportStatement:
-      // TODO: Allow exporting expressions
-      if (parent != undefined && parent.nodeType != NodeType.Program)
-        BriskParseError('Export statements must be at the top level.', node.position);
+      // TODO: Allow exporting expressions & Types
       node.variable = analyzeNode(
         _types,
         typeStacks,
@@ -207,6 +212,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.variable
       );
       if (node.variable.nodeType == NodeType.VariableUsage) {
@@ -228,6 +234,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.varType
       );
       node.name = analyzeNode(
@@ -239,6 +246,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         <AnalyzedVariableDefinitionNode>{
           ...node.name,
           global: parent != undefined && parent.nodeType == NodeType.Program,
@@ -255,6 +263,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.value
       );
       break;
@@ -268,6 +277,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.name
       );
       const varData = <VariableData>_variables.get(<number>node.name.name);
@@ -283,7 +293,26 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.value
+      );
+      break;
+    }
+    case NodeType.ReturnStatement: {
+      if (!parentNode || parentNode.nodeType != NodeType.FunctionLiteral) {
+        BriskParseError('Return Can Only Be Called In A Function', node.position);
+      }
+      node.returnValue = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        parentNode,
+        node.returnValue
       );
       break;
     }
@@ -299,6 +328,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.lhs
       );
       node.rhs = analyzeNode(
@@ -310,6 +340,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.rhs
       );
       break;
@@ -324,6 +355,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.value
       );
       break;
@@ -337,6 +369,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.name
       );
       node.args = node.args.map((arg) =>
@@ -349,6 +382,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           arg
         )
       );
@@ -364,6 +398,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           arg
         )
       );
@@ -395,6 +430,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          node,
           param
         )
       );
@@ -407,6 +443,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        node,
         node.body
       );
       node.returnType = analyzeNode(
@@ -417,6 +454,7 @@ const analyzeNode = <T extends AllNodes>(
         stacks,
         closureMap,
         stackMap,
+        node,
         node,
         node.returnType
       );
@@ -447,6 +485,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           node.type
         ),
       });
@@ -491,6 +530,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.name
       );
       if (node.child)
@@ -503,6 +543,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           node.child
         );
       break;
@@ -516,6 +557,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.paramType
       );
       node.name = analyzeNode(
@@ -527,6 +569,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         <AnalyzedVariableDefinitionNode>{
           ...node.name,
           global: false,
@@ -552,6 +595,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           node.typeLiteral
         ),
       });
@@ -569,6 +613,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           t
         )
       );
@@ -583,6 +628,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.value
       );
       break;
@@ -597,6 +643,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           param
         )
       );
@@ -609,6 +656,7 @@ const analyzeNode = <T extends AllNodes>(
         closureMap,
         stackMap,
         node,
+        parentNode,
         node.returnType
       );
       break;
@@ -623,6 +671,7 @@ const analyzeNode = <T extends AllNodes>(
           closureMap,
           stackMap,
           node,
+          parentNode,
           field.fieldType
         );
         return field;
@@ -670,7 +719,18 @@ const analyzeNode = <T extends AllNodes>(
 };
 const analyze = (program: ProgramNode) =>
   <AnalyzedProgramNode>(
-    analyzeNode(new Map(), [], new Map(), new Map(), [], new Set(), new Map(), undefined, program)
+    analyzeNode(
+      new Map(),
+      [],
+      new Map(),
+      new Map(),
+      [],
+      new Set(),
+      new Map(),
+      undefined,
+      undefined,
+      program
+    )
   );
 
 export default analyze;

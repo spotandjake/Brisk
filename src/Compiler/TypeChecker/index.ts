@@ -18,6 +18,7 @@ import {
   VariableMap,
   VariableStack,
   AnalyzedProgramNode,
+  AnalyzedFunctionLiteralNode,
 } from '../Types/AnalyzerNodes';
 import { BriskTypeError } from '../Errors/Compiler';
 import { instructions, WasmInstruction } from './WasmTypes';
@@ -258,6 +259,7 @@ const typeCheckNode = (
   typeStack: TypeStack,
   _variables: VariableMap,
   stack: VariableStack,
+  parentNode: AnalyzedProgramNode | AnalyzedFunctionLiteralNode,
   node: AnalyzerNode,
   code: string
 ): TypeLiteral => {
@@ -276,6 +278,7 @@ const typeCheckNode = (
           node.typeStack,
           node.variables,
           node.stack,
+          node,
           <AnalyzerNode>child,
           code
         )
@@ -287,6 +290,7 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.condition,
         code
       );
@@ -298,15 +302,39 @@ const typeCheckNode = (
         typeNode,
         node.position
       );
-      typeCheckNode(_types, typeStack, _variables, stack, <AnalyzerNode>node.body, code);
+      typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        parentNode,
+        <AnalyzerNode>node.body,
+        code
+      );
       if (node.alternative)
-        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzerNode>node.alternative, code);
+        typeCheckNode(
+          _types,
+          typeStack,
+          _variables,
+          stack,
+          parentNode,
+          <AnalyzerNode>node.alternative,
+          code
+        );
       return createTypeNode('Void', node.position);
     }
     // Statements
     case NodeType.BlockStatement:
       node.body.map((child) =>
-        typeCheckNode(_types, node.typeStack, _variables, node.stack, <AnalyzerNode>child, code)
+        typeCheckNode(
+          _types,
+          node.typeStack,
+          _variables,
+          node.stack,
+          parentNode,
+          <AnalyzerNode>child,
+          code
+        )
       );
       return createTypeNode('Void', node.position);
     case NodeType.WasmImportStatement:
@@ -320,6 +348,7 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.value,
         code
       );
@@ -332,11 +361,41 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.value,
         code
       );
-      const expectedType = typeCheckNode(_types, typeStack, _variables, stack, node.name, code);
+      const expectedType = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        parentNode,
+        node.name,
+        code
+      );
       checkValidType(_types, typeStack, code, expectedType, typeNode, node.position);
+      return createTypeNode('Void', node.position);
+    }
+    case NodeType.ReturnStatement: {
+      // TODO: We need to add path analysis to truly say that the function return type matches
+      checkValidType(
+        _types,
+        typeStack,
+        code,
+        (<AnalyzedFunctionLiteralNode>parentNode).returnType,
+        typeCheckNode(
+          _types,
+          typeStack,
+          _variables,
+          stack,
+          parentNode,
+          <AnalyzedExpression>node.returnValue,
+          code
+        ),
+        node.returnValue.position,
+        'Return Value Must Match Function Type Signature'
+      );
       return createTypeNode('Void', node.position);
     }
     // Expressions
@@ -345,8 +404,24 @@ const typeCheckNode = (
         _types,
         typeStack,
         code,
-        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.lhs, code),
-        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
+        typeCheckNode(
+          _types,
+          typeStack,
+          _variables,
+          stack,
+          parentNode,
+          <AnalyzedExpression>node.lhs,
+          code
+        ),
+        typeCheckNode(
+          _types,
+          typeStack,
+          _variables,
+          stack,
+          parentNode,
+          <AnalyzedExpression>node.rhs,
+          code
+        ),
         node.rhs.position,
         'lhs must match rhs'
       );
@@ -357,6 +432,7 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.lhs,
         code
       );
@@ -373,7 +449,15 @@ const typeCheckNode = (
         typeStack,
         code,
         lhs,
-        typeCheckNode(_types, typeStack, _variables, stack, <AnalyzedExpression>node.rhs, code),
+        typeCheckNode(
+          _types,
+          typeStack,
+          _variables,
+          stack,
+          parentNode,
+          <AnalyzedExpression>node.rhs,
+          code
+        ),
         node.rhs.position,
         'lhs must match rhs'
       );
@@ -389,6 +473,7 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.value,
         code
       );
@@ -408,6 +493,7 @@ const typeCheckNode = (
         typeStack,
         _variables,
         stack,
+        parentNode,
         <AnalyzedExpression>node.value,
         code
       );
@@ -457,12 +543,20 @@ const typeCheckNode = (
       }
     // Literals
     case NodeType.FunctionLiteral:
-      typeCheckNode(_types, node.typeStack, _variables, node.stack, <AnalyzerNode>node.body, code);
+      typeCheckNode(
+        _types,
+        node.typeStack,
+        _variables,
+        node.stack,
+        node,
+        <AnalyzerNode>node.body,
+        code
+      );
       return {
         nodeType: NodeType.FunctionSignatureLiteral,
         category: NodeCategory.Type,
         params: node.params.map((param) =>
-          typeCheckNode(_types, node.typeStack, _variables, node.stack, param, code)
+          typeCheckNode(_types, node.typeStack, _variables, node.stack, node, param, code)
         ),
         returnType: node.returnType,
         position: node.position,
@@ -515,6 +609,14 @@ const typeCheckNode = (
   }
 };
 const typeCheck = (program: AnalyzedProgramNode, code: string) => {
-  typeCheckNode(program.types, program.typeStack, program.variables, program.stack, program, code);
+  typeCheckNode(
+    program.types,
+    program.typeStack,
+    program.variables,
+    program.stack,
+    program,
+    program,
+    code
+  );
 };
 export default typeCheck;

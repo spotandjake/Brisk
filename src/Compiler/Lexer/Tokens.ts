@@ -12,11 +12,11 @@ const enum NumberType {
 }
 const enum NumberStyle {
   Decimal = 10,
-  Exponential = 0,
   Binary = 2,
   Octal = 8,
   Hexadecimal = 16,
 }
+// TODO: we want to remove this so we dont need to worry about js number limits
 const matchNumber = (numberType: NumberType) => {
   // Matching
   return (
@@ -51,12 +51,9 @@ const matchNumber = (numberType: NumberType) => {
       // Parsing
       let endOffset = startOffset,
         numberStyle = NumberStyle.Decimal,
-        length = 0,
-        value = 0,
-        sign = 1;
+        length = 0;
       // Determine Sign
       if (currentChar == '+' || currentChar == '-') {
-        if (currentChar == '-') sign = -1;
         endOffset++;
         currentChar = str.charAt(endOffset);
       }
@@ -75,7 +72,7 @@ const matchNumber = (numberType: NumberType) => {
         if (numberStyle != NumberStyle.Decimal) endOffset++;
       }
       // Parse Number
-      let hitDecimalPoint = !AllowDecimal,
+      let hitDecimalPoint = false,
         lastCharacter = '';
       for (; endOffset < str.length; endOffset++) {
         // Set Current Character
@@ -83,17 +80,9 @@ const matchNumber = (numberType: NumberType) => {
         const charCode = currentChar.charCodeAt(0);
         // Start Parsing
         if (currentChar == '_' && lastCharacter != '_') continue;
-        // Parse Decimal & Exponential
+        // Parse Decimal
         if (numberStyle == NumberStyle.Decimal) {
-          if (currentChar == 'e' || currentChar == 'E') {
-            if (numberType != NumberType.Number) return null;
-            if (AllowDecimal) hitDecimalPoint = false;
-            if (str.charAt(endOffset + 1) == '+' || str.charAt(endOffset + 1) == '-') {
-              endOffset++;
-            }
-            continue;
-          }
-          if (currentChar == '.' && !hitDecimalPoint) {
+          if (currentChar == '.' && AllowDecimal && !hitDecimalPoint) {
             hitDecimalPoint = true;
             continue;
           }
@@ -111,18 +100,6 @@ const matchNumber = (numberType: NumberType) => {
           )
         )
           break;
-        // Actually Parse it into a number
-        const radix = numberStyle;
-        if (charCode >= 97 && charCode <= 122) {
-          // Deal with lowercase letters
-          value = value * radix + (charCode - 87);
-        } else if (charCode >= 65 && charCode <= 90) {
-          // Deal with uppercase letters
-          value = value * radix + (charCode - 55);
-        } else if (charCode >= 48 && charCode <= 57) {
-          // Deal with regular numbers
-          value = value * radix + (charCode - 48);
-        }
         // Set Last Character
         lastCharacter = currentChar;
         length++;
@@ -140,11 +117,6 @@ const matchNumber = (numberType: NumberType) => {
       if (length != 0) {
         // Set the result
         const result: CustomPatternMatcherReturn = [str.slice(startOffset, endOffset)];
-        // Add metaData
-        result.payload = {
-          raw: str.slice(startOffset, endOffset),
-          parsed: value * sign,
-        };
         // Return the result
         return result;
       }
@@ -265,6 +237,12 @@ export const TknType = createToken({
   label: 'Type',
   name: LexerTokenType.TypeToken,
   pattern: /type/,
+  categories: keywordTokens,
+});
+export const TknReturn = createToken({
+  label: 'Return',
+  name: LexerTokenType.ReturnToken,
+  pattern: /return/,
   categories: keywordTokens,
 });
 // Literals
@@ -406,6 +384,7 @@ export const TknSemiColon = createToken({
 export const TknWhitespace = createToken({
   label: 'Whitespace',
   name: LexerTokenType.WhiteSpace,
+  group: Lexer.SKIPPED,
   pattern: /[ \t\s\r\n]+/,
   line_breaks: true,
 }); // ws
@@ -612,6 +591,7 @@ export const Tokens = [
   TknElse,
   TknInterface,
   TknType,
+  TknReturn,
   // Separators
   TknLParen,
   TknRParen,

@@ -13,6 +13,7 @@ export const enum NodeType {
   ExportStatement,
   DeclarationStatement,
   AssignmentStatement,
+  ReturnStatement,
   // Expressions
   ComparisonExpression,
   ArithmeticExpression,
@@ -48,8 +49,6 @@ export const enum NodeType {
   VariableUsage,
   MemberAccess,
   Parameter,
-  // WhiteSpace
-  WhiteSpace,
 }
 export const enum NodeCategory {
   General,
@@ -58,7 +57,6 @@ export const enum NodeCategory {
   Literal,
   Type,
   Variable, // TODO: we should come up with a better name for this
-  WhiteSpace,
 }
 // Program
 export interface ProgramNode {
@@ -77,7 +75,8 @@ export type Statement =
   | ExportStatementNode
   | DeclarationStatementNode
   | AssignmentStatementNode
-  | TypeDefinition;
+  | TypeDefinition
+  | ReturnStatementNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -137,6 +136,12 @@ export interface AssignmentStatementNode {
   category: NodeCategory.Statement;
   name: Variable;
   value: Expression;
+  position: Position;
+}
+export interface ReturnStatementNode {
+  nodeType: NodeType.ReturnStatement;
+  category: NodeCategory.Statement;
+  returnValue: Expression;
   position: Position;
 }
 // Expression Symbols
@@ -427,13 +432,6 @@ export interface MemberAccessNode {
   category: NodeCategory.Variable;
   name: VariableUsageNode;
   child?: Variable;
-  position: Position;
-}
-// WhiteSpace
-export interface WhiteSpaceNode {
-  nodeType: NodeType.WhiteSpace;
-  category: NodeCategory.WhiteSpace;
-  value: string;
   position: Position;
 }
 // General

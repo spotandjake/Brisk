@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, TokenType, ILexingResult, IToken } from 'chevrotain';
+import { EmbeddedActionsParser, TokenType, ILexingResult } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
@@ -21,7 +21,7 @@ class Parser extends EmbeddedActionsParser {
   }
   // Grammar
   public program = this.RULE('Program', (): Nodes.ProgramNode => {
-    const body = this.SUBRULE(this.statementList);
+    const body = this.SUBRULE(this.topLevelStatementList);
     return {
       nodeType: Nodes.NodeType.Program,
       category: Nodes.NodeCategory.General,
@@ -35,21 +35,31 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  private statementList = this.RULE('StatementList', (): Nodes.Statement[] => {
+  private topLevelStatementList = this.RULE('TopLevelStatementList', (): Nodes.Statement[] => {
     const body: Nodes.Statement[] = [];
-    this.SUBRULE(this.wss);
     this.MANY(() => {
       this.OR([
+        { ALT: () => body.push(this.SUBRULE(this.topLevelStatement)) },
         { ALT: () => body.push(this.SUBRULE(this.statement)) },
         { ALT: () => body.push(this.SUBRULE(this.flag)) },
       ]);
-      this.SUBRULE1(this.wss);
     });
     return body;
   });
+  private topLevelStatement = this.RULE('TopLevelStatement', () => {
+    const statement = this.OR({
+      DEF: [
+        { ALT: () => this.SUBRULE(this.importStatement) },
+        { ALT: () => this.SUBRULE(this.exportStatement) },
+      ],
+    });
+    this.CONSUME(Tokens.TknSemiColon, {
+      ERR_MSG: 'expecting `;` at end of Statement',
+    });
+    return statement;
+  });
   private statement = this.RULE('Statement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
-    this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknSemiColon, {
       ERR_MSG: 'expecting `;` at end of Statement',
     });
@@ -59,6 +69,10 @@ class Parser extends EmbeddedActionsParser {
     return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
       { ALT: () => this.SUBRULE(this.typeDefinition) },
+      { ALT: () => this.SUBRULE(this.returnStatement) },
+      { ALT: () => this.SUBRULE(this.ifStatement) },
+      { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
+      { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
   });
@@ -82,10 +96,8 @@ class Parser extends EmbeddedActionsParser {
   private blockStatement = this.RULE('BlockStatement', (): Nodes.BlockStatementNode => {
     const body: Nodes.Statement[] = [];
     const open = this.CONSUME(Tokens.TknLBrace);
-    this.SUBRULE(this.wss);
     this.MANY(() => {
       body.push(this.SUBRULE(this.statement));
-      this.SUBRULE1(this.wss);
     });
     this.CONSUME(Tokens.TknRBrace);
     return {
@@ -105,34 +117,23 @@ class Parser extends EmbeddedActionsParser {
     return this.OR({
       IGNORE_AMBIGUITIES: true,
       DEF: [
-        { ALT: () => this.SUBRULE(this.ifStatement) },
-        { ALT: () => this.SUBRULE(this.importStatement) },
-        { ALT: () => this.SUBRULE(this.exportStatement) },
-        { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
-        { ALT: () => this.SUBRULE(this.declarationStatement) },
-        { ALT: () => this.SUBRULE(this.assignmentStatement) },
         { ALT: () => this.SUBRULE(this.expressionStatement) },
+        { ALT: () => this.SUBRULE(this.assignmentStatement) },
       ],
     });
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
     const location = this.CONSUME(Tokens.TknIf);
-    this.SUBRULE(this.wss);
     this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE1(this.wss);
     const condition = this.SUBRULE(this.expression);
-    this.SUBRULE2(this.wss);
     this.CONSUME(Tokens.TknRParen);
-    this.SUBRULE3(this.wss);
     const { body, alternative } = this.OR([
       {
         ALT: () => {
           const body = this.SUBRULE(this.singleLineStatement);
           const alternative = this.OPTION(() => {
             this.CONSUME(Tokens.TknSemiColon);
-            this.SUBRULE4(this.wss);
             this.CONSUME(Tokens.TknElse);
-            this.SUBRULE5(this.wss);
             return this.SUBRULE(this._statement);
           });
           return { body, alternative };
@@ -142,9 +143,7 @@ class Parser extends EmbeddedActionsParser {
         ALT: () => {
           const body = this.SUBRULE(this.blockStatement);
           const alternative = this.OPTION1(() => {
-            this.SUBRULE6(this.wss);
             this.CONSUME1(Tokens.TknElse);
-            this.SUBRULE7(this.wss);
             return this.SUBRULE1(this._statement);
           });
           return { body, alternative };
@@ -171,7 +170,6 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
       let typeSignature: Nodes.TypeLiteral | undefined;
       const location = this.CONSUME(Tokens.TknImport);
-      this.SUBRULE(this.wss);
       const variable = this.OR([
         {
           ALT: () => {
@@ -181,19 +179,14 @@ class Parser extends EmbeddedActionsParser {
         {
           ALT: () => {
             this.CONSUME(Tokens.TknWasm);
-            this.SUBRULE1(this.wss);
             const variable = this.SUBRULE1(this.variableDefinitionNode);
-            this.SUBRULE2(this.wss);
             this.CONSUME(Tokens.TknColon);
-            this.SUBRULE3(this.wss);
             typeSignature = this.SUBRULE(this.typeLiteral);
             return variable;
           },
         },
       ]);
-      this.SUBRULE4(this.wss);
       this.CONSUME(Tokens.TknFrom);
-      this.SUBRULE5(this.wss);
       const source = this.SUBRULE(this.stringLiteral);
       if (typeSignature == undefined) {
         // TODO: we want to add support for destructuring imports
@@ -231,7 +224,6 @@ class Parser extends EmbeddedActionsParser {
   );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
-    this.SUBRULE(this.wss);
     const variable = this.SUBRULE(this.variable);
     return {
       nodeType: Nodes.NodeType.ExportStatement,
@@ -250,15 +242,10 @@ class Parser extends EmbeddedActionsParser {
     'ConstantDeclaration',
     (): Nodes.DeclarationStatementNode => {
       const location = this.CONSUME(Tokens.TknConst);
-      this.SUBRULE(this.wss);
       const name = this.SUBRULE(this.variableDefinitionNode);
-      this.SUBRULE1(this.wss);
       this.CONSUME(Tokens.TknColon);
-      this.SUBRULE2(this.wss);
       const varType = this.SUBRULE(this.typeLiteral);
-      this.SUBRULE3(this.wss);
       this.CONSUME(Tokens.assignmentOperators);
-      this.SUBRULE4(this.wss);
       const value = this.SUBRULE(this.expression);
       return {
         nodeType: Nodes.NodeType.DeclarationStatement,
@@ -279,15 +266,10 @@ class Parser extends EmbeddedActionsParser {
   );
   private declarationStatement = this.RULE('Declaration', (): Nodes.DeclarationStatementNode => {
     const location = this.CONSUME(Tokens.TknLet);
-    this.SUBRULE(this.wss);
     const name = this.SUBRULE(this.variableDefinitionNode);
-    this.SUBRULE1(this.wss);
     this.CONSUME(Tokens.TknColon);
-    this.SUBRULE2(this.wss);
     const varType = this.SUBRULE(this.typeLiteral);
-    this.SUBRULE3(this.wss);
     this.CONSUME(Tokens.assignmentOperators);
-    this.SUBRULE4(this.wss);
     const value = this.SUBRULE(this.expression);
     return {
       nodeType: Nodes.NodeType.DeclarationStatement,
@@ -309,9 +291,7 @@ class Parser extends EmbeddedActionsParser {
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
       const name = this.SUBRULE(this.variable);
-      this.SUBRULE(this.wss);
       this.CONSUME(Tokens.assignmentOperators);
-      this.SUBRULE1(this.wss);
       const value = this.SUBRULE(this.expression);
       return {
         nodeType: Nodes.NodeType.AssignmentStatement,
@@ -322,6 +302,24 @@ class Parser extends EmbeddedActionsParser {
       };
     }
   );
+  private returnStatement = this.RULE('ReturnStatement', (): Nodes.ReturnStatementNode => {
+    const location = this.CONSUME(Tokens.TknReturn);
+    this.CONSUME(Tokens.TknLParen);
+    const returnValue = this.SUBRULE(this.expression);
+    this.CONSUME(Tokens.TknRParen);
+    return {
+      nodeType: Nodes.NodeType.ReturnStatement,
+      category: Nodes.NodeCategory.Statement,
+      returnValue: returnValue,
+      position: {
+        offset: location.startOffset,
+        length: <number>location.endOffset - location.startOffset + 1,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.callExpression) },
@@ -339,7 +337,6 @@ class Parser extends EmbeddedActionsParser {
       const operators: Nodes.ComparisonExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticExpression);
-      length += this.SUBRULE(this.wss).position?.length || 0;
       this.MANY(() => {
         const operator = this.CONSUME(Tokens.comparisonOperators);
         length += operator.image.length;
@@ -363,9 +360,7 @@ class Parser extends EmbeddedActionsParser {
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
             break;
         }
-        length += this.SUBRULE1(this.wss).position?.length || 0;
         expressions.push(this.SUBRULE1(this.arithmeticExpression));
-        length += this.SUBRULE2(this.wss).position?.length || 0;
       });
       if (expressions.length == 0) {
         return lhs;
@@ -396,11 +391,11 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticExpression = this.RULE(
     'ArithmeticExpression',
     (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
+      // TODO: Fix length on this and comparison operator
       let length = 0;
       const operators: Nodes.ArithmeticExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.simpleExpression);
-      length += this.SUBRULE(this.wss).position?.length ?? 0;
       this.MANY(() => {
         const operator = this.CONSUME(Tokens.arithmeticOperators);
         length += operator.image.length;
@@ -421,9 +416,7 @@ class Parser extends EmbeddedActionsParser {
             operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
             break;
         }
-        length += this.SUBRULE1(this.wss).position?.length ?? 0;
         expressions.push(this.SUBRULE1(this.simpleExpression));
-        length += this.SUBRULE2(this.wss).position?.length ?? 0;
       });
       if (expressions.length == 0) {
         return lhs;
@@ -463,13 +456,13 @@ class Parser extends EmbeddedActionsParser {
           ALT: () => this.SUBRULE(this.parenthesisExpression),
         },
         {
-          ALT: () => this.SUBRULE(this.atom),
-        },
-        {
           ALT: () => this.SUBRULE(this.callExpression),
         },
         {
           ALT: () => this.SUBRULE(this.wasmCallExpression),
+        },
+        {
+          ALT: () => this.SUBRULE(this.atom),
         },
         {
           ALT: () => this.SUBRULE(this.castExpression),
@@ -479,11 +472,8 @@ class Parser extends EmbeddedActionsParser {
   });
   private castExpression = this.RULE('CaseExpression', (): Nodes.TypeCastExpressionNode => {
     const location = this.CONSUME(Tokens.TknComparisonLessThan);
-    this.SUBRULE(this.wss);
     const castType = this.SUBRULE(this.typeLiteral);
-    this.SUBRULE1(this.wss);
     this.CONSUME(Tokens.TknComparisonGreaterThan);
-    this.SUBRULE2(this.wss);
     const value = this.SUBRULE(this.simpleExpression);
     return {
       nodeType: Nodes.NodeType.TypeCastExpression,
@@ -548,13 +538,10 @@ class Parser extends EmbeddedActionsParser {
     const args: Nodes.Expression[] = [];
     const name = this.SUBRULE(this.variable);
     this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
-        this.SUBRULE2(this.wss);
       },
     });
     this.CONSUME(Tokens.TknRParen);
@@ -570,13 +557,10 @@ class Parser extends EmbeddedActionsParser {
     const args: Nodes.Expression[] = [];
     const location = this.CONSUME(Tokens.TknWasmCall);
     this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        this.SUBRULE1(this.wss);
         args.push(this.SUBRULE(this.expression));
-        this.SUBRULE2(this.wss);
       },
     });
     this.CONSUME(Tokens.TknRParen);
@@ -594,10 +578,8 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-
   // Atoms
   private atom = this.RULE('Atom', (): Nodes.Atom => {
-    this.SUBRULE(this.wss);
     const atom = this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
       { ALT: () => this.SUBRULE(this.i32Literal) },
@@ -611,7 +593,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.functionDefinition) },
       { ALT: () => this.SUBRULE(this.variable) },
     ]);
-    this.SUBRULE1(this.wss);
     return atom;
   });
   // Literals
@@ -813,17 +794,12 @@ class Parser extends EmbeddedActionsParser {
   private functionDefinition = this.RULE('FunctionDefinition', (): Nodes.FunctionLiteralNode => {
     const params: Nodes.ParameterNode[] = [];
     const location = this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        this.SUBRULE1(this.wss);
         const name = this.SUBRULE(this.variableDefinitionNode);
-        this.SUBRULE2(this.wss);
         this.CONSUME(Tokens.TknColon);
-        this.SUBRULE3(this.wss);
         const paramType = this.SUBRULE(this.typeLiteral);
-        this.SUBRULE4(this.wss);
         params.push({
           nodeType: Nodes.NodeType.Parameter,
           category: Nodes.NodeCategory.Variable,
@@ -833,13 +809,9 @@ class Parser extends EmbeddedActionsParser {
       },
     });
     this.CONSUME(Tokens.TknRParen);
-    this.SUBRULE5(this.wss);
     this.CONSUME1(Tokens.TknColon);
-    this.SUBRULE6(this.wss);
     const returnType = this.SUBRULE1(this.typeLiteral);
-    this.SUBRULE7(this.wss);
     this.CONSUME(Tokens.TknThickArrow);
-    this.SUBRULE8(this.wss);
     const body = this.SUBRULE(this._statement);
     return {
       nodeType: Nodes.NodeType.FunctionLiteral,
@@ -869,11 +841,8 @@ class Parser extends EmbeddedActionsParser {
   // Type Definition
   private typeAlias = this.RULE('TypeAliasDefinition', (): Nodes.TypeAliasDefinitionNode => {
     const location = this.CONSUME(Tokens.TknType);
-    this.SUBRULE(this.wss);
     const name = this.CONSUME(Tokens.TknIdentifier);
-    this.SUBRULE1(this.wss);
     this.CONSUME(Tokens.TknEqual);
-    this.SUBRULE2(this.wss);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
     return {
       nodeType: Nodes.NodeType.TypeAliasDefinition,
@@ -893,9 +862,7 @@ class Parser extends EmbeddedActionsParser {
     'InterfaceDefinition',
     (): Nodes.InterfaceDefinitionNode => {
       const location = this.CONSUME(Tokens.TknInterface);
-      this.SUBRULE(this.wss);
       const name = this.CONSUME(Tokens.TknIdentifier);
-      this.SUBRULE1(this.wss);
       const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
       return {
         nodeType: Nodes.NodeType.InterfaceDefinition,
@@ -918,12 +885,9 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.TypeLiteral | Nodes.TypeUnionLiteralNode => {
       const types: Nodes.TypeLiteral[] = [];
       const lhs = this.SUBRULE(this._typeLiteral);
-      this.SUBRULE(this.wss);
       this.MANY(() => {
         this.CONSUME(Tokens.TknUnion);
-        this.SUBRULE1(this.wss);
         types.push(this.SUBRULE1(this._typeLiteral));
-        this.SUBRULE2(this.wss);
       });
       if (types.length == 0) {
         return lhs;
@@ -939,50 +903,22 @@ class Parser extends EmbeddedActionsParser {
   );
   private _typeLiteral = this.RULE('_TypeLiteral', (): Nodes.TypeLiteral => {
     return this.OR([
-      // TODO: fix this
-      // { ALT: () => this.SUBRULE(this.parenthesisType), IGNORE_AMBIGUITIES: true },
       { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
       { ALT: () => this.SUBRULE(this.InterfaceTypeLiteral) },
       { ALT: () => this.SUBRULE(this.typeUsageNode) },
     ]);
-  });
-  private parenthesisType = this.RULE('ParenthesisType', (): Nodes.ParenthesisTypeLiteralNode => {
-    const location = this.CONSUME(Tokens.TknLParen);
-    this.SUBRULE(this.wss);
-    const value = this.SUBRULE(this.typeLiteral);
-    this.SUBRULE1(this.wss);
-    this.CONSUME(Tokens.TknRParen);
-    return {
-      nodeType: Nodes.NodeType.ParenthesisTypeLiteral,
-      category: Nodes.NodeCategory.Type,
-      value: value,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
   });
   private functionSignatureLiteral = this.RULE(
     'functionSignatureLiteral',
     (): Nodes.FunctionSignatureLiteralNode => {
       const params: Nodes.TypeLiteral[] = [];
       const location = this.CONSUME(Tokens.TknLParen);
-      this.SUBRULE(this.wss);
       this.MANY_SEP({
         SEP: Tokens.TknComma,
-        DEF: () => {
-          this.SUBRULE1(this.wss);
-          params.push(this.SUBRULE(this.typeLiteral));
-          this.SUBRULE2(this.wss);
-        },
+        DEF: () => params.push(this.SUBRULE(this.typeLiteral)),
       });
       this.CONSUME(Tokens.TknRParen);
-      this.SUBRULE4(this.wss);
       this.CONSUME(Tokens.TknThinArrow);
-      this.SUBRULE5(this.wss);
       const returnType = this.SUBRULE1(this.typeLiteral);
       return {
         nodeType: Nodes.NodeType.FunctionSignatureLiteral,
@@ -1004,13 +940,9 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.InterfaceLiteralNode => {
       const fields: Nodes.InterfaceFieldNode[] = [];
       const location = this.CONSUME(Tokens.TknLBrace);
-      this.SUBRULE(this.wss);
       this.MANY(() => {
-        this.SUBRULE1(this.wss);
         fields.push(this.SUBRULE(this.interfaceField));
-        this.SUBRULE2(this.wss);
         this.CONSUME(Tokens.TknSemiColon);
-        this.SUBRULE3(this.wss);
       });
       this.CONSUME(Tokens.TknRBrace);
       return {
@@ -1030,7 +962,6 @@ class Parser extends EmbeddedActionsParser {
   private interfaceField = this.RULE('InterfaceField', (): Nodes.InterfaceFieldNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);
-    this.SUBRULE(this.wss);
     const fieldType = this.SUBRULE(this.typeLiteral);
     return {
       nodeType: Nodes.NodeType.InterfaceField,
@@ -1068,23 +999,6 @@ class Parser extends EmbeddedActionsParser {
         length: <number>identifier.endOffset - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
-  // General Helpers
-  private wss = this.RULE('OptionalWhiteSpace', (): Nodes.WhiteSpaceNode => {
-    const spaces: IToken[] = [];
-    this.MANY(() => spaces.push(this.CONSUME(Tokens.TknWhitespace)));
-    return {
-      nodeType: Nodes.NodeType.WhiteSpace,
-      category: Nodes.NodeCategory.WhiteSpace,
-      value: spaces.map((space) => space.image).join(''),
-      position: {
-        offset: spaces[0]?.startOffset || 0,
-        length: <number>spaces.at(-1)?.endOffset - spaces[0]?.startOffset + 1 || 0,
-        line: spaces[0]?.startLine || 0,
-        col: spaces[0]?.startColumn || 0,
         file: this.file,
       },
     };
