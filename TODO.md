@@ -1,6 +1,9 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
+    + [ ] Implement PostFix Statements
+    + [ ] Switch Logical Expression To Unary Expression
+    + [ ] Add Logical And, Or To Comparison Operator Rename This
     + [ ] Implement Destructuring And Spread Syntax
     + [ ] Fix Ignore Ambiguous
       + [ ] They Do Not Allow us to implement Calling On Non Variables
