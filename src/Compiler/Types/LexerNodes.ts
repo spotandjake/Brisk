@@ -43,7 +43,6 @@ export const enum LexerTokenType {
   TknComparisonLessThanOrEqual = 'TknComparisonLessThanOrEqual',
   TknComparisonGreaterThanOrEqual = 'TknComparisonGreaterThanOrEqual',
   TknArrow = 'TknArrow',
-  TknThinArrow = 'TknThinArrow',
 
   TknNot = 'TknNot',
 
@@ -54,6 +53,8 @@ export const enum LexerTokenType {
   TknMultiply = 'TknMultiply',
   TknPower = 'TknPower',
   TknUnion = 'TypeUnion',
+  TknQuestionMark = 'TknQuestionMark',
+  TknEllipsis = 'TknEllipsis',
   // Literals
   TknStringLiteral = 'String',
   TknI32Literal = 'I32',

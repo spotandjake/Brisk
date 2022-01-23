@@ -203,7 +203,7 @@ const analyzeNode = <T extends AllNodes>(
       break;
     case NodeType.ExportStatement:
       // TODO: Allow exporting expressions & Types
-      node.variable = analyzeNode(
+      node.value = analyzeNode(
         _types,
         typeStacks,
         typeStackMap,
@@ -213,18 +213,20 @@ const analyzeNode = <T extends AllNodes>(
         stackMap,
         node,
         parentNode,
-        node.variable
+        node.value
       );
-      if (node.variable.nodeType == NodeType.VariableUsage) {
-        const name = <number>node.variable.name;
+      // TODO: We Dont Want This Type Specific Code In Here
+      if (node.value.nodeType == NodeType.VariableUsage) {
+        const name = <number>node.value.name;
         _variables.set(name, {
           ...(<VariableData>_variables.get(name)),
           exported: true,
         });
+      } else {
+        BriskParseError('Implement Code For Other Exports', node.position);
       }
       break;
     case NodeType.DeclarationStatement:
-      // TODO: recursive values are gonna be a problem, i.e let test = test.test.test;
       node.varType = analyzeNode(
         _types,
         typeStacks,
@@ -360,7 +362,7 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     case NodeType.CallExpression:
-      node.name = analyzeNode(
+      node.callee = analyzeNode(
         _types,
         typeStacks,
         typeStackMap,
@@ -370,7 +372,7 @@ const analyzeNode = <T extends AllNodes>(
         stackMap,
         node,
         parentNode,
-        node.name
+        node.callee
       );
       node.args = node.args.map((arg) =>
         analyzeNode(
@@ -404,6 +406,7 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     // Literals
+    // TODO: parse the literal types in here
     case NodeType.I32Literal:
     case NodeType.I64Literal:
     case NodeType.U32Literal:
@@ -413,7 +416,6 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.NumberLiteral:
       // console.log(node);
       break;
-    // TODO: parse the literal types in here
     case NodeType.FunctionLiteral:
       typeStacks.push(typeStack);
       typeStackMap = new Map();
@@ -466,6 +468,28 @@ const analyzeNode = <T extends AllNodes>(
         stack: stackMap,
       };
       break;
+    case NodeType.ObjectLiteral: {
+      const fields: string[] = [];
+      node.fields = node.fields.map((field) => {
+        if (fields.includes(field.name))
+          BriskParseError(`Duplicate Field \`${field.name}\``, field.position);
+        field.fieldValue = analyzeNode(
+          _types,
+          typeStacks,
+          typeStackMap,
+          _variables,
+          stacks,
+          closureMap,
+          stackMap,
+          node,
+          parentNode,
+          field.fieldValue
+        );
+        fields.push(field.name);
+        return field;
+      });
+      break;
+    }
     // Variables
     case NodeType.VariableDefinition:
       if (stack.has(<string>node.name))
@@ -520,8 +544,8 @@ const analyzeNode = <T extends AllNodes>(
       }
       break;
     case NodeType.MemberAccess:
-      // TODO: we need to deal with these properly
-      node.name = analyzeNode(
+      // TODO: We Need To Perform Some Analysis Here
+      node.parent = analyzeNode(
         _types,
         typeStacks,
         typeStackMap,
@@ -531,21 +555,20 @@ const analyzeNode = <T extends AllNodes>(
         stackMap,
         node,
         parentNode,
-        node.name
+        node.parent
       );
-      if (node.child)
-        node.child = analyzeNode(
-          _types,
-          typeStacks,
-          typeStackMap,
-          _variables,
-          stacks,
-          closureMap,
-          stackMap,
-          node,
-          parentNode,
-          node.child
-        );
+      node.property = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        parentNode,
+        node.property
+      );
       break;
     case NodeType.Parameter:
       node.paramType = analyzeNode(
@@ -660,8 +683,11 @@ const analyzeNode = <T extends AllNodes>(
         node.returnType
       );
       break;
-    case NodeType.InterfaceLiteral:
+    case NodeType.InterfaceLiteral: {
+      const fields: string[] = [];
       node.fields = node.fields.map((field) => {
+        if (fields.includes(field.name))
+          BriskParseError(`Duplicate Field \`${field.name}\``, field.position);
         field.fieldType = analyzeNode(
           _types,
           typeStacks,
@@ -674,9 +700,11 @@ const analyzeNode = <T extends AllNodes>(
           parentNode,
           field.fieldType
         );
+        fields.push(field.name);
         return field;
       });
       break;
+    }
     case NodeType.TypeUsage:
       if (typeStack.has(<string>node.name)) {
         node.name = <number>typeStack.get(<string>node.name);
@@ -708,6 +736,7 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.ConstantLiteral:
     case NodeType.TypePrimLiteral:
     case NodeType.TypeCastExpression:
+    case NodeType.PropertyUsage:
       break;
     // Other
     // Uncomment this when adding new nodes

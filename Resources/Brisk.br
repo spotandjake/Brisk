@@ -1,19 +1,58 @@
-type Print = (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) -> Void;
-import wasm print: Print from 'test1';
+// import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
+import wasm print: (i32) => Void from 'test1';
+interface ObjectTest {
+  let field1: i32;
+  field2?: i32;
+  field3: (i32) => i32;
+  field4: {
+    field1: (i32) => i32;
+  };
+};
+const field1: i32 = 1n;
+let a: ObjectTest = {
+  field1: 1n,
+  field2: 1n,
+  field3: (a: i32): i32 => {
+    return(a);
+  },
+  field4: {
+    field1: (a: i32): i32 => {
+      return(a);
+    }
+  }
+};
+print(a.field4.field1(1n));
+// export {
+//   field1: 1n
+// };
+// type D = (i32) => i32;
+// const d: D = (a: i32): i32 => {
+//   return(a);
+// };
+// let a: i32 = 1n ^ 1n;
+// a = 1n;
+// print(1n);
+// print(a.test);
+// const a: i32 = 1n ^ 1n;
+// const b: i32 = 1n / 1n;
+// const c: i32 = 1n * 1n;
+// const d: i32 = 1n + 1n;
+// const e: i32 = 1n - 1n;
+// const f: i32 = 1n + 1n / 1n * 1n ^ 1n - 1n;
 // if (1n == 1n) print('Test');
-if (1n == 1n) print('Test');
-else print('Test');
-if (1n == 1n) {
-  print('Test');
-};
-if (1n == 1n) {
-  print('Test');
-};
-if (1n == 1n) {
-  print('Test');
-} else if (1n == 1n) {
-  print('Test');
-};
+// if (1n == 1n) print('Test');
+// else print('Test');
+// if (1n == 1n) {
+//   print('Test');
+// };
+// if (1n == 1n) {
+//   print('Test');
+// };
+// if (1n == 1n) {
+//   print('Test');
+// } else if (1n == 1n) {
+//   print('Test');
+// };
 // import test from 'test';
 // if (1n == 1n) {
 //   let a: i32 = 1n;

@@ -3,7 +3,7 @@ import { BriskParseError } from '../Errors/Compiler';
 const errorHandler = (file: string): IParserErrorMessageProvider => {
   // TODO: Error Number and better errors
   return {
-    buildMismatchTokenMessage: ({ actual, expected }) => {
+    buildMismatchTokenMessage: ({ actual, expected, ruleName }) => {
       BriskParseError(
         `Failed to Parse Found: \`${actual.tokenType.LABEL}\`, Expected \`${expected.LABEL}\``,
         {

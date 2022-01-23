@@ -33,6 +33,8 @@ export const enum NodeType {
   NumberLiteral,
   ConstantLiteral,
   FunctionLiteral,
+  ObjectLiteral,
+  ObjectField,
   // Types
   TypeAliasDefinition,
   InterfaceDefinition,
@@ -48,6 +50,7 @@ export const enum NodeType {
   VariableDefinition,
   VariableUsage,
   MemberAccess,
+  PropertyUsage,
   Parameter,
 }
 export const enum NodeCategory {
@@ -115,9 +118,11 @@ export interface WasmImportStatementNode {
 export interface ExportStatementNode {
   nodeType: NodeType.ExportStatement;
   category: NodeCategory.Statement;
-  variable: Variable; // TODO: we want to add support for exporting objects
+  value: ExportStatementValue;
   position: Position;
 }
+// TODO: Add Object To This
+type ExportStatementValue = Variable | DeclarationStatementNode;
 export const enum DeclarationTypes {
   Constant,
   Lexical,
@@ -134,7 +139,7 @@ export interface DeclarationStatementNode {
 export interface AssignmentStatementNode {
   nodeType: NodeType.AssignmentStatement;
   category: NodeCategory.Statement;
-  name: Variable;
+  name: VariableUsageNode; // TODO: Allow Support For Assigning To Member Access Nodes
   value: Expression;
   position: Position;
 }
@@ -213,7 +218,7 @@ export interface ParenthesisExpressionNode {
 export interface CallExpressionNode {
   nodeType: NodeType.CallExpression;
   category: NodeCategory.Expression;
-  name: Variable;
+  callee: Expression;
   args: Expression[];
   position: Position;
 }
@@ -236,6 +241,7 @@ export type Atom =
   | NumberLiteralNode
   | ConstantLiteralNode
   | FunctionLiteralNode
+  | ObjectLiteralNode
   | VariableUsageNode
   | MemberAccessNode;
 export interface StringLiteralNode {
@@ -248,49 +254,42 @@ export interface I32LiteralNode {
   nodeType: NodeType.I32Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface I64LiteralNode {
   nodeType: NodeType.I64Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface U32LiteralNode {
   nodeType: NodeType.U32Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface U64LiteralNode {
   nodeType: NodeType.U64Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface F32LiteralNode {
   nodeType: NodeType.F32Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface F64LiteralNode {
   nodeType: NodeType.F64Literal;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface NumberLiteralNode {
   nodeType: NodeType.NumberLiteral;
   category: NodeCategory.Literal;
   value: string;
-  number: number;
   position: Position;
 }
 export interface ConstantLiteralNode {
@@ -305,6 +304,19 @@ export interface FunctionLiteralNode {
   returnType: TypeLiteral;
   params: ParameterNode[];
   body: Statement;
+  position: Position;
+}
+export interface ObjectLiteralNode {
+  nodeType: NodeType.ObjectLiteral;
+  category: NodeCategory.Literal;
+  fields: ObjectFieldNode[];
+  position: Position;
+}
+export interface ObjectFieldNode {
+  nodeType: NodeType.ObjectField;
+  category: NodeCategory.Literal;
+  name: string;
+  fieldValue: Expression;
   position: Position;
 }
 // Types
@@ -404,6 +416,8 @@ export interface InterfaceFieldNode {
   category: NodeCategory.Type;
   name: string;
   fieldType: TypeLiteral;
+  optional: boolean;
+  mutable: boolean;
   position: Position;
 }
 export interface TypeIdentifierNode {
@@ -427,11 +441,17 @@ export interface VariableUsageNode {
   name: string | number;
   position: Position;
 }
+export interface PropertyUsageNode {
+  nodeType: NodeType.PropertyUsage;
+  category: NodeCategory.Variable;
+  name: string;
+  position: Position;
+}
 export interface MemberAccessNode {
   nodeType: NodeType.MemberAccess;
   category: NodeCategory.Variable;
-  name: VariableUsageNode;
-  child?: Variable;
+  parent: Expression;
+  property: PropertyUsageNode;
   position: Position;
 }
 // General
@@ -443,6 +463,13 @@ export interface ParameterNode {
 }
 
 // Export Every Node
-type Node = ProgramNode | Statement | Expression | ParameterNode | TypeDefinition | TypeLiteral;
+type Node =
+  | ProgramNode
+  | Statement
+  | Expression
+  | ParameterNode
+  | TypeDefinition
+  | TypeLiteral
+  | PropertyUsageNode;
 
 export default Node;

@@ -430,11 +430,6 @@ export const TknThickArrow = createToken({
   name: LexerTokenType.TknArrow,
   pattern: /=>/,
 });
-export const TknThinArrow = createToken({
-  label: 'Signature Arrow',
-  name: LexerTokenType.TknThinArrow,
-  pattern: /->/,
-});
 export const TknNot = createToken({
   label: 'Not',
   name: LexerTokenType.TknNot,
@@ -483,6 +478,16 @@ export const TknUnion = createToken({
   name: LexerTokenType.TknUnion,
   categories: typeOperators,
   pattern: /\|/,
+});
+export const TknQuestionMark = createToken({
+  label: 'Tkn Question Mark',
+  name: LexerTokenType.TknQuestionMark,
+  pattern: /\?/,
+});
+export const TknEllipsis = createToken({
+  label: 'Tkn Ellipsis',
+  name: LexerTokenType.TknEllipsis,
+  pattern: /\.\.\./,
 });
 // Reserved Tokens
 export const TknEnum = createToken({
@@ -610,7 +615,6 @@ export const Tokens = [
   TknComparisonGreaterThan,
   TknComparisonLessThan,
   TknThickArrow,
-  TknThinArrow,
   TknNot,
   TknEqual,
   TknAdd,
@@ -619,6 +623,8 @@ export const Tokens = [
   TknMul,
   TknPow,
   TknUnion,
+  TknQuestionMark,
+  TknEllipsis,
   // Reserved Tokens
   TknEnum,
   TknMatch,

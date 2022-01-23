@@ -6,6 +6,8 @@ import {
   FunctionSignatureLiteralNode,
   TypePrimLiteralNode,
   TypeUnionLiteralNode,
+  InterfaceLiteralNode,
+  InterfaceFieldNode,
 } from '../Types/ParseNodes';
 import { Position } from '../Types/Types';
 import {
@@ -137,8 +139,9 @@ const typeMatch = (
       got.nodeType == NodeType.InterfaceLiteral &&
       expected.nodeType == NodeType.InterfaceLiteral
     ) {
+      // TODO: Add Support For Optional Fields
       // Check Interface Types Are Same
-      if (got.fields.length != expected.fields.length) return false;
+      if (got.fields.length != expected.fields.length) return true;
       for (let i = 0; i < got.fields.length; i++) {
         if (got.fields[i].name != expected.fields[i].name) return false;
         if (!typeMatch(_types, typeStack, got.fields[i].fieldType, expected.fields[i].fieldType))
@@ -176,9 +179,19 @@ const prettyName = (_types: TypeMap, typeStack: TypeStack, _givenType: TypeLiter
       .map((param) => prettyName(_types, typeStack, param))
       .join(', ')}) => ${prettyName(_types, typeStack, givenType.returnType)}`;
   } else if (givenType.nodeType == NodeType.InterfaceLiteral) {
+    const mutable = givenType.fields.some((field) => field.mutable) ? 3 : 0;
+    const optional = givenType.fields.some((field) => field.optional) ? 1 : 0;
     return `interface {\n${givenType.fields
-      .map((field) => `  ${field.name}: ${prettyName(_types, typeStack, field.fieldType)};\n`)
-      .join('')}}`; // TODO: Format This Nicely
+      .map((field) => {
+        return `  ${field.optional ? '' : ' '.repeat(optional)}${
+          field.mutable ? 'let' : ' '.repeat(mutable)
+        } ${field.name}${field.optional ? '?' : ''}: ${prettyName(
+          _types,
+          typeStack,
+          field.fieldType
+        )};\n`;
+      })
+      .join('')}}`; // TODO: This Formatting Needs Improvement
   } else if (givenType.nodeType == NodeType.TypeUnionLiteral) {
     return `${givenType.types.map((t) => prettyName(_types, typeStack, t)).join(' | ')}`;
   } else if (givenType.nodeType == NodeType.ParenthesisTypeLiteral) {
@@ -204,38 +217,45 @@ const checkValidType = (
     const offset = position.offset;
 
     let startOfLine = code.lastIndexOf('\n', offset);
-    let endOfLine = code.indexOf('\n', offset);
+    let endOfLine = code.indexOf('\n', offset + position.length);
     if (endOfLine - startOfLine > width) {
       const loopLength = endOfLine - startOfLine - width;
       for (let i = 0; i <= loopLength; i++) {
-        if (startOfLine < offset) {
-          startOfLine++;
-        }
-        if (endOfLine > offset) {
-          endOfLine--;
-        }
+        if (startOfLine < offset) startOfLine++;
+        if (endOfLine > offset) endOfLine--;
         if (endOfLine - startOfLine < width) break;
       }
     }
+    // Build First Line
+    const incorrectCode = code.slice(offset, offset + position.length);
     const line =
       position.length == 0
         ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
-        : `\x1b[0m${code.slice(startOfLine + 1, offset)}\x1b[31m\x1b[1m${code.slice(
-          offset,
-          offset + position.length
-        )}\x1b[0m${code.slice(offset + position.length, endOfLine)}`;
+        : `\x1b[0m${code.slice(
+          startOfLine + 1,
+          offset
+        )}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${code.slice(
+          offset + position.length,
+          endOfLine
+        )}`;
     // After Message
     const afterMessage = code.slice(
       endOfLine + 1,
       code.indexOf('\n', code.indexOf('\n', endOfLine + 1) + 1)
     );
     if (afterMessage.length >= width * 2) afterMessage.slice(width * 2);
+    // Calculate Lengths
+    const multiLine = /\n|\r/.test(incorrectCode);
+    const startLength = multiLine ? 0 : offset - startOfLine - 1;
+    const wrongCodeLength = multiLine
+      ? Math.max(...incorrectCode.split(/\n|\r/g).map((line) => line.length))
+      : position.length || 5;
     // Build message
     const msg = [
       'Type Mismatch',
       line,
-      `\x1b[31m\x1b[1m${' '.repeat(offset - startOfLine - 1)}${'^'.repeat(
-        position.length || 5
+      `\x1b[31m\x1b[1m${' '.repeat(startLength)}${'^'.repeat(
+        wrongCodeLength
       )} expected ${prettyName(_types, typeStack, expected)} got ${prettyName(
         _types,
         typeStack,
@@ -243,9 +263,7 @@ const checkValidType = (
       )}, ${message} \x1b[0m`
         .split('\n')
         .map((text, i) =>
-          i == 0
-            ? text
-            : `${' '.repeat(offset - startOfLine + ((position.length || 5) + 2))}${text}`
+          i == 0 ? text : `${' '.repeat(startLength + wrongCodeLength + 10)}${text}`
         )
         .join('\n'),
       afterMessage,
@@ -339,7 +357,10 @@ const typeCheckNode = (
       return createTypeNode('Void', node.position);
     case NodeType.WasmImportStatement:
     case NodeType.ImportStatement:
+      // TODO: We Need to Get the type from these for creating a type map
+      return createTypeNode('Void', node.position);
     case NodeType.ExportStatement:
+      typeCheckNode(_types, typeStack, _variables, stack, parentNode, node.value, code);
       // TODO: We Need to Get the type from these for creating a type map
       return createTypeNode('Void', node.position);
     case NodeType.DeclarationStatement: {
@@ -498,19 +519,51 @@ const typeCheckNode = (
         code
       );
     case NodeType.CallExpression: {
-      const functionReference = <VariableData>_variables.get(<number>node.name.name);
-      const functionType = resolveType(_types, typeStack, functionReference.type);
+      const functionReference = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        parentNode,
+        <AnalyzedExpression>node.callee,
+        code
+      );
+      const functionType = resolveType(_types, typeStack, functionReference);
       checkValidType(
         _types,
         typeStack,
         code,
         createTypeNode('Function', node.position),
-        functionReference.type,
+        functionReference,
         node.position,
-        `${functionReference.name} is not a Function`
+        'A Function Call Can Only Occur On A Function Of The Matching Type'
       );
-      if (functionType.nodeType == NodeType.FunctionSignatureLiteral)
+      if (functionType.nodeType == NodeType.FunctionSignatureLiteral) {
+        // TypeCheck Arguments
+        // TODO: Check The Length Of The Arguments Is Enough
+        node.args.map((arg, index) => {
+          const argumentType = typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>arg,
+            code
+          );
+          checkValidType(
+            _types,
+            typeStack,
+            code,
+            functionType.params[index],
+            argumentType,
+            arg.position,
+            'Argument does Not Match Expected Type'
+          );
+        });
+        // Return Type
         return functionType.returnType;
+      }
       // TODO: better type checking here, we Never want to reach this in actual Development
       return createTypeNode('Any', node.position);
     }
@@ -583,8 +636,30 @@ const typeCheckNode = (
       } else if (node.value != 'void') {
         BriskTypeError(`Unknown Constant Literal \`${node.value}\``, node.position);
       }
-      // Then it is void
       return createTypeNode('Void', node.position);
+    case NodeType.ObjectLiteral:
+      return <InterfaceLiteralNode>{
+        nodeType: NodeType.InterfaceLiteral,
+        category: NodeCategory.Type,
+        fields: node.fields.map((field) => {
+          return {
+            nodeType: NodeType.InterfaceField,
+            category: NodeCategory.Type,
+            name: field.name,
+            fieldType: typeCheckNode(
+              _types,
+              typeStack,
+              _variables,
+              stack,
+              parentNode,
+              <AnalyzedExpression>field.fieldValue,
+              code
+            ),
+            position: field.position,
+          };
+        }),
+        position: node.position,
+      };
     // Types
     case NodeType.TypeAliasDefinition:
       return createTypeNode('Void', node.position);
@@ -593,10 +668,40 @@ const typeCheckNode = (
     // Variables
     case NodeType.VariableUsage:
       return (<VariableData>(<unknown>_variables.get(<number>node.name))).type;
-    case NodeType.MemberAccess:
-      // TODO: We Need To Program This
-      BriskTypeError('Add Support for member access types', node.position);
-      return createTypeNode('Void', node.position);
+    case NodeType.MemberAccess: {
+      // TODO: We Need To Fix This
+      const variableObject = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        parentNode,
+        <AnalyzedExpression>node.parent,
+        code
+      );
+      const variableObjectType = resolveType(_types, typeStack, variableObject);
+      console.log('====================================');
+      if (variableObjectType.nodeType == NodeType.InterfaceLiteral) {
+        if (variableObjectType.fields.some((field) => field.name == node.property.name)) {
+          return (<InterfaceFieldNode>(
+            variableObjectType.fields.find((field) => field.name == node.property.name)
+          )).fieldType;
+        } else {
+          BriskTypeError(
+            `Field \`${node.property.name}\` does not exist on Interface \`${prettyName(
+              _types,
+              typeStack,
+              variableObjectType
+            )}\``,
+            node.position
+          );
+          return createTypeNode('Void', node.position);
+        }
+      } else {
+        BriskTypeError('You Can Only Access Properties On Objects', node.position);
+        return createTypeNode('Void', node.position);
+      }
+    }
     case NodeType.Parameter:
       return node.paramType;
     // Ignore

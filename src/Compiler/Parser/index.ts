@@ -11,7 +11,6 @@ class Parser extends EmbeddedActionsParser {
   private file: string;
   constructor(tokens: TokenType[], file: string) {
     super(tokens, {
-      // TODO: Lower This To One
       maxLookahead: 2,
       skipValidations: !__DEBUG__,
       errorMessageProvider: ErrorProvider(file),
@@ -28,7 +27,7 @@ class Parser extends EmbeddedActionsParser {
       body: body,
       position: {
         offset: 0,
-        length: 0, // TODO: Get Length For This
+        length: (<number>this.input.at(-1)?.endOffset || -1) + 1,
         line: 0,
         col: 0,
         file: this.file,
@@ -46,23 +45,19 @@ class Parser extends EmbeddedActionsParser {
     });
     return body;
   });
-  private topLevelStatement = this.RULE('TopLevelStatement', () => {
-    const statement = this.OR({
-      DEF: [
-        { ALT: () => this.SUBRULE(this.importStatement) },
-        { ALT: () => this.SUBRULE(this.exportStatement) },
-      ],
-    });
-    this.CONSUME(Tokens.TknSemiColon, {
-      ERR_MSG: 'expecting `;` at end of Statement',
-    });
+  private topLevelStatement = this.RULE('TopLevelStatement', (): Nodes.Statement => {
+    const statement = this.OR([
+      { ALT: () => this.SUBRULE(this.importStatement) },
+      { ALT: () => this.SUBRULE(this.exportStatement) },
+    ]);
+    this.CONSUME(Tokens.TknSemiColon);
+    this.ACTION(() => (statement.position.length += 1));
     return statement;
   });
   private statement = this.RULE('Statement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
-    this.CONSUME(Tokens.TknSemiColon, {
-      ERR_MSG: 'expecting `;` at end of Statement',
-    });
+    this.CONSUME(Tokens.TknSemiColon);
+    this.ACTION(() => (statement.position.length += 1));
     return statement;
   });
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
@@ -71,7 +66,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.typeDefinition) },
       { ALT: () => this.SUBRULE(this.returnStatement) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
-      { ALT: () => this.SUBRULE(this.constantDeclarationStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
@@ -99,21 +93,21 @@ class Parser extends EmbeddedActionsParser {
     this.MANY(() => {
       body.push(this.SUBRULE(this.statement));
     });
-    this.CONSUME(Tokens.TknRBrace);
+    const close = this.CONSUME(Tokens.TknRBrace);
     return {
       nodeType: Nodes.NodeType.BlockStatement,
       category: Nodes.NodeCategory.Statement,
       body: body,
       position: {
         offset: open.startOffset,
-        length: <number>open.endOffset - open.startOffset + 1,
+        length: <number>close.endOffset - open.startOffset + 1,
         line: open.startLine || 0,
         col: open.startColumn || 0,
         file: this.file,
       },
     };
   });
-  private singleLineStatement = this.RULE('SingleLineStatement', () => {
+  private singleLineStatement = this.RULE('SingleLineStatement', (): Nodes.Statement => {
     return this.OR({
       IGNORE_AMBIGUITIES: true,
       DEF: [
@@ -158,7 +152,10 @@ class Parser extends EmbeddedActionsParser {
       alternative: alternative,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
+        length:
+          (alternative?.position.offset || body?.position.offset) +
+          (alternative?.position.length || body?.position.length) -
+          location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -188,137 +185,145 @@ class Parser extends EmbeddedActionsParser {
       ]);
       this.CONSUME(Tokens.TknFrom);
       const source = this.SUBRULE(this.stringLiteral);
-      if (typeSignature == undefined) {
-        // TODO: we want to add support for destructuring imports
-        // TODO: Fix Length
-        return {
-          nodeType: Nodes.NodeType.ImportStatement,
-          category: Nodes.NodeCategory.Statement,
-          variable: variable,
-          source: source,
-          position: {
-            offset: location.startOffset,
-            length: 0,
-            line: location.startLine || 0,
-            col: location.startColumn || 0,
-            file: this.file,
-          },
-        };
-      } else {
-        return {
-          nodeType: Nodes.NodeType.WasmImportStatement,
-          category: Nodes.NodeCategory.Statement,
-          typeSignature: typeSignature,
-          variable: variable,
-          source: source,
-          position: {
-            offset: location.startOffset,
-            length: 0,
-            line: location.startLine || 0,
-            col: location.startColumn || 0,
-            file: this.file,
-          },
-        };
-      }
+      return this.ACTION(() => {
+        if (typeSignature == undefined) {
+          // TODO: we want to add support for destructuring imports
+          return {
+            nodeType: Nodes.NodeType.ImportStatement,
+            category: Nodes.NodeCategory.Statement,
+            variable: variable,
+            source: source,
+            position: {
+              offset: location.startOffset,
+              length: source.position.offset + source.position.length - location.startOffset,
+              line: location.startLine || 0,
+              col: location.startColumn || 0,
+              file: this.file,
+            },
+          };
+        } else {
+          return {
+            nodeType: Nodes.NodeType.WasmImportStatement,
+            category: Nodes.NodeCategory.Statement,
+            typeSignature: typeSignature,
+            variable: variable,
+            source: source,
+            position: {
+              offset: location.startOffset,
+              length: source?.position.offset + source?.position.length - location.startOffset,
+              line: location.startLine || 0,
+              col: location.startColumn || 0,
+              file: this.file,
+            },
+          };
+        }
+      });
     }
   );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
-    const variable = this.SUBRULE(this.variable);
-    return {
-      nodeType: Nodes.NodeType.ExportStatement,
-      category: Nodes.NodeCategory.Statement,
-      variable: variable, // Allow exporting groups of variables
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
-  });
-  private constantDeclarationStatement = this.RULE(
-    'ConstantDeclaration',
-    (): Nodes.DeclarationStatementNode => {
-      const location = this.CONSUME(Tokens.TknConst);
-      const name = this.SUBRULE(this.variableDefinitionNode);
-      this.CONSUME(Tokens.TknColon);
-      const varType = this.SUBRULE(this.typeLiteral);
-      this.CONSUME(Tokens.assignmentOperators);
-      const value = this.SUBRULE(this.expression);
+    const variable = this.OR([
+      { ALT: () => this.SUBRULE(this.variable) },
+      { ALT: () => this.SUBRULE(this.declarationStatement) },
+      { ALT: () => this.SUBRULE(this.objectLiteral) },
+    ]);
+    return this.ACTION(() => {
       return {
-        nodeType: Nodes.NodeType.DeclarationStatement,
+        nodeType: Nodes.NodeType.ExportStatement,
         category: Nodes.NodeCategory.Statement,
-        declarationType: Nodes.DeclarationTypes.Constant,
-        name: name,
-        varType: varType,
-        value: value,
+        value: variable, // Allow exporting groups of variables
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset + 1,
+          length: variable.position.offset + variable.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
         },
       };
-    }
-  );
+    });
+  });
   private declarationStatement = this.RULE('Declaration', (): Nodes.DeclarationStatementNode => {
-    const location = this.CONSUME(Tokens.TknLet);
+    const { location, declarationType } = this.OR([
+      {
+        ALT: () => {
+          return {
+            location: this.CONSUME(Tokens.TknLet),
+            declarationType: Nodes.DeclarationTypes.Lexical,
+          };
+        },
+      },
+      {
+        ALT: () => {
+          return {
+            location: this.CONSUME(Tokens.TknConst),
+            declarationType: Nodes.DeclarationTypes.Constant,
+          };
+        },
+      },
+    ]);
     const name = this.SUBRULE(this.variableDefinitionNode);
     this.CONSUME(Tokens.TknColon);
     const varType = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.assignmentOperators);
     const value = this.SUBRULE(this.expression);
-    return {
-      nodeType: Nodes.NodeType.DeclarationStatement,
-      category: Nodes.NodeCategory.Statement,
-      declarationType: Nodes.DeclarationTypes.Lexical,
-      name: name,
-      varType: varType,
-      value: value,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.DeclarationStatement,
+        category: Nodes.NodeCategory.Statement,
+        declarationType: declarationType,
+        name: name,
+        varType: varType,
+        value: value,
+        position: {
+          offset: location.startOffset,
+          length: value.position.offset + value.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private assignmentStatement = this.RULE(
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
-      const name = this.SUBRULE(this.variable);
+      // TODO: Allow Support For Assigning To Member Access Nodes
+      const name = this.SUBRULE(this.variableUsageNode);
       this.CONSUME(Tokens.assignmentOperators);
       const value = this.SUBRULE(this.expression);
-      return {
-        nodeType: Nodes.NodeType.AssignmentStatement,
-        category: Nodes.NodeCategory.Statement,
-        name: name,
-        value: value,
-        position: name.position,
-      };
+      return this.ACTION(() => {
+        return {
+          nodeType: Nodes.NodeType.AssignmentStatement,
+          category: Nodes.NodeCategory.Statement,
+          name: name,
+          value: value,
+          position: {
+            ...name.position,
+            length: value.position.offset + value.position.length - name.position.offset - 1,
+          },
+        };
+      });
     }
   );
   private returnStatement = this.RULE('ReturnStatement', (): Nodes.ReturnStatementNode => {
     const location = this.CONSUME(Tokens.TknReturn);
     this.CONSUME(Tokens.TknLParen);
     const returnValue = this.SUBRULE(this.expression);
-    this.CONSUME(Tokens.TknRParen);
-    return {
-      nodeType: Nodes.NodeType.ReturnStatement,
-      category: Nodes.NodeCategory.Statement,
-      returnValue: returnValue,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
+    const close = this.CONSUME(Tokens.TknRParen);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.ReturnStatement,
+        category: Nodes.NodeCategory.Statement,
+        returnValue: returnValue,
+        position: {
+          offset: location.startOffset,
+          length: <number>close.endOffset - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
@@ -333,13 +338,11 @@ class Parser extends EmbeddedActionsParser {
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-      let length = 0;
       const operators: Nodes.ComparisonExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.arithmeticExpression);
+      const lhs = this.SUBRULE(this.arithmeticShiftingExpression);
       this.MANY(() => {
         const operator = this.CONSUME(Tokens.comparisonOperators);
-        length += operator.image.length;
         switch (operator.tokenType.name) {
           case LexerTokenType.TknComparisonEqual:
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
@@ -360,13 +363,14 @@ class Parser extends EmbeddedActionsParser {
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
             break;
         }
-        expressions.push(this.SUBRULE1(this.arithmeticExpression));
+        expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
       });
       if (expressions.length == 0) {
         return lhs;
       } else {
         return this.ACTION(() => {
-          const expr = expressions.reduce(
+          // TODO: Fix Length
+          return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
               return {
                 nodeType: Nodes.NodeType.ComparisonExpression,
@@ -376,53 +380,101 @@ class Parser extends EmbeddedActionsParser {
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
-                  length: prevValue.position.length + currentValue.position.length + length,
+                  length:
+                    prevValue.position.offset +
+                    prevValue.position.length -
+                    currentValue.position.offset,
                 },
               };
             },
             lhs
           );
-          expr.position.length = expr.position.length += length;
-          return expr;
         });
       }
     }
   );
-  private arithmeticExpression = this.RULE(
-    'ArithmeticExpression',
-    (): Nodes.Expression | Nodes.ArithmeticExpressionNode => {
-      // TODO: Fix length on this and comparison operator
-      let length = 0;
+  // Arithmetic Expressions
+  private arithmeticShiftingExpression = this.RULE(
+    'ArithmeticShiftingExpression',
+    (): Nodes.Expression => {
       const operators: Nodes.ArithmeticExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.simpleExpression);
+      const lhs = this.SUBRULE(this.arithmeticScalingExpression);
       this.MANY(() => {
-        const operator = this.CONSUME(Tokens.arithmeticOperators);
-        length += operator.image.length;
-        switch (operator.tokenType.name) {
-          case LexerTokenType.TknAdd:
-            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticAdd);
-            break;
-          case LexerTokenType.TknSubtract:
-            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticSub);
-            break;
-          case LexerTokenType.TknDivision:
-            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticDiv);
-            break;
-          case LexerTokenType.TknMultiply:
-            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticMul);
-            break;
-          case LexerTokenType.TknPower:
-            operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
-            break;
-        }
-        expressions.push(this.SUBRULE1(this.simpleExpression));
+        operators.push(
+          this.OR([
+            {
+              ALT: () => {
+                this.CONSUME(Tokens.TknAdd);
+                return Nodes.ArithmeticExpressionOperator.ArithmeticAdd;
+              },
+            },
+            {
+              ALT: () => {
+                this.CONSUME(Tokens.TknSub);
+                return Nodes.ArithmeticExpressionOperator.ArithmeticSub;
+              },
+            },
+          ])
+        );
+        expressions.push(this.SUBRULE1(this.arithmeticScalingExpression));
       });
       if (expressions.length == 0) {
         return lhs;
       } else {
         return this.ACTION(() => {
-          const expr = expressions.reduce(
+          return expressions.reduce(
+            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
+              // TODO: Fix Length
+              return {
+                nodeType: Nodes.NodeType.ArithmeticExpression,
+                category: Nodes.NodeCategory.Expression,
+                lhs: prevValue,
+                operator: operators[index],
+                rhs: currentValue,
+                position: {
+                  ...prevValue.position,
+                  length: prevValue.position.length + currentValue.position.length + 1,
+                },
+              };
+            },
+            lhs
+          );
+        });
+      }
+    }
+  );
+  private arithmeticScalingExpression = this.RULE(
+    'ArithmeticScalingExpression',
+    (): Nodes.Expression => {
+      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.arithmeticPowerExpression);
+      this.MANY(() => {
+        operators.push(
+          this.OR([
+            {
+              ALT: () => {
+                this.CONSUME(Tokens.TknDiv);
+                return Nodes.ArithmeticExpressionOperator.ArithmeticDiv;
+              },
+            },
+            {
+              ALT: () => {
+                this.CONSUME(Tokens.TknMul);
+                return Nodes.ArithmeticExpressionOperator.ArithmeticMul;
+              },
+            },
+          ])
+        );
+        expressions.push(this.SUBRULE1(this.arithmeticPowerExpression));
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return this.ACTION(() => {
+          // TODO: Fix Length
+          return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
               return {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
@@ -438,13 +490,50 @@ class Parser extends EmbeddedActionsParser {
             },
             lhs
           );
-          expr.position.length = expr.position.length += length;
-          return expr;
         });
       }
     }
   );
+  private arithmeticPowerExpression = this.RULE(
+    'ArithmeticPowerExpression',
+    (): Nodes.Expression => {
+      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.simpleExpression);
+      this.MANY(() => {
+        this.CONSUME(Tokens.TknPow);
+        operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
+        expressions.push(this.SUBRULE1(this.simpleExpression));
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return this.ACTION(() => {
+          return expressions.reduce(
+            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
+              // TODO: Fix Length
+              return {
+                nodeType: Nodes.NodeType.ArithmeticExpression,
+                category: Nodes.NodeCategory.Expression,
+                lhs: prevValue,
+                operator: operators[index],
+                rhs: currentValue,
+                position: {
+                  ...prevValue.position,
+                  length: prevValue.position.length + currentValue.position.length + 1,
+                },
+              };
+            },
+            lhs
+          );
+        });
+      }
+    }
+  );
+  // PostFix Expressions
+  // Simple Expressions
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
+    // TODO: The IGNORE_AMBIGUITIES Part Here Breaks This
     return this.OR({
       MAX_LOOKAHEAD: 3,
       IGNORE_AMBIGUITIES: true,
@@ -475,83 +564,97 @@ class Parser extends EmbeddedActionsParser {
     const castType = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.TknComparisonGreaterThan);
     const value = this.SUBRULE(this.simpleExpression);
-    return {
-      nodeType: Nodes.NodeType.TypeCastExpression,
-      category: Nodes.NodeCategory.Expression,
-      castType: castType,
-      value: value,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.TypeCastExpression,
+        category: Nodes.NodeCategory.Expression,
+        castType: castType,
+        value: value,
+        position: {
+          offset: location.startOffset,
+          length: value.position.offset + value.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
-    const logicalOperatorToken = this.CONSUME(Tokens.logicalOperators);
-    let operator;
-    switch (logicalOperatorToken.tokenType.name) {
-      case LexerTokenType.TknNot:
-        operator = Nodes.LogicalExpressionOperator.LogicalNot;
-        break;
-      default:
-        operator = Nodes.LogicalExpressionOperator.LogicalNot;
-    }
-    const value = this.SUBRULE1(this.simpleExpression);
-    return {
-      nodeType: Nodes.NodeType.LogicExpression,
-      category: Nodes.NodeCategory.Expression,
-      operator: operator,
-      value: value,
-      position: {
-        offset: logicalOperatorToken.startOffset,
-        length: <number>logicalOperatorToken.endOffset - logicalOperatorToken.startOffset + 1,
-        line: logicalOperatorToken.startLine || 0,
-        col: logicalOperatorToken.startColumn || 0,
-        file: this.file,
+    // TODO: Switch This To Unary Operator
+    const { location, operator } = this.OR([
+      {
+        ALT: () => {
+          return {
+            location: this.CONSUME(Tokens.TknNot),
+            operator: Nodes.LogicalExpressionOperator.LogicalNot,
+          };
+        },
       },
-    };
+    ]);
+    const value = this.SUBRULE1(this.simpleExpression);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.LogicExpression,
+        category: Nodes.NodeCategory.Expression,
+        operator: operator,
+        value: value,
+        position: {
+          offset: location.startOffset,
+          length: value.position.offset + value.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private parenthesisExpression = this.RULE(
     'ParenthesisExpression',
     (): Nodes.ParenthesisExpressionNode => {
       const location = this.CONSUME(Tokens.TknLParen);
       const expression = this.SUBRULE(this.expression);
-      this.CONSUME(Tokens.TknRParen);
-      return {
-        nodeType: Nodes.NodeType.ParenthesisExpression,
-        category: Nodes.NodeCategory.Expression,
-        value: expression,
-        position: {
-          offset: location.startOffset,
-          length: 2 + expression.position?.length || 0,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
-      };
+      const close = this.CONSUME(Tokens.TknRParen);
+      return this.ACTION(() => {
+        return {
+          nodeType: Nodes.NodeType.ParenthesisExpression,
+          category: Nodes.NodeCategory.Expression,
+          value: expression,
+          position: {
+            offset: location.startOffset,
+            length: <number>close.endOffset - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
     }
   );
   private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
     const args: Nodes.Expression[] = [];
-    const name = this.SUBRULE(this.variable);
+    // TODO: We want to allow you to call Functions on more then just function variables
+    const callee = this.SUBRULE(this.variable);
     this.CONSUME(Tokens.TknLParen);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        args.push(this.SUBRULE(this.expression));
+        args.push(this.SUBRULE1(this.expression));
       },
     });
-    this.CONSUME(Tokens.TknRParen);
-    return {
-      nodeType: Nodes.NodeType.CallExpression,
-      category: Nodes.NodeCategory.Expression,
-      name: name,
-      args: args,
-      position: name.position,
-    };
+    const close = this.CONSUME(Tokens.TknRParen);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.CallExpression,
+        category: Nodes.NodeCategory.Expression,
+        callee: callee,
+        args: args,
+        position: {
+          ...callee.position,
+          length: <number>close.endOffset - callee.position.offset + 1,
+        },
+      };
+    });
   });
   private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
     const args: Nodes.Expression[] = [];
@@ -563,7 +666,7 @@ class Parser extends EmbeddedActionsParser {
         args.push(this.SUBRULE(this.expression));
       },
     });
-    this.CONSUME(Tokens.TknRParen);
+    const close = this.CONSUME(Tokens.TknRParen);
     return {
       nodeType: Nodes.NodeType.WasmCallExpression,
       category: Nodes.NodeCategory.Expression,
@@ -571,7 +674,7 @@ class Parser extends EmbeddedActionsParser {
       args: args,
       position: {
         offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
+        length: <number>close.endOffset - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -580,7 +683,7 @@ class Parser extends EmbeddedActionsParser {
   });
   // Atoms
   private atom = this.RULE('Atom', (): Nodes.Atom => {
-    const atom = this.OR([
+    return this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
       { ALT: () => this.SUBRULE(this.i32Literal) },
       { ALT: () => this.SUBRULE(this.i64Literal) },
@@ -590,10 +693,10 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.f64Literal) },
       { ALT: () => this.SUBRULE(this.numberLiteral) },
       { ALT: () => this.SUBRULE(this.constantLiteral) },
+      { ALT: () => this.SUBRULE(this.objectLiteral) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
       { ALT: () => this.SUBRULE(this.variable) },
     ]);
-    return atom;
   });
   // Literals
   private stringLiteral = this.RULE('StringLiteral', (): Nodes.StringLiteralNode => {
@@ -617,7 +720,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.I32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -633,7 +735,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.I64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -649,7 +750,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.U32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -665,7 +765,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.U64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -681,7 +780,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.F32Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -697,7 +795,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.F64Literal,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -713,7 +810,6 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.NumberLiteral,
       category: Nodes.NodeCategory.Literal,
       value: value.image,
-      number: value.payload?.parsed || 0,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,
@@ -723,7 +819,7 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  private constantLiteral = this.RULE('ConstantLiteral', () => {
+  private constantLiteral = this.RULE('ConstantLiteral', (): Nodes.ConstantLiteralNode => {
     const value = this.CONSUME(Tokens.TknConstant);
     return {
       nodeType: Nodes.NodeType.ConstantLiteral,
@@ -731,11 +827,69 @@ class Parser extends EmbeddedActionsParser {
       value: value.image,
       position: {
         offset: value.startOffset,
+        length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
       },
     };
+  });
+  private objectLiteral = this.RULE('ObjectLiteralNode', (): Nodes.ObjectLiteralNode => {
+    const fields: Nodes.ObjectFieldNode[] = [];
+    const location = this.CONSUME(Tokens.TknLBrace);
+    // TODO: Implement Spread Operator Here
+    this.AT_LEAST_ONE_SEP({
+      SEP: Tokens.TknComma,
+      DEF: () =>
+        this.OR([
+          { ALT: () => fields.push(this.SUBRULE(this.objectField)) },
+          {
+            ALT: () => {
+              const fieldValue = this.SUBRULE(this.variableUsageNode);
+              fields.push({
+                nodeType: Nodes.NodeType.ObjectField,
+                category: Nodes.NodeCategory.Literal,
+                name: <string>fieldValue.name,
+                fieldValue: fieldValue,
+                position: fieldValue.position,
+              });
+            },
+          },
+        ]),
+    });
+    const close = this.CONSUME(Tokens.TknRBrace);
+    return {
+      nodeType: Nodes.NodeType.ObjectLiteral,
+      category: Nodes.NodeCategory.Literal,
+      fields: fields,
+      position: {
+        offset: location.startOffset,
+        length: <number>close.endOffset - location.startOffset + 1,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
+  private objectField = this.RULE('ObjectField', (): Nodes.ObjectFieldNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    this.CONSUME(Tokens.TknColon);
+    const fieldValue = this.SUBRULE(this.expression);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.ObjectField,
+        category: Nodes.NodeCategory.Literal,
+        name: identifier.image,
+        fieldValue: fieldValue,
+        position: {
+          offset: identifier.startOffset,
+          length: fieldValue.position.offset + fieldValue.position.length - identifier.startOffset,
+          line: identifier.startLine || 0,
+          col: identifier.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private variable = this.RULE('Variable', (): Nodes.Variable => {
     return this.OR({
@@ -780,15 +934,47 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
-    const name = this.SUBRULE(this.variableUsageNode);
-    this.CONSUME(Tokens.TknPeriod);
-    const child = this.SUBRULE(this.variable);
+    // TODO: We Want To Allow The Main Object To Be Any Expression
+    const props: Nodes.PropertyUsageNode[] = [];
+    const parent = this.OR([
+      { ALT: () => this.SUBRULE(this.variableUsageNode) },
+      // { ALT: () => this.SUBRULE(this.parenthesisExpression) },
+      // { ALT: () => this.SUBRULE(this.objectLiteral) },
+    ]);
+    this.AT_LEAST_ONE(() => {
+      this.CONSUME(Tokens.TknPeriod);
+      props.push(this.SUBRULE(this.propertyUsageNode));
+    });
+    return this.ACTION(() => {
+      // TODO: Fix Length
+      return <Nodes.MemberAccessNode>props.reduce((prevValue: Nodes.Expression, currValue) => {
+        return {
+          nodeType: Nodes.NodeType.MemberAccess,
+          category: Nodes.NodeCategory.Variable,
+          parent: prevValue,
+          property: currValue,
+          position: {
+            ...prevValue.position,
+            length:
+              currValue.position.offset + currValue.position.length - prevValue.position.offset,
+          },
+        };
+      }, parent);
+    });
+  });
+  private propertyUsageNode = this.RULE('PropertyUsageNode', (): Nodes.PropertyUsageNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
     return {
-      nodeType: Nodes.NodeType.MemberAccess,
+      nodeType: Nodes.NodeType.PropertyUsage,
       category: Nodes.NodeCategory.Variable,
-      name: name,
-      child: child,
-      position: name.position,
+      name: identifier.image,
+      position: {
+        offset: identifier.startOffset,
+        length: <number>identifier.endOffset - identifier.startOffset + 1,
+        line: identifier.startLine || 0,
+        col: identifier.startColumn || 0,
+        file: this.file,
+      },
     };
   });
   private functionDefinition = this.RULE('FunctionDefinition', (): Nodes.FunctionLiteralNode => {
@@ -813,20 +999,22 @@ class Parser extends EmbeddedActionsParser {
     const returnType = this.SUBRULE1(this.typeLiteral);
     this.CONSUME(Tokens.TknThickArrow);
     const body = this.SUBRULE(this._statement);
-    return {
-      nodeType: Nodes.NodeType.FunctionLiteral,
-      category: Nodes.NodeCategory.Literal,
-      returnType: returnType,
-      params: params,
-      body: body,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.FunctionLiteral,
+        category: Nodes.NodeCategory.Literal,
+        returnType: returnType,
+        params: params,
+        body: body,
+        position: {
+          offset: location.startOffset,
+          length: body.position.offset + body.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   // Types
   private typeDefinition = this.RULE('TypeDefinition', (): Nodes.TypeDefinition => {
@@ -844,19 +1032,21 @@ class Parser extends EmbeddedActionsParser {
     const name = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknEqual);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
-    return {
-      nodeType: Nodes.NodeType.TypeAliasDefinition,
-      category: Nodes.NodeCategory.Type,
-      name: name.image,
-      typeLiteral: typeLiteral,
-      position: {
-        offset: location.startOffset,
-        length: <number>location.endOffset - location.startOffset + 1,
-        line: location.startLine || 0,
-        col: location.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.TypeAliasDefinition,
+        category: Nodes.NodeCategory.Type,
+        name: name.image,
+        typeLiteral: typeLiteral,
+        position: {
+          offset: location.startOffset,
+          length: typeLiteral.position.offset + typeLiteral.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private interfaceDefinition = this.RULE(
     'InterfaceDefinition',
@@ -864,43 +1054,52 @@ class Parser extends EmbeddedActionsParser {
       const location = this.CONSUME(Tokens.TknInterface);
       const name = this.CONSUME(Tokens.TknIdentifier);
       const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
-      return {
-        nodeType: Nodes.NodeType.InterfaceDefinition,
-        category: Nodes.NodeCategory.Type,
-        name: name.image,
-        typeLiteral: interfaceLiteral,
-        position: {
-          offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset + 1,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
-      };
+      return this.ACTION(() => {
+        return {
+          nodeType: Nodes.NodeType.InterfaceDefinition,
+          category: Nodes.NodeCategory.Type,
+          name: name.image,
+          typeLiteral: interfaceLiteral,
+          position: {
+            offset: location.startOffset,
+            length:
+              interfaceLiteral.position.offset +
+              interfaceLiteral.position.length -
+              location.startOffset -
+              1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
     }
   );
   // TypeLiteral
-  private typeUnionLiteral = this.RULE(
-    'TypeUnionLiteral',
-    (): Nodes.TypeLiteral | Nodes.TypeUnionLiteralNode => {
-      const types: Nodes.TypeLiteral[] = [];
-      const lhs = this.SUBRULE(this._typeLiteral);
-      this.MANY(() => {
-        this.CONSUME(Tokens.TknUnion);
-        types.push(this.SUBRULE1(this._typeLiteral));
-      });
+  private typeUnionLiteral = this.RULE('TypeUnionLiteral', (): Nodes.TypeLiteral => {
+    const types: Nodes.TypeLiteral[] = [];
+    const lhs = this.SUBRULE(this._typeLiteral);
+    this.MANY(() => {
+      this.CONSUME(Tokens.TknUnion);
+      types.push(this.SUBRULE1(this._typeLiteral));
+    });
+    return this.ACTION(() => {
       if (types.length == 0) {
         return lhs;
       } else {
+        const lastType = <Nodes.TypeLiteral>types.at(-1);
         return {
           nodeType: Nodes.NodeType.TypeUnionLiteral,
           category: Nodes.NodeCategory.Type,
           types: [lhs, ...types],
-          position: lhs.position,
+          position: {
+            ...lhs.position,
+            length: lastType.position.offset + lastType.position.length - lhs.position.offset,
+          },
         };
       }
-    }
-  );
+    });
+  });
   private _typeLiteral = this.RULE('_TypeLiteral', (): Nodes.TypeLiteral => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
@@ -918,21 +1117,23 @@ class Parser extends EmbeddedActionsParser {
         DEF: () => params.push(this.SUBRULE(this.typeLiteral)),
       });
       this.CONSUME(Tokens.TknRParen);
-      this.CONSUME(Tokens.TknThinArrow);
+      this.CONSUME(Tokens.TknThickArrow);
       const returnType = this.SUBRULE1(this.typeLiteral);
-      return {
-        nodeType: Nodes.NodeType.FunctionSignatureLiteral,
-        category: Nodes.NodeCategory.Type,
-        params: params,
-        returnType: returnType,
-        position: {
-          offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset + 1,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
-      };
+      return this.ACTION(() => {
+        return {
+          nodeType: Nodes.NodeType.FunctionSignatureLiteral,
+          category: Nodes.NodeCategory.Type,
+          params: params,
+          returnType: returnType,
+          position: {
+            offset: location.startOffset,
+            length: returnType.position.offset + returnType.position.length - location.startOffset,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
     }
   );
   private InterfaceTypeLiteral = this.RULE(
@@ -944,14 +1145,14 @@ class Parser extends EmbeddedActionsParser {
         fields.push(this.SUBRULE(this.interfaceField));
         this.CONSUME(Tokens.TknSemiColon);
       });
-      this.CONSUME(Tokens.TknRBrace);
+      const close = this.CONSUME(Tokens.TknRBrace);
       return {
         nodeType: Nodes.NodeType.InterfaceLiteral,
         category: Nodes.NodeCategory.Type,
         fields: fields,
         position: {
           offset: location.startOffset,
-          length: <number>location.endOffset - location.startOffset + 1,
+          length: <number>close.endOffset - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -960,22 +1161,34 @@ class Parser extends EmbeddedActionsParser {
     }
   );
   private interfaceField = this.RULE('InterfaceField', (): Nodes.InterfaceFieldNode => {
+    const mutable: undefined | boolean = this.OPTION(() => {
+      this.CONSUME(Tokens.TknLet);
+      return true;
+    });
     const identifier = this.CONSUME(Tokens.TknIdentifier);
+    const optional: undefined | boolean = this.OPTION1(() => {
+      this.CONSUME(Tokens.TknQuestionMark);
+      return true;
+    });
     this.CONSUME(Tokens.TknColon);
     const fieldType = this.SUBRULE(this.typeLiteral);
-    return {
-      nodeType: Nodes.NodeType.InterfaceField,
-      category: Nodes.NodeCategory.Type,
-      name: identifier.image,
-      fieldType: fieldType,
-      position: {
-        offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset + 1,
-        line: identifier.startLine || 0,
-        col: identifier.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.InterfaceField,
+        category: Nodes.NodeCategory.Type,
+        name: identifier.image,
+        fieldType: fieldType,
+        optional: optional ?? false,
+        mutable: mutable ?? false,
+        position: {
+          offset: identifier.startOffset,
+          length: fieldType.position.offset + fieldType.position.length - identifier.startOffset,
+          line: identifier.startLine || 0,
+          col: identifier.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   // TypeUsage
   private typeUsageNode = this.RULE('TypeUsage', (): Nodes.TypeUsageNode => {

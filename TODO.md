@@ -1,21 +1,17 @@
 # Current
-+ [ ] Tasks For Friday
-  + [ ] Start Writing Our Wasm Builder
-    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
-+ [ ] Tasks For Saturday
-  + [ ] Rewrite Lexer To Be A Custom Lexer
-  + [ ] Rewrite Parser To Perform Better
-    + [ ] Reduce Complexity Fix Order Of Operations
-    + [ ] Fix Node Lengths
++ [ ] Tasks For Day 1
+  + [ ] Rewrite Parser
+    + [ ] Implement Destructuring And Spread Syntax
+    + [ ] Fix Ignore Ambiguous
+      + [ ] They Do Not Allow us to implement Calling On Non Variables
+      + [ ] They Do Not Allow Us To Implement Member Accesses
     + [ ] Allow You To Call Functions On Any Things Like Other Function Calls
-    + [ ] Determine The Rules For This
-    + [ ] Simplify Grammar
-    + [ ] ReImplement Operation Expressions To Allow Us To Implement Operator Precedence
-    + [ ] Fix Single line if statement
-    + [ ] Implement Match Syntax, Implement Enum Syntax, Implement Generics Syntax
-    + [ ] Implement Objects
-    + [ ] Allow Exporting Any Expression Or Type
-    + [ ] Implement Destructuring And Spread Syntax, Along With Optional Parameters
+      + [ ] Determine The Rules For This
+    + [ ] Implement Parenthesis Type
+    + [ ] Fix Single Line If Statement
+    + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
+    + [ ] Implement Rational Numbers
+  + [ ] Convert Tokens From Regex To Strings In Lexer
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Support Member Access Calls
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
@@ -23,20 +19,27 @@
     + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
     + [ ] Consider ADT Enums And Generic Types
     + [ ] Implement Nicer Errors For This
-    + [ ] Implement Rational Numbers
-+ [ ] Tasks For Sunday
+    + [ ] Allow Exporting Any Expression Or Type
+    + [ ] Allow For Mutable And Optional Fields
+    + [ ] Check That You Are Not Modifying A immutable Field
+  + [ ] Start Writing Our Wasm Builder
+    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
++ [ ] Tasks For Day 2
   + [ ] Write New Tests Based On The Improvements To The Compiler
+    + [ ] Object Literals
+    + [ ] Unary Operators
+    + [ ] Order Of Operations
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`
   + [ ] Start Writing CodeGen
     + [ ] Implement Support For Arbitrary Precision Numbers In Compiler
       + [ ] This is needed for proper compilation of things like i64, u64, f64 and THe Number Type
-+ [ ] Tasks For Monday
++ [ ] Tasks For Day 3
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
   + [ ] Determine Syntax For Wasm Reference Types
-+ [ ] Tasks for Tuesday
++ [ ] Tasks for Day 4
   + [ ] Look Into Writing Linker
     + [ ] Find Way To Parse Without Binaryen
     + [ ] Find Way To Compile Without Binaryen
@@ -58,7 +61,6 @@
 + [ ] TypeChecker
   + [ ] Determine function actual return type
   + [ ] Add TypeChecking For Imports
-  + [ ] Add TypeChecking For Function Calls
   + [ ] Add Better TypeChecking On Wasm Calls
   + [ ] Deal With MemberAccess
 + [ ] Compiler
