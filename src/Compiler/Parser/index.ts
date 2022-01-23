@@ -111,6 +111,7 @@ class Parser extends EmbeddedActionsParser {
     return this.OR({
       IGNORE_AMBIGUITIES: true,
       DEF: [
+        { ALT: () => this.SUBRULE(this.postFixStatement) },
         { ALT: () => this.SUBRULE(this.expressionStatement) },
         { ALT: () => this.SUBRULE(this.assignmentStatement) },
       ],
@@ -325,6 +326,35 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
+  private postFixStatement = this.RULE('PostFixStatement', (): Nodes.PostFixStatementNode => {
+    const value = this.SUBRULE(this.variable);
+    const { location, operator } = this.OR([
+      {
+        ALT: () => {
+          const location = this.CONSUME(Tokens.TknPostFixIncrement);
+          return { location: location, operator: Nodes.PostFixOperator.Increment };
+        },
+      },
+      {
+        ALT: () => {
+          const location = this.CONSUME(Tokens.TknPostFixDecrement);
+          return { location: location, operator: Nodes.PostFixOperator.Decrement };
+        },
+      },
+    ]);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.PostFixStatement,
+        category: Nodes.NodeCategory.Statement,
+        operator: operator,
+        value: value,
+        position: {
+          ...value.position,
+          length: <number>location.endOffset - value.position.offset,
+        },
+      };
+    });
+  });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.callExpression) },
@@ -335,6 +365,7 @@ class Parser extends EmbeddedActionsParser {
   private expression = this.RULE('Expression', (): Nodes.Expression => {
     return this.SUBRULE(this.comparisonExpression);
   });
+  // TODO: Implement These In Brisk
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
@@ -361,6 +392,12 @@ class Parser extends EmbeddedActionsParser {
             break;
           case LexerTokenType.TknComparisonGreaterThanOrEqual:
             operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
+            break;
+          case LexerTokenType.TknComparisonAnd:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonAnd);
+            break;
+          case LexerTokenType.TknComparisonOr:
+            operators.push(Nodes.ComparisonExpressionOperator.ComparisonOr);
             break;
         }
         expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
@@ -533,13 +570,13 @@ class Parser extends EmbeddedActionsParser {
   // PostFix Expressions
   // Simple Expressions
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
-    // TODO: The IGNORE_AMBIGUITIES Part Here Breaks This
+    // TODO: Fix AMBIGUITIES
     return this.OR({
       MAX_LOOKAHEAD: 3,
-      IGNORE_AMBIGUITIES: true,
+      // IGNORE_AMBIGUITIES: true,
       DEF: [
         {
-          ALT: () => this.SUBRULE(this.logicalExpression),
+          ALT: () => this.SUBRULE(this.unaryExpression),
         },
         {
           ALT: () => this.SUBRULE(this.parenthesisExpression),
@@ -580,22 +617,37 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private logicalExpression = this.RULE('LogicalExpression', (): Nodes.LogicExpressionNode => {
-    // TODO: Switch This To Unary Operator
+  private unaryExpression = this.RULE('UnaryExpression', (): Nodes.UnaryExpressionNode => {
     const { location, operator } = this.OR([
       {
         ALT: () => {
           return {
             location: this.CONSUME(Tokens.TknNot),
-            operator: Nodes.LogicalExpressionOperator.LogicalNot,
+            operator: Nodes.UnaryExpressionOperator.UnaryNot,
+          };
+        },
+      },
+      {
+        ALT: () => {
+          return {
+            location: this.CONSUME(Tokens.TknAdd),
+            operator: Nodes.UnaryExpressionOperator.UnaryPositive,
+          };
+        },
+      },
+      {
+        ALT: () => {
+          return {
+            location: this.CONSUME(Tokens.TknSub),
+            operator: Nodes.UnaryExpressionOperator.UnaryNegative,
           };
         },
       },
     ]);
-    const value = this.SUBRULE1(this.simpleExpression);
+    const value = this.SUBRULE1(this.expression);
     return this.ACTION(() => {
       return {
-        nodeType: Nodes.NodeType.LogicExpression,
+        nodeType: Nodes.NodeType.UnaryExpression,
         category: Nodes.NodeCategory.Expression,
         operator: operator,
         value: value,
@@ -835,13 +887,14 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private objectLiteral = this.RULE('ObjectLiteralNode', (): Nodes.ObjectLiteralNode => {
-    const fields: Nodes.ObjectFieldNode[] = [];
+    const fields: (Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode)[] = [];
     const location = this.CONSUME(Tokens.TknLBrace);
     // TODO: Implement Spread Operator Here
     this.AT_LEAST_ONE_SEP({
       SEP: Tokens.TknComma,
       DEF: () =>
         this.OR([
+          { ALT: () => fields.push(this.SUBRULE(this.objectSpread)) },
           { ALT: () => fields.push(this.SUBRULE(this.objectField)) },
           {
             ALT: () => {
@@ -886,6 +939,24 @@ class Parser extends EmbeddedActionsParser {
           length: fieldValue.position.offset + fieldValue.position.length - identifier.startOffset,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
+  });
+  private objectSpread = this.RULE('ObjectSpread', (): Nodes.ObjectSpreadNode => {
+    const location = this.CONSUME(Tokens.TknEllipsis);
+    const fieldValue = this.SUBRULE(this.expression);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.ObjectSpread,
+        category: Nodes.NodeCategory.Literal,
+        fieldValue: fieldValue,
+        position: {
+          offset: location.startOffset,
+          length: fieldValue.position.offset + fieldValue.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
           file: this.file,
         },
       };

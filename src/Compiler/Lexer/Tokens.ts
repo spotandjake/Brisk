@@ -30,8 +30,6 @@ const matchNumber = (numberType: NumberType) => {
     // Matching
     let currentChar = str.charAt(startOffset);
     if (
-      currentChar == '+' ||
-      currentChar == '-' ||
       currentChar == '.' ||
       (currentChar.charCodeAt(0) >= 48 && currentChar.charCodeAt(0) <= 57)
     ) {
@@ -40,23 +38,11 @@ const matchNumber = (numberType: NumberType) => {
         numberType == NumberType.Number ||
         numberType == NumberType.F32 ||
         numberType == NumberType.F64;
-      const AllowSign =
-        numberType == NumberType.Number ||
-        numberType == NumberType.I32 ||
-        numberType == NumberType.I64 ||
-        numberType == NumberType.F32 ||
-        numberType == NumberType.F64;
       if (!AllowDecimal && currentChar == '.') return null;
-      if (!AllowSign && (currentChar == '-' || currentChar == '+')) return null;
       // Parsing
       let endOffset = startOffset,
         numberStyle = NumberStyle.Decimal,
         length = 0;
-      // Determine Sign
-      if (currentChar == '+' || currentChar == '-') {
-        endOffset++;
-        currentChar = str.charAt(endOffset);
-      }
       // Determine What Type Of Number We Are Parsing
       if (currentChar == '0') {
         endOffset++;
@@ -145,6 +131,11 @@ export const operators = createToken({
 export const reserved = createToken({
   name: LexerTokenType.Reserved,
   pattern: Lexer.NA,
+});
+export const postFixOperators = createToken({
+  name: LexerTokenType.PostFixOperators,
+  pattern: Lexer.NA,
+  categories: operators,
 });
 export const comparisonOperators = createToken({
   name: LexerTokenType.ComparisonOperators,
@@ -258,7 +249,7 @@ export const TknI32 = createToken({
   categories: literalTokens,
   pattern: matchNumber(NumberType.I32),
   line_breaks: false,
-  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+'],
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 }); // I32
 export const TknI64 = createToken({
   label: 'I64 Literal',
@@ -266,7 +257,7 @@ export const TknI64 = createToken({
   categories: literalTokens,
   pattern: matchNumber(NumberType.I64),
   line_breaks: false,
-  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+'],
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 }); // I64
 export const TknU32 = createToken({
   label: 'U32 Literal',
@@ -290,7 +281,7 @@ export const TknF32 = createToken({
   categories: literalTokens,
   pattern: matchNumber(NumberType.F32),
   line_breaks: false,
-  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'],
 }); // F32
 export const TknF64 = createToken({
   label: 'F64 Literal',
@@ -298,7 +289,7 @@ export const TknF64 = createToken({
   categories: literalTokens,
   pattern: matchNumber(NumberType.F64),
   line_breaks: false,
-  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'],
 }); // F64
 export const TknNumber = createToken({
   label: 'Number Literal',
@@ -306,7 +297,7 @@ export const TknNumber = createToken({
   categories: literalTokens,
   pattern: matchNumber(NumberType.Number),
   line_breaks: false,
-  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+', '.'],
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'],
 }); // Number
 export const TknConstant = createToken({
   label: 'Constant Literal',
@@ -363,6 +354,11 @@ export const TknComma = createToken({
   categories: separatorTokens,
   pattern: /,/,
 });
+export const TknEllipsis = createToken({
+  label: 'Tkn Ellipsis',
+  name: LexerTokenType.TknEllipsis,
+  pattern: /\.\.\./,
+});
 export const TknPeriod = createToken({
   label: 'Period',
   name: LexerTokenType.Period,
@@ -389,6 +385,18 @@ export const TknWhitespace = createToken({
   line_breaks: true,
 }); // ws
 // Operators
+export const TknPostFixIncrement = createToken({
+  label: 'PostFix Increment',
+  name: LexerTokenType.TknPostFixIncrement,
+  categories: postFixOperators,
+  pattern: /\+\+/,
+});
+export const TknPostFixDecrement = createToken({
+  label: 'PostFix Decrement',
+  name: LexerTokenType.TknPostFixDecrement,
+  categories: postFixOperators,
+  pattern: /--/,
+});
 export const TknComparisonEqual = createToken({
   label: 'Comparison Equal',
   name: LexerTokenType.TknComparisonEqual,
@@ -400,6 +408,18 @@ export const TknComparisonNotEqual = createToken({
   name: LexerTokenType.TknComparisonNotEqual,
   categories: comparisonOperators,
   pattern: /!=/,
+});
+export const TknComparisonLessThanEqual = createToken({
+  label: 'Comparison Less Than Or Equal To',
+  name: LexerTokenType.TknComparisonLessThanOrEqual,
+  categories: comparisonOperators,
+  pattern: /<=/,
+});
+export const TknComparisonGreaterThanEqual = createToken({
+  label: 'Comparison Greater Than Or Equal To',
+  name: LexerTokenType.TknComparisonGreaterThanOrEqual,
+  categories: comparisonOperators,
+  pattern: />=/,
 });
 export const TknComparisonGreaterThan = createToken({
   label: 'Comparison Greater Than',
@@ -413,17 +433,17 @@ export const TknComparisonLessThan = createToken({
   categories: comparisonOperators,
   pattern: /</,
 });
-export const TknComparisonGreaterThanEqual = createToken({
-  label: 'Comparison Greater Than Or Equal To',
-  name: LexerTokenType.TknComparisonGreaterThanOrEqual,
+export const TknComparisonAnd = createToken({
+  label: 'Comparison And',
+  name: LexerTokenType.TknComparisonAnd,
   categories: comparisonOperators,
-  pattern: />=/,
+  pattern: /&&/,
 });
-export const TknComparisonLessThanEqual = createToken({
-  label: 'Comparison Less Than Or Equal To',
-  name: LexerTokenType.TknComparisonLessThanOrEqual,
+export const TknComparisonOr = createToken({
+  label: 'Comparison Or',
+  name: LexerTokenType.TknComparisonOr,
   categories: comparisonOperators,
-  pattern: /<=/,
+  pattern: /\|\|/,
 });
 export const TknThickArrow = createToken({
   label: 'Arrow',
@@ -484,11 +504,6 @@ export const TknQuestionMark = createToken({
   name: LexerTokenType.TknQuestionMark,
   pattern: /\?/,
 });
-export const TknEllipsis = createToken({
-  label: 'Tkn Ellipsis',
-  name: LexerTokenType.TknEllipsis,
-  pattern: /\.\.\./,
-});
 // Reserved Tokens
 export const TknEnum = createToken({
   label: 'Enum',
@@ -517,6 +532,13 @@ export const TknImplements = createToken({
   categories: reserved,
   group: LexerTokenType.Reserved,
   pattern: /implements/,
+});
+export const TknExtends = createToken({
+  label: 'Extends',
+  name: LexerTokenType.TknExtends,
+  categories: reserved,
+  group: LexerTokenType.Reserved,
+  pattern: /extends/,
 });
 export const TknFor = createToken({
   label: 'For',
@@ -605,15 +627,20 @@ export const Tokens = [
   TknLBracket,
   TknRBracket,
   TknComma,
+  TknEllipsis,
   TknPeriod,
   TknColon,
   TknSemiColon,
+  TknPostFixIncrement,
+  TknPostFixDecrement,
   TknComparisonEqual,
   TknComparisonNotEqual,
-  TknComparisonGreaterThanEqual,
   TknComparisonLessThanEqual,
+  TknComparisonGreaterThanEqual,
   TknComparisonGreaterThan,
   TknComparisonLessThan,
+  TknComparisonAnd,
+  TknComparisonOr,
   TknThickArrow,
   TknNot,
   TknEqual,
@@ -624,12 +651,12 @@ export const Tokens = [
   TknPow,
   TknUnion,
   TknQuestionMark,
-  TknEllipsis,
   // Reserved Tokens
   TknEnum,
   TknMatch,
   TknClass,
   TknImplements,
+  TknExtends,
   TknFor,
   TknWhile,
   TknAwait,

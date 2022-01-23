@@ -1,19 +1,18 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
-    + [ ] Implement PostFix Statements
-    + [ ] Switch Logical Expression To Unary Expression
-    + [ ] Add Logical And, Or To Comparison Operator Rename This
-    + [ ] Implement Destructuring And Spread Syntax
+    + [ ] Consider Typing `<=` `>=` `<` `>` To Numeric Data
     + [ ] Fix Ignore Ambiguous
       + [ ] They Do Not Allow us to implement Calling On Non Variables
-      + [ ] They Do Not Allow Us To Implement Member Accesses
+      + [ ] They Do Not Allow Us To Implement Member Accesses On Expressions
     + [ ] Allow You To Call Functions On Any Things Like Other Function Calls
       + [ ] Determine The Rules For This
     + [ ] Implement Parenthesis Type
     + [ ] Fix Single Line If Statement
     + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
     + [ ] Implement Rational Numbers
+    + [ ] Implement Better Mutable Checking
+    + [ ] Consider Removing Operators From The Language And Moving Them To The standard library
   + [ ] Convert Tokens From Regex To Strings In Lexer
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Support Member Access Calls
@@ -29,9 +28,11 @@
     + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2
   + [ ] Write New Tests Based On The Improvements To The Compiler
-    + [ ] Object Literals
     + [ ] Unary Operators
     + [ ] Order Of Operations
+    + [ ] Post Fix Operator Testing
+    + [ ] Tests For Type Definitions And TypeChecker
+    + [ ] Tests For Object Spread Syntax
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`

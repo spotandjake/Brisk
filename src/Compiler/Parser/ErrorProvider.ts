@@ -1,4 +1,4 @@
-import { IParserErrorMessageProvider } from 'chevrotain';
+import { IParserErrorMessageProvider, TokenType } from 'chevrotain';
 import { BriskParseError } from '../Errors/Compiler';
 const errorHandler = (file: string): IParserErrorMessageProvider => {
   // TODO: Error Number and better errors
@@ -41,14 +41,26 @@ const errorHandler = (file: string): IParserErrorMessageProvider => {
       });
       return '';
     },
-    buildEarlyExitMessage: ({ previous }) => {
-      BriskParseError('BuildEarlyExitMessage, Please Contact The Developer', {
-        offset: previous.endOffset || 0,
-        length: 0,
-        line: previous.endLine || 0,
-        col: previous.endColumn || 0,
-        file: file,
-      });
+    buildEarlyExitMessage: ({ previous, actual, expectedIterationPaths }) => {
+      const mapExpected = (tokens: TokenType[][]): string => {
+        return tokens
+          .map((tokenPath, i) => {
+            return tokenPath.map((token) => `\`${token.name}\``).join(', ');
+          })
+          .join(', ');
+      };
+      BriskParseError(
+        `Failed To Parse Found: \`${actual[0].image}\`, Expected one of ${mapExpected(
+          expectedIterationPaths
+        )}`,
+        {
+          offset: previous.endOffset || 0,
+          length: 0,
+          line: previous.endLine || 0,
+          col: previous.endColumn || 0,
+          file: file,
+        }
+      );
       return '';
     },
   };

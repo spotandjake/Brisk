@@ -8,6 +8,8 @@ import {
   TypeUnionLiteralNode,
   InterfaceLiteralNode,
   InterfaceFieldNode,
+  UnaryExpressionOperator,
+  ComparisonExpressionOperator,
 } from '../Types/ParseNodes';
 import { Position } from '../Types/Types';
 import {
@@ -419,33 +421,94 @@ const typeCheckNode = (
       );
       return createTypeNode('Void', node.position);
     }
-    // Expressions
-    case NodeType.ComparisonExpression:
+    case NodeType.PostFixStatement: {
+      const valueType = typeCheckNode(
+        _types,
+        typeStack,
+        _variables,
+        stack,
+        parentNode,
+        <AnalyzedExpression>node.value,
+        code
+      );
       checkValidType(
         _types,
         typeStack,
         code,
-        typeCheckNode(
-          _types,
-          typeStack,
-          _variables,
-          stack,
-          parentNode,
-          <AnalyzedExpression>node.lhs,
-          code
-        ),
-        typeCheckNode(
-          _types,
-          typeStack,
-          _variables,
-          stack,
-          parentNode,
-          <AnalyzedExpression>node.rhs,
-          code
-        ),
-        node.rhs.position,
-        'lhs must match rhs'
+        createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64', 'u32', 'u64'], node.value.position),
+        valueType,
+        node.value.position,
+        'PostFix Operation Can Only Occur On Value Of Type Number'
       );
+      return createTypeNode('Void', node.position);
+    }
+    // Expressions
+    case NodeType.ComparisonExpression:
+      if (
+        node.operator == ComparisonExpressionOperator.ComparisonAnd ||
+        node.operator == ComparisonExpressionOperator.ComparisonOr
+      ) {
+        checkValidType(
+          _types,
+          typeStack,
+          code,
+          createTypeNode('Boolean', node.position),
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.lhs,
+            code
+          ),
+          node.lhs.position,
+          'Operators Must Be Of Type Boolean'
+        );
+        checkValidType(
+          _types,
+          typeStack,
+          code,
+          createTypeNode('Boolean', node.position),
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.rhs,
+            code
+          ),
+          node.rhs.position,
+          'Operators Must Be Of Type Boolean'
+        );
+      } else {
+        checkValidType(
+          _types,
+          typeStack,
+          code,
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.lhs,
+            code
+          ),
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.rhs,
+            code
+          ),
+          node.rhs.position,
+          'lhs must match rhs'
+        );
+      }
       return createTypeNode('Boolean', node.position);
     case NodeType.ArithmeticExpression: {
       const lhs = typeCheckNode(
@@ -485,10 +548,10 @@ const typeCheckNode = (
       return lhs;
     }
     case NodeType.TypeCastExpression:
-      // TODO: Add Logic For This
+      // TODO:Implement This
       BriskTypeError('Add Logic For TypeCasting', node.position);
       return createTypeNode('Void', node.position);
-    case NodeType.LogicExpression: {
+    case NodeType.UnaryExpression: {
       const typeNode = typeCheckNode(
         _types,
         typeStack,
@@ -498,15 +561,23 @@ const typeCheckNode = (
         <AnalyzedExpression>node.value,
         code
       );
-      checkValidType(
-        _types,
-        typeStack,
-        code,
-        createTypeNode('Boolean', node.position),
-        typeNode,
-        node.position
-      );
-      return createTypeNode('Boolean', node.position);
+      let expectedType: TypeLiteral, returnType: TypeLiteral;
+      if (node.operator == UnaryExpressionOperator.UnaryNot) {
+        expectedType = createTypeNode('Boolean', node.position);
+        returnType = createTypeNode('Boolean', node.position);
+      } else if (node.operator == UnaryExpressionOperator.UnaryPositive) {
+        expectedType = createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64'], node.position);
+        returnType = typeNode;
+      } else if (node.operator == UnaryExpressionOperator.UnaryNegative) {
+        expectedType = createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64'], node.position);
+        returnType = typeNode;
+      } else {
+        // TODO: This is only here to prevent the type checker from going off
+        //@ts-ignore
+        return createTypeNode('Void', node.position);
+      }
+      checkValidType(_types, typeStack, code, expectedType, typeNode, node.position);
+      return returnType;
     }
     case NodeType.ParenthesisExpression:
       return typeCheckNode(
@@ -637,12 +708,11 @@ const typeCheckNode = (
         BriskTypeError(`Unknown Constant Literal \`${node.value}\``, node.position);
       }
       return createTypeNode('Void', node.position);
-    case NodeType.ObjectLiteral:
-      return <InterfaceLiteralNode>{
-        nodeType: NodeType.InterfaceLiteral,
-        category: NodeCategory.Type,
-        fields: node.fields.map((field) => {
-          return {
+    case NodeType.ObjectLiteral: {
+      const fields: Map<string, InterfaceFieldNode> = new Map();
+      node.fields.forEach((field) => {
+        if (field.nodeType == NodeType.ObjectField) {
+          fields.set(field.name, {
             nodeType: NodeType.InterfaceField,
             category: NodeCategory.Type,
             name: field.name,
@@ -655,11 +725,43 @@ const typeCheckNode = (
               <AnalyzedExpression>field.fieldValue,
               code
             ),
+            optional: false,
+            mutable: false,
             position: field.position,
-          };
-        }),
+          });
+        } else {
+          const fieldType = resolveType(
+            _types,
+            typeStack,
+            typeCheckNode(
+              _types,
+              typeStack,
+              _variables,
+              stack,
+              parentNode,
+              <AnalyzedExpression>field.fieldValue,
+              code
+            )
+          );
+          if (fieldType.nodeType == NodeType.InterfaceLiteral) {
+            fieldType.fields.forEach((subField) => {
+              fields.set(subField.name, subField);
+            });
+          } else {
+            BriskTypeError(
+              `Expected An \`interface\`, Found \`${prettyName(_types, typeStack, fieldType)}\``,
+              field.fieldValue.position
+            );
+          }
+        }
+      });
+      return <InterfaceLiteralNode>{
+        nodeType: NodeType.InterfaceLiteral,
+        category: NodeCategory.Type,
+        fields: [...fields.values()],
         position: node.position,
       };
+    }
     // Types
     case NodeType.TypeAliasDefinition:
       return createTypeNode('Void', node.position);
@@ -669,7 +771,6 @@ const typeCheckNode = (
     case NodeType.VariableUsage:
       return (<VariableData>(<unknown>_variables.get(<number>node.name))).type;
     case NodeType.MemberAccess: {
-      // TODO: We Need To Fix This
       const variableObject = typeCheckNode(
         _types,
         typeStack,
@@ -680,7 +781,6 @@ const typeCheckNode = (
         code
       );
       const variableObjectType = resolveType(_types, typeStack, variableObject);
-      console.log('====================================');
       if (variableObjectType.nodeType == NodeType.InterfaceLiteral) {
         if (variableObjectType.fields.some((field) => field.name == node.property.name)) {
           return (<InterfaceFieldNode>(

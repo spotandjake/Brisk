@@ -14,11 +14,12 @@ export const enum NodeType {
   DeclarationStatement,
   AssignmentStatement,
   ReturnStatement,
+  PostFixStatement,
   // Expressions
   ComparisonExpression,
   ArithmeticExpression,
   TypeCastExpression,
-  LogicExpression,
+  UnaryExpression,
   ParenthesisExpression,
   CallExpression,
   WasmCallExpression,
@@ -35,6 +36,7 @@ export const enum NodeType {
   FunctionLiteral,
   ObjectLiteral,
   ObjectField,
+  ObjectSpread,
   // Types
   TypeAliasDefinition,
   InterfaceDefinition,
@@ -79,7 +81,8 @@ export type Statement =
   | DeclarationStatementNode
   | AssignmentStatementNode
   | TypeDefinition
-  | ReturnStatementNode;
+  | ReturnStatementNode
+  | PostFixStatementNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -149,6 +152,17 @@ export interface ReturnStatementNode {
   returnValue: Expression;
   position: Position;
 }
+export const enum PostFixOperator {
+  Increment,
+  Decrement,
+}
+export interface PostFixStatementNode {
+  nodeType: NodeType.PostFixStatement;
+  category: NodeCategory.Statement;
+  operator: PostFixOperator;
+  value: Variable;
+  position: Position;
+}
 // Expression Symbols
 export const enum ComparisonExpressionOperator {
   ComparisonEqual,
@@ -157,6 +171,8 @@ export const enum ComparisonExpressionOperator {
   ComparisonGreaterThan,
   ComparisonLessThanOrEqual,
   ComparisonGreaterThanOrEqual,
+  ComparisonAnd,
+  ComparisonOr,
 }
 export const enum ArithmeticExpressionOperator {
   ArithmeticAdd,
@@ -165,15 +181,17 @@ export const enum ArithmeticExpressionOperator {
   ArithmeticDiv,
   ArithmeticPow,
 }
-export const enum LogicalExpressionOperator {
-  LogicalNot,
+export const enum UnaryExpressionOperator {
+  UnaryNot,
+  UnaryPositive,
+  UnaryNegative,
 }
 // Expressions
 export type Expression =
   | ComparisonExpressionNode
   | ArithmeticExpressionNode
   | TypeCastExpressionNode
-  | LogicExpressionNode
+  | UnaryExpressionNode
   | ParenthesisExpressionNode
   | CallExpressionNode
   | WasmCallExpressionNode
@@ -202,10 +220,10 @@ export interface TypeCastExpressionNode {
   value: Expression;
   position: Position;
 }
-export interface LogicExpressionNode {
-  nodeType: NodeType.LogicExpression;
+export interface UnaryExpressionNode {
+  nodeType: NodeType.UnaryExpression;
   category: NodeCategory.Expression;
-  operator: LogicalExpressionOperator;
+  operator: UnaryExpressionOperator;
   value: Expression;
   position: Position;
 }
@@ -309,7 +327,7 @@ export interface FunctionLiteralNode {
 export interface ObjectLiteralNode {
   nodeType: NodeType.ObjectLiteral;
   category: NodeCategory.Literal;
-  fields: ObjectFieldNode[];
+  fields: (ObjectFieldNode | ObjectSpreadNode)[];
   position: Position;
 }
 export interface ObjectFieldNode {
@@ -319,6 +337,13 @@ export interface ObjectFieldNode {
   fieldValue: Expression;
   position: Position;
 }
+export interface ObjectSpreadNode {
+  nodeType: NodeType.ObjectSpread;
+  category: NodeCategory.Literal;
+  fieldValue: Expression;
+  position: Position;
+}
+
 // Types
 export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
 export type TypeLiteral =

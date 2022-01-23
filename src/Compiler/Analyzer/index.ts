@@ -318,6 +318,21 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     }
+    case NodeType.PostFixStatement:
+      // TODO: Check That Variable Is Mutable
+      node.value = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        parentNode,
+        node.value
+      );
+      break;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
@@ -346,7 +361,33 @@ const analyzeNode = <T extends AllNodes>(
         node.rhs
       );
       break;
-    case NodeType.LogicExpression:
+    case NodeType.TypeCastExpression:
+      node.value = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        parentNode,
+        node.value
+      );
+      node.castType = analyzeNode(
+        _types,
+        typeStacks,
+        typeStackMap,
+        _variables,
+        stacks,
+        closureMap,
+        stackMap,
+        node,
+        parentNode,
+        node.castType
+      );
+      break;
+    case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
       node.value = analyzeNode(
         _types,
@@ -471,7 +512,7 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.ObjectLiteral: {
       const fields: string[] = [];
       node.fields = node.fields.map((field) => {
-        if (fields.includes(field.name))
+        if (field.nodeType == NodeType.ObjectField && fields.includes(field.name))
           BriskParseError(`Duplicate Field \`${field.name}\``, field.position);
         field.fieldValue = analyzeNode(
           _types,
@@ -485,7 +526,7 @@ const analyzeNode = <T extends AllNodes>(
           parentNode,
           field.fieldValue
         );
-        fields.push(field.name);
+        if (field.nodeType == NodeType.ObjectField) fields.push(field.name);
         return field;
       });
       break;
@@ -735,7 +776,6 @@ const analyzeNode = <T extends AllNodes>(
     case NodeType.StringLiteral:
     case NodeType.ConstantLiteral:
     case NodeType.TypePrimLiteral:
-    case NodeType.TypeCastExpression:
     case NodeType.PropertyUsage:
       break;
     // Other
