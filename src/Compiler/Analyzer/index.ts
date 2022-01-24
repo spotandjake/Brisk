@@ -282,10 +282,7 @@ const analyzeNode = <T extends AllNodes>(
         parentNode,
         node.name
       );
-      const varData = <VariableData>_variables.get(<number>node.name.name);
-      if (varData.constant) {
-        BriskParseError(`Cannot modify immutable variable \`${varData.name}\``, node.position);
-      }
+      // TODO: Check If Variable Was Mutable
       node.value = analyzeNode(
         _types,
         typeStacks,

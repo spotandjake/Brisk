@@ -1,42 +1,52 @@
 // import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
-import wasm print: (i32) => Void from 'test1';
-const test: Function = (x: i32, y: i32, z: i32): Function => {
-  print(x);
-  return((y: i32): i32 => {
-    print(y);
-    return(y);
-  });
+import wasm print: (Any) => Void from 'test1';
+// const test: Function = (x: i32, y: i32, z: i32): Function => {
+//   print(x);
+//   return((y: i32): i32 => {
+//     print(y);
+//     return(y);
+//   });
+// };
+// print(((): i32 => {})());
+let mutableInt: i32 = 1n;
+mutableInt++;
+mutableInt = 2n;
+print(mutableInt);
+let mutableObject: { let mutableInt: i32; } = {
+  mutableInt: 1n
 };
-print(((): i32 => {})());
+mutableObject.mutableInt++;
+mutableObject.mutableInt = 2n;
+print(mutableObject);
 // const a: Boolean = true && false || false;
 // const b: i32 = 1n * 1n * 1n;
-print((test)(1n, 1n, 1n));
-print(test(1n, 1n, 1n));
-@wasm.i32.add(1n, 1n);
-interface ObjectTest {
-  let field1: i32;
-  field2?: i32;
-  field3: (i32) => i32;
-  field4: {
-    field1: (i32) => i32;
-  };
-};
-const field1: i32 = 1n;
-// field1++;
-let a: ObjectTest = {
-  field1,
-  field2: 1n,
-  field3: (a: i32): i32 => {
-    return(a);
-  },
-  field4: {
-    field1: (a: i32): i32 => {
-      return(a);
-    }
-  }
-};
-print(a.field1);
-print(a.field4.field1(1n));
+// print((test)(1n, 1n, 1n));
+// print(test(1n, 1n, 1n));
+// @wasm.i32.add(1n, 1n);
+// interface ObjectTest {
+//   let field1: i32;
+//   field2?: i32;
+//   field3: (i32) => i32;
+//   field4: {
+//     field1: (i32) => i32;
+//   };
+// };
+// const field1: i32 = 1n;
+// // field1++;
+// let a: ObjectTest = {
+//   field1,
+//   field2: 1n,
+//   field3: (a: i32): i32 => {
+//     return(a);
+//   },
+//   field4: {
+//     field1: (a: i32): i32 => {
+//       return(a);
+//     }
+//   }
+// };
+// print(a.field1);
+// print(a.field4.field1(1n));
 // export {
 //   field1: 1n
 // };

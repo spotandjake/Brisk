@@ -15,11 +15,11 @@ test('Compile: Main Pass', () => {
 });
 // Parser-Lexer
 test('Parser-Lexer: Main Pass', () => {
-  expect(parse(lex(Main_Pass, 'file'), 'file')).toMatchSnapshot();
+  expect(parse(lex(Main_Pass, 'file'), '', 'file')).toMatchSnapshot();
 });
 // Parser-Lexer-Analyzer
 test('Parser-Lexer-Analyzer: Main Pass', () => {
-  expect(analyze(parse(lex(Main_Pass, 'file'), 'file'))).toMatchSnapshot();
+  expect(analyze(parse(lex(Main_Pass, 'file'), '', 'file'))).toMatchSnapshot();
 });
 // Literals
 test('Compile: Literals Pass', () => {
@@ -27,9 +27,9 @@ test('Compile: Literals Pass', () => {
 });
 // Parser-Lexer
 test('Parser-Lexer: Literals Pass', () => {
-  expect(parse(lex(Literals_Pass, 'file'), 'file')).toMatchSnapshot();
+  expect(parse(lex(Literals_Pass, 'file'), '', 'file')).toMatchSnapshot();
 });
 // Parser-Lexer-Analyzer
 test('Parser-Lexer-Analyzer: Literals Pass', () => {
-  expect(analyze(parse(lex(Literals_Pass, 'file'), 'file'))).toMatchSnapshot();
+  expect(analyze(parse(lex(Literals_Pass, 'file'), '', 'file'))).toMatchSnapshot();
 });

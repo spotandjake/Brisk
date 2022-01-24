@@ -24,6 +24,7 @@ import {
   AnalyzedProgramNode,
   AnalyzedFunctionLiteralNode,
 } from '../Types/AnalyzerNodes';
+import { prettyError } from '../Errors/ErrorBuilder';
 import { BriskTypeError } from '../Errors/Compiler';
 import { instructions, WasmInstruction } from './WasmTypes';
 
@@ -214,64 +215,19 @@ const checkValidType = (
   message = ''
 ) => {
   if (!typeMatch(_types, typeStack, got, expected)) {
-    // Create Detailed Error Message
-    const width = process.stdout.columns || 80;
-    const offset = position.offset;
-
-    let startOfLine = code.lastIndexOf('\n', offset);
-    let endOfLine = code.indexOf('\n', offset + position.length);
-    if (endOfLine - startOfLine > width) {
-      const loopLength = endOfLine - startOfLine - width;
-      for (let i = 0; i <= loopLength; i++) {
-        if (startOfLine < offset) startOfLine++;
-        if (endOfLine > offset) endOfLine--;
-        if (endOfLine - startOfLine < width) break;
-      }
-    }
-    // Build First Line
-    const incorrectCode = code.slice(offset, offset + position.length);
-    const line =
-      position.length == 0
-        ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
-        : `\x1b[0m${code.slice(
-          startOfLine + 1,
-          offset
-        )}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${code.slice(
-          offset + position.length,
-          endOfLine
-        )}`;
-    // After Message
-    const afterMessage = code.slice(
-      endOfLine + 1,
-      code.indexOf('\n', code.indexOf('\n', endOfLine + 1) + 1)
-    );
-    if (afterMessage.length >= width * 2) afterMessage.slice(width * 2);
-    // Calculate Lengths
-    const multiLine = /\n|\r/.test(incorrectCode);
-    const startLength = multiLine ? 0 : offset - startOfLine - 1;
-    const wrongCodeLength = multiLine
-      ? Math.max(...incorrectCode.split(/\n|\r/g).map((line) => line.length))
-      : position.length || 5;
-    // Build message
-    const msg = [
-      'Type Mismatch',
-      line,
-      `\x1b[31m\x1b[1m${' '.repeat(startLength)}${'^'.repeat(
-        wrongCodeLength
-      )} expected ${prettyName(_types, typeStack, expected)} got ${prettyName(
-        _types,
-        typeStack,
-        got
-      )}, ${message} \x1b[0m`
-        .split('\n')
-        .map((text, i) =>
-          i == 0 ? text : `${' '.repeat(startLength + wrongCodeLength + 10)}${text}`
-        )
-        .join('\n'),
-      afterMessage,
-    ];
     // =================================================================
-    BriskTypeError(msg.join('\n'), position);
+    BriskTypeError(
+      prettyError(
+        code,
+        `expected ${prettyName(_types, typeStack, expected)} got ${prettyName(
+          _types,
+          typeStack,
+          got
+        )}, ${message}`,
+        position
+      ),
+      position
+    );
   }
 };
 const typeCheckNode = (

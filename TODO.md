@@ -1,9 +1,6 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
-    + [ ] Fix Ignore Ambiguous
-      + [ ] On Expression Statement
-      + [ ] Fix Assignment Statement
     + [ ] Allow you to access members on general expressions
     + [ ] Implement Parenthesis Type
     + [ ] Fix Single Line If Statement
@@ -23,6 +20,7 @@
     + [ ] Allow Exporting Any Expression Or Type
     + [ ] Allow For Mutable And Optional Fields
     + [ ] Check That You Are Not Modifying A immutable Field
+    + [ ] Implement Export Analysis
   + [ ] Start Writing Our Wasm Builder
     + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2

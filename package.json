@@ -54,7 +54,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "chevrotain": "^9.1.0",
+    "chevrotain": "^10.0.0",
     "commander": "^8.3.0"
   }
 }

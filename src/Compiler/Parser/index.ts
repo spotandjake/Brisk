@@ -4,6 +4,8 @@ import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import * as Nodes from '../Types/ParseNodes';
+import { prettyError } from '../Errors/ErrorBuilder';
+import { BriskParseError } from '../Errors/Compiler';
 //@ts-ignore
 import { __DEBUG__ } from '@brisk/config';
 // Parser
@@ -13,7 +15,7 @@ class Parser extends EmbeddedActionsParser {
     super(tokens, {
       maxLookahead: 2,
       skipValidations: !__DEBUG__,
-      errorMessageProvider: ErrorProvider(file),
+      errorMessageProvider: ErrorProvider(),
     });
     this.file = file;
     this.performSelfAnalysis();
@@ -108,14 +110,20 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private singleLineStatement = this.RULE('SingleLineStatement', (): Nodes.Statement => {
-    return this.OR({
-      IGNORE_AMBIGUITIES: true,
-      DEF: [
-        { ALT: () => this.SUBRULE(this.postFixStatement) },
-        { ALT: () => this.SUBRULE(this.assignmentStatement) },
-        { ALT: () => this.SUBRULE(this.expressionStatement) },
-      ],
-    });
+    return this.OR([
+      {
+        GATE: this.BACKTRACK(this.expressionStatement),
+        ALT: () => this.SUBRULE(this.expressionStatement),
+      },
+      {
+        GATE: this.BACKTRACK(this.assignmentStatement),
+        ALT: () => this.SUBRULE(this.assignmentStatement),
+      },
+      {
+        GATE: this.BACKTRACK(this.postFixStatement),
+        ALT: () => this.SUBRULE(this.postFixStatement),
+      },
+    ]);
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
     const location = this.CONSUME(Tokens.TknIf);
@@ -223,8 +231,8 @@ class Parser extends EmbeddedActionsParser {
   );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
-    const variable = this.OR([
-      { ALT: () => this.SUBRULE(this.variable) },
+    const variable: Nodes.ExportStatementValue = this.OR([
+      { ALT: () => this.SUBRULE(this.variableUsage) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
     ]);
@@ -289,7 +297,7 @@ class Parser extends EmbeddedActionsParser {
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
       // TODO: Allow Support For Assigning To Member Access Nodes
-      const name = this.SUBRULE(this.variableUsageNode);
+      const name = this.SUBRULE(this.variableUsage);
       this.CONSUME(Tokens.assignmentOperators);
       const value = this.SUBRULE(this.expression);
       return this.ACTION(() => {
@@ -327,7 +335,7 @@ class Parser extends EmbeddedActionsParser {
     });
   });
   private postFixStatement = this.RULE('PostFixStatement', (): Nodes.PostFixStatementNode => {
-    const value = this.SUBRULE(this.variable);
+    const value = this.SUBRULE(this.variableUsage);
     const { location, operator } = this.OR([
       {
         ALT: () => {
@@ -592,7 +600,7 @@ class Parser extends EmbeddedActionsParser {
         MAX_LOOKAHEAD: 3,
         DEF: [
           { ALT: () => this.SUBRULE(this.parenthesisExpression) },
-          { ALT: () => this.SUBRULE(this.variable) },
+          { ALT: () => this.SUBRULE(this.variableUsage) },
         ],
       });
       const FunctionHead = () => {
@@ -949,7 +957,7 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private variable = this.RULE('Variable', (): Nodes.Variable => {
+  private variableUsage = this.RULE('Variable', (): Nodes.VariableUsage => {
     return this.OR({
       MAX_LOOKAHEAD: 2,
       DEF: [
@@ -1284,13 +1292,28 @@ class Parser extends EmbeddedActionsParser {
   });
 }
 // Parse code
-const parse = (lexingResult: ILexingResult, file: string) => {
+const parse = (lexingResult: ILexingResult, code: string, file: string) => {
   // =================================================================
   const parser = new Parser(Tokens.Tokens, file);
   // "input" is a setter which will reset the parser's state.
   parser.input = lexingResult.tokens;
-  if (parser.errors.length > 0) throw new Error('Parsing errors detected');
+  const parsed = parser.program();
+  if (parser.errors.length > 0) {
+    const { message, token } = parser.errors[0];
+    const position = {
+      offset: token.startOffset,
+      length: (token.endOffset ?? 0) - token.startOffset + 1,
+      line: token.startLine || 0,
+      col: token.startColumn || 0,
+      file: file,
+    };
+    BriskParseError(prettyError(code, message, position), position);
+  }
+  if (parsed == undefined) {
+    // console.log(lexed);
+    throw new Error('Parsed was undefined');
+  }
   // =================================================================
-  return parser.program();
+  return parsed;
 };
 export default parse;

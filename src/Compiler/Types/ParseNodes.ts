@@ -125,7 +125,7 @@ export interface ExportStatementNode {
   position: Position;
 }
 // TODO: Add Object To This
-type ExportStatementValue = Variable | DeclarationStatementNode;
+export type ExportStatementValue = VariableUsage | DeclarationStatementNode | ObjectLiteralNode;
 export const enum DeclarationTypes {
   Constant,
   Lexical,
@@ -142,7 +142,7 @@ export interface DeclarationStatementNode {
 export interface AssignmentStatementNode {
   nodeType: NodeType.AssignmentStatement;
   category: NodeCategory.Statement;
-  name: VariableUsageNode; // TODO: Allow Support For Assigning To Member Access Nodes
+  name: VariableUsage; // TODO: Allow Support For Assigning To Member Access Nodes
   value: Expression;
   position: Position;
 }
@@ -160,7 +160,7 @@ export interface PostFixStatementNode {
   nodeType: NodeType.PostFixStatement;
   category: NodeCategory.Statement;
   operator: PostFixOperator;
-  value: Variable;
+  value: VariableUsage;
   position: Position;
 }
 // Expression Symbols
@@ -444,7 +444,7 @@ export interface TypeIdentifierNode {
 }
 // Variables
 // TODO: these should probably just be identifier and member something because are not necessarily variables.
-export type Variable = VariableUsageNode | MemberAccessNode;
+export type VariableUsage = VariableUsageNode | MemberAccessNode;
 export type VariableDefinition = VariableDefinitionNode;
 export interface VariableDefinitionNode {
   nodeType: NodeType.VariableDefinition;

@@ -8,11 +8,7 @@ const compile = (program: string, file: string) => {
   // 1. Lex
   const lexed = lex(program, file);
   // 2. Parse
-  const parsed = parse(lexed, file);
-  if (parsed == undefined) {
-    // console.log(lexed);
-    throw new Error('Parsed was undefined');
-  }
+  const parsed = parse(lexed, program, file);
   // 3. Analyze ParseTree
   const analyzed = analyze(parsed);
   // 4. Type Check
