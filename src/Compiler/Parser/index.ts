@@ -112,8 +112,8 @@ class Parser extends EmbeddedActionsParser {
       IGNORE_AMBIGUITIES: true,
       DEF: [
         { ALT: () => this.SUBRULE(this.postFixStatement) },
-        { ALT: () => this.SUBRULE(this.expressionStatement) },
         { ALT: () => this.SUBRULE(this.assignmentStatement) },
+        { ALT: () => this.SUBRULE(this.expressionStatement) },
       ],
     });
   });
@@ -171,13 +171,13 @@ class Parser extends EmbeddedActionsParser {
       const variable = this.OR([
         {
           ALT: () => {
-            return this.SUBRULE(this.variableDefinitionNode);
+            return this.SUBRULE(this.variableDefinition);
           },
         },
         {
           ALT: () => {
             this.CONSUME(Tokens.TknWasm);
-            const variable = this.SUBRULE1(this.variableDefinitionNode);
+            const variable = this.SUBRULE1(this.variableDefinition);
             this.CONSUME(Tokens.TknColon);
             typeSignature = this.SUBRULE(this.typeLiteral);
             return variable;
@@ -262,7 +262,7 @@ class Parser extends EmbeddedActionsParser {
         },
       },
     ]);
-    const name = this.SUBRULE(this.variableDefinitionNode);
+    const name = this.SUBRULE(this.variableDefinition);
     this.CONSUME(Tokens.TknColon);
     const varType = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.assignmentOperators);
@@ -958,6 +958,9 @@ class Parser extends EmbeddedActionsParser {
       ],
     });
   });
+  private variableDefinition = this.RULE('VariableDefinition', (): Nodes.VariableDefinition => {
+    return this.OR([{ ALT: () => this.SUBRULE(this.variableDefinitionNode) }]);
+  });
   private variableDefinitionNode = this.RULE(
     'VariableDefinitionNode',
     (): Nodes.VariableDefinitionNode => {
@@ -976,6 +979,7 @@ class Parser extends EmbeddedActionsParser {
       };
     }
   );
+  // TODO: Implement Object Destructuring
   private variableUsageNode = this.RULE('VariableUsageNode', (): Nodes.VariableUsageNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     return {
@@ -1040,7 +1044,7 @@ class Parser extends EmbeddedActionsParser {
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        const name = this.SUBRULE(this.variableDefinitionNode);
+        const name = this.SUBRULE(this.variableDefinition);
         const optional: undefined | boolean = this.OPTION1(() => {
           this.CONSUME(Tokens.TknQuestionMark);
           return true;

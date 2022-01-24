@@ -106,7 +106,7 @@ export interface BlockStatementNode {
 export interface ImportStatementNode {
   nodeType: NodeType.ImportStatement;
   category: NodeCategory.Statement;
-  variable: VariableDefinitionNode; // TODO: we want to add support for destructuring imports
+  variable: VariableDefinition; // TODO: we want to add support for destructuring imports
   source: StringLiteralNode;
   position: Position;
 }
@@ -114,7 +114,7 @@ export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
   typeSignature: TypeLiteral;
-  variable: VariableDefinitionNode;
+  variable: VariableDefinition;
   source: StringLiteralNode;
   position: Position;
 }
@@ -134,7 +134,7 @@ export interface DeclarationStatementNode {
   nodeType: NodeType.DeclarationStatement;
   category: NodeCategory.Statement;
   declarationType: DeclarationTypes;
-  name: VariableDefinitionNode;
+  name: VariableDefinition;
   varType: TypeLiteral;
   value: Expression;
   position: Position;
@@ -445,6 +445,7 @@ export interface TypeIdentifierNode {
 // Variables
 // TODO: these should probably just be identifier and member something because are not necessarily variables.
 export type Variable = VariableUsageNode | MemberAccessNode;
+export type VariableDefinition = VariableDefinitionNode;
 export interface VariableDefinitionNode {
   nodeType: NodeType.VariableDefinition;
   category: NodeCategory.Variable;
@@ -474,7 +475,7 @@ export interface MemberAccessNode {
 export interface ParameterNode {
   nodeType: NodeType.Parameter;
   category: NodeCategory.Variable;
-  name: VariableDefinitionNode;
+  name: VariableDefinition;
   optional: boolean;
   paramType: TypeLiteral;
 }

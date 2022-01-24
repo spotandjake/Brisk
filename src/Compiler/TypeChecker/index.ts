@@ -482,6 +482,46 @@ const typeCheckNode = (
           node.rhs.position,
           'Operators Must Be Of Type Boolean'
         );
+      } else if (
+        node.operator == ComparisonExpressionOperator.ComparisonLessThan ||
+        node.operator == ComparisonExpressionOperator.ComparisonGreaterThan ||
+        node.operator == ComparisonExpressionOperator.ComparisonLessThanOrEqual ||
+        node.operator == ComparisonExpressionOperator.ComparisonGreaterThanOrEqual
+      ) {
+        checkValidType(
+          _types,
+          typeStack,
+          code,
+          createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64', 'u32', 'u64'], node.position),
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.lhs,
+            code
+          ),
+          node.lhs.position,
+          'Operators Must Be Numeric'
+        );
+        checkValidType(
+          _types,
+          typeStack,
+          code,
+          createTypeNode(['Number', 'i32', 'i64', 'f32', 'f64', 'u32', 'u64'], node.position),
+          typeCheckNode(
+            _types,
+            typeStack,
+            _variables,
+            stack,
+            parentNode,
+            <AnalyzedExpression>node.rhs,
+            code
+          ),
+          node.rhs.position,
+          'Operators Must Be Numeric'
+        );
       } else {
         checkValidType(
           _types,
@@ -605,8 +645,6 @@ const typeCheckNode = (
         node.position,
         'A Function Call Can Only Occur On A Function Of The Matching Type'
       );
-      console.log(node);
-      console.log('-------------------------------------');
       if (functionType.nodeType == NodeType.FunctionSignatureLiteral) {
         // TypeCheck Arguments
         // TODO: Check The Length Of The Arguments Is Enough

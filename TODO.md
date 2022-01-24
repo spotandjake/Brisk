@@ -1,20 +1,21 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
-    + [ ] Consider Typing `<=` `>=` `<` `>` To Numeric Data
     + [ ] Fix Ignore Ambiguous
-      + [ ] They Do Not Allow Us To Implement Member Accesses On Expressions
+      + [ ] On Expression Statement
+      + [ ] Fix Assignment Statement
+    + [ ] Allow you to access members on general expressions
     + [ ] Implement Parenthesis Type
     + [ ] Fix Single Line If Statement
     + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
     + [ ] Implement Rational Numbers
     + [ ] Implement Better Mutable Checking
     + [ ] Implement Arrays
-    + [ ] Consider Removing Operators From The Language And Moving Them To The standard library
   + [ ] Convert Tokens From Regex To Strings In Lexer
   + [ ] Rewrite Type Checker And Analyzer
-    + [ ] Support Member Access Calls
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
+      + [ ] Perform Value Narrowing And Type Narrowing
+    + [ ] Support Member Access Calls
     + [ ] Reduce Complexity Of Both The TypeChecker And Analyzer
     + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
     + [ ] Consider ADT Enums And Generic Types
