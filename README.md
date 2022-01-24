@@ -17,7 +17,7 @@
 # Language Goals
 ***
 
-Compile to web assembly easily, have a minimal number of keywords and functions implemented at the compiler level possible while being fully bootstrapable and extendable.
+An Easy To Program Language That Compiles To Web Assembly. The Goal Of brisk Is To Allow Users To Write Code Easily While Still Being Performant And Powerful. Brisk Syntax Is Similar To Typescript At Its Core While Adding Features Such As Advanced Enums That Make It Extremely Powerful.
 # Language Fundamentals
 ***
 
