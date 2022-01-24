@@ -3,15 +3,13 @@
   + [ ] Rewrite Parser
     + [ ] Consider Typing `<=` `>=` `<` `>` To Numeric Data
     + [ ] Fix Ignore Ambiguous
-      + [ ] They Do Not Allow us to implement Calling On Non Variables
       + [ ] They Do Not Allow Us To Implement Member Accesses On Expressions
-    + [ ] Allow You To Call Functions On Any Things Like Other Function Calls
-      + [ ] Determine The Rules For This
     + [ ] Implement Parenthesis Type
     + [ ] Fix Single Line If Statement
     + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
     + [ ] Implement Rational Numbers
     + [ ] Implement Better Mutable Checking
+    + [ ] Implement Arrays
     + [ ] Consider Removing Operators From The Language And Moving Them To The standard library
   + [ ] Convert Tokens From Regex To Strings In Lexer
   + [ ] Rewrite Type Checker And Analyzer

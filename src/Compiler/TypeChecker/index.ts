@@ -547,10 +547,6 @@ const typeCheckNode = (
       );
       return lhs;
     }
-    case NodeType.TypeCastExpression:
-      // TODO:Implement This
-      BriskTypeError('Add Logic For TypeCasting', node.position);
-      return createTypeNode('Void', node.position);
     case NodeType.UnaryExpression: {
       const typeNode = typeCheckNode(
         _types,
@@ -609,6 +605,8 @@ const typeCheckNode = (
         node.position,
         'A Function Call Can Only Occur On A Function Of The Matching Type'
       );
+      console.log(node);
+      console.log('-------------------------------------');
       if (functionType.nodeType == NodeType.FunctionSignatureLiteral) {
         // TypeCheck Arguments
         // TODO: Check The Length Of The Arguments Is Enough

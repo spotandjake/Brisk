@@ -1,7 +1,18 @@
 // import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
 import wasm print: (i32) => Void from 'test1';
+const test: Function = (x: i32, y: i32, z: i32): Function => {
+  print(x);
+  return((y: i32): i32 => {
+    print(y);
+    return(y);
+  });
+};
+print(((): i32 => {})());
 // const a: Boolean = true && false || false;
-// const b: Boolean = true && false || 3;
+// const b: i32 = 1n * 1n * 1n;
+print((test)(1n, 1n, 1n));
+print(test(1n, 1n, 1n));
+@wasm.i32.add(1n, 1n);
 interface ObjectTest {
   let field1: i32;
   field2?: i32;
@@ -24,7 +35,8 @@ let a: ObjectTest = {
     }
   }
 };
-// print(a.field4.field1(1n));
+print(a.field1);
+print(a.field4.field1(1n));
 // export {
 //   field1: 1n
 // };

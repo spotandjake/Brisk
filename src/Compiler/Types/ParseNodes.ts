@@ -18,7 +18,6 @@ export const enum NodeType {
   // Expressions
   ComparisonExpression,
   ArithmeticExpression,
-  TypeCastExpression,
   UnaryExpression,
   ParenthesisExpression,
   CallExpression,
@@ -54,6 +53,7 @@ export const enum NodeType {
   MemberAccess,
   PropertyUsage,
   Parameter,
+  Arguments,
 }
 export const enum NodeCategory {
   General,
@@ -190,7 +190,6 @@ export const enum UnaryExpressionOperator {
 export type Expression =
   | ComparisonExpressionNode
   | ArithmeticExpressionNode
-  | TypeCastExpressionNode
   | UnaryExpressionNode
   | ParenthesisExpressionNode
   | CallExpressionNode
@@ -211,13 +210,6 @@ export interface ArithmeticExpressionNode {
   lhs: Expression;
   operator: ArithmeticExpressionOperator;
   rhs: Expression;
-  position: Position;
-}
-export interface TypeCastExpressionNode {
-  nodeType: NodeType.TypeCastExpression;
-  category: NodeCategory.Expression;
-  castType: TypeLiteral;
-  value: Expression;
   position: Position;
 }
 export interface UnaryExpressionNode {
@@ -248,7 +240,8 @@ export interface WasmCallExpressionNode {
   position: Position;
 }
 // Literals
-export type Atom =
+export type Atom = Literal | VariableUsageNode | MemberAccessNode;
+export type Literal =
   | StringLiteralNode
   | I32LiteralNode
   | I64LiteralNode
@@ -259,9 +252,7 @@ export type Atom =
   | NumberLiteralNode
   | ConstantLiteralNode
   | FunctionLiteralNode
-  | ObjectLiteralNode
-  | VariableUsageNode
-  | MemberAccessNode;
+  | ObjectLiteralNode;
 export interface StringLiteralNode {
   nodeType: NodeType.StringLiteral;
   category: NodeCategory.Literal;
@@ -484,7 +475,15 @@ export interface ParameterNode {
   nodeType: NodeType.Parameter;
   category: NodeCategory.Variable;
   name: VariableDefinitionNode;
+  optional: boolean;
   paramType: TypeLiteral;
+}
+export interface ArgumentsNode {
+  nodeType: NodeType.Arguments;
+  category: NodeCategory.General;
+
+  args: Expression[];
+  position: Position;
 }
 
 // Export Every Node

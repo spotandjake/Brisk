@@ -19,6 +19,7 @@ const errorHandler = (file: string): IParserErrorMessageProvider => {
     buildNotAllInputParsedMessage: ({
       firstRedundant: { image, endOffset, startOffset, startLine, startColumn },
     }) => {
+      console.log();
       BriskParseError(
         `\x1b[31m\x1b[1merror[]\x1b[0m: Failed To Parse Input Invalid Token \`${image}\``,
         {

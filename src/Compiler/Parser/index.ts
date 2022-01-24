@@ -357,7 +357,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
-      { ALT: () => this.SUBRULE(this.callExpression) },
+      { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true] }) },
       { ALT: () => this.SUBRULE(this.wasmCallExpression) },
     ]);
   });
@@ -406,7 +406,6 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          // TODO: Fix Length
           return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
               return {
@@ -418,9 +417,9 @@ class Parser extends EmbeddedActionsParser {
                 position: {
                   ...prevValue.position,
                   length:
-                    prevValue.position.offset +
-                    prevValue.position.length -
-                    currentValue.position.offset,
+                    currentValue.position.offset +
+                    currentValue.position.length -
+                    prevValue.position.offset,
                 },
               };
             },
@@ -462,7 +461,6 @@ class Parser extends EmbeddedActionsParser {
         return this.ACTION(() => {
           return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-              // TODO: Fix Length
               return {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
                 category: Nodes.NodeCategory.Expression,
@@ -471,7 +469,10 @@ class Parser extends EmbeddedActionsParser {
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
-                  length: prevValue.position.length + currentValue.position.length + 1,
+                  length:
+                    currentValue.position.offset +
+                    currentValue.position.length -
+                    prevValue.position.offset,
                 },
               };
             },
@@ -510,7 +511,6 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          // TODO: Fix Length
           return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
               return {
@@ -521,7 +521,10 @@ class Parser extends EmbeddedActionsParser {
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
-                  length: prevValue.position.length + currentValue.position.length + 1,
+                  length:
+                    currentValue.position.offset +
+                    currentValue.position.length -
+                    prevValue.position.offset,
                 },
               };
             },
@@ -548,7 +551,6 @@ class Parser extends EmbeddedActionsParser {
         return this.ACTION(() => {
           return expressions.reduce(
             (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-              // TODO: Fix Length
               return {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
                 category: Nodes.NodeCategory.Expression,
@@ -557,7 +559,10 @@ class Parser extends EmbeddedActionsParser {
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
-                  length: prevValue.position.length + currentValue.position.length + 1,
+                  length:
+                    currentValue.position.offset +
+                    currentValue.position.length -
+                    prevValue.position.offset,
                 },
               };
             },
@@ -567,56 +572,51 @@ class Parser extends EmbeddedActionsParser {
       }
     }
   );
-  // PostFix Expressions
   // Simple Expressions
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
-    // TODO: Fix AMBIGUITIES
     return this.OR({
       MAX_LOOKAHEAD: 3,
-      // IGNORE_AMBIGUITIES: true,
       DEF: [
-        {
-          ALT: () => this.SUBRULE(this.unaryExpression),
-        },
-        {
-          ALT: () => this.SUBRULE(this.parenthesisExpression),
-        },
-        {
-          ALT: () => this.SUBRULE(this.callExpression),
-        },
-        {
-          ALT: () => this.SUBRULE(this.wasmCallExpression),
-        },
-        {
-          ALT: () => this.SUBRULE(this.atom),
-        },
-        {
-          ALT: () => this.SUBRULE(this.castExpression),
-        },
+        { ALT: () => this.SUBRULE(this.unaryExpression) },
+        { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false] }) },
+        { ALT: () => this.SUBRULE(this.wasmCallExpression) },
+        { ALT: () => this.SUBRULE(this.literal) },
       ],
     });
   });
-  private castExpression = this.RULE('CaseExpression', (): Nodes.TypeCastExpressionNode => {
-    const location = this.CONSUME(Tokens.TknComparisonLessThan);
-    const castType = this.SUBRULE(this.typeLiteral);
-    this.CONSUME(Tokens.TknComparisonGreaterThan);
-    const value = this.SUBRULE(this.simpleExpression);
-    return this.ACTION(() => {
-      return {
-        nodeType: Nodes.NodeType.TypeCastExpression,
-        category: Nodes.NodeCategory.Expression,
-        castType: castType,
-        value: value,
-        position: {
-          offset: location.startOffset,
-          length: value.position.offset + value.position.length - location.startOffset,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
+  private callExpression = this.RULE(
+    'callExpression',
+    (requireFunctionCall = false): Nodes.Expression => {
+      const calls: (Nodes.ArgumentsNode | Nodes.Expression)[] = [];
+      const callee = this.OR({
+        MAX_LOOKAHEAD: 3,
+        DEF: [
+          { ALT: () => this.SUBRULE(this.parenthesisExpression) },
+          { ALT: () => this.SUBRULE(this.variable) },
+        ],
+      });
+      const FunctionHead = () => {
+        this.AT_LEAST_ONE(() => calls.push(this.SUBRULE(this.arguments)));
+        return this.ACTION(() => {
+          return <Nodes.CallExpressionNode>calls.reduce((prevValue, currValue) => {
+            return {
+              nodeType: Nodes.NodeType.CallExpression,
+              category: Nodes.NodeCategory.Expression,
+              callee: <Nodes.Expression>prevValue,
+              args: (<Nodes.ArgumentsNode>currValue).args,
+              position: {
+                ...prevValue.position,
+                length:
+                  currValue.position.offset + currValue.position.length - prevValue.position.offset,
+              },
+            };
+          }, callee);
+        });
       };
-    });
-  });
+      if (requireFunctionCall) return FunctionHead();
+      else return this.OPTION(FunctionHead) || callee;
+    }
+  );
   private unaryExpression = this.RULE('UnaryExpression', (): Nodes.UnaryExpressionNode => {
     const { location, operator } = this.OR([
       {
@@ -683,46 +683,36 @@ class Parser extends EmbeddedActionsParser {
       });
     }
   );
-  private callExpression = this.RULE('CallExpression', (): Nodes.CallExpressionNode => {
-    const args: Nodes.Expression[] = [];
-    // TODO: We want to allow you to call Functions on more then just function variables
-    const callee = this.SUBRULE(this.variable);
-    this.CONSUME(Tokens.TknLParen);
-    this.MANY_SEP({
-      SEP: Tokens.TknComma,
-      DEF: () => {
-        args.push(this.SUBRULE1(this.expression));
-      },
-    });
-    const close = this.CONSUME(Tokens.TknRParen);
+  private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
+    const location = this.CONSUME(Tokens.TknWasmCall);
+    const args = this.SUBRULE(this.arguments);
     return this.ACTION(() => {
       return {
-        nodeType: Nodes.NodeType.CallExpression,
+        nodeType: Nodes.NodeType.WasmCallExpression,
         category: Nodes.NodeCategory.Expression,
-        callee: callee,
-        args: args,
+        name: location.image,
+        args: args.args,
         position: {
-          ...callee.position,
-          length: <number>close.endOffset - callee.position.offset + 1,
+          offset: location.startOffset,
+          length: args.position.offset + args.position.length - location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
         },
       };
     });
   });
-  private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
+  private arguments = this.RULE('Arguments', (): Nodes.ArgumentsNode => {
     const args: Nodes.Expression[] = [];
-    const location = this.CONSUME(Tokens.TknWasmCall);
-    this.CONSUME(Tokens.TknLParen);
+    const location = this.CONSUME(Tokens.TknLParen);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
-      DEF: () => {
-        args.push(this.SUBRULE(this.expression));
-      },
+      DEF: () => args.push(this.SUBRULE(this.expression)),
     });
     const close = this.CONSUME(Tokens.TknRParen);
     return {
-      nodeType: Nodes.NodeType.WasmCallExpression,
-      category: Nodes.NodeCategory.Expression,
-      name: location.image,
+      nodeType: Nodes.NodeType.Arguments,
+      category: Nodes.NodeCategory.General,
       args: args,
       position: {
         offset: location.startOffset,
@@ -733,8 +723,8 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
-  // Atoms
-  private atom = this.RULE('Atom', (): Nodes.Atom => {
+  // Literals
+  private literal = this.RULE('Literal', (): Nodes.Literal => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
       { ALT: () => this.SUBRULE(this.i32Literal) },
@@ -747,10 +737,8 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.constantLiteral) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
-      { ALT: () => this.SUBRULE(this.variable) },
     ]);
   });
-  // Literals
   private stringLiteral = this.RULE('StringLiteral', (): Nodes.StringLiteralNode => {
     const value = this.CONSUME(Tokens.TknString);
     return {
@@ -889,7 +877,6 @@ class Parser extends EmbeddedActionsParser {
   private objectLiteral = this.RULE('ObjectLiteralNode', (): Nodes.ObjectLiteralNode => {
     const fields: (Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode)[] = [];
     const location = this.CONSUME(Tokens.TknLBrace);
-    // TODO: Implement Spread Operator Here
     this.AT_LEAST_ONE_SEP({
       SEP: Tokens.TknComma,
       DEF: () =>
@@ -1017,7 +1004,6 @@ class Parser extends EmbeddedActionsParser {
       props.push(this.SUBRULE(this.propertyUsageNode));
     });
     return this.ACTION(() => {
-      // TODO: Fix Length
       return <Nodes.MemberAccessNode>props.reduce((prevValue: Nodes.Expression, currValue) => {
         return {
           nodeType: Nodes.NodeType.MemberAccess,
@@ -1055,12 +1041,17 @@ class Parser extends EmbeddedActionsParser {
       SEP: Tokens.TknComma,
       DEF: () => {
         const name = this.SUBRULE(this.variableDefinitionNode);
+        const optional: undefined | boolean = this.OPTION1(() => {
+          this.CONSUME(Tokens.TknQuestionMark);
+          return true;
+        });
         this.CONSUME(Tokens.TknColon);
         const paramType = this.SUBRULE(this.typeLiteral);
         params.push({
           nodeType: Nodes.NodeType.Parameter,
           category: Nodes.NodeCategory.Variable,
           name: name,
+          optional: optional ?? false,
           paramType: paramType,
         });
       },

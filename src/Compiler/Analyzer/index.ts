@@ -361,32 +361,6 @@ const analyzeNode = <T extends AllNodes>(
         node.rhs
       );
       break;
-    case NodeType.TypeCastExpression:
-      node.value = analyzeNode(
-        _types,
-        typeStacks,
-        typeStackMap,
-        _variables,
-        stacks,
-        closureMap,
-        stackMap,
-        node,
-        parentNode,
-        node.value
-      );
-      node.castType = analyzeNode(
-        _types,
-        typeStacks,
-        typeStackMap,
-        _variables,
-        stacks,
-        closureMap,
-        stackMap,
-        node,
-        parentNode,
-        node.castType
-      );
-      break;
     case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
       node.value = analyzeNode(
