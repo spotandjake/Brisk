@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@jest/globals": "^27.4.6",
     "@rollup/plugin-node-resolve": "^13.1.2",
     "@swc/core": "^1.2.127",
     "@types/jest": "^27.4.0",

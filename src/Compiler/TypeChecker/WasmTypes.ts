@@ -31,7 +31,6 @@ const createFunctionSignature = (
     position: position,
   });
 };
-// TODO: We need to Convert The Number Type Here To A Type Usage
 // Types
 const i32Load = createFunctionSignature(['Number', 'Number', 'u32'], 'i32');
 const i32Store = createFunctionSignature(['Number', 'Number', 'u32', 'i32'], 'Void');

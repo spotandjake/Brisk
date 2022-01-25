@@ -194,7 +194,7 @@ const prettyName = (_types: TypeMap, typeStack: TypeStack, _givenType: TypeLiter
           field.fieldType
         )};\n`;
       })
-      .join('')}}`; // TODO: This Formatting Needs Improvement
+      .join('')}}`;
   } else if (givenType.nodeType == NodeType.TypeUnionLiteral) {
     return `${givenType.types.map((t) => prettyName(_types, typeStack, t)).join(' | ')}`;
   } else if (givenType.nodeType == NodeType.ParenthesisTypeLiteral) {

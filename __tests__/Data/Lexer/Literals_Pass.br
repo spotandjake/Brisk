@@ -19,6 +19,11 @@ const r: Boolean = true;
 const s: Boolean = false;
 const t: Void = void;
 const u: Function = (v: String): Void => {};
+const v: { field1: i32; let field2: i32; field3?: i32; } = {
+  field1: 1n,
+  field2: 1n,
+  field3: 1n
+};
 // Custom Numbers
 const a1: Number = 1234567890; // Decimal
 const b1: Number = .1; // Decimal

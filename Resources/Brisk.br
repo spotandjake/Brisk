@@ -1,5 +1,36 @@
 // import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
 import wasm print: (Any) => Void from 'test1';
+if (true) print('test');
+
+if (true) print('test');
+else print('test');
+
+if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else print('test');
+
+if (true) {
+  print('test');
+};
+interface Foo {
+  field1: i32;
+  field2: (i32 | i64);
+  field3: (i32) => i32;
+};
 // const test: Function = (x: i32, y: i32, z: i32): Function => {
 //   print(x);
 //   return((y: i32): i32 => {
@@ -18,302 +49,3 @@ let mutableObject: { let mutableInt: i32; } = {
 mutableObject.mutableInt++;
 mutableObject.mutableInt = 2n;
 print(mutableObject);
-// const a: Boolean = true && false || false;
-// const b: i32 = 1n * 1n * 1n;
-// print((test)(1n, 1n, 1n));
-// print(test(1n, 1n, 1n));
-// @wasm.i32.add(1n, 1n);
-// interface ObjectTest {
-//   let field1: i32;
-//   field2?: i32;
-//   field3: (i32) => i32;
-//   field4: {
-//     field1: (i32) => i32;
-//   };
-// };
-// const field1: i32 = 1n;
-// // field1++;
-// let a: ObjectTest = {
-//   field1,
-//   field2: 1n,
-//   field3: (a: i32): i32 => {
-//     return(a);
-//   },
-//   field4: {
-//     field1: (a: i32): i32 => {
-//       return(a);
-//     }
-//   }
-// };
-// print(a.field1);
-// print(a.field4.field1(1n));
-// export {
-//   field1: 1n
-// };
-// type D = (i32) => i32;
-// const d: D = (a: i32): i32 => {
-//   return(a);
-// };
-// let a: i32 = 1n ^ 1n;
-// a = 1n;
-// print(1n);
-// print(a.test);
-// const a: i32 = 1n ^ 1n;
-// const b: i32 = 1n / 1n;
-// const c: i32 = 1n * 1n;
-// const d: i32 = 1n + 1n;
-// const e: i32 = 1n - 1n;
-// const f: i32 = 1n + 1n / 1n * 1n ^ 1n - 1n;
-// if (1n == 1n) print('Test');
-// if (1n == 1n) print('Test');
-// else print('Test');
-// if (1n == 1n) {
-//   print('Test');
-// };
-// if (1n == 1n) {
-//   print('Test');
-// };
-// if (1n == 1n) {
-//   print('Test');
-// } else if (1n == 1n) {
-//   print('Test');
-// };
-// import test from 'test';
-// if (1n == 1n) {
-//   let a: i32 = 1n;
-//   let b: i32 = test1(1n);
-//   // a.a.a.a('test');
-//   a = 1n + 1n + 1n + 1n + 1n;
-// };
-// const c: Function = (a: i32, b: i32): i32 => {
-//   return(1n);
-// };
-// {
-//   const a: i32 = 1n;
-// };
-// interface Test {
-//   field1: i32;
-//   field2: (i32, i32) -> i32;
-//   field3: i64;
-// };
-// type v = i32;
-// type a = v;
-// let a: a = 1n;
-// a = 2n;
-// const b: a = 1n;
-// import wasm print: (String) -> Void from 'print';
-// if (false) print('test');
-// else print('test');
-// // Import Testing
-// import a from 'test';
-// import wasm print: (String) -> Void from 'print';
-// import wasm f: () -> Void from 'print';
-// import wasm b: i32 from 'test';
-// import wasm return: Number from 'test';
-// // TODO: add Property access testing
-// // This is a comment
-// // if statement testing
-// if (1 == 1) {
-//   print('If Test');
-// } else if ('test' == 'test') {
-//   print('Else If Test');
-// } else {
-//   print('Else Test');
-// };
-// if (1 == 1) print('Test 1')
-// else print('test');
-
-// if (true) {
-//   print('true');
-// };
-
-// if (false) print('test');
-
-// // Function Call Tests
-// print('test');
-// f();
-// @wasm.i32.add(1n, 1n);
-// // Variable Declaration tests
-// let c: Number = 1 + (1 + 1) + 1 + 1 + 1;
-// c = 1;
-// let d: Number = a;
-// let t: Number = 1;
-// // let e: Number = t.t;
-// type Func = Function;
-// let z: Func = (a: i32): Number => {
-//   @wasm.return(a);
-// };
-// z(1n);
-// TODO: Test
-// type Dat = (i32) -> Number | i64;
-// const n: Dat = (a: i32): Number | i32 => {
-//   let i: i32 = 1n;
-// };
-// type Data = i32 | i64 | Number;
-// type Data = ((i32) -> i32 | Number);
-// type Data = (i32) -> i32 | Number;
-// const n: Data = 1n;
-// const t: (i32) -> Number = (x: i32): Number => {
-//   let n: i32 = x + 1n;
-// };
-// const h: Number = 1;
-
-// // Export Tests
-// export h;
-// const tknfrom: i32 = 1n;
-// const a: i32 = 1n;
-// const b: i64 = 1N;
-// const c: i32 = +1n;
-// const d: i64 = -1N;
-// const e: f32 = 1f;
-// const f: f64 = 1F;
-// const g: f32 = +1f;
-// const h: f64 = +1F;
-// const i: f32 = 1.0f;
-// const j: f64 = 1.0F;
-// const k: f32 = -1.0f;
-// const l: f64 = -1.0F;
-// const m: f32 = +1.0f;
-// const n: f64 = +1.0F;
-// const o: u32 = 1u;
-// const p: u64 = 1U;
-// const q: String = 'Test';
-// const r: Boolean = true;
-// const s: Boolean = false;
-// const t: Void = void;
-// const u: Function = (v: String): Void => {};
-// // Custom Numbers
-// const a1: Number = 1234567890; // Decimal
-// const b1: Number = .1; // Decimal
-// const c1: Number = 0.111; // Decimal
-// const d1: Number = +0.111; // Decimal
-// const e1: Number = -0.111; // Decimal
-// const l1: Number = 0b10000000000000000000000000000000; // Binary
-// const m1: Number = +0b01111111100000000000000000000000; // Binary
-// const n1: Number = -0B00000000011111111111111111111111; // Binary
-// const o1: Number = 0O755; // Octal
-// const p1: Number = 0o644; // Octal
-// const q1: Number = 0755; // Octal
-// const r1: Number = 0644; // Octal
-// const s1: Number = 0xFFFFFFFFFFFFFFFFF; // Hex
-// const t1: Number = 0x123456789ABCDEF; // Hex
-// const u1: Number = 0XA; // Hex
-// // Numeric Seperators
-// const v1: Number = 1_000_000_000_000; // Decimal
-// const x1: Number = 0b1010_0001_1000_0101; // Binary
-// const y1: Number = 0o2_2_5_6; // Octal
-// const z1: Number = 0xA0_B0_C0; // Hex
-// // Custom Int32
-// const a2: i32 = 1234567890n; // Decimal
-// const l2: i32 = 0b10000000000000000000000000000000n; // Binary
-// const m2: i32 = +0b01111111100000000000000000000000n; // Binary
-// const n2: i32 = -0B00000000011111111111111111111111n; // Binary
-// const o2: i32 = 0O755n; // Octal
-// const p2: i32 = 0o644n; // Octal
-// const q2: i32 = 0755n; // Octal
-// const r2: i32 = 0644n; // Octal
-// const s2: i32 = 0xFFFFFFFFFFFFFFFFFn; // Hex
-// const t2: i32 = 0x123456789ABCDEFn; // Hex
-// const u2: i32 = 0XAn; // Hex
-// // Numeric Seperators
-// const v2: i32 = 1_000_000_000_000n; // Decimal
-// const x2: i32 = 0b1010_0001_1000_0101n; // Binary
-// const y2: i32 = 0o2_2_5_6n; // Octal
-// const z2: i32 = 0xA0_B0_C0n; // Hex
-// // Custom Int64
-// const a3: i64 = 1234567890N; // Decimal
-// const l3: i64 = 0b10000000000000000000000000000000N; // Binary
-// const m3: i64 = +0b01111111100000000000000000000000N; // Binary
-// const n3: i64 = -0B00000000011111111111111111111111N; // Binary
-// const o3: i64 = 0O755N; // Octal
-// const p3: i64 = 0o644N; // Octal
-// const q3: i64 = 0755N; // Octal
-// const r3: i64 = 0644N; // Octal
-// const s3: i64 = 0xFFFFFFFFFFFFFFFFFN; // Hex
-// const t3: i64 = 0x123456789ABCDEFN; // Hex
-// const u3: i64 = 0XAN; // Hex
-// // Numeric Seperators
-// const v3: i64 = 1_000_000_000_000N; // Decimal
-// const x3: i64 = 0b1010_0001_1000_0101N; // Binary
-// const y3: i64 = 0o2_2_5_6N; // Octal
-// const z3: i64 = 0xA0_B0_C0N; // Hex
-// // Custom u32
-// const a4: u32 = 1234567890u; // Decimal
-// const b4: u32 = 10u; // Decimal
-// const c4: u32 = 111u; // Decimal
-// const d4: u32 = 0123u; // Decimal
-// const e4: u32 = 123u; // Decimal
-// const l4: u32 = 0b10000000000000000000000000000000u; // Binary
-// const m4: u32 = 0b01111111100000000000000000000000u; // Binary
-// const n4: u32 = 0B00000000011111111111111111111111u; // Binary
-// const o4: u32 = 0O755u; // Octal
-// const p4: u32 = 0o644u; // Octal
-// const q4: u32 = 0755u; // Octal
-// const r4: u32 = 0644u; // Octal
-// const s4: u32 = 0xFFFFFFFFFFFFFFFFFu; // Hex
-// const t4: u32 = 0x123456789ABCDEFu; // Hex
-// const u4: u32 = 0XAu; // Hex
-// // Numeric Seperators
-// const v4: u32 = 1_000_000_000_000u; // Decimal
-// const x4: u32 = 0b1010_0001_1000_0101u; // Binary
-// const y4: u32 = 0o2_2_5_6u; // Octal
-// const z4: u32 = 0xA0_B0_C0u; // Hex
-// // Custom u64
-// const a5: u64 = 1234567890U; // Decimal
-// const b5: u64 = 10U; // Decimal
-// const c5: u64 = 111U; // Decimal
-// const d5: u64 = 0123U; // Decimal
-// const e5: u64 = 123U; // Decimal
-// const l5: u64 = 0b10000000000000000000000000000000U; // Binary
-// const m5: u64 = 0b01111111100000000000000000000000U; // Binary
-// const n5: u64 = 0B00000000011111111111111111111111U; // Binary
-// const o5: u64 = 0O755U; // Octal
-// const p5: u64 = 0o644U; // Octal
-// const q5: u64 = 0755U; // Octal
-// const r5: u64 = 0644U; // Octal
-// const s5: u64 = 0xFFFFFFFFFFFFFFFFFU; // Hex
-// const t5: u64 = 0x123456789ABCDEFU; // Hex
-// const u5: u64 = 0XAU; // Hex
-// // Numeric Seperators
-// const v5: u64 = 1_000_000_000_000U; // Decimal
-// const x5: u64 = 0b1010_0001_1000_0101U; // Binary
-// const y5: u64 = 0o2_2_5_6U; // Octal
-// const z5: u64 = 0xA0_B0_C0U; // Hex
-// // Custom f32
-// const a6: f32 = 1234567890f; // Decimal
-// const b6: f32 = .1f; // Decimal
-// const c6: f32 = 0.111f; // Decimal
-// const d6: f32 = +0.111f; // Decimal
-// const e6: f32 = -0.111f; // Decimal
-// const l6: f32 = 0b10000000000000000000000000000000f; // Binary
-// const m6: f32 = +0b01111111100000000000000000000000f; // Binary
-// const n6: f32 = -0B00000000011111111111111111111111f; // Binary
-// const o6: f32 = 0O755f; // Octal
-// const p6: f32 = 0o644f; // Octal
-// const q6: f32 = 0755f; // Octal
-// const r6: f32 = 0644f; // Octal
-// // Numeric Seperators
-// const v6: f32 = 1_000_000_000_000f; // Decimal
-// const x6: f32 = 0b1010_0001_1000_0101f; // Binary
-// const y6: f32 = 0o2_2_5_6f; // Octal
-// // Custom f64
-// const a7: f64 = 1234567890F; // Decimal
-// const b7: f64 = .1F; // Decimal
-// const c7: f64 = 0.111F; // Decimal
-// const d7: f64 = +0.111F; // Decimal
-// const e7: f64 = -0.111F; // Decimal
-// const l7: f64 = 0b10000000000000000000000000000000F; // Binary
-// const m7: f64 = +0b01111111100000000000000000000000F; // Binary
-// const n7: f64 = -0B00000000011111111111111111111111F; // Binary
-// const o7: f64 = 0O755F; // Octal
-// const p7: f64 = 0o644F; // Octal
-// const q7: f64 = 0755F; // Octal
-// const r7: f64 = 0644F; // Octal
-// // Numeric Seperators
-// const v7: f64 = 1_000_000_000_000F; // Decimal
-// const x7: f64 = 0b1010_0001_1000_0101F; // Binary
-// const y7: f64 = 0o2_2_5_6F; // Octal
-
-
-// // String Throw Offs
-// const strThrow: String = '1';

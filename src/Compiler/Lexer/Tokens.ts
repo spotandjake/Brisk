@@ -16,7 +16,6 @@ const enum NumberStyle {
   Octal = 8,
   Hexadecimal = 16,
 }
-// TODO: we want to remove this so we dont need to worry about js number limits
 const matchNumber = (numberType: NumberType) => {
   // Matching
   return (
@@ -173,67 +172,67 @@ export const TknComment = createToken({
 export const TknImport = createToken({
   label: 'Import',
   name: LexerTokenType.ImportToken,
-  pattern: /import/,
+  pattern: 'import',
   categories: keywordTokens,
 });
 export const TknWasm = createToken({
   label: 'Wasm Import Identifier',
   name: LexerTokenType.WasmToken,
-  pattern: /wasm/,
+  pattern: 'wasm',
   categories: keywordTokens,
 });
 export const TknFrom = createToken({
   label: 'From',
   name: LexerTokenType.FromToken,
-  pattern: /from/,
+  pattern: 'from',
   categories: keywordTokens,
 });
 export const TknExport = createToken({
   label: 'Export',
   name: LexerTokenType.ExportToken,
-  pattern: /export/,
+  pattern: 'export',
   categories: keywordTokens,
 });
 export const TknConst = createToken({
   label: 'Const',
   name: LexerTokenType.ConstToken,
-  pattern: /const/,
+  pattern: 'const',
   categories: keywordTokens,
 });
 export const TknLet = createToken({
   label: 'Let',
   name: LexerTokenType.LetToken,
-  pattern: /let/,
+  pattern: 'let',
   categories: keywordTokens,
 });
 export const TknIf = createToken({
   label: 'If',
   name: LexerTokenType.IfToken,
-  pattern: /if/,
+  pattern: 'if',
   categories: keywordTokens,
 });
 export const TknElse = createToken({
   label: 'Else',
   name: LexerTokenType.ElseToken,
-  pattern: /else/,
+  pattern: 'else',
   categories: keywordTokens,
 });
 export const TknInterface = createToken({
   label: 'Interface',
   name: LexerTokenType.InterfaceToken,
-  pattern: /interface/,
+  pattern: 'interface',
   categories: keywordTokens,
 });
 export const TknType = createToken({
   label: 'Type',
   name: LexerTokenType.TypeToken,
-  pattern: /type/,
+  pattern: 'type',
   categories: keywordTokens,
 });
 export const TknReturn = createToken({
   label: 'Return',
   name: LexerTokenType.ReturnToken,
-  pattern: /return/,
+  pattern: 'return',
   categories: keywordTokens,
 });
 // Literals
@@ -316,66 +315,66 @@ export const TknLParen = createToken({
   label: 'Left Parenthesis',
   name: LexerTokenType.LeftParenthesis,
   categories: separatorTokens,
-  pattern: /\(/,
+  pattern: '(',
 });
 export const TknRParen = createToken({
   label: 'Right Parenthesis',
   name: LexerTokenType.RightParenthesis,
   categories: separatorTokens,
-  pattern: /\)/,
+  pattern: ')',
 });
 export const TknLBrace = createToken({
   label: 'Left Brace',
   name: LexerTokenType.LeftBrace,
   categories: separatorTokens,
-  pattern: /\{/,
+  pattern: '{',
 });
 export const TknRBrace = createToken({
   label: 'Right Brace',
   name: LexerTokenType.RightBrace,
   categories: separatorTokens,
-  pattern: /\}/,
+  pattern: '}',
 });
 export const TknLBracket = createToken({
   label: 'Left Bracket',
   name: LexerTokenType.LeftBracket,
   categories: separatorTokens,
-  pattern: /\[/,
+  pattern: '[',
 });
 export const TknRBracket = createToken({
   label: 'Right Bracket',
   name: LexerTokenType.RightBracket,
   categories: separatorTokens,
-  pattern: /\]/,
+  pattern: ']',
 });
 export const TknComma = createToken({
   label: 'Comma',
   name: LexerTokenType.Comma,
   categories: separatorTokens,
-  pattern: /,/,
+  pattern: ',',
 });
 export const TknEllipsis = createToken({
   label: 'Tkn Ellipsis',
   name: LexerTokenType.TknEllipsis,
-  pattern: /\.\.\./,
+  pattern: '...',
 });
 export const TknPeriod = createToken({
   label: 'Period',
   name: LexerTokenType.Period,
   categories: separatorTokens,
-  pattern: /\./,
+  pattern: '.',
 });
 export const TknColon = createToken({
   label: 'Colon',
   name: LexerTokenType.Colon,
   categories: separatorTokens,
-  pattern: /:/,
+  pattern: ':',
 });
 export const TknSemiColon = createToken({
   label: 'Semicolon',
   name: LexerTokenType.Semicolon,
   categories: separatorTokens,
-  pattern: /;/,
+  pattern: ';',
 });
 export const TknWhitespace = createToken({
   label: 'Whitespace',
@@ -389,120 +388,120 @@ export const TknPostFixIncrement = createToken({
   label: 'PostFix Increment',
   name: LexerTokenType.TknPostFixIncrement,
   categories: postFixOperators,
-  pattern: /\+\+/,
+  pattern: '++',
 });
 export const TknPostFixDecrement = createToken({
   label: 'PostFix Decrement',
   name: LexerTokenType.TknPostFixDecrement,
   categories: postFixOperators,
-  pattern: /--/,
+  pattern: '--',
 });
 export const TknComparisonEqual = createToken({
   label: 'Comparison Equal',
   name: LexerTokenType.TknComparisonEqual,
   categories: comparisonOperators,
-  pattern: /==/,
+  pattern: '==',
 });
 export const TknComparisonNotEqual = createToken({
   label: 'Comparison Not Equal',
   name: LexerTokenType.TknComparisonNotEqual,
   categories: comparisonOperators,
-  pattern: /!=/,
+  pattern: '!=',
 });
 export const TknComparisonLessThanEqual = createToken({
   label: 'Comparison Less Than Or Equal To',
   name: LexerTokenType.TknComparisonLessThanOrEqual,
   categories: comparisonOperators,
-  pattern: /<=/,
+  pattern: '<=',
 });
 export const TknComparisonGreaterThanEqual = createToken({
   label: 'Comparison Greater Than Or Equal To',
   name: LexerTokenType.TknComparisonGreaterThanOrEqual,
   categories: comparisonOperators,
-  pattern: />=/,
+  pattern: '>=',
 });
 export const TknComparisonGreaterThan = createToken({
   label: 'Comparison Greater Than',
   name: LexerTokenType.TknComparisonGreaterThan,
   categories: comparisonOperators,
-  pattern: />/,
+  pattern: '>',
 });
 export const TknComparisonLessThan = createToken({
   label: 'Comparison Less Than',
   name: LexerTokenType.TknComparisonLessThan,
   categories: comparisonOperators,
-  pattern: /</,
+  pattern: '<',
 });
 export const TknComparisonAnd = createToken({
   label: 'Comparison And',
   name: LexerTokenType.TknComparisonAnd,
   categories: comparisonOperators,
-  pattern: /&&/,
+  pattern: '&&',
 });
 export const TknComparisonOr = createToken({
   label: 'Comparison Or',
   name: LexerTokenType.TknComparisonOr,
   categories: comparisonOperators,
-  pattern: /\|\|/,
+  pattern: '||',
 });
 export const TknThickArrow = createToken({
   label: 'Arrow',
   name: LexerTokenType.TknArrow,
-  pattern: /=>/,
+  pattern: '=>',
 });
 export const TknNot = createToken({
   label: 'Not',
   name: LexerTokenType.TknNot,
   categories: logicalOperators,
-  pattern: /!/,
+  pattern: '!',
 });
 export const TknEqual = createToken({
   label: 'Equal',
   name: LexerTokenType.TknEqual,
   categories: assignmentOperators,
-  pattern: /=/,
+  pattern: '=',
 });
 export const TknAdd = createToken({
   label: 'Add',
   name: LexerTokenType.TknAdd,
   categories: arithmeticOperators,
-  pattern: /\+/,
+  pattern: '+',
 });
 export const TknSub = createToken({
   label: 'Subtract',
   name: LexerTokenType.TknSubtract,
   categories: arithmeticOperators,
-  pattern: /-/,
+  pattern: '-',
 });
 export const TknDiv = createToken({
   label: 'Division',
   name: LexerTokenType.TknDivision,
   categories: arithmeticOperators,
-  pattern: /\//,
+  pattern: '/',
   longer_alt: TknComment,
 });
 export const TknMul = createToken({
   label: 'Multiplication',
   name: LexerTokenType.TknMultiply,
   categories: arithmeticOperators,
-  pattern: /\*/,
+  pattern: '*',
 });
 export const TknPow = createToken({
   label: 'Power Of',
   name: LexerTokenType.TknPower,
   categories: arithmeticOperators,
-  pattern: /\^/,
+  pattern: '^',
 });
 export const TknUnion = createToken({
   label: 'Tkn Type Union',
   name: LexerTokenType.TknUnion,
   categories: typeOperators,
-  pattern: /\|/,
+  pattern: '|',
 });
 export const TknQuestionMark = createToken({
   label: 'Tkn Question Mark',
   name: LexerTokenType.TknQuestionMark,
-  pattern: /\?/,
+  pattern: '?',
 });
 // Reserved Tokens
 export const TknEnum = createToken({
@@ -510,63 +509,63 @@ export const TknEnum = createToken({
   name: LexerTokenType.TknEnum,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /enum/,
+  pattern: 'enum',
 });
 export const TknMatch = createToken({
   label: 'Match',
   name: LexerTokenType.TknMatch,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /match/,
+  pattern: 'match',
 });
 export const TknClass = createToken({
   label: 'Class',
   name: LexerTokenType.TknClass,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /class/,
+  pattern: 'class',
 });
 export const TknImplements = createToken({
   label: 'Implements',
   name: LexerTokenType.TknImplements,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /implements/,
+  pattern: 'implements',
 });
 export const TknExtends = createToken({
   label: 'Extends',
   name: LexerTokenType.TknExtends,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /extends/,
+  pattern: 'extends',
 });
 export const TknFor = createToken({
   label: 'For',
   name: LexerTokenType.TknFor,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /for/,
+  pattern: 'for',
 });
 export const TknWhile = createToken({
   label: 'While',
   name: LexerTokenType.TknWhile,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /while/,
+  pattern: 'while',
 });
 export const TknAwait = createToken({
   label: 'Await',
   name: LexerTokenType.TknAwait,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /await/,
+  pattern: 'await',
 });
 export const TknAsync = createToken({
   label: 'Async',
   name: LexerTokenType.TknAsync,
   categories: reserved,
   group: LexerTokenType.Reserved,
-  pattern: /async/,
+  pattern: 'async',
 });
 // Flags
 export const TknFlag = createToken({

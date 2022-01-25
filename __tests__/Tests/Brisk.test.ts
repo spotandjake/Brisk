@@ -1,4 +1,5 @@
 // Test Utils
+//@ts-ignore
 import { test, expect } from '@jest/globals';
 import fs from 'fs';
 // Test Components

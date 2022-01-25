@@ -3,8 +3,41 @@ import a from 'test';
 import wasm print: (String) => Void from 'print';
 import wasm f: () => Void from 'print';
 import wasm b: i32 from 'test';
-// TODO: add Property access testing
 // This is a comment
+// Type Testing
+type A = i32;
+type B = i32 | i64 | u32 | u64 | f32 | f64;
+type C = i32 | (i32, i32 | i64) => u32 | i64;
+type D = i32 | (i32, i32 | i64) => (u32 | i64) | f32;
+interface E {
+  field1: i32;
+  let field2: i32;
+  field3?: i32;
+  field4: {
+    field1: i32;
+  };
+};
+// Member Access Testing
+let objectTest: E = {
+  field1: 1n,
+  field2: 1n,
+  field3: 1n,
+  field4: {
+    field1: 1n
+  }
+};
+let objectTest2: E = {
+  field1: 1n,
+  field2: 1n,
+  field4: {
+    field1: 1n
+  }
+};
+let objectTest3: E = {
+  ...objectTest2,
+  field3: 1n
+};
+objectTest.field2 = 2n;
 // if statement testing
 if (1 == 1) {
   print('If Test');
@@ -20,8 +53,32 @@ if (true) {
   print('true');
 };
 
-// if (false) print('test');
+if (true) print('test');
 
+if (true) print('test');
+else print('test');
+
+if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else print('test');
+
+if (true) {
+  print('test');
+};
 // Function Call Tests
 print('test');
 f();
@@ -30,11 +87,20 @@ f();
 let c: Number = 1 + (1 + 1) + 1 + 1 + 1;
 c = 1;
 let d: Number = a;
-// let e: Number = t.t;
-let z: Function = (g: Number): Number => {
+let e: i32 = objectTest3.field3;
+let z: Function = (g: i32): i32 => {
   return(g);
 };
 const h: Number = 1;
-
+((): i32 => {
+  print('test');
+  return(1n);
+})();
 // Export Tests
+export const y: Number = 1;
 export h;
+export {
+  c,
+  d,
+  z
+};

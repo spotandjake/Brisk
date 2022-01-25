@@ -1,14 +1,8 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
-    + [ ] Allow you to access members on general expressions
-    + [ ] Implement Parenthesis Type
-    + [ ] Fix Single Line If Statement
+    + [ ] Implement Destructuring
     + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
-    + [ ] Implement Rational Numbers
-    + [ ] Implement Better Mutable Checking
-    + [ ] Implement Arrays
-  + [ ] Convert Tokens From Regex To Strings In Lexer
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
       + [ ] Perform Value Narrowing And Type Narrowing
@@ -21,6 +15,13 @@
     + [ ] Allow For Mutable And Optional Fields
     + [ ] Check That You Are Not Modifying A immutable Field
     + [ ] Implement Export Analysis
+    + [ ] Implement Better Mutable Checking
+  + [ ] Parser Additions
+    + [ ] Allow you to access members on general expressions
+    + [ ] Implement Array Literals
+      + [ ] Implement Array Spread
+      + [ ] Implement Array Literal Syntax
+      + [ ] Implement Array Index Syntax
   + [ ] Start Writing Our Wasm Builder
     + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2
@@ -30,6 +31,7 @@
     + [ ] Post Fix Operator Testing
     + [ ] Tests For Type Definitions And TypeChecker
     + [ ] Tests For Object Spread Syntax
+    + [ ] Analyze Arrays
   + [ ] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`
@@ -45,6 +47,14 @@
     + [ ] Find Way To Parse Without Binaryen
     + [ ] Find Way To Compile Without Binaryen
     + [ ] Find Way To Optimize Without Binaryen
++ [ ] Tasks For Day 5
+  + [ ] Rewrite Grammar in ENBF
+    + [ ] Consider Simplifying Grammar Based Off Of This new Optimal Form
+  + [ ] Write A Basic LSP
+
+# After We Have A Usable Languge
++ [ ] Port Comparison, And Expression Operators into brisk through a operator definition syntax.
++ [ ] Port `Number`, `String`, `Array` All into brisk we dont want these to need special compiler code.
 
 # Tasks
 + [x] Lexer

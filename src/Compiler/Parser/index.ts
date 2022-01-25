@@ -134,10 +134,13 @@ class Parser extends EmbeddedActionsParser {
       {
         ALT: () => {
           const body = this.SUBRULE(this.singleLineStatement);
-          const alternative = this.OPTION(() => {
-            this.CONSUME(Tokens.TknSemiColon);
-            this.CONSUME(Tokens.TknElse);
-            return this.SUBRULE(this._statement);
+          const alternative = this.OPTION({
+            GATE: () => this.LA(2).tokenType == Tokens.TknElse,
+            DEF: () => {
+              this.CONSUME(Tokens.TknSemiColon);
+              this.CONSUME(Tokens.TknElse);
+              return this.SUBRULE(this._statement);
+            },
           });
           return { body, alternative };
         },
@@ -196,7 +199,6 @@ class Parser extends EmbeddedActionsParser {
       const source = this.SUBRULE(this.stringLiteral);
       return this.ACTION(() => {
         if (typeSignature == undefined) {
-          // TODO: we want to add support for destructuring imports
           return {
             nodeType: Nodes.NodeType.ImportStatement,
             category: Nodes.NodeCategory.Statement,
@@ -296,7 +298,6 @@ class Parser extends EmbeddedActionsParser {
   private assignmentStatement = this.RULE(
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
-      // TODO: Allow Support For Assigning To Member Access Nodes
       const name = this.SUBRULE(this.variableUsage);
       this.CONSUME(Tokens.assignmentOperators);
       const value = this.SUBRULE(this.expression);
@@ -373,7 +374,6 @@ class Parser extends EmbeddedActionsParser {
   private expression = this.RULE('Expression', (): Nodes.Expression => {
     return this.SUBRULE(this.comparisonExpression);
   });
-  // TODO: Implement These In Brisk
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
@@ -1176,10 +1176,33 @@ class Parser extends EmbeddedActionsParser {
   });
   private _typeLiteral = this.RULE('_TypeLiteral', (): Nodes.TypeLiteral => {
     return this.OR([
-      { ALT: () => this.SUBRULE(this.functionSignatureLiteral) },
+      {
+        GATE: this.BACKTRACK(this.functionSignatureLiteral),
+        ALT: () => this.SUBRULE(this.functionSignatureLiteral),
+      },
+      { ALT: () => this.SUBRULE(this.parenthesisType) },
       { ALT: () => this.SUBRULE(this.InterfaceTypeLiteral) },
       { ALT: () => this.SUBRULE(this.typeUsageNode) },
     ]);
+  });
+  private parenthesisType = this.RULE('ParenthesisType', (): Nodes.ParenthesisTypeLiteralNode => {
+    const location = this.CONSUME(Tokens.TknLParen);
+    const value = this.SUBRULE(this.typeLiteral);
+    const close = this.CONSUME(Tokens.TknRParen);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.ParenthesisTypeLiteral,
+        category: Nodes.NodeCategory.Type,
+        value: value,
+        position: {
+          offset: location.startOffset,
+          length: <number>close.endOffset - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private functionSignatureLiteral = this.RULE(
     'functionSignatureLiteral',

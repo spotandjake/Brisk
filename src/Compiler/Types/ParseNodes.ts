@@ -61,7 +61,7 @@ export const enum NodeCategory {
   Expression,
   Literal,
   Type,
-  Variable, // TODO: we should come up with a better name for this
+  Variable,
 }
 // Program
 export interface ProgramNode {
@@ -106,7 +106,7 @@ export interface BlockStatementNode {
 export interface ImportStatementNode {
   nodeType: NodeType.ImportStatement;
   category: NodeCategory.Statement;
-  variable: VariableDefinition; // TODO: we want to add support for destructuring imports
+  variable: VariableDefinition;
   source: StringLiteralNode;
   position: Position;
 }
@@ -124,7 +124,6 @@ export interface ExportStatementNode {
   value: ExportStatementValue;
   position: Position;
 }
-// TODO: Add Object To This
 export type ExportStatementValue = VariableUsage | DeclarationStatementNode | ObjectLiteralNode;
 export const enum DeclarationTypes {
   Constant,
@@ -142,7 +141,7 @@ export interface DeclarationStatementNode {
 export interface AssignmentStatementNode {
   nodeType: NodeType.AssignmentStatement;
   category: NodeCategory.Statement;
-  name: VariableUsage; // TODO: Allow Support For Assigning To Member Access Nodes
+  name: VariableUsage;
   value: Expression;
   position: Position;
 }
@@ -160,7 +159,7 @@ export interface PostFixStatementNode {
   nodeType: NodeType.PostFixStatement;
   category: NodeCategory.Statement;
   operator: PostFixOperator;
-  value: VariableUsage;
+  value: Expression;
   position: Position;
 }
 // Expression Symbols
@@ -443,7 +442,6 @@ export interface TypeIdentifierNode {
   position: Position;
 }
 // Variables
-// TODO: these should probably just be identifier and member something because are not necessarily variables.
 export type VariableUsage = VariableUsageNode | MemberAccessNode;
 export type VariableDefinition = VariableDefinitionNode;
 export interface VariableDefinitionNode {
