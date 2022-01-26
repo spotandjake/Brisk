@@ -1,11 +1,23 @@
 # Current
 + [ ] Tasks For Day 1
   + [ ] Rewrite Parser
+    + [ ] Implement Enum Syntax
+      + [x] Document General Enum Syntax
+      + [x] Implement General Syntax
+      + [ ] Generate A Type For This
     + [ ] Implement Destructuring
-    + [ ] Implement Generics Syntax, Implement Enum Syntax, Implement Match Syntax
+    + [ ] Implement Generics Syntax, Implement Match Syntax
+    + [ ] Add Support For Optional Ending Comma
+      + [ ] ObjectLiteral
+      + [ ] Enum
+    + [ ] Document Language Grammar
   + [ ] Rewrite Type Checker And Analyzer
+    + [ ] Determine Scoping On Generics
+    + [ ] Add Support For Recursive Types
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
       + [ ] Perform Value Narrowing And Type Narrowing
+    + [ ] Consider Values As Types
+      + [ ] i.e you could create a type alias that allowed either 1n | 2n 
     + [ ] Support Member Access Calls
     + [ ] Reduce Complexity Of Both The TypeChecker And Analyzer
     + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore

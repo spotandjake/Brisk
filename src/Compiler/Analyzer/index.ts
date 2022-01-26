@@ -6,6 +6,7 @@ import Node, {
   PrimTypes,
   primTypes,
   TypePrimLiteralNode,
+  I32LiteralNode,
 } from '../Types/ParseNodes';
 import AnalyzerNode, {
   TypeMap,
@@ -315,6 +316,27 @@ const analyzeNode = <T extends AllNodes>(
       );
       break;
     }
+    case NodeType.EnumDefinitionStatement:
+      if (
+        !node.variants.every((v) => v.value == undefined) &&
+        node.variants.some((v) => v.value == undefined)
+      ) {
+        BriskParseError('All Enum Variants Must Be Given A Value', node.position);
+      } else {
+        // If the user does not specify values for any nodes we want to assign them
+        node.variants = node.variants.map((variant, i) => {
+          variant.value = <I32LiteralNode>{
+            nodeType: NodeType.I32Literal,
+            category: NodeCategory.Literal,
+            value: `${i}n`, // Consider using A Number over an i32 here
+            position: variant.position,
+          };
+          return variant;
+        });
+      }
+      console.log(node);
+      // TODO: Add The Node To The Variable List
+      break;
     case NodeType.PostFixStatement:
       // TODO: Check That Variable Is Mutable
       node.value = analyzeNode(

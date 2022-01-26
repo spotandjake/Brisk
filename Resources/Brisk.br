@@ -1,36 +1,49 @@
 // import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
 import wasm print: (Any) => Void from 'test1';
-if (true) print('test');
-
-if (true) print('test');
-else print('test');
-
-if (true) {
-  print('test');
-} else {
-  print('test');
+// Enums
+enum Color {
+  Red = 0,
+  Green = 1,
+  Blue(String, i32)
 };
-
-if (true) {
-  print('test');
-} else if (true) {
-  print('test');
-} else {
-  print('test');
+enum PrimaryColor {
+  Red,
+  Green,
+  Blue
 };
+// Ojbect Literal
+// If Statements
+// if (true) print('test');
 
-if (true) {
-  print('test');
-} else print('test');
+// if (true) print('test');
+// else print('test');
 
-if (true) {
-  print('test');
-};
-interface Foo {
-  field1: i32;
-  field2: (i32 | i64);
-  field3: (i32) => i32;
-};
+// if (true) {
+//   print('test');
+// } else {
+//   print('test');
+// };
+
+// if (true) {
+//   print('test');
+// } else if (true) {
+//   print('test');
+// } else {
+//   print('test');
+// };
+
+// if (true) {
+//   print('test');
+// } else print('test');
+
+// if (true) {
+//   print('test');
+// };
+// interface Foo {
+//   field1: i32;
+//   field2: (i32 | i64);
+//   field3: (i32) => i32;
+// };
 // const test: Function = (x: i32, y: i32, z: i32): Function => {
 //   print(x);
 //   return((y: i32): i32 => {
@@ -39,13 +52,13 @@ interface Foo {
 //   });
 // };
 // print(((): i32 => {})());
-let mutableInt: i32 = 1n;
-mutableInt++;
-mutableInt = 2n;
-print(mutableInt);
-let mutableObject: { let mutableInt: i32; } = {
-  mutableInt: 1n
-};
-mutableObject.mutableInt++;
-mutableObject.mutableInt = 2n;
-print(mutableObject);
+// let mutableInt: i32 = 1n;
+// mutableInt++;
+// mutableInt = 2n;
+// print(mutableInt);
+// let mutableObject: { let mutableInt: i32; } = {
+//   mutableInt: 1n
+// };
+// mutableObject.mutableInt++;
+// mutableObject.mutableInt = 2n;
+// print(mutableObject);

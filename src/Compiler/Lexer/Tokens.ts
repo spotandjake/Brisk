@@ -55,6 +55,7 @@ const matchNumber = (numberType: NumberType) => {
         )
           numberStyle = NumberStyle.Hexadecimal; // Hexadecimal
         if (numberStyle != NumberStyle.Decimal) endOffset++;
+        else endOffset--;
       }
       // Parse Number
       let hitDecimalPoint = false,
@@ -233,6 +234,12 @@ export const TknReturn = createToken({
   label: 'Return',
   name: LexerTokenType.ReturnToken,
   pattern: 'return',
+  categories: keywordTokens,
+});
+export const TknEnum = createToken({
+  label: 'Enum',
+  name: LexerTokenType.TknEnum,
+  pattern: 'enum',
   categories: keywordTokens,
 });
 // Literals
@@ -504,13 +511,6 @@ export const TknQuestionMark = createToken({
   pattern: '?',
 });
 // Reserved Tokens
-export const TknEnum = createToken({
-  label: 'Enum',
-  name: LexerTokenType.TknEnum,
-  categories: reserved,
-  group: LexerTokenType.Reserved,
-  pattern: 'enum',
-});
 export const TknMatch = createToken({
   label: 'Match',
   name: LexerTokenType.TknMatch,
@@ -618,6 +618,7 @@ export const Tokens = [
   TknInterface,
   TknType,
   TknReturn,
+  TknEnum,
   // Separators
   TknLParen,
   TknRParen,
@@ -651,7 +652,6 @@ export const Tokens = [
   TknUnion,
   TknQuestionMark,
   // Reserved Tokens
-  TknEnum,
   TknMatch,
   TknClass,
   TknImplements,

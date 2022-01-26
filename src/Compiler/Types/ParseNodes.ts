@@ -15,6 +15,9 @@ export const enum NodeType {
   AssignmentStatement,
   ReturnStatement,
   PostFixStatement,
+  EnumDefinitionStatement,
+  // Enums
+  EnumVariant,
   // Expressions
   ComparisonExpression,
   ArithmeticExpression,
@@ -58,6 +61,7 @@ export const enum NodeType {
 export const enum NodeCategory {
   General,
   Statement,
+  Enum,
   Expression,
   Literal,
   Type,
@@ -82,6 +86,7 @@ export type Statement =
   | AssignmentStatementNode
   | TypeDefinition
   | ReturnStatementNode
+  | EnumDefinitionStatementNode
   | PostFixStatementNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
@@ -160,6 +165,21 @@ export interface PostFixStatementNode {
   category: NodeCategory.Statement;
   operator: PostFixOperator;
   value: Expression;
+  position: Position;
+}
+// Enums
+export interface EnumDefinitionStatementNode {
+  nodeType: NodeType.EnumDefinitionStatement;
+  category: NodeCategory.Statement;
+  identifier: VariableDefinition;
+  variants: EnumVariantNode[];
+  position: Position;
+}
+export interface EnumVariantNode {
+  nodeType: NodeType.EnumVariant;
+  category: NodeCategory.Enum;
+  identifier: string;
+  value: undefined | Expression | TypeLiteral[];
   position: Position;
 }
 // Expression Symbols
@@ -359,7 +379,7 @@ export interface InterfaceDefinitionNode {
   position: Position;
 }
 // TypeLiteral
-// TODO: Port Number, String , Boolean into brisk
+// TODO: Port Number, String, Boolean into brisk
 export type PrimTypes =
   | 'u32'
   | 'u64'

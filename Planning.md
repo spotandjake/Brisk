@@ -107,12 +107,12 @@
   + [x] Lexer - Chevrotain
     + [ ] Consider Creating a program that can convert These Lexer Tokens To An Extension
   + [ ] Parser - Chevrotain
-    - [x] Main Parser
-    - [ ] Things To Add
-      - [ ] Destructuring
-      - [ ] Objects
-      - [ ] Arrays
-    - [ ] Better Errors
+    + [x] Main Parser
+    + [ ] Things To Add
+      + [ ] Destructuring
+      + [ ] Objects
+      + [ ] Arrays
+    + [ ] Better Errors
   + [ ] Analyzer
     + [ ] Find Closures Values
       + [ ] Closures are functions that rely on local vars defined above, To determine these we need to double check the values it is relying on are not in the global scope.
@@ -162,3 +162,80 @@ user defined types must start with a capital letter, we need some way of resolvi
     + [ ] what does this mean
       + [ ] Defining things such as The Number data type directly in brisk
       + [ ] Converting Closures to be compiled macros that are given operators
+
+
+# Syntax
+This section describes grain syntax and features.
+## Keywords
++ Reserved
+  + `enums`
+  + `implements`
+  + `extends`
+## Separators
+## Operators
+## Syntax
+# Language WalkThrough
+### Variable Assignments
+### Literals
+## Types
+### Functions
+### Imports
+### exports
+### Math
+### If Statements
+### Enum
+This section describes enum syntax and how to use enums in Brisk.
+### Defining Enums
+Lets say you want a value that can hold the field of a day. We could use numbers or strings but allocating a string for this is wasteful and numbers are not very friendly and are hard to remember what number refers to what, you may think what if i make an object with the properties to assigned of each day. while this is a good solution it is still wasteful. Enums are perfect for this because they are inlined throughout your code.
+```br
+enum Day {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday
+};
+```
+### Assigning Values to enums
+By default `Day.Sunday` would represent the number 0 as an i32 and `Day.Monday` would represent a 1. Lets say we want these to instead represent strings we could do.
+```br
+enum Day {
+  Sunday = 'Sun',
+  Monday = 'Mun',
+  Tuesday = 'Tue;,
+  Wednesday = 'Wed',
+  Thursday = 'Thur',
+  Friday = 'Fri',
+  Saturday = 'Sat'
+};
+```
+### More Advanced Enums
+The Enums we have shown you so far are very simple And only touch the surface of Brisk's Enum System. For Example lets say we wanted To Create an enum that held a value for example.
+```br
+enum Result {
+  Failure(string),
+  Success(string),
+};
+```
+These enums contain A Varient And A String. To Make Use Of This you would do.
+```br
+const readFile: Function = (path: String): Result => {
+  const pathExists: Boolean = false; // This would actually be a function that checks if the path exists
+  if (pathExists) {
+    const data = ''; // Read File
+    return(Result.Success(data));
+  }
+  return(Result.Failure('File Does Not Exist'));
+};
+```
+You can even use enums with Generic Types.
+```br
+enum Option<T> {
+  Some(T),
+  None
+};
+```
+### Matching
+### Flags

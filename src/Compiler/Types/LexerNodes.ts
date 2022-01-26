@@ -24,6 +24,7 @@ export const enum LexerTokenType {
   InterfaceToken = 'InterfaceToken',
   TypeToken = 'TypeToken',
   ReturnToken = 'ReturnToken',
+  TknEnum = 'TknEnum',
   // Separators
   LeftParenthesis = 'LeftParen',
   RightParenthesis = 'RightParen',
@@ -72,7 +73,6 @@ export const enum LexerTokenType {
   TknConstantLiteral = 'Constant',
   TknWasmCall = 'Wasm Instruction Call',
   // Reserved Tokens
-  TknEnum = 'TknEnum',
   TknMatch = 'TknMatch',
   TknClass = 'TknClass',
   TknImplements = 'TknImplements',

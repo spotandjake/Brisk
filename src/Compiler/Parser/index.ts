@@ -66,6 +66,7 @@ class Parser extends EmbeddedActionsParser {
     return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
       { ALT: () => this.SUBRULE(this.typeDefinition) },
+      { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
       { ALT: () => this.SUBRULE(this.returnStatement) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
@@ -369,6 +370,83 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true] }) },
       { ALT: () => this.SUBRULE(this.wasmCallExpression) },
     ]);
+  });
+  // Enums
+  private enumDefinitionStatement = this.RULE(
+    'EnumDefinitionStatement',
+    (): Nodes.EnumDefinitionStatementNode => {
+      const variants: Nodes.EnumVariantNode[] = [];
+      const location = this.CONSUME(Tokens.TknEnum);
+      const identifier = this.SUBRULE(this.variableDefinitionNode);
+      this.CONSUME(Tokens.TknLBrace);
+      this.AT_LEAST_ONE_SEP({
+        SEP: Tokens.TknComma,
+        DEF: () => variants.push(this.SUBRULE(this.enumVariant)),
+      });
+      const close = this.CONSUME(Tokens.TknRBrace);
+      return this.ACTION(() => {
+        return {
+          nodeType: Nodes.NodeType.EnumDefinitionStatement,
+          category: Nodes.NodeCategory.Statement,
+          identifier: identifier,
+          variants: variants,
+          position: {
+            offset: location.startOffset,
+            length: <number>close.endOffset - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
+  private enumVariant = this.RULE('EnumVariant', (): Nodes.EnumVariantNode => {
+    const identifier = this.CONSUME(Tokens.TknIdentifier);
+    const value = this.OPTION(() => {
+      return this.OR([
+        {
+          ALT: () => {
+            this.CONSUME(Tokens.TknEqual);
+            const value = this.SUBRULE(this.literal);
+            return {
+              endOffset: (value?.position?.offset || 0) + value?.position?.length || 0,
+              value: value,
+            };
+          },
+        },
+        {
+          ALT: () => {
+            const values: Nodes.TypeLiteral[] = [];
+            this.CONSUME(Tokens.TknLParen);
+            this.AT_LEAST_ONE_SEP({
+              SEP: Tokens.TknComma,
+              DEF: () => values.push(this.SUBRULE(this.typeLiteral)),
+            });
+            const location = this.CONSUME(Tokens.TknRParen);
+            return {
+              value: values,
+              endOffset: location?.endOffset || 0,
+            };
+          },
+        },
+      ]);
+    });
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.EnumVariant,
+        category: Nodes.NodeCategory.Enum,
+        identifier: identifier.image,
+        value: value?.value, // Default To An Index
+        position: {
+          offset: identifier.startOffset,
+          length: (value?.endOffset ?? <number>identifier.endOffset) - identifier.startOffset + 1,
+          line: identifier.startLine || 0,
+          col: identifier.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   // Expressions
   private expression = this.RULE('Expression', (): Nodes.Expression => {
