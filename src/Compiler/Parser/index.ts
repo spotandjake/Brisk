@@ -188,6 +188,7 @@ class Parser extends EmbeddedActionsParser {
         },
         {
           ALT: () => {
+            // TODO: We Dont Want To Allow Destructuring Of Wasm Foreign Imports
             this.CONSUME(Tokens.TknWasm);
             const variable = this.SUBRULE1(this.variableDefinition);
             this.CONSUME(Tokens.TknColon);
@@ -379,10 +380,12 @@ class Parser extends EmbeddedActionsParser {
       const location = this.CONSUME(Tokens.TknEnum);
       const identifier = this.SUBRULE(this.variableDefinitionNode);
       this.CONSUME(Tokens.TknLBrace);
-      this.AT_LEAST_ONE_SEP({
-        SEP: Tokens.TknComma,
-        DEF: () => variants.push(this.SUBRULE(this.enumVariant)),
+      variants.push(this.SUBRULE(this.enumVariant));
+      this.MANY(() => {
+        this.CONSUME(Tokens.TknComma);
+        variants.push(this.SUBRULE1(this.enumVariant));
       });
+      this.OPTION(() => this.CONSUME1(Tokens.TknComma));
       const close = this.CONSUME(Tokens.TknRBrace);
       return this.ACTION(() => {
         return {
@@ -437,7 +440,7 @@ class Parser extends EmbeddedActionsParser {
         nodeType: Nodes.NodeType.EnumVariant,
         category: Nodes.NodeCategory.Enum,
         identifier: identifier.image,
-        value: value?.value, // Default To An Index
+        value: value?.value,
         position: {
           offset: identifier.startOffset,
           length: (value?.endOffset ?? <number>identifier.endOffset) - identifier.startOffset + 1,
@@ -963,26 +966,12 @@ class Parser extends EmbeddedActionsParser {
   private objectLiteral = this.RULE('ObjectLiteralNode', (): Nodes.ObjectLiteralNode => {
     const fields: (Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode)[] = [];
     const location = this.CONSUME(Tokens.TknLBrace);
-    this.AT_LEAST_ONE_SEP({
-      SEP: Tokens.TknComma,
-      DEF: () =>
-        this.OR([
-          { ALT: () => fields.push(this.SUBRULE(this.objectSpread)) },
-          { ALT: () => fields.push(this.SUBRULE(this.objectField)) },
-          {
-            ALT: () => {
-              const fieldValue = this.SUBRULE(this.variableUsageNode);
-              fields.push({
-                nodeType: Nodes.NodeType.ObjectField,
-                category: Nodes.NodeCategory.Literal,
-                name: <string>fieldValue.name,
-                fieldValue: fieldValue,
-                position: fieldValue.position,
-              });
-            },
-          },
-        ]),
+    fields.push(this.SUBRULE(this.objectFieldValue));
+    this.MANY(() => {
+      this.CONSUME(Tokens.TknComma);
+      fields.push(this.SUBRULE1(this.objectFieldValue));
     });
+    this.OPTION(() => this.CONSUME1(Tokens.TknComma));
     const close = this.CONSUME(Tokens.TknRBrace);
     return {
       nodeType: Nodes.NodeType.ObjectLiteral,
@@ -997,6 +986,27 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
+  private objectFieldValue = this.RULE(
+    'ObjectFieldValue',
+    (): Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode => {
+      return this.OR([
+        { ALT: () => this.SUBRULE(this.objectSpread) },
+        { ALT: () => this.SUBRULE(this.objectField) },
+        {
+          ALT: () => {
+            const fieldValue = this.SUBRULE(this.variableUsageNode);
+            return {
+              nodeType: Nodes.NodeType.ObjectField,
+              category: Nodes.NodeCategory.Literal,
+              name: <string>fieldValue.name,
+              fieldValue: fieldValue,
+              position: fieldValue.position,
+            };
+          },
+        },
+      ]);
+    }
+  );
   private objectField = this.RULE('ObjectField', (): Nodes.ObjectFieldNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);

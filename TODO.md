@@ -1,18 +1,17 @@
 # Current
 + [ ] Tasks For Day 1
-  + [ ] Rewrite Parser
-    + [ ] Implement Enum Syntax
-      + [x] Document General Enum Syntax
-      + [x] Implement General Syntax
-      + [ ] Generate A Type For This
-    + [ ] Implement Destructuring
-    + [ ] Implement Generics Syntax, Implement Match Syntax
-    + [ ] Add Support For Optional Ending Comma
-      + [ ] ObjectLiteral
-      + [ ] Enum
-    + [ ] Document Language Grammar
+  + [ ] Analyzer Additions
+    + [ ] Generate A Control Flow Graph In The Analyzer
+    + [ ] Do Not Replace The Variables Names With There Numbers
   + [ ] Rewrite Type Checker And Analyzer
+    + [ ] Things We Dont Have But We Need To Support
+      + [ ] Generics
+      + [ ] Member Access On Expression
+      + [ ] Destructuring
+    + [ ] Restrict the Function type to Variable Definitions, Do not allow it on `Parameters` Allow it on returns too
+      + [ ] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
     + [ ] Determine Scoping On Generics
+      + [ ] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
     + [ ] Add Support For Recursive Types
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
       + [ ] Perform Value Narrowing And Type Narrowing
@@ -29,11 +28,16 @@
     + [ ] Implement Export Analysis
     + [ ] Implement Better Mutable Checking
   + [ ] Parser Additions
+    + [ ] Implement Generics
+    + [ ] Implement Match Syntax
     + [ ] Allow you to access members on general expressions
+    + [ ] Allow u to define multiple variables off one `let` or `const` using `,`
+    + [ ] Implement Destructuring
     + [ ] Implement Array Literals
       + [ ] Implement Array Spread
       + [ ] Implement Array Literal Syntax
       + [ ] Implement Array Index Syntax
+    + [ ] Document Language Grammar
   + [ ] Start Writing Our Wasm Builder
     + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2

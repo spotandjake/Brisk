@@ -334,7 +334,6 @@ const analyzeNode = <T extends AllNodes>(
           return variant;
         });
       }
-      console.log(node);
       // TODO: Add The Node To The Variable List
       break;
     case NodeType.PostFixStatement:

@@ -9,9 +9,21 @@ enum Color {
 enum PrimaryColor {
   Red,
   Green,
-  Blue
+  Blue,
 };
 // Ojbect Literal
+interface TestObject {
+  name: String;
+  age: i32;
+};
+let testObject: TestObject = {
+  name: 'test',
+  age: 10
+};
+let testObject1: TestObject = {
+  name: 'test',
+  age: 10,
+};
 // If Statements
 // if (true) print('test');
 
