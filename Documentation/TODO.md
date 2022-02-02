@@ -102,6 +102,8 @@
 
 + [ ] Important todo
   + [ ] I dont think the analyzer or typechecker know how to deal with member access nodes
++ [ ] Generate Syntax Highlighting
+  + [ ] Switch The `TS` code Blocks for `br` code blocks in the docs
 
 # Minimal Viable product
 + [ ] General

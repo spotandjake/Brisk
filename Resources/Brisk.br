@@ -24,6 +24,7 @@ let testObject1: TestObject = {
   name: 'test',
   age: 10,
 };
+const test: i32 = <i32>1;
 // If Statements
 // if (true) print('test');
 
