@@ -6,6 +6,7 @@ import Node, {
   Expression,
   NodeCategory,
   VariableUsageNode,
+  DeclarationStatementNode,
   ExportStatementValue,
   DeclarationTypes,
 } from '../Types/ParseNodes';
@@ -57,7 +58,8 @@ const analyzeNode = (
     varPool: VariableMap,
     varStack: VariableStack,
     varName: string,
-    position: Position
+    position: Position,
+    { exported }: { exported: boolean }
   ): VariableData => {
     // Get Reference To Variable In VarPool
     if (!varStack.has(varName)) BriskParseError(`Variable ${varName} Not Found`, position);
@@ -71,6 +73,7 @@ const analyzeNode = (
     varPool.set(variableReference, {
       ...value,
       used: true,
+      exported: exported || value.exported,
     });
     // Return Value
     return value;
@@ -80,7 +83,7 @@ const analyzeNode = (
     props: Partial<AnalyzeNode> = properties,
     parentNode: Node = node
   ): AnalyzerNode => {
-    return analyzeNode({ ...props, ...properties }, parentNode, childNode);
+    return analyzeNode({ ...properties, ...props }, parentNode, childNode);
   };
   // Match The Node For Analysis
   switch (node.nodeType) {
@@ -210,7 +213,8 @@ const analyzeNode = (
           _variables,
           _varStack,
           node.value.name,
-          node.value.position
+          node.value.position,
+          { exported: true }
         );
         _exports.set(node.value.name, {
           name: node.value.name,
@@ -218,8 +222,21 @@ const analyzeNode = (
           type: variableData.type,
         });
       } else if (node.value.nodeType == NodeType.DeclarationStatement) {
-        console.log(node);
-        node.value = <ExportStatementValue>_analyzeNode(node.value);
+        node.value = <DeclarationStatementNode>_analyzeNode(node.value);
+        // Export Variable Value
+        // TODO: Make The Export Value A VariableUsage
+        const variableData = getVariable(
+          _variables,
+          _varStack,
+          node.value.name.name,
+          node.value.position,
+          { exported: true }
+        );
+        _exports.set(variableData.name, {
+          name: variableData.name,
+          value: node.value,
+          type: variableData.type,
+        });
       } else if (node.value.nodeType == NodeType.ObjectLiteral) {
         node.value = <ExportStatementValue>_analyzeNode(node.value);
         // We Want To Export Each Field As A Separate Export
@@ -228,6 +245,7 @@ const analyzeNode = (
       return node;
     }
     case NodeType.DeclarationStatement:
+      // TODO: Handle Destructuring
       node.value = <Expression>_analyzeNode(node.value);
       // Add Variable
       createVariable(_variables, _varStack, {
@@ -267,6 +285,7 @@ const analyzeNode = (
     case NodeType.F64Literal:
     case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
+      return node;
     case NodeType.FunctionLiteral:
     case NodeType.ObjectLiteral:
       console.log('TODO: Analyze Literals');
