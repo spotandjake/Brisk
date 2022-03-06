@@ -5,7 +5,29 @@ import Node, {
   FunctionLiteralNode,
   VariableDefinitionNode,
   TypeLiteral,
+  ExportStatementValue,
 } from './ParseNodes';
+export type ImportMap = Map<string, any>; // TODO: Determine What We Are Importing
+interface ExportItem {
+  name: string;
+  value: ExportStatementValue;
+  type: TypeLiteral;
+}
+export type ExportMap = Map<string, ExportItem>; // TODO: Determine What We Are Exporting
+export interface AnalyzeNode {
+  // Pools
+  _imports: ImportMap;
+  _exports: ExportMap;
+  _variables: VariableMap;
+  _types: TypeMap;
+  // Parent Stacks
+  _varStacks: VariableStack[];
+  _typeStacks: TypeStack[];
+  // Stacks
+  _closure: VariableClosure;
+  _varStack: VariableStack;
+  _typeStack: TypeStack;
+}
 
 export interface TypeData {
   name: string;
@@ -26,14 +48,13 @@ export type VariableMap = Map<number, VariableData>;
 export type VariableStack = Map<string, number>;
 export type VariableClosure = Set<number>;
 export interface AnalyzedProgramNode extends ProgramNode {
-  types: TypeMap;
-  typeStack: TypeStack;
-  variables: VariableMap;
-  stack: VariableStack;
+  data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
 }
 export interface AnalyzedBlockStatementNode extends BlockStatementNode {
-  typeStack: TypeStack;
-  stack: VariableStack;
+  data: {
+    _varStack: VariableStack;
+    _typeStack: TypeStack;
+  };
 }
 export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
   typeStack: TypeStack;

@@ -1,30 +1,36 @@
-// import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
+//import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
 import wasm print: (Any) => Void from 'test1';
-// Enums
-enum Color {
-  Red = 0,
-  Green = 1,
-  Blue(String, i32)
+export print;
+export let value: i32 = 1n;
+export {
+  value: 1n,
+  value2: 2n,
 };
-enum PrimaryColor {
-  Red,
-  Green,
-  Blue,
-};
-// Ojbect Literal
-interface TestObject {
-  name: String;
-  age: i32;
-};
-let testObject: TestObject = {
-  name: 'test',
-  age: 10
-};
-let testObject1: TestObject = {
-  name: 'test',
-  age: 10,
-};
-const test: i32 = <i32>1;
+// // Enums
+// enum Color {
+//   Red = 0,
+//   Green = 1,
+//   Blue(String, i32)
+// };
+// enum PrimaryColor {
+//   Red,
+//   Green,
+//   Blue,
+// };
+// // Ojbect Literal
+// interface TestObject {
+//   name: String;
+//   age: i32;
+// };
+// let testObject: TestObject = {
+//   name: 'test',
+//   age: 10
+// };
+// let testObject1: TestObject = {
+//   name: 'test',
+//   age: 10,
+// };
+// const test: i32 = <i32>1;
 // If Statements
 // if (true) print('test');
 

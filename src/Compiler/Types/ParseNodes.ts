@@ -23,6 +23,7 @@ export const enum NodeType {
   ArithmeticExpression,
   UnaryExpression,
   ParenthesisExpression,
+  TypeCastExpression,
   CallExpression,
   WasmCallExpression,
   // Literals
@@ -211,6 +212,7 @@ export type Expression =
   | ArithmeticExpressionNode
   | UnaryExpressionNode
   | ParenthesisExpressionNode
+  | TypeCastExpression
   | CallExpressionNode
   | WasmCallExpressionNode
   | Atom;
@@ -242,6 +244,13 @@ export interface ParenthesisExpressionNode {
   nodeType: NodeType.ParenthesisExpression;
   category: NodeCategory.Expression;
   value: Expression;
+  position: Position;
+}
+export interface TypeCastExpression {
+  nodeType: NodeType.TypeCastExpression;
+  category: NodeCategory.Expression;
+  value: Expression;
+  typeLiteral: TypeLiteral;
   position: Position;
 }
 export interface CallExpressionNode {
@@ -367,14 +376,14 @@ export type TypeLiteral =
 export interface TypeAliasDefinitionNode {
   nodeType: NodeType.TypeAliasDefinition;
   category: NodeCategory.Type;
-  name: string | number;
+  name: string;
   typeLiteral: TypeLiteral;
   position: Position;
 }
 export interface InterfaceDefinitionNode {
   nodeType: NodeType.InterfaceDefinition;
   category: NodeCategory.Type;
-  name: string | number;
+  name: string;
   typeLiteral: TypeLiteral;
   position: Position;
 }
@@ -442,7 +451,7 @@ export interface InterfaceLiteralNode {
 export interface TypeUsageNode {
   nodeType: NodeType.TypeUsage;
   category: NodeCategory.Type;
-  name: string | number;
+  name: string;
   position: Position;
 }
 // General Type Stuff
@@ -467,13 +476,13 @@ export type VariableDefinition = VariableDefinitionNode;
 export interface VariableDefinitionNode {
   nodeType: NodeType.VariableDefinition;
   category: NodeCategory.Variable;
-  name: string | number;
+  name: string;
   position: Position;
 }
 export interface VariableUsageNode {
   nodeType: NodeType.VariableUsage;
   category: NodeCategory.Variable;
-  name: string | number;
+  name: string;
   position: Position;
 }
 export interface PropertyUsageNode {

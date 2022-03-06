@@ -67,7 +67,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.blockStatement) },
       { ALT: () => this.SUBRULE(this.typeDefinition) },
       { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
-      { ALT: () => this.SUBRULE(this.returnStatement) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
@@ -112,6 +111,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private singleLineStatement = this.RULE('SingleLineStatement', (): Nodes.Statement => {
     return this.OR([
+      { ALT: () => this.SUBRULE(this.returnStatement) },
       {
         GATE: this.BACKTRACK(this.expressionStatement),
         ALT: () => this.SUBRULE(this.expressionStatement),
@@ -666,11 +666,33 @@ class Parser extends EmbeddedActionsParser {
     return this.OR({
       MAX_LOOKAHEAD: 3,
       DEF: [
+        { ALT: () => this.SUBRULE(this.typeCastExpression) },
         { ALT: () => this.SUBRULE(this.unaryExpression) },
         { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false] }) },
         { ALT: () => this.SUBRULE(this.wasmCallExpression) },
         { ALT: () => this.SUBRULE(this.literal) },
       ],
+    });
+  });
+  private typeCastExpression = this.RULE('TypeCastExpression', (): Nodes.TypeCastExpression => {
+    const location = this.CONSUME(Tokens.TknComparisonLessThan);
+    const typeLiteral = this.SUBRULE(this.typeLiteral);
+    this.CONSUME(Tokens.TknComparisonGreaterThan);
+    const value = this.SUBRULE(this.simpleExpression);
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.TypeCastExpression,
+        category: Nodes.NodeCategory.Expression,
+        value: value,
+        typeLiteral: typeLiteral,
+        position: {
+          offset: location.startOffset,
+          length: value.position.offset + value.position.length - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          file: this.file,
+        },
+      };
     });
   });
   private callExpression = this.RULE(

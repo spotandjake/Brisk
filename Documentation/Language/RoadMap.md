@@ -13,8 +13,8 @@
   + [x] Variables
   + [x] Wasm Call Statements
   + [x] Imports
-  + [ ] Type Casting
-  + [ ] Enums
+  + [x] Type Casting
+  + [x] Enums
   + [ ] Match Statements
   + [ ] Build Operator Definition Syntax Into The Language
 + [ ] Implement A Powerful Analyzer

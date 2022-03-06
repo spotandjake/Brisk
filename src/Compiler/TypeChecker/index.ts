@@ -250,10 +250,10 @@ const typeCheckNode = (
     case NodeType.Program:
       node.body.map((child) =>
         typeCheckNode(
-          node.types,
-          node.typeStack,
-          node.variables,
-          node.stack,
+          node.data._types,
+          node.data._typeStack,
+          node.data._variables,
+          node.data._varStack,
           node,
           <AnalyzerNode>child,
           code
@@ -807,10 +807,10 @@ const typeCheckNode = (
 };
 const typeCheck = (program: AnalyzedProgramNode, code: string) => {
   typeCheckNode(
-    program.types,
-    program.typeStack,
-    program.variables,
-    program.stack,
+    program.data._types,
+    program.data._typeStack,
+    program.data._variables,
+    program.data._varStack,
     program,
     program,
     code
