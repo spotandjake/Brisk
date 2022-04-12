@@ -1,0 +1,8 @@
+let test: i32 = 1n;
+let test1: i32 = 1n;
+const test3: i32 = 1n;
+const test: Function = (): i32 => {
+    let test: i32 = 1n;
+    test1 = 1n;
+    return(i32);
+};

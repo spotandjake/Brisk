@@ -57,9 +57,9 @@ export interface AnalyzedBlockStatementNode extends BlockStatementNode {
   };
 }
 export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
-  typeStack: TypeStack;
-  closure: VariableClosure;
-  stack: VariableStack;
+  data: {
+    _closure: VariableClosure;
+  };
 }
 export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {
   global: boolean;

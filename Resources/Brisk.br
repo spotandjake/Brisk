@@ -92,3 +92,8 @@ val7++;
 // mutableObject.mutableInt++;
 // mutableObject.mutableInt = 2n;
 // print(mutableObject);
+
+
+const test: Function = (): number => {
+    return(true);
+};

@@ -21,9 +21,11 @@ import AnalyzerNode, {
   AnalyzedBlockStatementNode,
   TypeMap,
   TypeStack,
+  VariableClosure,
   VariableData,
   VariableMap,
   VariableStack,
+  AnalyzedFunctionLiteralNode,
 } from '../Types/AnalyzerNodes';
 // Analyze Node Interface
 // Analyze Node
@@ -59,15 +61,22 @@ const analyzeNode = (
   const getVariable = (
     varPool: VariableMap,
     varStack: VariableStack,
+    _closure: VariableClosure,
+    varStacks: VariableStack[],
     varName: string,
     position: Position,
     { exported }: { exported: boolean }
   ): VariableData => {
     // Get Reference To Variable In VarPool
-    if (!varStack.has(varName)) BriskParseError(`Variable ${varName} Not Found`, position);
+    if (!varStack.has(varName)) {
+      // It May Be In A Furthur Up Stack
+      // varStacks.
+      // Does Not Exist
+      BriskParseError(`Variable ${varName} Not Found`, position);
+    }
     const variableReference = <number>varStack.get(varName);
     // Get Variable Value
-    // TODO: Determine  A Better Error Message here
+    // TODO: Determine A Better Error Message here
     if (!varPool.has(variableReference)) BriskParseError('Compiler Bug Please Report', position);
     // Get Value
     const value = <VariableData>varPool.get(variableReference);
@@ -83,6 +92,8 @@ const analyzeNode = (
   const checkVariable = (
     varPool: VariableMap,
     varStack: VariableStack,
+    _closure: VariableClosure,
+    varStacks: VariableStack[],
     varReference: VariableUsage,
     position: Position
   ): void => {
@@ -192,6 +203,7 @@ const analyzeNode = (
       // Create Our New Stacks
       const varStack: VariableStack = new Map();
       const typeStack: TypeStack = new Map();
+      // Push Our Old Stack To The List
       // Return Our Node
       return <AnalyzedBlockStatementNode>{
         ...node,
@@ -201,6 +213,9 @@ const analyzeNode = (
             _closure: _closure,
             _varStack: varStack,
             _typeStack: typeStack,
+            // Stack Pool
+            _varStacks: [ ..._varStacks, _varStack ],
+            _typeStacks: [ ..._typeStacks, _typeStack ]
           })
         ),
         data: {
@@ -240,6 +255,8 @@ const analyzeNode = (
         const variableData = getVariable(
           _variables,
           _varStack,
+          _closure,
+          _varStacks,
           node.value.name,
           node.value.position,
           { exported: true }
@@ -256,6 +273,8 @@ const analyzeNode = (
         const variableData = getVariable(
           _variables,
           _varStack,
+          _closure,
+          _varStacks,
           node.value.name.name,
           node.value.position,
           { exported: true }
@@ -289,7 +308,7 @@ const analyzeNode = (
       // Analyze Variable
       node.name = <VariableUsage>_analyzeNode(node.name);
       // Verify That Var Exists And Is mutable
-      checkVariable(_variables, _varStack, node.name, node.position);
+      checkVariable(_variables, _varStack ,_closure, _varStacks, node.name, node.position);
       // Analyze Value
       node.value = <Expression>_analyzeNode(node.value);
       return node;
@@ -298,7 +317,7 @@ const analyzeNode = (
       return node;
     case NodeType.PostFixStatement:
       // Verify That Var Exists And Is mutable
-      checkVariable(_variables, _varStack, node.value, node.position);
+      checkVariable(_variables, _varStack, _closure, _varStacks, node.value, node.position);
       // Analyze Value
       node.value = <VariableUsage>_analyzeNode(node.value);
       return node;
@@ -340,6 +359,18 @@ const analyzeNode = (
     case NodeType.ConstantLiteral:
       return node;
     case NodeType.FunctionLiteral:
+      // Create New Closure
+      // TODO: Inject self into here for self referencing.
+      const closure: VariableClosure = new Set();
+      // Analyze Body
+      // Analyze Params
+      return <AnalyzedFunctionLiteralNode>{
+        ...node,
+        body: _analyzeNode(node.body, { _closure: closure }),
+        data: {
+          _closure: closure
+        },
+      };
     case NodeType.ObjectLiteral:
       console.log('TODO: Analyze Literals');
       process.exit(1);
