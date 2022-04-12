@@ -76,7 +76,7 @@
 + [x] Lexer
 + [ ] Parser
   + [ ] Improve Type System
-    + [ ] add enums
+    + [x] add enums
     + [ ] support recursive types
     + [ ] generics
   + [ ] Add Destructuring
