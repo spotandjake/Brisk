@@ -338,7 +338,7 @@ class Parser extends EmbeddedActionsParser {
     });
   });
   private postFixStatement = this.RULE('PostFixStatement', (): Nodes.PostFixStatementNode => {
-    const value = this.SUBRULE(this.variableUsage);
+    const name = this.SUBRULE(this.variableUsage);
     const { location, operator } = this.OR([
       {
         ALT: () => {
@@ -358,10 +358,10 @@ class Parser extends EmbeddedActionsParser {
         nodeType: Nodes.NodeType.PostFixStatement,
         category: Nodes.NodeCategory.Statement,
         operator: operator,
-        value: value,
+        name: name,
         position: {
-          ...value.position,
-          length: <number>location.endOffset - value.position.offset,
+          ...name.position,
+          length: <number>location.endOffset - name.position.offset,
         },
       };
     });
@@ -1030,6 +1030,10 @@ class Parser extends EmbeddedActionsParser {
     }
   );
   private objectField = this.RULE('ObjectField', (): Nodes.ObjectFieldNode => {
+    const mutable: undefined | boolean = this.OPTION(() => {
+      this.CONSUME(Tokens.TknLet);
+      return true;
+    });
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);
     const fieldValue = this.SUBRULE(this.expression);
@@ -1039,6 +1043,7 @@ class Parser extends EmbeddedActionsParser {
         category: Nodes.NodeCategory.Literal,
         name: identifier.image,
         fieldValue: fieldValue,
+        fieldMutable: mutable ?? false,
         position: {
           offset: identifier.startOffset,
           length: fieldValue.position.offset + fieldValue.position.length - identifier.startOffset,
@@ -1162,6 +1167,10 @@ class Parser extends EmbeddedActionsParser {
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
+        const mutable: undefined | boolean = this.OPTION(() => {
+          this.CONSUME(Tokens.TknLet);
+          return true;
+        });
         const name = this.SUBRULE(this.variableDefinition);
         const optional: undefined | boolean = this.OPTION1(() => {
           this.CONSUME(Tokens.TknQuestionMark);
@@ -1174,7 +1183,9 @@ class Parser extends EmbeddedActionsParser {
           category: Nodes.NodeCategory.Variable,
           name: name,
           optional: optional ?? false,
+          mutable: mutable ?? false,
           paramType: paramType,
+          position: name.position,
         });
       },
     });

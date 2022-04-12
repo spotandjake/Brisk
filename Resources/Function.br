@@ -1,8 +1,26 @@
-let test: i32 = 1n;
-let test1: i32 = 1n;
-const test3: i32 = 1n;
-const test: Function = (): i32 => {
-    let test: i32 = 1n;
-    test1 = 1n;
-    return(i32);
+// import wasm print: (Any) => Void from 'test1';
+interface Test {
+  test: i32;
+  let test2: i32;
+  test3: i32;
 };
+const test: Test = {
+  test: 1n,
+  let test2: 2n,
+  let test3: 3n,
+};
+// test = 2n;
+// const test2: i32 = 1n;
+// test2 = 2n;
+// export test;
+// export let test: i32 = 1n;
+// let test1: i32 = 1n;
+// const test3: i32 = 1n;
+// const testFunction: Function = (let a: i32, b: i32, c?: i32): i32 => {
+//   let test: i32 = 1n;
+//   let t: i32 = testFunction;
+//   // test = 2n;
+//   // test1 = 1n;
+//   // test2 = 2n;
+//   // return(i32);
+// };

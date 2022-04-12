@@ -120,7 +120,7 @@ export interface WasmImportStatementNode {
   nodeType: NodeType.WasmImportStatement;
   category: NodeCategory.Statement;
   typeSignature: TypeLiteral;
-  variable: VariableDefinition;
+  variable: VariableDefinitionNode;
   source: StringLiteralNode;
   position: Position;
 }
@@ -165,7 +165,7 @@ export interface PostFixStatementNode {
   nodeType: NodeType.PostFixStatement;
   category: NodeCategory.Statement;
   operator: PostFixOperator;
-  value: VariableUsage;
+  name: VariableUsage;
   position: Position;
 }
 // Enums
@@ -354,6 +354,7 @@ export interface ObjectFieldNode {
   category: NodeCategory.Literal;
   name: string;
   fieldValue: Expression;
+  fieldMutable: boolean;
   position: Position;
 }
 export interface ObjectSpreadNode {
@@ -504,12 +505,13 @@ export interface ParameterNode {
   category: NodeCategory.Variable;
   name: VariableDefinition;
   optional: boolean;
+  mutable: boolean;
   paramType: TypeLiteral;
+  position: Position;
 }
 export interface ArgumentsNode {
   nodeType: NodeType.Arguments;
   category: NodeCategory.General;
-
   args: Expression[];
   position: Position;
 }

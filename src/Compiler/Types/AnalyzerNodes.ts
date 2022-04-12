@@ -40,7 +40,10 @@ export interface VariableData {
   name: string;
   global: boolean;
   constant: boolean;
+  parameter: boolean;
   exported: boolean;
+  import: boolean;
+  wasmImport: boolean;
   used: boolean;
   type: TypeLiteral;
 }
@@ -59,6 +62,8 @@ export interface AnalyzedBlockStatementNode extends BlockStatementNode {
 export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
   data: {
     _closure: VariableClosure;
+    _varStack: VariableStack;
+    _typeStack: TypeStack;
   };
 }
 export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {

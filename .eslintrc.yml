@@ -1,26 +1,26 @@
 env:
   node: true
 extends:
-  - 'eslint:recommended'
-  - 'plugin:@typescript-eslint/recommended'
-parser: '@typescript-eslint/parser'
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/recommended"
+parser: "@typescript-eslint/parser"
 parserOptions:
   ecmaVersion: 12
   sourceType: module
   project:
-    - 'tsconfig.json'
+    - "tsconfig.json"
 plugins:
-  - '@typescript-eslint'
+  - "@typescript-eslint"
 rules:
-  '@typescript-eslint/no-explicit-any': 0
-  '@typescript-eslint/explicit-module-boundary-types': 0
-  '@typescript-eslint/ban-ts-comment': 0
-  '@typescript-eslint/switch-exhaustiveness-check': 1
+  "@typescript-eslint/no-explicit-any": 0
+  "@typescript-eslint/explicit-module-boundary-types": 0
+  "@typescript-eslint/ban-ts-comment": 0
+  "@typescript-eslint/switch-exhaustiveness-check": 1
   no-invalid-regexp: warn
   no-unreachable: warn
   no-eval: warn
   vars-on-top: warn
-  '@typescript-eslint/no-unused-vars':
+  "@typescript-eslint/no-unused-vars":
     - warn
     - args: none
   indent:
@@ -38,4 +38,5 @@ rules:
   prefer-const: warn
   prefer-template: error
   no-prototype-builtins: 0
-  max-len: ['warn', 100, 2, { 'ignoreComments': true, 'ignoreStrings': true }]
+  no-fallthrough: false
+  max-len: ["warn", 100, 2, { "ignoreComments": true, "ignoreStrings": true }]
