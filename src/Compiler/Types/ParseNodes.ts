@@ -165,7 +165,7 @@ export interface PostFixStatementNode {
   nodeType: NodeType.PostFixStatement;
   category: NodeCategory.Statement;
   operator: PostFixOperator;
-  value: Expression;
+  value: VariableUsage;
   position: Position;
 }
 // Enums

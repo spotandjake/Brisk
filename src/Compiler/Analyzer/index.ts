@@ -9,8 +9,10 @@ import Node, {
   DeclarationStatementNode,
   ExportStatementValue,
   DeclarationTypes,
+  TypeLiteral,
+  VariableUsage,
 } from '../Types/ParseNodes';
-import { BriskParseError } from '../Errors/Compiler';
+import { BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
   ImportMap,
   ExportMap,
@@ -78,6 +80,32 @@ const analyzeNode = (
     // Return Value
     return value;
   };
+  const checkVariable = (
+    varPool: VariableMap,
+    varStack: VariableStack,
+    varReference: VariableUsage,
+    position: Position
+  ): void => {
+    // Get Reference
+    if (varReference.nodeType == NodeType.VariableUsage) {
+      // Ensure It Exists
+      if (!varStack.has(varReference.name))
+        BriskParseError(`Variable ${varReference.name} Not Found`, position);
+      // Get Node
+      const _varRef = <number>varStack.get(varReference.name);
+      if (!varPool.has(_varRef))
+        BriskParseError('Compiler Bug Please Report', position);
+      const varRef = <VariableData>varPool.get(_varRef);
+      // Ensure It Is mutable
+      if (varRef.constant)
+        BriskTypeError(`Variable ${varReference.name} Is Constant`, position);
+    } else {
+      // if (!varStack.has(varReference.))
+        // BriskParseError(`Variable ${varReference.name} Not Found`, position);
+      // TODO: Add A MemberSetNode
+      BriskParseError('Compiler Bug Setting Members Is Not Yet Implemented', position);
+    }
+  }; 
   const _analyzeNode = (
     childNode: Node,
     props: Partial<AnalyzeNode> = properties,
@@ -239,7 +267,7 @@ const analyzeNode = (
         });
       } else if (node.value.nodeType == NodeType.ObjectLiteral) {
         node.value = <ExportStatementValue>_analyzeNode(node.value);
-        // We Want To Export Each Field As A Separate Export
+        // TODO: We Want To Export Each Field As A Separate Export
         console.log(node);
       }
       return node;
@@ -258,23 +286,48 @@ const analyzeNode = (
       });
       return node;
     case NodeType.AssignmentStatement:
+      // Analyze Variable
+      node.name = <VariableUsage>_analyzeNode(node.name);
+      // Verify That Var Exists And Is mutable
+      checkVariable(_variables, _varStack, node.name, node.position);
+      // Analyze Value
+      node.value = <Expression>_analyzeNode(node.value);
+      return node;
     case NodeType.ReturnStatement:
+      node.returnValue = <Expression>_analyzeNode(node.returnValue);
+      return node;
     case NodeType.PostFixStatement:
+      // Verify That Var Exists And Is mutable
+      checkVariable(_variables, _varStack, node.value, node.position);
+      // Analyze Value
+      node.value = <VariableUsage>_analyzeNode(node.value);
+      return node;
     case NodeType.EnumDefinitionStatement:
+      // Add To Variable List As An Object Maybe
+      // Analyze Varients
+      console.log(node);
       console.log('TODO: Analyze Statements');
       process.exit(1);
       break;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
+      node.lhs = <Expression>_analyzeNode(node.lhs);
+      node.rhs = <Expression>_analyzeNode(node.rhs);
+      return node;
+    case NodeType.TypeCastExpression:
+      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
     case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
-    case NodeType.TypeCastExpression:
+      node.value = <Expression>_analyzeNode(node.value);
+      return node;
     case NodeType.CallExpression:
-    case NodeType.WasmCallExpression:
       console.log('TODO: Analyze Expressions');
       process.exit(1);
       break;
+    case NodeType.WasmCallExpression:
+      node.args = node.args.map((arg) => <Expression>_analyzeNode(arg));
+      return node;
     // Literals
     case NodeType.StringLiteral:
     case NodeType.I32Literal:
@@ -305,6 +358,7 @@ const analyzeNode = (
       break;
     // Variables
     case NodeType.VariableUsage:
+      return node;
     case NodeType.MemberAccess:
     case NodeType.PropertyUsage:
     case NodeType.Parameter:

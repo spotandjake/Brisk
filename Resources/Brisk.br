@@ -1,18 +1,28 @@
 //import wasm print: (String | i32 | i64 | f32 | f64 | u32 | u64 | Number) => Void from 'test1';
 import wasm print: (Any) => Void from 'test1';
 let v: i32 = 2n;
-export print;
-export let value: i32 = 1n;
+let val: boolean = 1 < 2;
+let val1: i32 = 1n + 2n;
+let val2: boolean = true && false;
+let val3: boolean = !true;
+let val4: i32 = +1;
+let val5: i32 = -1;
+let val6: i32 = (1n + 1n);
+let val7: i32 = @wasm.i32.add(1n, 1n);
+val7 = 1n;
+val7++;
+//export print;
+//export let value: i32 = 1n;
 // export {
 //   value: 1n,
 //   value2: 2n,
 // };
 // // Enums
-// enum Color {
-//   Red = 0,
-//   Green = 1,
-//   Blue(String, i32)
-// };
+//enum Color {
+//  Red = 0,
+//  Green = 1,
+//  Blue(String, i32)
+//};
 // enum PrimaryColor {
 //   Red,
 //   Green,
