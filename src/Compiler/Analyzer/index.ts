@@ -244,6 +244,11 @@ const analyzeNode = (
       if (node.alternative) node.alternative = <Statement>_analyzeNode(node.body);
       return node;
     case NodeType.FlagStatement:
+      // TODO: Check it is a valid flag in a valid position
+      // Flags
+      // @dissablegc();
+      // @inline();
+      // @operator("<string>", <precedence>);
       // TODO: Implement Analysis For Flag Statements
       console.log('TODO: Analyze Flag Statement');
       process.exit(1);
