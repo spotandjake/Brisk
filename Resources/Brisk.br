@@ -94,6 +94,6 @@ val7++;
 // print(mutableObject);
 
 
-const test: Function = (): number => {
+const test: Function = (): Number => {
     return(true);
 };

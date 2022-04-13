@@ -16,7 +16,8 @@ import Node, {
   ObjectFieldNode,
   ObjectSpreadNode,
   primTypes,
-  TypeUsageNode
+  TypeUsageNode,
+  PropertyUsageNode
 } from '../Types/ParseNodes';
 import { BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -525,11 +526,13 @@ const analyzeNode = (
       getVariable(_variables, _varStack, _closure, _varStacks, node, node.position, {});
       return node;
     case NodeType.MemberAccess:
+      // Analyze Parent
+      node.parent = <Expression>_analyzeNode(node.parent);
+      // Analyze Child
+      node.property = <PropertyUsageNode>_analyzeNode(node.property);
     case NodeType.PropertyUsage:
-      // TODO: Analyze Variables
-      console.log('TODO: Analyze Variables');
-      process.exit(1);
-      break;
+      // Return node
+      return node;
     case NodeType.Parameter:
       // Change Type To Include Void
       node.paramType = <TypeLiteral>_analyzeNode(node.optional ? <TypeUnionLiteralNode>{
