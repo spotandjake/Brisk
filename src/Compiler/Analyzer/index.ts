@@ -379,10 +379,11 @@ const analyzeNode = (
       node.value = <Expression>_analyzeNode(node.value);
       return node;
     case NodeType.CallExpression:
-      // TODO: Analyze Call Expression
-      console.log('TODO: Analyze Expressions');
-      process.exit(1);
-      break;
+      // Analyze Callee
+      node.callee = <Expression>_analyzeNode(node.callee);
+      // Analyze Arguments
+      node.args = node.args.map((arg: Expression) => <Expression>_analyzeNode(arg));
+      return node;
     case NodeType.WasmCallExpression:
       node.args = node.args.map((arg) => <Expression>_analyzeNode(arg));
       return node;
