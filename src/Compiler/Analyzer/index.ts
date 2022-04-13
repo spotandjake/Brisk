@@ -17,7 +17,8 @@ import Node, {
   ObjectSpreadNode,
   primTypes,
   TypeUsageNode,
-  PropertyUsageNode
+  PropertyUsageNode,
+  EnumVariantNode
 } from '../Types/ParseNodes';
 import { BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -60,15 +61,14 @@ const getVariable = (
   varReference: VariableUsage | string,
   position: Position,
   { used=true, exported=false }: { used?: boolean, exported?: boolean }
-): VariableData => {
+): VariableData | void => {
   // Get Variable Reference
   let varName: string;
   if (typeof varReference == 'string') varName = varReference; 
   else if (varReference.nodeType == NodeType.VariableUsage) varName = varReference.name;
   else {
-    // TODO: Implement Checking On Member Access
-    BriskParseError(`Member Access Not Yet Implemented`, position);
-    process.exit(1);
+    if (varReference.parent.nodeType == NodeType.VariableUsage) varName = varReference.parent.name;
+    return;
   }
   // Search The Stacks
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
@@ -100,7 +100,7 @@ const createType = (
 ) => {
   // Do Not Allow You To Write Over Primitive Types
   if ((<Set<string>>primTypes).has(typeData.name))
-    BriskParseError(`You May Not Declare A Type With The Same Name As A Primitive Type`, position);
+    BriskParseError('You May Not Declare A Type With The Same Name As A Primitive Type', position);
   // Check If Variable Already Exists On Stack
   if (typeStack.has(typeData.name))
     BriskParseError(`Type ${typeData.name} Has Already been Declared`, position);
@@ -125,7 +125,7 @@ const getType = (
   else if (typeReference.nodeType == NodeType.TypeUsage) varName = typeReference.name;
   else {
     // TODO: Implement Checking On Member Access
-    BriskParseError(`Member Access Not Yet Implemented`, position);
+    BriskParseError('Member Access Not Yet Implemented', position);
     process.exit(1);
   }
   // Search The Stacks
@@ -248,14 +248,17 @@ const analyzeNode = (
       if (node.args.length != 0) {
         if (node.value == 'operator') {
           if (node.args.length != 2)
-            BriskTypeError(`Operator Flag Can Only Take 2 Arguments Found ${node.args.length}`, node.args.position);
+            BriskTypeError(
+              `Operator Flag Can Only Take 2 Arguments Found ${node.args.length}`,
+              node.args.position
+            );
           if (node.args.args[0].nodeType != NodeType.StringLiteral)
-            BriskTypeError(`Operator Flag Expected A String At Argument Zero`, node.args.position);
+            BriskTypeError('Operator Flag Expected A String At Argument Zero', node.args.position);
           if (node.args.args[1].nodeType != NodeType.NumberLiteral)
-            BriskTypeError(`Operator Flag Expected A Number At Argument Zero`, node.args.position);
+            BriskTypeError('Operator Flag Expected A Number At Argument Zero', node.args.position);
           return node;
         }
-        BriskTypeError(`Flag Did Not Expect Arguments`, node.args.position);
+        BriskTypeError('Flag Did Not Expect Arguments', node.args.position);
       }
       // TODO: Ensure this is valid
       return node;
@@ -285,11 +288,29 @@ const analyzeNode = (
       };
     }
     case NodeType.ImportStatement:
+      // Temp: Until we impleement the rest
+      createVariable(_variables, _varStack, {
+        name: node.variable.name,
+        global: true,
+        constant: true,
+        parameter: false,
+        exported: false,
+        import: true,
+        wasmImport: false,
+        used: false,
+        type: <TypePrimLiteralNode>{
+          nodeType: NodeType.TypePrimLiteral,
+          category: NodeCategory.Type,
+          name: 'Any',
+          position: node.variable.position,
+        }
+      }, node.position);
       // TODO: Compile The Other Files And Get Type Data, For Rest Of Analysis
       // TODO: Add Import Item To List
-      console.log('TODO: Analyze Import Statement');
-      process.exit(1);
-      break;
+      // console.log('TODO: Analyze Import Statement');
+      // process.exit(1);
+      // break;
+      return node;
     case NodeType.WasmImportStatement:
       // Analyze Type
       node.typeSignature = <TypeLiteral>_analyzeNode(node.typeSignature);
@@ -309,6 +330,17 @@ const analyzeNode = (
       return node;
     case NodeType.ExportStatement: {
       // Analysis
+      // TODO: Analyze Type Exports
+      if (
+        node.value.nodeType == NodeType.InterfaceDefinition ||
+        node.value.nodeType == NodeType.EnumDefinitionStatement ||
+        node.value.nodeType == NodeType.TypeAliasDefinition ||
+        node.value.nodeType == NodeType.TypeUsage
+      ) {
+        BriskParseError('Type Export Not Yet Implemented', node.position);
+        process.exit(1);
+      }
+      // Analyze Object Literal
       if (node.value.nodeType == NodeType.ObjectLiteral) {
         // Analyze Value
         node.value = <ObjectLiteralNode>_analyzeNode(node.value);
@@ -319,7 +351,11 @@ const analyzeNode = (
       // Deal With Other Types Of Exports
       if (node.value.nodeType == NodeType.DeclarationStatement)
         node.value = <DeclarationStatementNode>_analyzeNode(node.value);
-      const variableName = node.value.nodeType == NodeType.DeclarationStatement ? node.value.name.name : node.value;
+      const variableName = (
+        node.value.nodeType == NodeType.DeclarationStatement ? 
+          node.value.name.name : 
+          node.value
+      );
       // Set Variable Information
       const variableData = getVariable(
         _variables,
@@ -330,6 +366,7 @@ const analyzeNode = (
         node.value.position,
         { used: true, exported: true }
       );
+      if (variableData == undefined) return node; // TODO: Better Member Analysis
       // Change Export State
       _exports.set(variableData.name, {
         name: variableData.name,
@@ -359,24 +396,82 @@ const analyzeNode = (
     case NodeType.AssignmentStatement:
       // Analyze Value
       node.value = <Expression>_analyzeNode(node.value);
-    case NodeType.PostFixStatement:
+    case NodeType.PostFixStatement: {
       // Analyze Variable
       node.name = <VariableUsage>_analyzeNode(node.name);
       // Verify That Var Exists And Is mutable
-      const variableData = getVariable(_variables, _varStack, _closure, _varStacks, node.name, node.position, {  used: false });
+      const variableData = getVariable(
+        _variables,
+        _varStack,
+        _closure,
+        _varStacks,
+        node.name,
+        node.position,
+        {  used: false }
+      );
+      if (variableData == undefined) return node; // TODO: Better Member Analysis
       if (variableData.constant)
-        BriskTypeError(`Assignment To Constant Variable`, node.position);
+        BriskTypeError('Assignment To Constant Variable', node.position);
       return node;
+    }
     case NodeType.ReturnStatement:
       node.returnValue = <Expression>_analyzeNode(node.returnValue);
       return node;
-    case NodeType.EnumDefinitionStatement:
+    case NodeType.EnumDefinitionStatement: {
       // TODO: Add To Variable List As An Object Maybe
-      // TODO: Analyze Variants
-      console.log(node);
-      console.log('TODO: Analyze Statements');
-      process.exit(1);
-      break;
+      // Ensure No Duplicate Variants
+      const variants: Set<string> = new Set();
+      for (const variant of node.variants) {
+        if (variants.has(variant.identifier))
+          BriskTypeError(`Duplicate Enum Field Name ${variant.identifier}`, variant.position);
+        variants.add(variant.identifier);
+      }
+      // Analyze Variants
+      node.variants = node.variants.map((variant) => <EnumVariantNode>_analyzeNode(variant));
+      // TODO: Add To Type Stack
+      createType(
+        _types,
+        _typeStack,
+        {
+          name: node.identifier,
+          exported: false,
+          type: node
+        },
+        node.position
+      );
+      // TODO: Add To Variable Stack
+      createVariable(
+        _variables,
+        _varStack,
+        {
+          name: node.identifier,
+          global: parentNode?.nodeType == NodeType.Program,
+          constant: true,
+          parameter: false,
+          exported: false,
+          import: false,
+          wasmImport: false,
+          used: false,
+          type: <TypeUsageNode>{
+            nodeType: NodeType.TypeUsage,
+            category: NodeCategory.Type,
+            name: node.identifier,
+            position: node.position
+          },
+        },
+        node.position
+      );
+      return node;
+    }
+    case NodeType.EnumVariant:
+      // Analyze Value
+      if (node.value) {
+        if (Array.isArray(node.value))
+          node.value = node.value.map(typeLiteral => <TypeLiteral>_analyzeNode(typeLiteral));
+        else if (node.value.category == NodeCategory.Expression)
+          node.value = <Expression>_analyzeNode(node.value);
+      }
+      return node;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
@@ -419,7 +514,10 @@ const analyzeNode = (
       for (const param of node.params) {
         if (param.optional) foundOptional = true;
         else if (foundOptional)
-          BriskParseError(`Optional Parameters Must Appear Last In A Function Definition`, param.position);
+          BriskParseError(
+            'Optional Parameters Must Appear Last In A Function Definition',
+            param.position
+          );
       }
       // Analyze Params
       return <AnalyzedFunctionLiteralNode>{
@@ -450,7 +548,7 @@ const analyzeNode = (
         },
       };
     }
-    case NodeType.ObjectLiteral:
+    case NodeType.ObjectLiteral: {
       // Analyze Fields
       const fields: (ObjectFieldNode | ObjectSpreadNode)[] = [];
       for (const field of node.fields) {
@@ -465,6 +563,7 @@ const analyzeNode = (
       }
       node.fields = fields;
       return node;
+    }
     // Types
     // TODO: Allow Recursive Types
     case NodeType.InterfaceDefinition:

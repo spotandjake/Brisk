@@ -41,7 +41,7 @@ class Parser extends EmbeddedActionsParser {
     this.MANY(() => {
       this.OR([
         { ALT: () => body.push(this.SUBRULE(this.topLevelStatement)) },
-        { ALT: () => body.push(this.SUBRULE(this.statement)) },
+        { ALT: () => body.push(this.SUBRULE(this.statement)) }
       ]);
     });
     return body;
@@ -57,6 +57,23 @@ class Parser extends EmbeddedActionsParser {
     return statement;
   });
   private statement = this.RULE('Statement', (): Nodes.Statement => {
+    return this.OR([
+      { ALT: () => this.SUBRULE(this.optionalSemiColon) },
+      { ALT: () => this.SUBRULE(this.semiStatement) },
+    ]);
+  });
+  private optionalSemiColon = this.RULE('OptionalSemi', (): Nodes.Statement => {
+    const statement =  this.OR([
+      { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
+      { ALT: () => this.SUBRULE(this.interfaceDefinition) },
+    ]);
+    this.OPTION(() => {
+      this.CONSUME(Tokens.TknSemiColon);
+      this.ACTION(() => (statement.position.length += 1));
+    });
+    return statement;
+  });
+  private semiStatement = this.RULE('SemiStatement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
     this.CONSUME(Tokens.TknSemiColon);
     this.ACTION(() => (statement.position.length += 1));
@@ -65,8 +82,7 @@ class Parser extends EmbeddedActionsParser {
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.blockStatement) },
-      { ALT: () => this.SUBRULE(this.typeDefinition) },
-      { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
+      { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
@@ -241,6 +257,10 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.variableUsage) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
+      { ALT: () => this.SUBRULE(this.interfaceDefinition) },
+      { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
+      { ALT: () => this.SUBRULE(this.typeAlias) },
+      // TODO: Handle Exporting Type usages
     ]);
     return this.ACTION(() => {
       return {
@@ -380,7 +400,7 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.EnumDefinitionStatementNode => {
       const variants: Nodes.EnumVariantNode[] = [];
       const location = this.CONSUME(Tokens.TknEnum);
-      const identifier = this.SUBRULE(this.variableDefinitionNode);
+      const identifier = this.CONSUME(Tokens.TknIdentifier);
       this.CONSUME(Tokens.TknLBrace);
       variants.push(this.SUBRULE(this.enumVariant));
       this.MANY(() => {
@@ -393,7 +413,7 @@ class Parser extends EmbeddedActionsParser {
         return {
           nodeType: Nodes.NodeType.EnumDefinitionStatement,
           category: Nodes.NodeCategory.Statement,
-          identifier: identifier,
+          identifier: identifier.image,
           variants: variants,
           position: {
             offset: location.startOffset,
@@ -1215,12 +1235,6 @@ class Parser extends EmbeddedActionsParser {
     });
   });
   // Types
-  private typeDefinition = this.RULE('TypeDefinition', (): Nodes.TypeDefinition => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.typeAlias) },
-      { ALT: () => this.SUBRULE(this.interfaceDefinition) },
-    ]);
-  });
   private typeLiteral = this.RULE('TypeLiteral', (): Nodes.TypeLiteral => {
     return this.SUBRULE(this.typeUnionLiteral);
   });

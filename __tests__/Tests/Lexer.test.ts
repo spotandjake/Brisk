@@ -8,7 +8,7 @@ import lex from '../../src/Compiler/Lexer/index';
 const Lexer_Pass = fs.readFileSync('./__tests__/Data/Lexer/Lexer_Pass.br', 'utf8');
 const Import_Pass = fs.readFileSync('./__tests__/Data/Lexer/Import_Pass.br', 'utf8');
 const Export_Pass = fs.readFileSync('./__tests__/Data/Lexer/Export_Pass.br', 'utf8');
-const Literals_Pass = fs.readFileSync('./__tests__/Data/Lexer/Literals_pass.br', 'utf8');
+const Literals_Pass = fs.readFileSync('./__tests__/Data/Lexer/Literals_Pass.br', 'utf8');
 // Serialize Lex Data
 import { ILexingResult, IToken } from 'chevrotain';
 const serializeLex = (lexStream: ILexingResult) => {

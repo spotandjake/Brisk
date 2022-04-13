@@ -38,5 +38,5 @@ rules:
   prefer-const: warn
   prefer-template: error
   no-prototype-builtins: 0
-  no-fallthrough: false
+  no-fallthrough: 0
   max-len: ["warn", 100, 2, { "ignoreComments": true, "ignoreStrings": true }]

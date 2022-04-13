@@ -1,4 +1,9 @@
 // import wasm print: (Any) => Void from 'test1';
+enum Option {
+  None,
+  None2 = 1,
+  Some(i32),
+}
 // enum Option {
 //   None,
 //   Some(i32)
@@ -26,7 +31,7 @@ interface Test {
   let test3: i32;
   // test4: Te;
   // test5: Test;
-};
+}
 const test: Test = {
   test: 1n,
   let test2: 2n,

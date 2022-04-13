@@ -88,6 +88,7 @@ export type Statement =
   | TypeDefinition
   | ReturnStatementNode
   | EnumDefinitionStatementNode
+  | EnumVariantNode
   | PostFixStatementNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
@@ -131,7 +132,15 @@ export interface ExportStatementNode {
   value: ExportStatementValue;
   position: Position;
 }
-export type ExportStatementValue = VariableUsage | DeclarationStatementNode | ObjectLiteralNode;
+export type ExportStatementValue = 
+  | VariableUsage 
+  | DeclarationStatementNode 
+  | ObjectLiteralNode 
+  | InterfaceDefinitionNode 
+  | EnumDefinitionStatementNode
+  | TypeAliasDefinitionNode
+  | TypeUsageNode
+;
 export const enum DeclarationTypes {
   Constant,
   Lexical,
@@ -173,7 +182,7 @@ export interface PostFixStatementNode {
 export interface EnumDefinitionStatementNode {
   nodeType: NodeType.EnumDefinitionStatement;
   category: NodeCategory.Statement;
-  identifier: VariableDefinition;
+  identifier: string;
   variants: EnumVariantNode[];
   position: Position;
 }
@@ -373,6 +382,7 @@ export type TypeLiteral =
   | ParenthesisTypeLiteralNode
   | FunctionSignatureLiteralNode
   | InterfaceLiteralNode
+  | EnumDefinitionStatementNode
   | TypeUsageNode;
 // Type Definition
 export interface TypeAliasDefinitionNode {
