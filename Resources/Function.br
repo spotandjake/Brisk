@@ -39,12 +39,12 @@
 // export let test: i32 = 1n;
 // let test1: i32 = 1n;
 // const test3: i32 = 1n;
-const testFunction: Function = (let a: i32, b: i32, c?: i32): i32 => {
-  let test: i32 = 1n;
-  let t: i32 = testFunction;
-  // test = 2n;
-  // test1 = 1n;
-  // test2 = 2n;
-  // return(i32);
-};
-testFunction(1n, 2n);
+// const testFunction: Function = (let a: i32, b: i32, c?: i32): i32 => {
+//   let test: i32 = 1n;
+//   let t: i32 = testFunction;
+//   // test = 2n;
+//   // test1 = 1n;
+//   // test2 = 2n;
+//   // return(i32);
+// };
+// testFunction(1n, 2n);

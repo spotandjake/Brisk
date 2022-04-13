@@ -244,15 +244,20 @@ const analyzeNode = (
       if (node.alternative) node.alternative = <Statement>_analyzeNode(node.body);
       return node;
     case NodeType.FlagStatement:
-      // TODO: Check it is a valid flag in a valid position
-      // Flags
-      // @dissablegc();
-      // @inline();
-      // @operator("<string>", <precedence>);
-      // TODO: Implement Analysis For Flag Statements
-      console.log('TODO: Analyze Flag Statement');
-      process.exit(1);
-      break;
+      if (node.args.length != 0) {
+        if (node.value == 'operator') {
+          if (node.args.length != 2)
+            BriskTypeError(`Operator Flag Can Only Take 2 Arguments Found ${node.args.length}`, node.args.position);
+          if (node.args.args[0].nodeType != NodeType.StringLiteral)
+            BriskTypeError(`Operator Flag Expected A String At Argument Zero`, node.args.position);
+          if (node.args.args[1].nodeType != NodeType.NumberLiteral)
+            BriskTypeError(`Operator Flag Expected A Number At Argument Zero`, node.args.position);
+          return node;
+        }
+        BriskTypeError(`Flag Did Not Expect Arguments`, node.args.position);
+      }
+      // TODO: Ensure this is valid
+      return node;
     case NodeType.BlockStatement: {
       // Create Our New Stacks
       const varStack: VariableStack = new Map();

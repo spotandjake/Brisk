@@ -42,7 +42,6 @@ class Parser extends EmbeddedActionsParser {
       this.OR([
         { ALT: () => body.push(this.SUBRULE(this.topLevelStatement)) },
         { ALT: () => body.push(this.SUBRULE(this.statement)) },
-        { ALT: () => body.push(this.SUBRULE(this.flag)) },
       ]);
     });
     return body;
@@ -51,6 +50,7 @@ class Parser extends EmbeddedActionsParser {
     const statement = this.OR([
       { ALT: () => this.SUBRULE(this.importStatement) },
       { ALT: () => this.SUBRULE(this.exportStatement) },
+      { ALT: () => this.SUBRULE(this.flag) },
     ]);
     this.CONSUME(Tokens.TknSemiColon);
     this.ACTION(() => (statement.position.length += 1));
@@ -75,10 +75,12 @@ class Parser extends EmbeddedActionsParser {
   // Flags
   private flag = this.RULE('Flag', (): Nodes.FlagNode => {
     const flag = this.CONSUME(Tokens.TknFlag);
+    const args = this.SUBRULE(this.arguments);
     return {
       nodeType: Nodes.NodeType.FlagStatement,
       category: Nodes.NodeCategory.Statement,
-      value: flag.image,
+      value: flag.image.slice(1),
+      args: args,
       position: {
         offset: flag.startOffset,
         length: <number>flag.endOffset - flag.startOffset + 1,
@@ -824,6 +826,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.Arguments,
       category: Nodes.NodeCategory.General,
+      length: args.length,
       args: args,
       position: {
         offset: location.startOffset,

@@ -101,6 +101,7 @@ export interface FlagNode {
   nodeType: NodeType.FlagStatement;
   category: NodeCategory.Statement;
   value: string;
+  args: ArgumentsNode;
   position: Position;
 }
 export interface BlockStatementNode {
@@ -512,6 +513,7 @@ export interface ParameterNode {
 export interface ArgumentsNode {
   nodeType: NodeType.Arguments;
   category: NodeCategory.General;
+  length: number;
   args: Expression[];
   position: Position;
 }
