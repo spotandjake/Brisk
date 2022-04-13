@@ -1,14 +1,18 @@
 // import wasm print: (Any) => Void from 'test1';
+// type Test = Void;
+type Te = Void;
 interface Test {
-  test: i32;
+  test: i32 | (i64 | f32) | (i64, f64) => f32;
   let test2: i32;
   test3: i32;
+  test4: Te;
+  // test5: Test;
 };
-const test: Test = {
-  test: 1n,
-  let test2: 2n,
-  let test3: 3n,
-};
+// const test: Test = {
+//   test: 1n,
+//   let test2: 2n,
+//   let test3: 3n,
+// };
 // test = 2n;
 // const test2: i32 = 1n;
 // test2 = 2n;

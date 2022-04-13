@@ -6,15 +6,17 @@ import Node, {
   Expression,
   NodeCategory,
   DeclarationStatementNode,
-  ExportStatementValue,
   DeclarationTypes,
   TypeLiteral,
   VariableUsage,
   TypeUnionLiteralNode,
   TypePrimLiteralNode,
   ParenthesisTypeLiteralNode,
+  ObjectLiteralNode,
   ObjectFieldNode,
-  ObjectSpreadNode
+  ObjectSpreadNode,
+  primTypes,
+  TypeUsageNode
 } from '../Types/ParseNodes';
 import { BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -25,6 +27,7 @@ import AnalyzerNode, {
   AnalyzedBlockStatementNode,
   TypeMap,
   TypeStack,
+  TypeData,
   VariableClosure,
   VariableData,
   VariableMap,
@@ -83,6 +86,60 @@ const getVariable = (
   varPool.set(variableReference, {
     ...value,
     used: value.used || used,
+    exported: value.exported || exported,
+  });
+  // Return Value
+  return value;
+};
+const createType = (
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeData: TypeData,
+  position: Position
+) => {
+  // Do Not Allow You To Write Over Primitive Types
+  if ((<Set<string>>primTypes).has(typeData.name))
+    BriskParseError(`You May Not Declare A Type With The Same Name As A Primitive Type`, position);
+  // Check If Variable Already Exists On Stack
+  if (typeStack.has(typeData.name))
+    BriskParseError(`Type ${typeData.name} Has Already been Declared`, position);
+  // Create Reference To Map
+  const variableReference = typePool.size;
+  // Add Variable To Pool
+  typePool.set(variableReference, typeData);
+  // Add Variable To Stack
+  typeStack.set(typeData.name, variableReference);
+};
+const getType = (
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeReference: TypeUsageNode | string,
+  position: Position,
+  { exported=false }: { exported?: boolean }
+): VariableData => {
+  // Get Variable Reference
+  let varName: string;
+  if (typeof typeReference == 'string') varName = typeReference; 
+  else if (typeReference.nodeType == NodeType.TypeUsage) varName = typeReference.name;
+  else {
+    // TODO: Implement Checking On Member Access
+    BriskParseError(`Member Access Not Yet Implemented`, position);
+    process.exit(1);
+  }
+  // Search The Stacks
+  const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
+  // Check If It Exists
+  if (_varStack == undefined)
+    BriskParseError(`Type ${varName} Not Found`, position);
+  // Get Node
+  const variableReference = <number>(<VariableStack>_varStack).get(varName);
+  if (!typePool.has(variableReference))
+    BriskParseError('Compiler Bug Please Report', position);
+  const value = <VariableData>typePool.get(variableReference);
+  // Set Variable To used
+  typePool.set(variableReference, {
+    ...value,
     exported: value.exported || exported,
   });
   // Return Value
@@ -242,9 +299,11 @@ const analyzeNode = (
     case NodeType.ExportStatement: {
       // Analysis
       if (node.value.nodeType == NodeType.ObjectLiteral) {
-        // TODO: Deal With Object Exports
-        console.log('TODO: Analyze Object Literal Export');
-        process.exit(1);
+        // Analyze Value
+        node.value = <ObjectLiteralNode>_analyzeNode(node.value);
+        // TODO: Handle Object Exports
+        BriskParseError('Object Export Not Yet Implemented', node.position);
+        return node;
       }
       // Deal With Other Types Of Exports
       if (node.value.nodeType == NodeType.DeclarationStatement)
@@ -385,23 +444,71 @@ const analyzeNode = (
       for (const field of node.fields) {
         // field
         field.fieldValue = <Expression>_analyzeNode(field.fieldValue);
+        // Check if field exists
+        if (
+          field.nodeType == NodeType.ObjectField &&
+          fields.some(f => f.nodeType == NodeType.ObjectField && f.name == field.name)
+        ) BriskTypeError(`Duplicate Field Name ${field.name}`, field.position);
+        fields.push(field);
       }
       node.fields = fields;
       return node;
     // Types
-    case NodeType.TypeAliasDefinition:
+    // TODO: Allow Recursive Types
     case NodeType.InterfaceDefinition:
-    case NodeType.TypePrimLiteral:
-    case NodeType.TypeUnionLiteral:
-    case NodeType.ParenthesisTypeLiteral:
-    case NodeType.FunctionSignatureLiteral:
-    case NodeType.InterfaceLiteral:
-    case NodeType.TypeUsage:
-      // TODO: Analyze Types
-      console.log('TODO: Analyze Types');
+      // Analyze Interface
+      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
+    case NodeType.TypeAliasDefinition:
+      createType(
+        _types,
+        _typeStack,
+        {
+          name: node.name,
+          exported: false,
+          type: node.typeLiteral
+        },
+        node.position
+      );
       return node;
-      // process.exit(1);
-      // break;
+    case NodeType.TypePrimLiteral:
+      return node;
+    case NodeType.TypeUnionLiteral:
+      // Analyze Types
+      node.types = node.types.map(type => <TypeLiteral>_analyzeNode(type));
+      return node;
+    case NodeType.ParenthesisTypeLiteral:
+      node.value = <TypeLiteral>_analyzeNode(node.value);
+      return node;
+    case NodeType.FunctionSignatureLiteral:
+      // Analyze Parameter Types
+      node.params = node.params.map(param => <TypeLiteral>_analyzeNode(param));
+      // Analyze Return Types
+      node.returnType = <TypeLiteral>_analyzeNode(node.returnType);
+      return node;
+    case NodeType.InterfaceLiteral: {
+      // Analyze Fields
+      const fields: Set<string> = new Set();
+      node.fields = node.fields.map(field => {
+        if (fields.has(field.name))
+          BriskTypeError(`Field ${field.name} has already been declared`, field.position);
+        field.fieldType = <TypeLiteral>_analyzeNode(field.fieldType);
+        fields.add(field.name);
+        return field;
+      });
+      return node;
+    }
+    case NodeType.TypeUsage:
+      // Check If Type Is A Primitive Type
+      if ((<Set<string>>primTypes).has(node.name)) {
+        return <TypePrimLiteralNode>{
+          nodeType: NodeType.TypePrimLiteral,
+          category: NodeCategory.Type,
+          name: node.name,
+          position: node.position
+        };
+      }
+      getType(_types, _typeStack, _typeStacks, node.name, node.position, {});
+      return node;
     // Variables
     case NodeType.VariableUsage:
       getVariable(_variables, _varStack, _closure, _varStacks, node, node.position, {});

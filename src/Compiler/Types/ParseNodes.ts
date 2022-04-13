@@ -403,7 +403,7 @@ export type PrimTypes =
   | 'Number'
   | 'Function'
   | 'Any';
-export const primTypes: PrimTypes[] = [
+export const primTypes: Set<PrimTypes> = new Set([
   'u32',
   'u64',
   'i32',
@@ -416,7 +416,7 @@ export const primTypes: PrimTypes[] = [
   'Number',
   'Function',
   'Any',
-];
+]);
 export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
   category: NodeCategory.Type;
