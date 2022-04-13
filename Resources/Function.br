@@ -32,7 +32,7 @@ const test: Test = {
   let test2: 2n,
   let test3: 3n,
 };
-const test2: i32 = test.test;
+// const test2: i32 = test.test;
 // test = 2n;
 // const test2: i32 = 1n;
 // test2 = 2n;
