@@ -9,8 +9,8 @@ import { BriskErrorType } from './Errors/Errors';
 const compile = async (
   program: string,
   filePath: string,
-  fileCompiler?: (filePath: string) => Promise<ExportList>
-) => {
+  fileCompiler?: (filePath: string) => Promise<{ output: string, exports: ExportList}>
+): Promise<{ output: string, exports: ExportList}> => {
   // Compilation Steps
   // 1. Lex
   const lexed = lex(program, filePath);
@@ -19,13 +19,13 @@ const compile = async (
   // 3. Analyze ParseTree
   const analyzed = analyze(program, parsed);
   // 4. Handle Compilation Of Other Files
-  for (const [ variableName, sourceInfo ] of analyzed.data._imports) {
+  for (const sourceInfo of analyzed.data._imports.values()) {
     if (fileCompiler) {
       // Compile File
       fileCompiler(sourceInfo.path);
       // TODO: Handle Export Map
     } else {
-      BriskError(program, BriskErrorType.ImportNotSupported, [], sourceInfo.position)
+      BriskError(program, BriskErrorType.ImportNotSupported, [], sourceInfo.position);
     }
   }
   // 5. Type Check
@@ -37,6 +37,8 @@ const compile = async (
   // 7. Return Code
   return {
     // output: '',
+    // TODO: remove This Ignore
+    //@ts-ignore
     output: analyzed,
     exports: exports
   };

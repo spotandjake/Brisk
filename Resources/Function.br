@@ -1,5 +1,5 @@
 // import wasm print: (Any) => Void from 'test1';
-import Test from 'test';
+// import Test from 'test';
 // enum Option {
 //  None,
 //  None2 = 1,
@@ -38,6 +38,9 @@ const test: Test = {
   test: 1n,
   let test2: 2n,
   let test3: 3n,
+};
+export {
+  test: 1n
 };
 // const test2: i32 = test.test;
 // test = 2n;

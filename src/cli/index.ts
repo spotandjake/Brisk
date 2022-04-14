@@ -13,7 +13,7 @@ const program = new Command();
 // Config
 program.version(__VERSION__);
 // File Compiler
-const compileFile = async (filePath: string): Promise<ExportList> => {
+const compileFile = async (filePath: string): Promise<{ output: string, exports: ExportList}> => {
   // Normalize File Path
   const _filePath = path.resolve(process.cwd(), filePath);
   // Read File
@@ -24,15 +24,16 @@ const compileFile = async (filePath: string): Promise<ExportList> => {
   // Compile File
   const compiled = await compile(fileContent, filePath, compileFile);
   // Save File
-  console.log('================================================================');
-  console.dir(compiled.output, { depth: null });
   // Return ExportList
-  return compiled.exports;
+  return compiled;
 };
 // Tasks
 program.argument('<file>', 'File to compile').action(async (filePath) => {
   // Compile
-  await compileFile(filePath);
+  const { output } = await compileFile(filePath);
+  // Log Output
+  console.log('================================================================');
+  console.dir(output, { depth: null });
   // Link
 });
 // Start

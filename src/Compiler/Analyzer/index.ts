@@ -9,6 +9,7 @@ import Node, {
   DeclarationTypes,
   TypeLiteral,
   VariableUsage,
+  VariableUsageNode,
   TypeUnionLiteralNode,
   TypePrimLiteralNode,
   ParenthesisTypeLiteralNode,
@@ -375,8 +376,18 @@ const analyzeNode = (
       if (node.value.nodeType == NodeType.ObjectLiteral) {
         // Analyze Value
         node.value = <ObjectLiteralNode>_analyzeNode(node.value);
-        // TODO: Handle Object Exports
-        BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        // Add Fields To Export
+        for (const field of node.value.fields) {
+          if (field.nodeType == NodeType.ObjectSpread) {
+            // TODO: Support Exporting Spread Objects
+            BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], field.position);
+          } else {
+            _exports.set(field.name, {
+              name: field.name,
+              value: field.fieldValue
+            });
+          }
+        }
         return node;
       }
       // Deal With Other Types Of Exports
@@ -402,8 +413,12 @@ const analyzeNode = (
       // Change Export State
       _exports.set(variableData.name, {
         name: variableData.name,
-        value: node.value,
-        type: variableData.type,
+        value: <VariableUsageNode>{
+          nodeType: NodeType.VariableUsage,
+          category: NodeCategory.Variable,
+          name: variableData.name,
+          position: node.position
+        }
       });
       // Return Value
       return node;

@@ -12,9 +12,12 @@ import { ExportList } from '../../src/Compiler/Types/Types';
 const Main_Pass = fs.readFileSync('./__tests__/Data/Brisk/Brisk_pass.br', 'utf8');
 const Literals_Pass = fs.readFileSync('./__tests__/Data/Brisk/Literals_pass.br', 'utf8');
 // PolyFill Compile
-const compileFile = async (filePath: string): Promise<ExportList> => {
+const compileFile = async (filePath: string): Promise<{ output: '', exports: ExportList }> => {
   // TODO: Return Proper Types
-  return new Map();
+  return {
+    output: '',
+    exports: new Map()
+  };
 };
 // Compiler
 test('Compile: Main Pass', async () => {
