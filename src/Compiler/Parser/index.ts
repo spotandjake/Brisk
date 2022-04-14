@@ -4,7 +4,6 @@ import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
 import * as Nodes from '../Types/ParseNodes';
-import { prettyError } from '../Errors/ErrorBuilder';
 import { BriskParseError } from '../Errors/Compiler';
 //@ts-ignore
 import { __DEBUG__ } from '@brisk/config';
@@ -1468,7 +1467,7 @@ const parse = (lexingResult: ILexingResult, code: string, file: string) => {
       col: token.startColumn || 0,
       file: file,
     };
-    BriskParseError(prettyError(code, message, position), position);
+    BriskParseError(code, message, position);
   }
   if (parsed == undefined) {
     // console.log(lexed);

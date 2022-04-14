@@ -20,7 +20,7 @@ test('Parser-Lexer: Main Pass', () => {
 });
 // Parser-Lexer-Analyzer
 test('Parser-Lexer-Analyzer: Main Pass', () => {
-  expect(analyze(parse(lex(Main_Pass, 'file'), '', 'file'))).toMatchSnapshot();
+  expect(analyze(Main_Pass, parse(lex(Main_Pass, 'file'), '', 'file'))).toMatchSnapshot();
 });
 // Literals
 test('Compile: Literals Pass', () => {
@@ -32,5 +32,5 @@ test('Parser-Lexer: Literals Pass', () => {
 });
 // Parser-Lexer-Analyzer
 test('Parser-Lexer-Analyzer: Literals Pass', () => {
-  expect(analyze(parse(lex(Literals_Pass, 'file'), '', 'file'))).toMatchSnapshot();
+  expect(analyze(Literals_Pass, parse(lex(Literals_Pass, 'file'), '', 'file'))).toMatchSnapshot();
 });

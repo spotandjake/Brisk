@@ -38,6 +38,7 @@ import AnalyzerNode, {
 } from '../Types/AnalyzerNodes';
 // Variable Interactions
 const createVariable = (
+  code: string,
   varPool: VariableMap,
   varStack: VariableStack,
   varData: VariableData,
@@ -45,7 +46,7 @@ const createVariable = (
 ) => {
   // Check If Variable Already Exists On Stack
   if (varStack.has(varData.name))
-    BriskParseError(`Variable ${varData.name} Has Already been Declared`, position);
+    BriskParseError(code, `Variable ${varData.name} Has Already been Declared`, position);
   // Create Reference To Map
   const variableReference = varPool.size;
   // Add Variable To Pool
@@ -54,6 +55,7 @@ const createVariable = (
   varStack.set(varData.name, variableReference);
 };
 const getVariable = (
+  code: string, 
   varPool: VariableMap,
   varStack: VariableStack,
   _closure: VariableClosure,
@@ -74,14 +76,14 @@ const getVariable = (
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskParseError(`Variable ${varName} Not Found`, position);
+    BriskParseError(code, `Variable ${varName} Not Found`, position);
   // Get Node
   const variableReference = <number>(<VariableStack>_varStack).get(varName);
   // Check If We need To Add To Closure
   if (!varStack.has(varName))
     _closure.add(variableReference);
   if (!varPool.has(variableReference))
-    BriskParseError('Compiler Bug Please Report', position);
+    BriskParseError(code, 'Compiler Bug Please Report', position);
   const value = <VariableData>varPool.get(variableReference);
   // Set Variable To used
   varPool.set(variableReference, {
@@ -93,6 +95,7 @@ const getVariable = (
   return value;
 };
 const createType = (
+  code: string, 
   typePool: TypeMap,
   typeStack: TypeStack,
   typeData: TypeData,
@@ -100,10 +103,10 @@ const createType = (
 ) => {
   // Do Not Allow You To Write Over Primitive Types
   if ((<Set<string>>primTypes).has(typeData.name))
-    BriskParseError('You May Not Declare A Type With The Same Name As A Primitive Type', position);
+    BriskParseError(code, 'You May Not Declare A Type With The Same Name As A Primitive Type', position);
   // Check If Variable Already Exists On Stack
   if (typeStack.has(typeData.name))
-    BriskParseError(`Type ${typeData.name} Has Already been Declared`, position);
+    BriskParseError(code, `Type ${typeData.name} Has Already been Declared`, position);
   // Create Reference To Map
   const variableReference = typePool.size;
   // Add Variable To Pool
@@ -114,6 +117,7 @@ const createType = (
   return variableReference;
 };
 const getType = (
+  code: string, 
   typePool: TypeMap,
   typeStack: TypeStack,
   typeStacks: TypeStack[],
@@ -127,18 +131,18 @@ const getType = (
   else if (typeReference.nodeType == NodeType.TypeUsage) varName = typeReference.name;
   else {
     // TODO: Implement Checking On Member Access
-    BriskParseError('Member Access Not Yet Implemented', position);
+    BriskParseError(code, 'Member Access Not Yet Implemented', position);
     process.exit(1);
   }
   // Search The Stacks
   const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskParseError(`Type ${varName} Not Found`, position);
+    BriskParseError(code, `Type ${varName} Not Found`, position);
   // Get Node
   const variableReference = <number>(<VariableStack>_varStack).get(varName);
   if (!typePool.has(variableReference))
-    BriskParseError('Compiler Bug Please Report', position);
+    BriskParseError(code, 'Compiler Bug Please Report', position);
   const value = <VariableData>typePool.get(variableReference);
   // Set Variable To used
   typePool.set(variableReference, {
@@ -150,6 +154,8 @@ const getType = (
 };
 // Analyze Node
 const analyzeNode = (
+  // Code
+  code: string,
   // Stacks
   properties: AnalyzeNode,
   // Nodes
@@ -175,7 +181,7 @@ const analyzeNode = (
     props: Partial<AnalyzeNode> = properties,
     parentNode: Node = node
   ): AnalyzerNode => {
-    return analyzeNode({ ...properties, ...props }, parentNode, childNode);
+    return analyzeNode(code, { ...properties, ...props }, parentNode, childNode);
   };
   // Match The Node For Analysis
   switch (node.nodeType) {
@@ -201,10 +207,10 @@ const analyzeNode = (
           prevNode.nodeType != NodeType.ImportStatement &&
           prevNode.nodeType != NodeType.WasmImportStatement
         )
-          BriskParseError('Import Statement must be at top of file', statementNode.position);
+          BriskParseError(code, 'Import Statement must be at top of file', statementNode.position);
         if (statementNode.nodeType == NodeType.ExportStatement) hitExportNode = true;
         if (statementNode.nodeType != NodeType.ExportStatement && hitExportNode)
-          BriskParseError('Export Statement Must Be At The End Of File', statementNode.position);
+          BriskParseError(code, 'Export Statement Must Be At The End Of File', statementNode.position);
         prevNode = statementNode;
       }
       // Return Our Node
@@ -240,7 +246,7 @@ const analyzeNode = (
     case NodeType.IfStatement:
       // Don't Allow Definition Statements Here
       if (node.alternative?.nodeType == NodeType.DeclarationStatement)
-        BriskParseError('Declaration May Not Appear In A Single-Statement If', node.position);
+        BriskParseError(code, 'Declaration May Not Appear In A Single-Statement If', node.position);
       node.condition = <Expression>_analyzeNode(node.condition);
       // Analyze Body And Alternative
       node.body = <Statement>_analyzeNode(node.body);
@@ -251,16 +257,17 @@ const analyzeNode = (
         if (node.value == 'operator') {
           if (node.args.length != 2)
             BriskTypeError(
+              code, 
               `Operator Flag Can Only Take 2 Arguments Found ${node.args.length}`,
               node.args.position
             );
           if (node.args.args[0].nodeType != NodeType.StringLiteral)
-            BriskTypeError('Operator Flag Expected A String At Argument Zero', node.args.position);
+            BriskTypeError(code, 'Operator Flag Expected A String At Argument Zero', node.args.position);
           if (node.args.args[1].nodeType != NodeType.NumberLiteral)
-            BriskTypeError('Operator Flag Expected A Number At Argument Zero', node.args.position);
+            BriskTypeError(code, 'Operator Flag Expected A Number At Argument Zero', node.args.position);
           return node;
         }
-        BriskTypeError('Flag Did Not Expect Arguments', node.args.position);
+        BriskTypeError(code, 'Flag Did Not Expect Arguments', node.args.position);
       }
       // TODO: Ensure this is valid
       return node;
@@ -291,7 +298,7 @@ const analyzeNode = (
     }
     case NodeType.ImportStatement:
       // Temp: Until we impleement the rest
-      createVariable(_variables, _varStack, {
+      createVariable(code, _variables, _varStack, {
         name: node.variable.name,
         global: true,
         constant: true,
@@ -317,7 +324,7 @@ const analyzeNode = (
       // Analyze Type
       node.typeSignature = <TypeLiteral>_analyzeNode(node.typeSignature);
       // Add Variable
-      createVariable(_variables, _varStack, {
+      createVariable(code, _variables, _varStack, {
         name: node.variable.name,
         global: true,
         constant: true,
@@ -339,7 +346,7 @@ const analyzeNode = (
         node.value.nodeType == NodeType.TypeAliasDefinition ||
         node.value.nodeType == NodeType.TypeUsage
       ) {
-        BriskParseError('Type Export Not Yet Implemented', node.position);
+        BriskParseError(code, 'Type Export Not Yet Implemented', node.position);
         process.exit(1);
       }
       // Analyze Object Literal
@@ -347,7 +354,7 @@ const analyzeNode = (
         // Analyze Value
         node.value = <ObjectLiteralNode>_analyzeNode(node.value);
         // TODO: Handle Object Exports
-        BriskParseError('Object Export Not Yet Implemented', node.position);
+        BriskParseError(code, 'Object Export Not Yet Implemented', node.position);
         return node;
       }
       // Deal With Other Types Of Exports
@@ -360,6 +367,7 @@ const analyzeNode = (
       );
       // Set Variable Information
       const variableData = getVariable(
+        code,
         _variables,
         _varStack,
         _closure,
@@ -381,7 +389,7 @@ const analyzeNode = (
     case NodeType.DeclarationStatement:
       // TODO: Handle Destructuring
       // Add Variable To Stack
-      createVariable(_variables, _varStack, {
+      createVariable(code, _variables, _varStack, {
         name: node.name.name,
         global: parentNode?.nodeType == NodeType.Program,
         constant: node.declarationType == DeclarationTypes.Constant,
@@ -403,6 +411,7 @@ const analyzeNode = (
       node.name = <VariableUsage>_analyzeNode(node.name);
       // Verify That Var Exists And Is mutable
       const variableData = getVariable(
+        code,
         _variables,
         _varStack,
         _closure,
@@ -413,7 +422,7 @@ const analyzeNode = (
       );
       if (variableData == undefined) return node; // TODO: Better Member Analysis
       if (variableData.constant)
-        BriskTypeError('Assignment To Constant Variable', node.position);
+        BriskTypeError(code, 'Assignment To Constant Variable', node.position);
       return node;
     }
     case NodeType.ReturnStatement:
@@ -425,13 +434,14 @@ const analyzeNode = (
       const variants: Set<string> = new Set();
       for (const variant of node.variants) {
         if (variants.has(variant.identifier))
-          BriskTypeError(`Duplicate Enum Field Name ${variant.identifier}`, variant.position);
+          BriskTypeError(code, `Duplicate Enum Field Name ${variant.identifier}`, variant.position);
         variants.add(variant.identifier);
       }
       // Analyze Variants
       node.variants = node.variants.map((variant) => <EnumVariantNode>_analyzeNode(variant));
       // TODO: Add To Type Stack
       createType(
+        code,
         _types,
         _typeStack,
         {
@@ -443,6 +453,7 @@ const analyzeNode = (
       );
       // TODO: Add To Variable Stack
       createVariable(
+        code,
         _variables,
         _varStack,
         {
@@ -517,6 +528,7 @@ const analyzeNode = (
         if (param.optional) foundOptional = true;
         else if (foundOptional)
           BriskParseError(
+            code, 
             'Optional Parameters Must Appear Last In A Function Definition',
             param.position
           );
@@ -560,7 +572,7 @@ const analyzeNode = (
         if (
           field.nodeType == NodeType.ObjectField &&
           fields.some(f => f.nodeType == NodeType.ObjectField && f.name == field.name)
-        ) BriskTypeError(`Duplicate Field Name ${field.name}`, field.position);
+        ) BriskTypeError(code, `Duplicate Field Name ${field.name}`, field.position);
         fields.push(field);
       }
       node.fields = fields;
@@ -571,6 +583,7 @@ const analyzeNode = (
     case NodeType.TypeAliasDefinition: {
       // Set Type
       const typeReference = createType(
+        code,
         _types,
         _typeStack,
         {
@@ -610,7 +623,7 @@ const analyzeNode = (
       const fields: Set<string> = new Set();
       node.fields = node.fields.map(field => {
         if (fields.has(field.name))
-          BriskTypeError(`Field ${field.name} has already been declared`, field.position);
+          BriskTypeError(code, `Field ${field.name} has already been declared`, field.position);
         field.fieldType = <TypeLiteral>_analyzeNode(field.fieldType);
         fields.add(field.name);
         return field;
@@ -627,11 +640,28 @@ const analyzeNode = (
           position: node.position
         };
       }
-      getType(_types, _typeStack, _typeStacks, node.name, node.position, {});
+      getType(
+        code,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.name,
+        node.position,
+        {}
+      );
       return node;
     // Variables
     case NodeType.VariableUsage:
-      getVariable(_variables, _varStack, _closure, _varStacks, node, node.position, {});
+      getVariable(
+        code,
+        _variables,
+        _varStack,
+        _closure,
+        _varStacks,
+        node,
+        node.position,
+        {}
+      );
       return node;
     case NodeType.MemberAccess:
       // Analyze Parent
@@ -664,7 +694,7 @@ const analyzeNode = (
       } : node.paramType);
       // Add Variable To Stack
       // TODO: Support Destructuring
-      createVariable(_variables, _varStack, {
+      createVariable(code, _variables, _varStack, {
         name: node.name.name,
         global: false,
         constant: !node.mutable,
@@ -684,8 +714,9 @@ const analyzeNode = (
   }
 };
 // Analyze Program
-const analyzeProgram = (program: ProgramNode) => {
+const analyzeProgram = (code: string, program: ProgramNode) => {
   return analyzeNode(
+    code,
     {
       _imports: new Map(),
       _exports: new Map(),

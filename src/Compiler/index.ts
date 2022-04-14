@@ -10,7 +10,7 @@ const compile = (program: string, file: string) => {
   // 2. Parse
   const parsed = parse(lexed, program, file);
   // 3. Analyze ParseTree
-  const analyzed = analyze(parsed);
+  const analyzed = analyze(program, parsed);
   // 4. Type Check
   // TODO: Rewrite Type Checker
   // typeCheck(analyzed, program);
