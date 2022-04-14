@@ -133,13 +133,12 @@ export interface ExportStatementNode {
   position: Position;
 }
 export type ExportStatementValue = 
-  | VariableUsage 
+  | VariableUsageNode 
   | DeclarationStatementNode 
   | ObjectLiteralNode 
   | InterfaceDefinitionNode 
   | EnumDefinitionStatementNode
   | TypeAliasDefinitionNode
-  | TypeUsageNode
 ;
 export const enum DeclarationTypes {
   Constant,
@@ -182,7 +181,7 @@ export interface PostFixStatementNode {
 export interface EnumDefinitionStatementNode {
   nodeType: NodeType.EnumDefinitionStatement;
   category: NodeCategory.Statement;
-  identifier: string;
+  name: string;
   variants: EnumVariantNode[];
   position: Position;
 }

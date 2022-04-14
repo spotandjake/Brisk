@@ -1,36 +1,36 @@
 # Current
 + [ ] Tasks For Day 1
-  + [ ] Analyzer Additions
-    + [ ] Generate A Control Flow Graph In The Analyzer
-    + [ ] Do Not Replace The Variables Names With There Numbers
+  + [x] Analyzer Additions
+    + [x] Do Not Replace The Variables Names With There Numbers
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Things We Dont Have But We Need To Support
       + [ ] Generics
-      + [ ] Member Access On Expression
+      + [x] Member Access On Expression
       + [ ] Destructuring
     + [ ] Restrict the Function type to Variable Definitions, Do not allow it on `Parameters` Allow it on returns too
       + [ ] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
     + [ ] Determine Scoping On Generics
       + [ ] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
-    + [ ] Add Support For Recursive Types
+    + [x] Add Support For Recursive Types
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
       + [ ] Perform Value Narrowing And Type Narrowing
     + [ ] Consider Values As Types
-      + [ ] i.e you could create a type alias that allowed either 1n | 2n 
+      + [ ] i.e you could create a type alias that allowed either 1n | 2n
+      + [ ] This should make Enums simplier because then they are both values and types 
     + [ ] Support Member Access Calls
     + [ ] Reduce Complexity Of Both The TypeChecker And Analyzer
-    + [ ] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
-    + [ ] Consider ADT Enums And Generic Types
-    + [ ] Implement Nicer Errors For This
+    + [x] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
+    + [x] Consider ADT Enums And Generic Types
+    + [x] Implement Nicer Errors For This
     + [ ] Allow Exporting Any Expression Or Type
-    + [ ] Allow For Mutable And Optional Fields
+    + [x] Allow For Mutable And Optional Fields
     + [ ] Check That You Are Not Modifying A immutable Field
-    + [ ] Implement Export Analysis
+    + [x] Implement Export Analysis
     + [ ] Implement Better Mutable Checking
   + [ ] Parser Additions
     + [ ] Implement Generics
     + [ ] Implement Match Syntax
-    + [ ] Allow you to access members on general expressions
+    + [x] Allow you to access members on general expressions
     + [ ] Allow u to define multiple variables off one `let` or `const` using `,`
     + [ ] Implement Destructuring
     + [ ] Implement Array Literals
@@ -48,12 +48,12 @@
     + [ ] Tests For Type Definitions And TypeChecker
     + [ ] Tests For Object Spread Syntax
     + [ ] Analyze Arrays
-  + [ ] Better Error Messages
+  + [x] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`
   + [ ] Start Writing CodeGen
     + [ ] Implement Support For Arbitrary Precision Numbers In Compiler
-      + [ ] This is needed for proper compilation of things like i64, u64, f64 and THe Number Type
+      + [ ] This is needed for proper compilation of things like i64, u64, f64 and The Number Type
 + [ ] Tasks For Day 3
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
@@ -77,19 +77,19 @@
 + [ ] Parser
   + [ ] Improve Type System
     + [x] add enums
-    + [ ] support recursive types
+    + [x] support recursive types
     + [ ] generics
   + [ ] Add Destructuring
-  + [ ] Add Objects
+  + [x] Add Objects
 + [ ] Analyzer
-  + [ ] Deal With MemberAccess
+  + [x] Deal With MemberAccess
   + [ ] Parseliterals
     + This will also allow us to make typefiles for compiled program so we can type imports
 + [ ] TypeChecker
   + [ ] Determine function actual return type
   + [ ] Add TypeChecking For Imports
   + [ ] Add Better TypeChecking On Wasm Calls
-  + [ ] Deal With MemberAccess
+  + [x] Deal With MemberAccess
 + [ ] Compiler
 + [ ] lsp
   + [ ] Program to generate syntax highlighting from createToken
@@ -100,8 +100,8 @@
   + [ ] Analyzer
   + [ ] TypeChecker
 
-+ [ ] Important todo
-  + [ ] I dont think the analyzer or typechecker know how to deal with member access nodes
++ [x] Important todo
+  + [x] I dont think the analyzer or typechecker know how to deal with member access nodes
 + [ ] Generate Syntax Highlighting
   + [ ] Switch The `TS` code Blocks for `br` code blocks in the docs
 
@@ -157,35 +157,35 @@
           + [x] Binary
           + [x] Octal
           + [x] Numeric Separators
-        + [ ] Objects
+        + [x] Objects
         + [ ] Arrays
         + [ ] Wasm Interface Types Interaction
       + [ ] Types
         + [ ] Type Literals
-          + [ ] Interfaces
+          + [x] Interfaces
             + [x] General Interface Parsing
-            + [ ] Mutable Fields
+            + [x] Mutable Fields
           + [x] Type Variables
           + [ ] Generics
-          + [ ] Parenthesis TypeLiterals
+          + [x] Parenthesis TypeLiterals
           + [x] Union Types
           + [x] Function Signatures
         + [x] Type Aliases
         + [x] Type Interfaces
         + [ ] Enums
           + [x] Decide On Adt Enums Or Regular Enums
-          + [ ] Implement Syntax For ADT Enums
-          + [ ] Implement Analysis For ADT Enums
+          + [x] Implement Syntax For ADT Enums
+          + [x] Implement Analysis For ADT Enums
           + [ ] Implement Type Checking For ADT Enums
       + [ ] Expressions
-        + [ ] Fix Operator Precedence In Parsing
-        + [ ] Comparisons
+        + [x] Fix Operator Precedence In Parsing
+        + [x] Comparisons
           + [x] Equal
           + [x] Not Equal
-          + [ ] Less Then
-          + [ ] Greater Then
-          + [ ] Less Then Equal
-          + [ ] Greater Then Equal
+          + [x] Less Then
+          + [x] Greater Then
+          + [x] Less Then Equal
+          + [x] Greater Then Equal
         + [x] Arithmetic
           + [x] Addition
           + [x] Subtraction
@@ -209,16 +209,16 @@
         + [ ] If Statement
           + [x] general Parsing
           + [x] Else
-          + [ ] SingleLine If Statement
+          + [x] SingleLine If Statement
         + [ ] Match Statements
-        + [ ] Expression Statement
-          + [ ] Increment
-          + [ ] Decrement
+        + [x] Expression Statement
+          + [x] Increment
+          + [x] Decrement
           + [x] Function Call
           + [x] Wasm Call Expression
       + [ ] We want to remove all newlines from the input and double check that we get the same output, i.e remove significance of newlines
     + [ ] Analyzer
-      + [ ] Rewrite to be simpler and simplify Variable References
+      + [x] Rewrite to be simpler and simplify Variable References
       + [x] Find closures
       + [x] Discover Unused Variables
       + [x] Type Stack
@@ -263,5 +263,3 @@
       + [ ] String
     + [ ] General
       + [ ] Print
-
-*Fix Where SemiColons Are Needed, They are not required after a }*

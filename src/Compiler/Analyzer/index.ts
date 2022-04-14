@@ -5,7 +5,6 @@ import Node, {
   Statement,
   Expression,
   NodeCategory,
-  DeclarationStatementNode,
   DeclarationTypes,
   TypeLiteral,
   VariableUsage,
@@ -13,13 +12,13 @@ import Node, {
   TypeUnionLiteralNode,
   TypePrimLiteralNode,
   ParenthesisTypeLiteralNode,
-  ObjectLiteralNode,
   ObjectFieldNode,
   ObjectSpreadNode,
   primTypes,
   TypeUsageNode,
   PropertyUsageNode,
-  EnumVariantNode
+  EnumVariantNode,
+  ExportStatementValue
 } from '../Types/ParseNodes';
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -362,64 +361,116 @@ const analyzeNode = (
       return node;
     case NodeType.ExportStatement: {
       // Analysis
-      // TODO: Analyze Type Exports
-      if (
-        node.value.nodeType == NodeType.InterfaceDefinition ||
-        node.value.nodeType == NodeType.EnumDefinitionStatement ||
-        node.value.nodeType == NodeType.TypeAliasDefinition ||
-        node.value.nodeType == NodeType.TypeUsage
-      ) {
-        BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        process.exit(1);
-      }
+      node.value = <ExportStatementValue>_analyzeNode(node.value);
       // Analyze Object Literal
       if (node.value.nodeType == NodeType.ObjectLiteral) {
-        // Analyze Value
-        node.value = <ObjectLiteralNode>_analyzeNode(node.value);
         // Add Fields To Export
         for (const field of node.value.fields) {
           if (field.nodeType == NodeType.ObjectSpread) {
             // TODO: Support Exporting Spread Objects
             BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], field.position);
           } else {
+            if (_exports.has(field.name))
+              BriskTypeError(
+                code,
+                BriskErrorType.DuplicateExport,
+                [ field.name ],
+                field.position
+              );
             _exports.set(field.name, {
               name: field.name,
-              value: field.fieldValue
+              value: field.fieldValue,
+              typeExport: false,
+              valueExport: true
             });
           }
         }
         return node;
-      }
-      // Deal With Other Types Of Exports
-      if (node.value.nodeType == NodeType.DeclarationStatement)
-        node.value = <DeclarationStatementNode>_analyzeNode(node.value);
-      const variableName = (
-        node.value.nodeType == NodeType.DeclarationStatement ? 
-          node.value.name.name : 
-          node.value
-      );
-      // Set Variable Information
-      const variableData = getVariable(
-        code,
-        _variables,
-        _varStack,
-        _closure,
-        _varStacks,
-        variableName,
-        node.value.position,
-        { used: true, exported: true }
-      );
-      if (variableData == undefined) return node; // TODO: Better Member Analysis
-      // Change Export State
-      _exports.set(variableData.name, {
-        name: variableData.name,
-        value: <VariableUsageNode>{
-          nodeType: NodeType.VariableUsage,
-          category: NodeCategory.Variable,
-          name: variableData.name,
-          position: node.position
+      } else if (
+        node.value.nodeType == NodeType.InterfaceDefinition ||
+        node.value.nodeType == NodeType.EnumDefinitionStatement ||
+        node.value.nodeType == NodeType.TypeAliasDefinition
+      ) {
+        // Analyze Type Export
+        const exportName = node.value.name;
+        // Get Type Data
+        const typeData = getType(
+          code,
+          _types,
+          _typeStack,
+          _typeStacks,
+          exportName, 
+          node.position,
+          { exported: true }
+        );
+        // Check Export Valid
+        if (_exports.has(typeData.name))
+          BriskTypeError(
+            code,
+            BriskErrorType.DuplicateExport,
+            [ typeData.name ],
+            node.position
+          );
+        // Set Exported
+        _exports.set(typeData.name, {
+          name: typeData.name,
+          value: <TypeUsageNode>{
+            nodeType: NodeType.TypeUsage,
+            category: NodeCategory.Type,
+            name: typeData.name,
+            position: node.position,
+          },
+          typeExport: true,
+          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement
+        });
+      } else {
+        // Regular Export
+        const exportName: string = (
+          node.value.nodeType == NodeType.DeclarationStatement ?
+            node.value.name.name :
+            node.value.name
+        );
+        // Set Variable To Exported
+        const exportData = getVariable(
+          code,
+          _variables,
+          _varStack,
+          _closure,
+          _varStacks,
+          exportName,
+          node.value.position,
+          { used: true, exported: true }
+        );
+        if (exportData == undefined) {
+          BriskError(
+            code,
+            BriskErrorType.CompilerError,
+            [],
+            node.position
+          );
+          return node;
         }
-      });
+        // Check Export Valid
+        if (_exports.has(exportData.name))
+          BriskTypeError(
+            code,
+            BriskErrorType.DuplicateExport,
+            [ exportData.name ],
+            node.position
+          );
+        // Set Exported
+        _exports.set(exportData.name, {
+          name: exportData.name,
+          value: <VariableUsageNode>{
+            nodeType: NodeType.VariableUsage,
+            category: NodeCategory.Variable,
+            name: exportData.name,
+            position: node.position
+          },
+          typeExport: false,
+          valueExport: true
+        });
+      }
       // Return Value
       return node;
     }
@@ -492,7 +543,7 @@ const analyzeNode = (
         _types,
         _typeStack,
         {
-          name: node.identifier,
+          name: node.name,
           exported: false,
           type: node
         },
@@ -504,7 +555,7 @@ const analyzeNode = (
         _variables,
         _varStack,
         {
-          name: node.identifier,
+          name: node.name,
           global: parentNode?.nodeType == NodeType.Program,
           constant: true,
           parameter: false,
@@ -515,7 +566,7 @@ const analyzeNode = (
           type: <TypeUsageNode>{
             nodeType: NodeType.TypeUsage,
             category: NodeCategory.Type,
-            name: node.identifier,
+            name: node.name,
             position: node.position
           },
         },

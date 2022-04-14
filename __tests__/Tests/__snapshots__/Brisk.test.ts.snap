@@ -13639,6 +13639,7 @@ Object {
       "_exports": Map {
         "h" => Object {
           "name": "h",
+          "typeExport": false,
           "value": Object {
             "category": 6,
             "name": "h",
@@ -13651,6 +13652,7 @@ Object {
               "offset": 1654,
             },
           },
+          "valueExport": true,
         },
       },
       "_imports": Map {
@@ -38598,6 +38600,7 @@ Object {
     "_exports": Map {
       "h" => Object {
         "name": "h",
+        "typeExport": false,
         "value": Object {
           "category": 6,
           "name": "h",
@@ -38610,6 +38613,7 @@ Object {
             "offset": 1654,
           },
         },
+        "valueExport": true,
       },
     },
     "_imports": Map {

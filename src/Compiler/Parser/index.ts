@@ -253,13 +253,12 @@ class Parser extends EmbeddedActionsParser {
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
     const variable: Nodes.ExportStatementValue = this.OR([
-      { ALT: () => this.SUBRULE(this.variableUsage) },
+      { ALT: () => this.SUBRULE(this.variableUsageNode) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
       { ALT: () => this.SUBRULE(this.interfaceDefinition) },
       { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
-      { ALT: () => this.SUBRULE(this.typeAlias) },
-      // TODO: Handle Exporting Type usages
+      { ALT: () => this.SUBRULE(this.typeAlias) }
     ]);
     return this.ACTION(() => {
       return {
@@ -412,7 +411,7 @@ class Parser extends EmbeddedActionsParser {
         return {
           nodeType: Nodes.NodeType.EnumDefinitionStatement,
           category: Nodes.NodeCategory.Statement,
-          identifier: identifier.image,
+          name: identifier.image,
           variants: variants,
           position: {
             offset: location.startOffset,

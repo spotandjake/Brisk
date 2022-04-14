@@ -5,6 +5,7 @@ import Node, {
   FunctionLiteralNode,
   VariableDefinitionNode,
   TypeLiteral,
+  TypeUsageNode,
 } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>; // TODO: Determine What We Are Importing
@@ -15,7 +16,9 @@ interface ImportItem {
 }
 interface ExportItem {
   name: string;
-  value: Expression;
+  value: Expression | TypeUsageNode;
+  typeExport: boolean;
+  valueExport: boolean;
 }
 export type ExportMap = Map<string, ExportItem>;
 export interface AnalyzeNode {
