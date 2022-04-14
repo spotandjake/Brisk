@@ -1,9 +1,9 @@
 // import wasm print: (Any) => Void from 'test1';
-enum Option {
-  None,
-  None2 = 1,
-  Some(i32),
-}
+// enum Option {
+//  None,
+//  None2 = 1,
+//  Some(i32),
+// }
 // enum Option {
 //   None,
 //   Some(i32)
@@ -29,6 +29,7 @@ interface Test {
   test: i32 | (i64 | f32) | (i64, f64) => f32;
   let test2: i32;
   let test3: i32;
+  test4: Test;
   // test4: Te;
   // test5: Test;
 }

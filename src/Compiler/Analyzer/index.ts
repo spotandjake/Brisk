@@ -110,6 +110,8 @@ const createType = (
   typePool.set(variableReference, typeData);
   // Add Variable To Stack
   typeStack.set(typeData.name, variableReference);
+  // Return Type Reference
+  return variableReference;
 };
 const getType = (
   typePool: TypeMap,
@@ -565,12 +567,10 @@ const analyzeNode = (
       return node;
     }
     // Types
-    // TODO: Allow Recursive Types
     case NodeType.InterfaceDefinition:
-      // Analyze Interface
-      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
-    case NodeType.TypeAliasDefinition:
-      createType(
+    case NodeType.TypeAliasDefinition: {
+      // Set Type
+      const typeReference = createType(
         _types,
         _typeStack,
         {
@@ -580,7 +580,16 @@ const analyzeNode = (
         },
         node.position
       );
+      // Analyze Interface
+      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
+      // Complete Type
+      _types.set(typeReference, {
+        name: node.name,
+        exported: false,
+        type: node.typeLiteral
+      });
       return node;
+    }
     case NodeType.TypePrimLiteral:
       return node;
     case NodeType.TypeUnionLiteral:
