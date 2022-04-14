@@ -1,4 +1,5 @@
 // import wasm print: (Any) => Void from 'test1';
+import Test from 'test';
 // enum Option {
 //  None,
 //  None2 = 1,
@@ -55,4 +56,3 @@ const test: Test = {
 //   // return(i32);
 // };
 // testFunction(1n, 2n);
-let a: i32 = b;

@@ -23,7 +23,7 @@ Object {
           "line": 2,
           "offset": 32,
         },
-        "value": "'test'",
+        "value": "test",
       },
       "variable": Object {
         "category": 6,
@@ -58,7 +58,7 @@ Object {
           "line": 3,
           "offset": 81,
         },
-        "value": "'print'",
+        "value": "print",
       },
       "typeSignature": Object {
         "category": 5,
@@ -130,7 +130,7 @@ Object {
           "line": 4,
           "offset": 121,
         },
-        "value": "'print'",
+        "value": "print",
       },
       "typeSignature": Object {
         "category": 5,
@@ -189,7 +189,7 @@ Object {
           "line": 5,
           "offset": 154,
         },
-        "value": "'test'",
+        "value": "test",
       },
       "typeSignature": Object {
         "category": 5,
@@ -1297,7 +1297,7 @@ Object {
                     "line": 47,
                     "offset": 878,
                   },
-                  "value": "'Else Test'",
+                  "value": "Else Test",
                 },
               ],
               "callee": Object {
@@ -1347,7 +1347,7 @@ Object {
                     "line": 45,
                     "offset": 844,
                   },
-                  "value": "'Else If Test'",
+                  "value": "Else If Test",
                 },
               ],
               "callee": Object {
@@ -1396,7 +1396,7 @@ Object {
               "line": 44,
               "offset": 816,
             },
-            "value": "'test'",
+            "value": "test",
           },
           "nodeType": 13,
           "operator": 0,
@@ -1417,7 +1417,7 @@ Object {
               "line": 44,
               "offset": 826,
             },
-            "value": "'test'",
+            "value": "test",
           },
         },
         "nodeType": 1,
@@ -1443,7 +1443,7 @@ Object {
                   "line": 43,
                   "offset": 793,
                 },
-                "value": "'If Test'",
+                "value": "If Test",
               },
             ],
             "callee": Object {
@@ -1538,7 +1538,7 @@ Object {
               "line": 50,
               "offset": 933,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -1575,7 +1575,7 @@ Object {
               "line": 49,
               "offset": 913,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -1662,7 +1662,7 @@ Object {
                   "line": 53,
                   "offset": 963,
                 },
-                "value": "'true'",
+                "value": "true",
               },
             ],
             "callee": Object {
@@ -1734,7 +1734,7 @@ Object {
               "line": 56,
               "offset": 992,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -1794,7 +1794,7 @@ Object {
               "line": 59,
               "offset": 1038,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -1831,7 +1831,7 @@ Object {
               "line": 58,
               "offset": 1018,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -1893,7 +1893,7 @@ Object {
                   "line": 64,
                   "offset": 1094,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -1943,7 +1943,7 @@ Object {
                   "line": 62,
                   "offset": 1068,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -2017,7 +2017,7 @@ Object {
                     "line": 72,
                     "offset": 1189,
                   },
-                  "value": "'test'",
+                  "value": "test",
                 },
               ],
               "callee": Object {
@@ -2067,7 +2067,7 @@ Object {
                     "line": 70,
                     "offset": 1163,
                   },
-                  "value": "'test'",
+                  "value": "test",
                 },
               ],
               "callee": Object {
@@ -2139,7 +2139,7 @@ Object {
                   "line": 68,
                   "offset": 1127,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -2210,7 +2210,7 @@ Object {
               "line": 77,
               "offset": 1244,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -2249,7 +2249,7 @@ Object {
                   "line": 76,
                   "offset": 1222,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -2323,7 +2323,7 @@ Object {
                   "line": 80,
                   "offset": 1274,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -2393,7 +2393,7 @@ Object {
             "line": 83,
             "offset": 1315,
           },
-          "value": "'test'",
+          "value": "test",
         },
       ],
       "callee": Object {
@@ -3022,7 +3022,7 @@ Object {
                       "line": 96,
                       "offset": 1578,
                     },
-                    "value": "'test'",
+                    "value": "test",
                   },
                 ],
                 "callee": Object {
@@ -3329,7 +3329,7 @@ Object {
           "line": 2,
           "offset": 32,
         },
-        "value": "'test'",
+        "value": "test",
       },
       "variable": Object {
         "category": 6,
@@ -3364,7 +3364,7 @@ Object {
           "line": 3,
           "offset": 81,
         },
-        "value": "'print'",
+        "value": "print",
       },
       "typeSignature": Object {
         "category": 5,
@@ -3436,7 +3436,7 @@ Object {
           "line": 4,
           "offset": 121,
         },
-        "value": "'print'",
+        "value": "print",
       },
       "typeSignature": Object {
         "category": 5,
@@ -3495,7 +3495,7 @@ Object {
           "line": 5,
           "offset": 154,
         },
-        "value": "'test'",
+        "value": "test",
       },
       "typeSignature": Object {
         "category": 5,
@@ -4603,7 +4603,7 @@ Object {
                     "line": 47,
                     "offset": 878,
                   },
-                  "value": "'Else Test'",
+                  "value": "Else Test",
                 },
               ],
               "callee": Object {
@@ -4653,7 +4653,7 @@ Object {
                     "line": 45,
                     "offset": 844,
                   },
-                  "value": "'Else If Test'",
+                  "value": "Else If Test",
                 },
               ],
               "callee": Object {
@@ -4702,7 +4702,7 @@ Object {
               "line": 44,
               "offset": 816,
             },
-            "value": "'test'",
+            "value": "test",
           },
           "nodeType": 13,
           "operator": 0,
@@ -4723,7 +4723,7 @@ Object {
               "line": 44,
               "offset": 826,
             },
-            "value": "'test'",
+            "value": "test",
           },
         },
         "nodeType": 1,
@@ -4749,7 +4749,7 @@ Object {
                   "line": 43,
                   "offset": 793,
                 },
-                "value": "'If Test'",
+                "value": "If Test",
               },
             ],
             "callee": Object {
@@ -4844,7 +4844,7 @@ Object {
               "line": 50,
               "offset": 933,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -4881,7 +4881,7 @@ Object {
               "line": 49,
               "offset": 913,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -4968,7 +4968,7 @@ Object {
                   "line": 53,
                   "offset": 963,
                 },
-                "value": "'true'",
+                "value": "true",
               },
             ],
             "callee": Object {
@@ -5040,7 +5040,7 @@ Object {
               "line": 56,
               "offset": 992,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -5100,7 +5100,7 @@ Object {
               "line": 59,
               "offset": 1038,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -5137,7 +5137,7 @@ Object {
               "line": 58,
               "offset": 1018,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -5199,7 +5199,7 @@ Object {
                   "line": 64,
                   "offset": 1094,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -5249,7 +5249,7 @@ Object {
                   "line": 62,
                   "offset": 1068,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -5323,7 +5323,7 @@ Object {
                     "line": 72,
                     "offset": 1189,
                   },
-                  "value": "'test'",
+                  "value": "test",
                 },
               ],
               "callee": Object {
@@ -5373,7 +5373,7 @@ Object {
                     "line": 70,
                     "offset": 1163,
                   },
-                  "value": "'test'",
+                  "value": "test",
                 },
               ],
               "callee": Object {
@@ -5445,7 +5445,7 @@ Object {
                   "line": 68,
                   "offset": 1127,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -5516,7 +5516,7 @@ Object {
               "line": 77,
               "offset": 1244,
             },
-            "value": "'test'",
+            "value": "test",
           },
         ],
         "callee": Object {
@@ -5555,7 +5555,7 @@ Object {
                   "line": 76,
                   "offset": 1222,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -5629,7 +5629,7 @@ Object {
                   "line": 80,
                   "offset": 1274,
                 },
-                "value": "'test'",
+                "value": "test",
               },
             ],
             "callee": Object {
@@ -5699,7 +5699,7 @@ Object {
             "line": 83,
             "offset": 1315,
           },
-          "value": "'test'",
+          "value": "test",
         },
       ],
       "callee": Object {
@@ -6328,7 +6328,7 @@ Object {
                       "line": 96,
                       "offset": 1578,
                     },
-                    "value": "'test'",
+                    "value": "test",
                   },
                 ],
                 "callee": Object {

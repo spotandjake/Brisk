@@ -877,7 +877,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.StringLiteral,
       category: Nodes.NodeCategory.Literal,
-      value: value.image,
+      value: value.image.slice(1, -1),
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,

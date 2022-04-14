@@ -3,6 +3,7 @@ export const enum BriskErrorType {
   // Brisk Error
   CompilerError,
   FeatureNotYetImplemented,
+  ImportNotSupported,
   // Syntax Error
   CannotUseReservedKeyword,
   // Reference Error
@@ -27,6 +28,7 @@ export const BriskErrorMessage = {
   // Brisk Error
   [BriskErrorType.CompilerError]: 'Compiler Bug Please Report',
   [BriskErrorType.FeatureNotYetImplemented]: 'Feature Not Yet Implemented',
+  [BriskErrorType.ImportNotSupported]: 'Your Current Environment Does Not Support Imports',
   // Syntax Error
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot Use Reserved Keyword %1',
   // Reference Error

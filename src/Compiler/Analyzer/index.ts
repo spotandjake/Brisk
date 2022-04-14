@@ -320,7 +320,11 @@ const analyzeNode = (
       };
     }
     case NodeType.ImportStatement:
-      _imports.set(node.variable.name, node.source.value);
+      _imports.set(node.variable.name, {
+        name: node.variable.name,
+        path: node.source.value,
+        position: node.position
+      });
       createVariable(code, _variables, _varStack, {
         name: node.variable.name,
         global: true,
@@ -743,8 +747,8 @@ const analyzeNode = (
   }
 };
 // Analyze Program
-const analyzeProgram = (code: string, program: ProgramNode) => {
-  return analyzeNode(
+const analyzeProgram = (code: string, program: ProgramNode): AnalyzedProgramNode => {
+  return <AnalyzedProgramNode>analyzeNode(
     code,
     {
       _imports: new Map(),
