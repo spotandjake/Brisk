@@ -18,7 +18,7 @@ import Node, {
   TypeUsageNode,
   PropertyUsageNode,
   EnumVariantNode,
-  ExportStatementValue
+  ExportStatementValue,
 } from '../Types/ParseNodes';
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -47,12 +47,7 @@ const createVariable = (
 ) => {
   // Check If Variable Already Exists On Stack
   if (varStack.has(varData.name))
-    BriskParseError(
-      code,
-      BriskErrorType.VariableHasAlreadyBeenDeclared,
-      [ varData.name ],
-      position
-    );
+    BriskParseError(code, BriskErrorType.VariableHasAlreadyBeenDeclared, [varData.name], position);
   // Create Reference To Map
   const variableReference = varPool.size;
   // Add Variable To Pool
@@ -61,18 +56,18 @@ const createVariable = (
   varStack.set(varData.name, variableReference);
 };
 const getVariable = (
-  code: string, 
+  code: string,
   varPool: VariableMap,
   varStack: VariableStack,
   _closure: VariableClosure,
   varStacks: VariableStack[],
   varReference: VariableUsage | string,
   position: Position,
-  { used=true, exported=false }: { used?: boolean, exported?: boolean }
+  { used = true, exported = false }: { used?: boolean; exported?: boolean }
 ): VariableData | void => {
   // Get Variable Reference
   let varName: string;
-  if (typeof varReference == 'string') varName = varReference; 
+  if (typeof varReference == 'string') varName = varReference;
   else if (varReference.nodeType == NodeType.VariableUsage) varName = varReference.name;
   else {
     if (varReference.parent.nodeType == NodeType.VariableUsage) varName = varReference.parent.name;
@@ -82,14 +77,12 @@ const getVariable = (
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskParseError(code, BriskErrorType.VariableNotFound, [ varName ], position);
+    BriskParseError(code, BriskErrorType.VariableNotFound, [varName], position);
   // Get Node
   const variableReference = <number>(<VariableStack>_varStack).get(varName);
   // Check If We need To Add To Closure
-  if (!varStack.has(varName))
-    _closure.add(variableReference);
-  if (!varPool.has(variableReference))
-    BriskError(code, BriskErrorType.CompilerError, [], position);
+  if (!varStack.has(varName)) _closure.add(variableReference);
+  if (!varPool.has(variableReference)) BriskError(code, BriskErrorType.CompilerError, [], position);
   const value = <VariableData>varPool.get(variableReference);
   // Set Variable To used
   varPool.set(variableReference, {
@@ -101,7 +94,7 @@ const getVariable = (
   return value;
 };
 const createType = (
-  code: string, 
+  code: string,
   typePool: TypeMap,
   typeStack: TypeStack,
   typeData: TypeData,
@@ -109,10 +102,10 @@ const createType = (
 ) => {
   // Do Not Allow You To Write Over Primitive Types
   if ((<Set<string>>primTypes).has(typeData.name))
-    BriskTypeError(code, BriskErrorType.InvalidTypeName, [ typeData.name ], position);
+    BriskTypeError(code, BriskErrorType.InvalidTypeName, [typeData.name], position);
   // Check If Variable Already Exists On Stack
   if (typeStack.has(typeData.name))
-    BriskTypeError(code, BriskErrorType.TypeHasAlreadyBeenDeclared, [ typeData.name ], position);
+    BriskTypeError(code, BriskErrorType.TypeHasAlreadyBeenDeclared, [typeData.name], position);
   // Create Reference To Map
   const variableReference = typePool.size;
   // Add Variable To Pool
@@ -123,17 +116,17 @@ const createType = (
   return variableReference;
 };
 const getType = (
-  code: string, 
+  code: string,
   typePool: TypeMap,
   typeStack: TypeStack,
   typeStacks: TypeStack[],
   typeReference: TypeUsageNode | string,
   position: Position,
-  { exported=false }: { exported?: boolean }
+  { exported = false }: { exported?: boolean }
 ): VariableData => {
   // Get Variable Reference
   let varName: string;
-  if (typeof typeReference == 'string') varName = typeReference; 
+  if (typeof typeReference == 'string') varName = typeReference;
   else if (typeReference.nodeType == NodeType.TypeUsage) varName = typeReference.name;
   else {
     // TODO: Implement Checking On Member Access
@@ -144,7 +137,7 @@ const getType = (
   const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskTypeError(code, BriskErrorType.TypeNotFound, [ varName ], position);
+    BriskTypeError(code, BriskErrorType.TypeNotFound, [varName], position);
   // Get Node
   const variableReference = <number>(<VariableStack>_varStack).get(varName);
   if (!typePool.has(variableReference))
@@ -280,7 +273,7 @@ const analyzeNode = (
             BriskTypeError(
               code,
               BriskErrorType.FlagExpectedArguments,
-              [ node.value, '2', `${node.args.length}` ],
+              [node.value, '2', `${node.args.length}`],
               node.args.position
             );
           return node;
@@ -288,7 +281,7 @@ const analyzeNode = (
         BriskTypeError(
           code,
           BriskErrorType.FlagExpectedArguments,
-          [ node.value, '0', `${node.args.length}` ],
+          [node.value, '0', `${node.args.length}`],
           node.args.position
         );
       }
@@ -323,40 +316,52 @@ const analyzeNode = (
       _imports.set(node.variable.name, {
         name: node.variable.name,
         path: node.source.value,
-        position: node.position
+        position: node.position,
       });
-      createVariable(code, _variables, _varStack, {
-        name: node.variable.name,
-        global: true,
-        constant: true,
-        parameter: false,
-        exported: false,
-        import: true,
-        wasmImport: false,
-        used: false,
-        type: <TypePrimLiteralNode>{
-          nodeType: NodeType.TypePrimLiteral,
-          category: NodeCategory.Type,
-          name: 'Unknown',
-          position: node.variable.position,
-        }
-      }, node.position);
+      createVariable(
+        code,
+        _variables,
+        _varStack,
+        {
+          name: node.variable.name,
+          global: true,
+          constant: true,
+          parameter: false,
+          exported: false,
+          import: true,
+          wasmImport: false,
+          used: false,
+          type: <TypePrimLiteralNode>{
+            nodeType: NodeType.TypePrimLiteral,
+            category: NodeCategory.Type,
+            name: 'Unknown',
+            position: node.variable.position,
+          },
+        },
+        node.position
+      );
       return node;
     case NodeType.WasmImportStatement:
       // Analyze Type
       node.typeSignature = <TypeLiteral>_analyzeNode(node.typeSignature);
       // Add Variable
-      createVariable(code, _variables, _varStack, {
-        name: node.variable.name,
-        global: true,
-        constant: true,
-        parameter: false,
-        exported: false,
-        import: false,
-        wasmImport: true,
-        used: false,
-        type: node.typeSignature,
-      }, node.position);
+      createVariable(
+        code,
+        _variables,
+        _varStack,
+        {
+          name: node.variable.name,
+          global: true,
+          constant: true,
+          parameter: false,
+          exported: false,
+          import: false,
+          wasmImport: true,
+          used: false,
+          type: node.typeSignature,
+        },
+        node.position
+      );
       // Return Node
       return node;
     case NodeType.ExportStatement: {
@@ -371,17 +376,12 @@ const analyzeNode = (
             BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], field.position);
           } else {
             if (_exports.has(field.name))
-              BriskTypeError(
-                code,
-                BriskErrorType.DuplicateExport,
-                [ field.name ],
-                field.position
-              );
+              BriskTypeError(code, BriskErrorType.DuplicateExport, [field.name], field.position);
             _exports.set(field.name, {
               name: field.name,
               value: field.fieldValue,
               typeExport: false,
-              valueExport: true
+              valueExport: true,
             });
           }
         }
@@ -394,23 +394,12 @@ const analyzeNode = (
         // Analyze Type Export
         const exportName = node.value.name;
         // Get Type Data
-        const typeData = getType(
-          code,
-          _types,
-          _typeStack,
-          _typeStacks,
-          exportName, 
-          node.position,
-          { exported: true }
-        );
+        const typeData = getType(code, _types, _typeStack, _typeStacks, exportName, node.position, {
+          exported: true,
+        });
         // Check Export Valid
         if (_exports.has(typeData.name))
-          BriskTypeError(
-            code,
-            BriskErrorType.DuplicateExport,
-            [ typeData.name ],
-            node.position
-          );
+          BriskTypeError(code, BriskErrorType.DuplicateExport, [typeData.name], node.position);
         // Set Exported
         _exports.set(typeData.name, {
           name: typeData.name,
@@ -421,15 +410,14 @@ const analyzeNode = (
             position: node.position,
           },
           typeExport: true,
-          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement
+          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement,
         });
       } else {
         // Regular Export
-        const exportName: string = (
-          node.value.nodeType == NodeType.DeclarationStatement ?
-            node.value.name.name :
-            node.value.name
-        );
+        const exportName: string =
+          node.value.nodeType == NodeType.DeclarationStatement
+            ? node.value.name.name
+            : node.value.name;
         // Set Variable To Exported
         const exportData = getVariable(
           code,
@@ -442,22 +430,12 @@ const analyzeNode = (
           { used: true, exported: true }
         );
         if (exportData == undefined) {
-          BriskError(
-            code,
-            BriskErrorType.CompilerError,
-            [],
-            node.position
-          );
+          BriskError(code, BriskErrorType.CompilerError, [], node.position);
           return node;
         }
         // Check Export Valid
         if (_exports.has(exportData.name))
-          BriskTypeError(
-            code,
-            BriskErrorType.DuplicateExport,
-            [ exportData.name ],
-            node.position
-          );
+          BriskTypeError(code, BriskErrorType.DuplicateExport, [exportData.name], node.position);
         // Set Exported
         _exports.set(exportData.name, {
           name: exportData.name,
@@ -465,10 +443,10 @@ const analyzeNode = (
             nodeType: NodeType.VariableUsage,
             category: NodeCategory.Variable,
             name: exportData.name,
-            position: node.position
+            position: node.position,
           },
           typeExport: false,
-          valueExport: true
+          valueExport: true,
         });
       }
       // Return Value
@@ -477,17 +455,23 @@ const analyzeNode = (
     case NodeType.DeclarationStatement:
       // TODO: Handle Destructuring
       // Add Variable To Stack
-      createVariable(code, _variables, _varStack, {
-        name: node.name.name,
-        global: parentNode?.nodeType == NodeType.Program,
-        constant: node.declarationType == DeclarationTypes.Constant,
-        parameter: false,
-        exported: false,
-        import: false,
-        wasmImport: false,
-        used: false,
-        type: node.varType,
-      }, node.position);
+      createVariable(
+        code,
+        _variables,
+        _varStack,
+        {
+          name: node.name.name,
+          global: parentNode?.nodeType == NodeType.Program,
+          constant: node.declarationType == DeclarationTypes.Constant,
+          parameter: false,
+          exported: false,
+          import: false,
+          wasmImport: false,
+          used: false,
+          type: node.varType,
+        },
+        node.position
+      );
       // Analyze The Value
       node.value = <Expression>_analyzeNode(node.value);
       return node;
@@ -506,16 +490,11 @@ const analyzeNode = (
         _varStacks,
         node.name,
         node.position,
-        {  used: false }
+        { used: false }
       );
       if (variableData == undefined) return node; // TODO: Better Member Analysis
       if (variableData.constant)
-        BriskTypeError(
-          code,
-          BriskErrorType.ConstantAssignment,
-          [ variableData.name ],
-          node.position
-        );
+        BriskTypeError(code, BriskErrorType.ConstantAssignment, [variableData.name], node.position);
       return node;
     }
     case NodeType.ReturnStatement:
@@ -530,7 +509,7 @@ const analyzeNode = (
           BriskTypeError(
             code,
             BriskErrorType.DuplicateField,
-            [ variant.identifier ],
+            [variant.identifier],
             variant.position
           );
         variants.add(variant.identifier);
@@ -545,7 +524,7 @@ const analyzeNode = (
         {
           name: node.name,
           exported: false,
-          type: node
+          type: node,
         },
         node.position
       );
@@ -567,7 +546,7 @@ const analyzeNode = (
             nodeType: NodeType.TypeUsage,
             category: NodeCategory.Type,
             name: node.name,
-            position: node.position
+            position: node.position,
           },
         },
         node.position
@@ -578,7 +557,7 @@ const analyzeNode = (
       // Analyze Value
       if (node.value) {
         if (Array.isArray(node.value))
-          node.value = node.value.map(typeLiteral => <TypeLiteral>_analyzeNode(typeLiteral));
+          node.value = node.value.map((typeLiteral) => <TypeLiteral>_analyzeNode(typeLiteral));
         else if (node.value.category == NodeCategory.Expression)
           node.value = <Expression>_analyzeNode(node.value);
       }
@@ -625,30 +604,27 @@ const analyzeNode = (
       for (const param of node.params) {
         if (param.optional) foundOptional = true;
         else if (foundOptional)
-          BriskTypeError(
-            code,
-            BriskErrorType.OptionalParametersMustAppearLast,
-            [],
-            param.position
-          );
+          BriskTypeError(code, BriskErrorType.OptionalParametersMustAppearLast, [], param.position);
       }
       // Analyze Params
       return <AnalyzedFunctionLiteralNode>{
         ...node,
         returnType: <TypeLiteral>_analyzeNode(node.returnType),
-        params: node.params.map(param => _analyzeNode(param, {
-          // Parent Stacks
-          _varStacks:[ ..._varStacks, _varStack ],
-          _typeStacks: [ ..._typeStacks, _typeStack ],
-          // Stacks
-          _closure: closure,
-          _varStack: varStack,
-          _typeStack: typeStack,
-        })),
+        params: node.params.map((param) =>
+          _analyzeNode(param, {
+            // Parent Stacks
+            _varStacks: [..._varStacks, _varStack],
+            _typeStacks: [..._typeStacks, _typeStack],
+            // Stacks
+            _closure: closure,
+            _varStack: varStack,
+            _typeStack: typeStack,
+          })
+        ),
         body: _analyzeNode(node.body, {
           // Parent Stacks
-          _varStacks:[ ..._varStacks, _varStack ],
-          _typeStacks: [ ..._typeStacks, _typeStack ],
+          _varStacks: [..._varStacks, _varStack],
+          _typeStacks: [..._typeStacks, _typeStack],
           // Stacks
           _closure: closure,
           _varStack: varStack,
@@ -670,8 +646,9 @@ const analyzeNode = (
         // Check if field exists
         if (
           field.nodeType == NodeType.ObjectField &&
-          fields.some(f => f.nodeType == NodeType.ObjectField && f.name == field.name)
-        ) BriskTypeError(code, BriskErrorType.DuplicateField, [ field.name ], field.position);
+          fields.some((f) => f.nodeType == NodeType.ObjectField && f.name == field.name)
+        )
+          BriskTypeError(code, BriskErrorType.DuplicateField, [field.name], field.position);
         fields.push(field);
       }
       node.fields = fields;
@@ -688,7 +665,7 @@ const analyzeNode = (
         {
           name: node.name,
           exported: false,
-          type: node.typeLiteral
+          type: node.typeLiteral,
         },
         node.position
       );
@@ -698,7 +675,7 @@ const analyzeNode = (
       _types.set(typeReference, {
         name: node.name,
         exported: false,
-        type: node.typeLiteral
+        type: node.typeLiteral,
       });
       return node;
     }
@@ -706,23 +683,23 @@ const analyzeNode = (
       return node;
     case NodeType.TypeUnionLiteral:
       // Analyze Types
-      node.types = node.types.map(type => <TypeLiteral>_analyzeNode(type));
+      node.types = node.types.map((type) => <TypeLiteral>_analyzeNode(type));
       return node;
     case NodeType.ParenthesisTypeLiteral:
       node.value = <TypeLiteral>_analyzeNode(node.value);
       return node;
     case NodeType.FunctionSignatureLiteral:
       // Analyze Parameter Types
-      node.params = node.params.map(param => <TypeLiteral>_analyzeNode(param));
+      node.params = node.params.map((param) => <TypeLiteral>_analyzeNode(param));
       // Analyze Return Types
       node.returnType = <TypeLiteral>_analyzeNode(node.returnType);
       return node;
     case NodeType.InterfaceLiteral: {
       // Analyze Fields
       const fields: Set<string> = new Set();
-      node.fields = node.fields.map(field => {
+      node.fields = node.fields.map((field) => {
         if (fields.has(field.name))
-          BriskTypeError(code, BriskErrorType.DuplicateField, [ field.name ], field.position);
+          BriskTypeError(code, BriskErrorType.DuplicateField, [field.name], field.position);
         field.fieldType = <TypeLiteral>_analyzeNode(field.fieldType);
         fields.add(field.name);
         return field;
@@ -736,31 +713,14 @@ const analyzeNode = (
           nodeType: NodeType.TypePrimLiteral,
           category: NodeCategory.Type,
           name: node.name,
-          position: node.position
+          position: node.position,
         };
       }
-      getType(
-        code,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.name,
-        node.position,
-        {}
-      );
+      getType(code, _types, _typeStack, _typeStacks, node.name, node.position, {});
       return node;
     // Variables
     case NodeType.VariableUsage:
-      getVariable(
-        code,
-        _variables,
-        _varStack,
-        _closure,
-        _varStacks,
-        node,
-        node.position,
-        {}
-      );
+      getVariable(code, _variables, _varStack, _closure, _varStacks, node, node.position, {});
       return node;
     case NodeType.MemberAccess:
       // Analyze Parent
@@ -770,41 +730,51 @@ const analyzeNode = (
     case NodeType.PropertyUsage:
       // Return node
       return node;
-    case NodeType.Parameter:
+    case NodeType.Parameter: {
+      if (node.optional) {
+        node.paramType = <TypeUnionLiteralNode>{
+          nodeType: NodeType.TypeUnionLiteral,
+          category: NodeCategory.Type,
+          types: [
+            <TypePrimLiteralNode>{
+              nodeType: NodeType.TypePrimLiteral,
+              category: NodeCategory.Type,
+              name: 'Void',
+              position: node.paramType.position,
+            },
+            <ParenthesisTypeLiteralNode>{
+              nodeType: NodeType.ParenthesisTypeLiteral,
+              category: NodeCategory.Type,
+              value: node.paramType,
+              position: node.paramType.position,
+            },
+          ],
+          position: node.paramType.position,
+        };
+      }
       // Change Type To Include Void
-      node.paramType = <TypeLiteral>_analyzeNode(node.optional ? <TypeUnionLiteralNode>{
-        nodeType: NodeType.TypeUnionLiteral,
-        category: NodeCategory.Type,
-        types: [
-          <TypePrimLiteralNode>{
-            nodeType: NodeType.TypePrimLiteral,
-            category: NodeCategory.Type,
-            name: 'Void',
-            position: node.paramType.position
-          },
-          <ParenthesisTypeLiteralNode> {
-            nodeType: NodeType.ParenthesisTypeLiteral,
-            category: NodeCategory.Type,
-            value: node.paramType,
-            position: node.paramType.position
-          }
-        ],
-        position: node.paramType.position,
-      } : node.paramType);
+      node.paramType = <TypeLiteral>_analyzeNode(node.paramType);
       // Add Variable To Stack
       // TODO: Support Destructuring
-      createVariable(code, _variables, _varStack, {
-        name: node.name.name,
-        global: false,
-        constant: !node.mutable,
-        parameter: true,
-        exported: false,
-        import: false,
-        wasmImport: false,
-        used: false,
-        type: node.paramType,
-      }, node.position);
+      createVariable(
+        code,
+        _variables,
+        _varStack,
+        {
+          name: node.name.name,
+          global: false,
+          constant: !node.mutable,
+          parameter: true,
+          exported: false,
+          import: false,
+          wasmImport: false,
+          used: false,
+          type: node.paramType,
+        },
+        node.position
+      );
       return node;
+    }
     // Otherwise
     default:
       console.log('Analyzer Unknown Node');
