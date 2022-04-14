@@ -33,7 +33,7 @@ export const BriskErrorMessage = {
   // Type Error
   [BriskErrorType.InvalidFlag]: 'Flag %1 Is Not A Valid Flag',
   [BriskErrorType.FlagExpectedArguments]: 'Flag %1 Expected %2 Arguments, Found %3',
-  [BriskErrorType.ConstantAssignment]: 'Unexpected Assignment To Constant %1',
+  [BriskErrorType.ConstantAssignment]: 'Unexpected Assignment To Constant Variable %1',
   [BriskErrorType.DuplicateField]: 'Duplicate Field %1',
   [BriskErrorType.InvalidTypeName]: 'Invalid Type Name %1',
   [BriskErrorType.TypeHasAlreadyBeenDeclared]: 'Type %1 Has Already Been Declared',
@@ -45,4 +45,4 @@ export const BriskErrorMessage = {
   [BriskErrorType.ImportStatementExpectedAtTop]: 'Expected Import Statement At Top Of File',
   [BriskErrorType.ExportStatementExpectedAtBottom]: 'Expected Export Statement At Bottom Of File',
   [BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement]: 'Declaration Cannot Occur Inside Single Line Statement'
-}
+};

@@ -23,7 +23,7 @@ const lex = (code: string, file: string) => {
         line: tokenized.groups.Reserved[0].startLine || 0,
         col: tokenized.groups.Reserved[0].startColumn || 0,
         file: file,
-      })
+      });
   if (tokenized.errors.length > 0) {
     const { offset, line, column, length, message } = tokenized.errors[0];
     const position = {

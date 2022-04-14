@@ -2,15 +2,26 @@ import _BriskError, { _BriskCustomError } from './index';
 import { Position } from '../Types/Types';
 import { BriskErrorType } from './Errors';
 // TODO: add information for fixing
-export const BriskCustomError = (code: string, type: string, msg: string, pos?: Position, exit = true) =>
+type ErrCode = BriskErrorType;
+type Pos = Position;
+const BriskCustomError = (code: string, type: string, msg: string, pos?: Pos, exit = true) =>
   _BriskCustomError(code, `${type}: ${msg}`, pos, exit);
-export const BriskError = (code: string, errCode: BriskErrorType, errParams: string[], pos?: Position, exit = true): void =>
-  _BriskError(code, 'Error', errCode, errParams, pos, exit);
-export const BriskSyntaxError = (code: string, errCode: BriskErrorType, errParams: string[], pos?: Position, exit = true): void =>
-  _BriskError(code, 'SyntaxError', errCode, errParams, pos, exit);
-export const BriskReferenceError = (code: string, errCode: BriskErrorType, errParams: string[], pos?: Position, exit = true): void =>
-  _BriskError(code, 'ReferenceError', errCode, errParams, pos, exit);
-export const BriskTypeError = (code: string, errCode: BriskErrorType, errParams: string[], pos?: Position, exit = true): void =>
-  _BriskError(code, 'TypeError', errCode, errParams, pos, exit);
-export const BriskParseError = (code: string, errCode: BriskErrorType, errParams: string[], pos?: Position, exit = true): void =>
-  _BriskError(code, 'ParseError', errCode, errParams, pos, exit);
+const BriskError = (code: string, err: ErrCode, eParams: string[], pos?: Pos, exit = true) =>
+  _BriskError(code, 'Error', err, eParams, pos, exit);
+const BriskSyntaxError = (code: string, err: ErrCode, eParams: string[], pos?: Pos, exit = true) =>
+  _BriskError(code, 'SyntaxError', err, eParams, pos, exit);
+const BriskReferenceError = (code: string, e: ErrCode, eParams: string[], pos?: Pos, exit = true) =>
+  _BriskError(code, 'ReferenceError', e, eParams, pos, exit);
+const BriskTypeError = (code: string, err: ErrCode, eParams: string[], pos?: Pos, exit = true) =>
+  _BriskError(code, 'TypeError', err, eParams, pos, exit);
+const BriskParseError = (code: string, err: ErrCode, eParams: string[], pos?: Pos, exit = true) =>
+  _BriskError(code, 'ParseError', err, eParams, pos, exit);
+// Exports 
+export {
+  BriskCustomError,
+  BriskError,
+  BriskSyntaxError,
+  BriskReferenceError,
+  BriskTypeError,
+  BriskParseError
+};

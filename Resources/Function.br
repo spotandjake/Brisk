@@ -56,4 +56,3 @@ const test: Test = {
 // };
 // testFunction(1n, 2n);
 let a: i32 = b;
-extends

@@ -2,9 +2,9 @@ import { Position } from '../Types/Types';
 import { prettyError } from './ErrorBuilder';
 import { BriskErrorType, BriskErrorMessage } from './Errors';
 
-export const _BriskCustomError = (code: string, message: string, pos?: Position, exit = true): void => {
+export const _BriskCustomError = (code: string, msg: string, pos?: Position, exit = true): void => {
   // Build Pretty Errror
-  const errorMessage = pos ? prettyError(code, message, pos) : message;
+  const errorMessage = pos ? prettyError(code, msg, pos) : msg;
   // Log Error
   const color = exit ? '\x1b[31m' : '\x1b[33m';
   console.log(`${color}\x1b[1m${errorMessage}\x1b[0m`);
@@ -26,7 +26,7 @@ const _BriskError = (
     errorTemplate = errorTemplate.replaceAll(`%${index+1}`, `\`${param}\``);
   });
   // Build Error Message
-  const errorMessage = `${type}(${errorCode}): ${errorTemplate}`;
+  const errorMessage = `${type}[${errorCode}]: ${errorTemplate}`;
   // Log Error Message
   _BriskCustomError(code, errorMessage, pos, exit);
 };

@@ -7,13 +7,13 @@ import Node, {
   TypeLiteral,
   ExportStatementValue,
 } from './ParseNodes';
-export type ImportMap = Map<string, any>; // TODO: Determine What We Are Importing
+export type ImportMap = Map<string, string>; // TODO: Determine What We Are Importing
 interface ExportItem {
   name: string;
   value: ExportStatementValue;
   type: TypeLiteral;
 }
-export type ExportMap = Map<string, ExportItem>; // TODO: Determine What We Are Exporting
+export type ExportMap = Map<string, ExportItem>;
 export interface AnalyzeNode {
   // Pools
   _imports: ImportMap;

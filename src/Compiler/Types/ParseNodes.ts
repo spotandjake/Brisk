@@ -413,6 +413,7 @@ export type PrimTypes =
   | 'String'
   | 'Number'
   | 'Function'
+  | 'Unknown' // This type is internal only so we do not have it in our types array
   | 'Any';
 export const primTypes: Set<PrimTypes> = new Set([
   'u32',
