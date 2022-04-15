@@ -1,0 +1,23 @@
+// type Test = String[4];
+// type Test1 = String | String[4];
+// type Test2 = (String | String[4]);
+const array: i32[] = [
+  1n,
+  2n,
+  3n,
+  4n
+];
+// TODO: ensure you put in the Array Length when it cant be inffered
+// const test: Test = 1n;
+// type Test = string | Test[];
+// type Te = string | Te;
+// type T = T;
+// interface TestInterface2 {
+//   test: string;
+// }
+// interface TestInterface {
+//   test?: TestInterface;
+// }
+// interface TestInterface3 {
+//   test: TestInterface3;
+// }

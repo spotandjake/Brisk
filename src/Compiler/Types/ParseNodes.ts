@@ -37,6 +37,7 @@ export const enum NodeType {
   NumberLiteral,
   ConstantLiteral,
   FunctionLiteral,
+  ArrayLiteral,
   ObjectLiteral,
   ObjectField,
   ObjectSpread,
@@ -45,6 +46,7 @@ export const enum NodeType {
   InterfaceDefinition,
   TypePrimLiteral,
   TypeUnionLiteral,
+  ArrayTypeLiteral,
   ParenthesisTypeLiteral,
   FunctionSignatureLiteral,
   InterfaceLiteral,
@@ -132,14 +134,13 @@ export interface ExportStatementNode {
   value: ExportStatementValue;
   position: Position;
 }
-export type ExportStatementValue = 
-  | VariableUsageNode 
-  | DeclarationStatementNode 
-  | ObjectLiteralNode 
-  | InterfaceDefinitionNode 
+export type ExportStatementValue =
+  | VariableUsageNode
+  | DeclarationStatementNode
+  | ObjectLiteralNode
+  | InterfaceDefinitionNode
   | EnumDefinitionStatementNode
-  | TypeAliasDefinitionNode
-;
+  | TypeAliasDefinitionNode;
 export const enum DeclarationTypes {
   Constant,
   Lexical,
@@ -289,6 +290,7 @@ export type Literal =
   | NumberLiteralNode
   | ConstantLiteralNode
   | FunctionLiteralNode
+  | ArrayLiteralNode
   | ObjectLiteralNode;
 export interface StringLiteralNode {
   nodeType: NodeType.StringLiteral;
@@ -352,6 +354,13 @@ export interface FunctionLiteralNode {
   body: Statement;
   position: Position;
 }
+export interface ArrayLiteralNode {
+  nodeType: NodeType.ArrayLiteral;
+  length: number;
+  category: NodeCategory.Literal;
+  elements: Expression[];
+  position: Position;
+}
 export interface ObjectLiteralNode {
   nodeType: NodeType.ObjectLiteral;
   category: NodeCategory.Literal;
@@ -378,6 +387,7 @@ export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
 export type TypeLiteral =
   | TypePrimLiteralNode
   | TypeUnionLiteralNode
+  | ArrayTypeLiteralNode
   | ParenthesisTypeLiteralNode
   | FunctionSignatureLiteralNode
   | InterfaceLiteralNode
@@ -438,6 +448,13 @@ export interface TypeUnionLiteralNode {
   nodeType: NodeType.TypeUnionLiteral;
   category: NodeCategory.Type;
   types: TypeLiteral[];
+  position: Position;
+}
+export interface ArrayTypeLiteralNode {
+  nodeType: NodeType.ArrayTypeLiteral;
+  category: NodeCategory.Type;
+  length?: NumberLiteralNode;
+  value: TypeLiteral;
   position: Position;
 }
 export interface ParenthesisTypeLiteralNode {

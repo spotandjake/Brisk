@@ -40,7 +40,7 @@ class Parser extends EmbeddedActionsParser {
     this.MANY(() => {
       this.OR([
         { ALT: () => body.push(this.SUBRULE(this.topLevelStatement)) },
-        { ALT: () => body.push(this.SUBRULE(this.statement)) }
+        { ALT: () => body.push(this.SUBRULE(this.statement)) },
       ]);
     });
     return body;
@@ -62,7 +62,7 @@ class Parser extends EmbeddedActionsParser {
     ]);
   });
   private optionalSemiColon = this.RULE('OptionalSemi', (): Nodes.Statement => {
-    const statement =  this.OR([
+    const statement = this.OR([
       { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
       { ALT: () => this.SUBRULE(this.interfaceDefinition) },
     ]);
@@ -258,7 +258,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.objectLiteral) },
       { ALT: () => this.SUBRULE(this.interfaceDefinition) },
       { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
-      { ALT: () => this.SUBRULE(this.typeAlias) }
+      { ALT: () => this.SUBRULE(this.typeAlias) },
     ]);
     return this.ACTION(() => {
       return {
@@ -867,6 +867,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.f64Literal) },
       { ALT: () => this.SUBRULE(this.numberLiteral) },
       { ALT: () => this.SUBRULE(this.constantLiteral) },
+      { ALT: () => this.SUBRULE(this.arrayLiteral) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
     ]);
@@ -1002,6 +1003,30 @@ class Parser extends EmbeddedActionsParser {
         length: <number>value.endOffset - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
+        file: this.file,
+      },
+    };
+  });
+  private arrayLiteral = this.RULE('ArrayLiteralNode', (): Nodes.ArrayLiteralNode => {
+    const elements: Nodes.Expression[] = [];
+    const location = this.CONSUME(Tokens.TknLBracket);
+    elements.push(this.SUBRULE(this.expression));
+    this.MANY(() => {
+      this.CONSUME(Tokens.TknComma);
+      elements.push(this.SUBRULE1(this.expression));
+    });
+    this.OPTION(() => this.CONSUME1(Tokens.TknComma));
+    const close = this.CONSUME(Tokens.TknRBracket);
+    return {
+      nodeType: Nodes.NodeType.ArrayLiteral,
+      category: Nodes.NodeCategory.Literal,
+      length: elements.length,
+      elements: elements,
+      position: {
+        offset: location.startOffset,
+        length: <number>close.endOffset - location.startOffset + 1,
+        line: location.startLine || 0,
+        col: location.startColumn || 0,
         file: this.file,
       },
     };
@@ -1288,10 +1313,10 @@ class Parser extends EmbeddedActionsParser {
   // TypeLiteral
   private typeUnionLiteral = this.RULE('TypeUnionLiteral', (): Nodes.TypeLiteral => {
     const types: Nodes.TypeLiteral[] = [];
-    const lhs = this.SUBRULE(this._typeLiteral);
+    const lhs = this.SUBRULE(this.arrayType);
     this.MANY(() => {
       this.CONSUME(Tokens.TknUnion);
-      types.push(this.SUBRULE1(this._typeLiteral));
+      types.push(this.SUBRULE1(this.arrayType));
     });
     return this.ACTION(() => {
       if (types.length == 0) {
@@ -1308,6 +1333,39 @@ class Parser extends EmbeddedActionsParser {
           },
         };
       }
+    });
+  });
+  private arrayType = this.RULE('ArrayType', (): Nodes.ArrayTypeLiteralNode | Nodes.TypeLiteral => {
+    const value = this.SUBRULE(this._typeLiteral);
+    const arrayType = this.OPTION(() => {
+      this.CONSUME(Tokens.TknLBracket);
+      const lengthValue = this.OPTION1(() => {
+        return this.SUBRULE(this.numberLiteral);
+      });
+      const close = this.CONSUME(Tokens.TknRBracket);
+      return {
+        lengthValue: lengthValue,
+        closeValue: close,
+      };
+    });
+    return this.ACTION(() => {
+      if (arrayType) {
+        const { lengthValue, closeValue } = arrayType;
+        return {
+          nodeType: Nodes.NodeType.ArrayTypeLiteral,
+          category: Nodes.NodeCategory.Type,
+          length: lengthValue,
+          value: value,
+          position: {
+            offset: value.position.offset,
+            length: <number>closeValue.endOffset - value.position.offset + 1,
+            line: value.position.line,
+            col: value.position.col,
+            file: this.file,
+          },
+        };
+      }
+      return value;
     });
   });
   private _typeLiteral = this.RULE('_TypeLiteral', (): Nodes.TypeLiteral => {
