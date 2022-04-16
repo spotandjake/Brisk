@@ -216,7 +216,7 @@ class Parser extends EmbeddedActionsParser {
       ]);
       this.CONSUME(Tokens.TknFrom);
       const source = this.SUBRULE(this.stringLiteral);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
         if (typeSignature == undefined) {
           return {
             nodeType: Nodes.NodeType.ImportStatement,
@@ -260,7 +260,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
       { ALT: () => this.SUBRULE(this.typeAlias) },
     ]);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ExportStatementNode => {
       return {
         nodeType: Nodes.NodeType.ExportStatement,
         category: Nodes.NodeCategory.Statement,
@@ -299,7 +299,7 @@ class Parser extends EmbeddedActionsParser {
     const varType = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.assignmentOperators);
     const value = this.SUBRULE(this.expression);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.DeclarationStatementNode => {
       return {
         nodeType: Nodes.NodeType.DeclarationStatement,
         category: Nodes.NodeCategory.Statement,
@@ -323,7 +323,7 @@ class Parser extends EmbeddedActionsParser {
       const name = this.SUBRULE(this.variableUsage);
       this.CONSUME(Tokens.assignmentOperators);
       const value = this.SUBRULE(this.expression);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.AssignmentStatementNode => {
         return {
           nodeType: Nodes.NodeType.AssignmentStatement,
           category: Nodes.NodeCategory.Statement,
@@ -340,9 +340,9 @@ class Parser extends EmbeddedActionsParser {
   private returnStatement = this.RULE('ReturnStatement', (): Nodes.ReturnStatementNode => {
     const location = this.CONSUME(Tokens.TknReturn);
     this.CONSUME(Tokens.TknLParen);
-    const returnValue = this.SUBRULE(this.expression);
+    const returnValue = this.OPTION(() => this.SUBRULE(this.expression));
     const close = this.CONSUME(Tokens.TknRParen);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ReturnStatementNode => {
       return {
         nodeType: Nodes.NodeType.ReturnStatement,
         category: Nodes.NodeCategory.Statement,
@@ -373,7 +373,7 @@ class Parser extends EmbeddedActionsParser {
         },
       },
     ]);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.PostFixStatementNode => {
       return {
         nodeType: Nodes.NodeType.PostFixStatement,
         category: Nodes.NodeCategory.Statement,
@@ -399,20 +399,22 @@ class Parser extends EmbeddedActionsParser {
       const variants: Nodes.EnumVariantNode[] = [];
       const location = this.CONSUME(Tokens.TknEnum);
       const identifier = this.CONSUME(Tokens.TknIdentifier);
+      const genericTypes = this.OPTION(() => this.SUBRULE(this.genericType));
       this.CONSUME(Tokens.TknLBrace);
       variants.push(this.SUBRULE(this.enumVariant));
       this.MANY(() => {
         this.CONSUME(Tokens.TknComma);
         variants.push(this.SUBRULE1(this.enumVariant));
       });
-      this.OPTION(() => this.CONSUME1(Tokens.TknComma));
+      this.OPTION1(() => this.CONSUME1(Tokens.TknComma));
       const close = this.CONSUME(Tokens.TknRBrace);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.EnumDefinitionStatementNode => {
         return {
           nodeType: Nodes.NodeType.EnumDefinitionStatement,
           category: Nodes.NodeCategory.Statement,
           name: identifier.image,
           variants: variants,
+          genericTypes: genericTypes,
           position: {
             offset: location.startOffset,
             length: <number>close.endOffset - location.startOffset + 1,
@@ -455,7 +457,7 @@ class Parser extends EmbeddedActionsParser {
         },
       ]);
     });
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.EnumVariantNode => {
       return {
         nodeType: Nodes.NodeType.EnumVariant,
         category: Nodes.NodeCategory.Enum,
@@ -699,7 +701,7 @@ class Parser extends EmbeddedActionsParser {
     const typeLiteral = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.TknComparisonGreaterThan);
     const value = this.SUBRULE(this.simpleExpression);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.TypeCastExpression => {
       return {
         nodeType: Nodes.NodeType.TypeCastExpression,
         category: Nodes.NodeCategory.Expression,
@@ -728,7 +730,7 @@ class Parser extends EmbeddedActionsParser {
       });
       const FunctionHead = () => {
         this.AT_LEAST_ONE(() => calls.push(this.SUBRULE(this.arguments)));
-        return this.ACTION(() => {
+        return this.ACTION((): Nodes.CallExpressionNode => {
           return <Nodes.CallExpressionNode>calls.reduce((prevValue, currValue) => {
             return {
               nodeType: Nodes.NodeType.CallExpression,
@@ -776,7 +778,7 @@ class Parser extends EmbeddedActionsParser {
       },
     ]);
     const value = this.SUBRULE1(this.expression);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.UnaryExpressionNode => {
       return {
         nodeType: Nodes.NodeType.UnaryExpression,
         category: Nodes.NodeCategory.Expression,
@@ -798,7 +800,7 @@ class Parser extends EmbeddedActionsParser {
       const location = this.CONSUME(Tokens.TknLParen);
       const expression = this.SUBRULE(this.expression);
       const close = this.CONSUME(Tokens.TknRParen);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.ParenthesisExpressionNode => {
         return {
           nodeType: Nodes.NodeType.ParenthesisExpression,
           category: Nodes.NodeCategory.Expression,
@@ -817,7 +819,7 @@ class Parser extends EmbeddedActionsParser {
   private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
     const location = this.CONSUME(Tokens.TknWasmCall);
     const args = this.SUBRULE(this.arguments);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.WasmCallExpressionNode => {
       return {
         nodeType: Nodes.NodeType.WasmCallExpression,
         category: Nodes.NodeCategory.Expression,
@@ -1083,7 +1085,7 @@ class Parser extends EmbeddedActionsParser {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     this.CONSUME(Tokens.TknColon);
     const fieldValue = this.SUBRULE(this.expression);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ObjectFieldNode => {
       return {
         nodeType: Nodes.NodeType.ObjectField,
         category: Nodes.NodeCategory.Literal,
@@ -1103,7 +1105,7 @@ class Parser extends EmbeddedActionsParser {
   private objectSpread = this.RULE('ObjectSpread', (): Nodes.ObjectSpreadNode => {
     const location = this.CONSUME(Tokens.TknEllipsis);
     const fieldValue = this.SUBRULE(this.expression);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ObjectSpreadNode => {
       return {
         nodeType: Nodes.NodeType.ObjectSpread,
         category: Nodes.NodeCategory.Literal,
@@ -1176,7 +1178,7 @@ class Parser extends EmbeddedActionsParser {
       this.CONSUME(Tokens.TknPeriod);
       props.push(this.SUBRULE(this.propertyUsageNode));
     });
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.MemberAccessNode => {
       return <Nodes.MemberAccessNode>props.reduce((prevValue: Nodes.Expression, currValue) => {
         return {
           nodeType: Nodes.NodeType.MemberAccess,
@@ -1213,12 +1215,12 @@ class Parser extends EmbeddedActionsParser {
     this.MANY_SEP({
       SEP: Tokens.TknComma,
       DEF: () => {
-        const mutable: undefined | boolean = this.OPTION(() => {
+        const mutable: undefined | boolean = this.OPTION1(() => {
           this.CONSUME(Tokens.TknLet);
           return true;
         });
         const name = this.SUBRULE(this.variableDefinition);
-        const optional: undefined | boolean = this.OPTION1(() => {
+        const optional: undefined | boolean = this.OPTION2(() => {
           this.CONSUME(Tokens.TknQuestionMark);
           return true;
         });
@@ -1240,7 +1242,7 @@ class Parser extends EmbeddedActionsParser {
     const returnType = this.SUBRULE1(this.typeLiteral);
     this.CONSUME(Tokens.TknThickArrow);
     const body = this.SUBRULE(this._statement);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.FunctionLiteralNode => {
       return {
         nodeType: Nodes.NodeType.FunctionLiteral,
         category: Nodes.NodeCategory.Literal,
@@ -1265,14 +1267,16 @@ class Parser extends EmbeddedActionsParser {
   private typeAlias = this.RULE('TypeAliasDefinition', (): Nodes.TypeAliasDefinitionNode => {
     const location = this.CONSUME(Tokens.TknType);
     const name = this.CONSUME(Tokens.TknIdentifier);
+    const genericTypes = this.OPTION(() => this.SUBRULE(this.genericType));
     this.CONSUME(Tokens.TknEqual);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.TypeAliasDefinitionNode => {
       return {
         nodeType: Nodes.NodeType.TypeAliasDefinition,
         category: Nodes.NodeCategory.Type,
         name: name.image,
         typeLiteral: typeLiteral,
+        genericTypes: genericTypes,
         position: {
           offset: location.startOffset,
           length: typeLiteral.position.offset + typeLiteral.position.length - location.startOffset,
@@ -1288,13 +1292,15 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.InterfaceDefinitionNode => {
       const location = this.CONSUME(Tokens.TknInterface);
       const name = this.CONSUME(Tokens.TknIdentifier);
+      const genericTypes = this.OPTION(() => this.SUBRULE(this.genericType));
       const interfaceLiteral = this.SUBRULE(this.InterfaceTypeLiteral);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.InterfaceDefinitionNode => {
         return {
           nodeType: Nodes.NodeType.InterfaceDefinition,
           category: Nodes.NodeCategory.Type,
           name: name.image,
           typeLiteral: interfaceLiteral,
+          genericTypes: genericTypes,
           position: {
             offset: location.startOffset,
             length:
@@ -1318,7 +1324,7 @@ class Parser extends EmbeddedActionsParser {
       this.CONSUME(Tokens.TknUnion);
       types.push(this.SUBRULE1(this.arrayType));
     });
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.TypeLiteral => {
       if (types.length == 0) {
         return lhs;
       } else {
@@ -1348,7 +1354,7 @@ class Parser extends EmbeddedActionsParser {
         closeValue: close,
       };
     });
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ArrayTypeLiteralNode | Nodes.TypeLiteral => {
       if (arrayType) {
         const { lengthValue, closeValue } = arrayType;
         return {
@@ -1383,7 +1389,7 @@ class Parser extends EmbeddedActionsParser {
     const location = this.CONSUME(Tokens.TknLParen);
     const value = this.SUBRULE(this.typeLiteral);
     const close = this.CONSUME(Tokens.TknRParen);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.ParenthesisTypeLiteralNode => {
       return {
         nodeType: Nodes.NodeType.ParenthesisTypeLiteral,
         category: Nodes.NodeCategory.Type,
@@ -1410,7 +1416,7 @@ class Parser extends EmbeddedActionsParser {
       this.CONSUME(Tokens.TknRParen);
       this.CONSUME(Tokens.TknThickArrow);
       const returnType = this.SUBRULE1(this.typeLiteral);
-      return this.ACTION(() => {
+      return this.ACTION((): Nodes.FunctionSignatureLiteralNode => {
         return {
           nodeType: Nodes.NodeType.FunctionSignatureLiteral,
           category: Nodes.NodeCategory.Type,
@@ -1463,7 +1469,7 @@ class Parser extends EmbeddedActionsParser {
     });
     this.CONSUME(Tokens.TknColon);
     const fieldType = this.SUBRULE(this.typeLiteral);
-    return this.ACTION(() => {
+    return this.ACTION((): Nodes.InterfaceFieldNode => {
       return {
         nodeType: Nodes.NodeType.InterfaceField,
         category: Nodes.NodeCategory.Type,
@@ -1492,6 +1498,32 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   // General Type Stuff
+  private genericType = this.RULE('GenericType', (): Nodes.GenericTypeNode[] => {
+    const identifiers: Nodes.TypeIdentifierNode[] = [];
+    const location = this.CONSUME(Tokens.TknComparisonLessThan);
+    identifiers.push(this.SUBRULE(this.typeIdentifier));
+    this.MANY(() => {
+      this.CONSUME(Tokens.TknComma);
+      identifiers.push(this.SUBRULE1(this.typeIdentifier));
+    });
+    const close = this.CONSUME(Tokens.TknComparisonGreaterThan);
+    return this.ACTION((): Nodes.GenericTypeNode[] => {
+      return identifiers.map((identifier): Nodes.GenericTypeNode => {
+        return {
+          nodeType: Nodes.NodeType.GenericType,
+          category: Nodes.NodeCategory.Type,
+          name: identifier.name,
+          position: {
+            offset: location.startOffset,
+            length: <number>close.endOffset - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
+    });
+  });
   private typeIdentifier = this.RULE('TypeIdentifier', (): Nodes.TypeIdentifierNode => {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     return {

@@ -24,6 +24,8 @@ const v: { field1: i32; let field2: i32; field3?: i32; } = {
   field2: 1n,
   field3: 1n
 };
+const w: i32[] = [ 1n, 2n, 3n ];
+const x: i32[3] = [ 1n, 2n, 3n ];
 // Custom Numbers
 const a1: Number = 1234567890; // Decimal
 const b1: Number = .1; // Decimal

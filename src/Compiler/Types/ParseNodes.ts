@@ -52,6 +52,7 @@ export const enum NodeType {
   InterfaceLiteral,
   InterfaceField,
   TypeUsage,
+  GenericType,
   TypeIdentifier,
   // Vars
   VariableDefinition,
@@ -164,7 +165,7 @@ export interface AssignmentStatementNode {
 export interface ReturnStatementNode {
   nodeType: NodeType.ReturnStatement;
   category: NodeCategory.Statement;
-  returnValue: Expression;
+  returnValue: Expression | undefined;
   position: Position;
 }
 export const enum PostFixOperator {
@@ -184,6 +185,7 @@ export interface EnumDefinitionStatementNode {
   category: NodeCategory.Statement;
   name: string;
   variants: EnumVariantNode[];
+  genericTypes: GenericTypeNode[] | undefined;
   position: Position;
 }
 export interface EnumVariantNode {
@@ -392,13 +394,15 @@ export type TypeLiteral =
   | FunctionSignatureLiteralNode
   | InterfaceLiteralNode
   | EnumDefinitionStatementNode
-  | TypeUsageNode;
+  | TypeUsageNode
+  | GenericTypeNode;
 // Type Definition
 export interface TypeAliasDefinitionNode {
   nodeType: NodeType.TypeAliasDefinition;
   category: NodeCategory.Type;
   name: string;
   typeLiteral: TypeLiteral;
+  genericTypes: GenericTypeNode[] | undefined;
   position: Position;
 }
 export interface InterfaceDefinitionNode {
@@ -406,6 +410,7 @@ export interface InterfaceDefinitionNode {
   category: NodeCategory.Type;
   name: string;
   typeLiteral: TypeLiteral;
+  genericTypes: undefined | GenericTypeNode[];
   position: Position;
 }
 // TypeLiteral
@@ -491,6 +496,12 @@ export interface InterfaceFieldNode {
   fieldType: TypeLiteral;
   optional: boolean;
   mutable: boolean;
+  position: Position;
+}
+export interface GenericTypeNode {
+  nodeType: NodeType.GenericType;
+  category: NodeCategory.Type;
+  name: string;
   position: Position;
 }
 export interface TypeIdentifierNode {

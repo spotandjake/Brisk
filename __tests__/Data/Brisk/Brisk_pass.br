@@ -96,6 +96,27 @@ const h: Number = 1;
   print('test');
   return(1n);
 })();
+// SemiColon Test
+interface OptionalSemi_Has_TestInterface<GenericTest> {
+  test: GenericTest;
+};
+enum OptionalSemi_Has_EnumTest<GenericTest> {
+  Test(GenericTest)
+};
+interface OptionalSemi_TestInterface<GenericTest> {
+  test: GenericTest;
+}
+enum OptionalSemi_EnumTest<GenericTest> {
+  Test(GenericTest)
+}
+// Generics Tests
+type Generic_TypeTest<GenericTest, GenericTest1> = String;
+interface Generic_TestInterface<GenericTest> {
+  test: GenericTest;
+}
+enum Generic_EnumTest<GenericTest> {
+  Test(GenericTest)
+}
 // Export Tests
 // export const y: Number = 1;
 export h;

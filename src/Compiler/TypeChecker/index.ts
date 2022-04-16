@@ -81,6 +81,7 @@ const typeCheckNode = (
     case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
     case NodeType.FunctionLiteral:
+    case NodeType.ArrayLiteral:
     case NodeType.ObjectLiteral:
       BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
@@ -94,6 +95,7 @@ const typeCheckNode = (
     case NodeType.FunctionSignatureLiteral:
     case NodeType.InterfaceLiteral:
     case NodeType.TypeUsage:
+    case NodeType.GenericType:
       BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
     // Variables

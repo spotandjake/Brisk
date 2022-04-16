@@ -20,6 +20,7 @@ import Node, {
   NumberLiteralNode,
   EnumVariantNode,
   ExportStatementValue,
+  GenericTypeNode,
 } from '../Types/ParseNodes';
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import AnalyzerNode, {
@@ -535,10 +536,23 @@ const analyzeNode = (
       return node;
     }
     case NodeType.ReturnStatement:
-      node.returnValue = <Expression>_analyzeNode(node.returnValue);
+      if (node.returnValue) node.returnValue = <Expression>_analyzeNode(node.returnValue);
       return node;
     case NodeType.EnumDefinitionStatement: {
       // TODO: Add To Variable List As An Object Maybe
+      // Create New Type Stack
+      const typeStack: TypeStack = new Map();
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((genericType) => {
+          return <GenericTypeNode>_analyzeNode(genericType, {
+            // Stacks
+            _typeStack: typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
       // Ensure No Duplicate Variants
       const variants: Set<string> = new Set();
       for (const variant of node.variants) {
@@ -552,7 +566,14 @@ const analyzeNode = (
         variants.add(variant.identifier);
       }
       // Analyze Variants
-      node.variants = node.variants.map((variant) => <EnumVariantNode>_analyzeNode(variant));
+      node.variants = node.variants.map((variant) => {
+        return <EnumVariantNode>_analyzeNode(variant, {
+          // Stacks
+          _typeStack: typeStack,
+          // Stack Pool
+          _typeStacks: [..._typeStacks, _typeStack],
+        });
+      });
       // TODO: Add To Type Stack
       createType(
         rawProgram,
@@ -704,6 +725,8 @@ const analyzeNode = (
     // Types
     case NodeType.InterfaceDefinition:
     case NodeType.TypeAliasDefinition: {
+      // Create New Type Stack
+      const typeStack: TypeStack = new Map();
       // Set Type
       const typeReference = createType(
         rawProgram,
@@ -716,8 +739,24 @@ const analyzeNode = (
         },
         node.position
       );
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((genericType) => {
+          return <GenericTypeNode>_analyzeNode(genericType, {
+            // Stacks
+            _typeStack: typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
       // Analyze Interface
-      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
+      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral, {
+        // Stacks
+        _typeStack: typeStack,
+        // Stack Pool
+        _typeStacks: [..._typeStacks, _typeStack],
+      });
       // Complete Type
       _types.set(typeReference, {
         name: node.name,
@@ -770,6 +809,20 @@ const analyzeNode = (
         };
       }
       getType(rawProgram, _types, _typeStack, _typeStacks, node.name, node.position, {});
+      return node;
+    case NodeType.GenericType:
+      // Create Type
+      createType(
+        rawProgram,
+        _types,
+        _typeStack,
+        {
+          name: node.name,
+          exported: false,
+          type: node,
+        },
+        node.position
+      );
       return node;
     // Variables
     case NodeType.VariableUsage:
