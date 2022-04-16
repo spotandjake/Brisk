@@ -5,12 +5,14 @@
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Things We Dont Have But We Need To Support
       + [ ] Generics
+        + [x] General Generics
+        + [ ] Implement Generics On Functions
       + [x] Member Access On Expression
       + [ ] Destructuring
     + [ ] Restrict the Function type to Variable Definitions, Do not allow it on `Parameters` Allow it on returns too
       + [ ] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
-    + [ ] Determine Scoping On Generics
-      + [ ] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
+    + [x] Determine Scoping On Generics
+      + [x] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
     + [x] Add Support For Recursive Types
     + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
       + [ ] Perform Value Narrowing And Type Narrowing
@@ -22,20 +24,20 @@
     + [x] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
     + [x] Consider ADT Enums And Generic Types
     + [x] Implement Nicer Errors For This
-    + [ ] Allow Exporting Any Expression Or Type
+    + [x] Allow Exporting Any Expression Or Type
     + [x] Allow For Mutable And Optional Fields
     + [ ] Check That You Are Not Modifying A immutable Field
     + [x] Implement Export Analysis
     + [ ] Implement Better Mutable Checking
   + [ ] Parser Additions
-    + [ ] Implement Generics
+    + [x] Implement Generics
     + [ ] Implement Match Syntax
     + [x] Allow you to access members on general expressions
     + [ ] Allow u to define multiple variables off one `let` or `const` using `,`
     + [ ] Implement Destructuring
     + [ ] Implement Array Literals
       + [ ] Implement Array Spread
-      + [ ] Implement Array Literal Syntax
+      + [x] Implement Array Literal Syntax
       + [ ] Implement Array Index Syntax
     + [ ] Document Language Grammar
   + [ ] Start Writing Our Wasm Builder
@@ -47,7 +49,7 @@
     + [ ] Post Fix Operator Testing
     + [ ] Tests For Type Definitions And TypeChecker
     + [ ] Tests For Object Spread Syntax
-    + [ ] Analyze Arrays
+    + [x] Analyze Arrays
   + [x] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`
@@ -75,10 +77,10 @@
 # Tasks
 + [x] Lexer
 + [ ] Parser
-  + [ ] Improve Type System
+  + [x] Improve Type System
     + [x] add enums
     + [x] support recursive types
-    + [ ] generics
+    + [x] generics
   + [ ] Add Destructuring
   + [x] Add Objects
 + [ ] Analyzer
@@ -158,7 +160,7 @@
           + [x] Octal
           + [x] Numeric Separators
         + [x] Objects
-        + [ ] Arrays
+        + [x] Arrays
         + [ ] Wasm Interface Types Interaction
       + [ ] Types
         + [ ] Type Literals
@@ -166,7 +168,7 @@
             + [x] General Interface Parsing
             + [x] Mutable Fields
           + [x] Type Variables
-          + [ ] Generics
+          + [x] Generics
           + [x] Parenthesis TypeLiterals
           + [x] Union Types
           + [x] Function Signatures
@@ -206,7 +208,7 @@
           + [ ] SubtractEqual
           + [ ] MultiplyEqual
           + [ ] DivideEqual
-        + [ ] If Statement
+        + [x] If Statement
           + [x] general Parsing
           + [x] Else
           + [x] SingleLine If Statement
@@ -216,7 +218,7 @@
           + [x] Decrement
           + [x] Function Call
           + [x] Wasm Call Expression
-      + [ ] We want to remove all newlines from the input and double check that we get the same output, i.e remove significance of newlines
+      + [x] We want to remove all newlines from the input and double check that we get the same output, i.e remove significance of newlines
     + [ ] Analyzer
       + [x] Rewrite to be simpler and simplify Variable References
       + [x] Find closures
