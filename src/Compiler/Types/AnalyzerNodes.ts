@@ -3,9 +3,9 @@ import Node, {
   ProgramNode,
   BlockStatementNode,
   FunctionLiteralNode,
-  VariableDefinitionNode,
   TypeLiteral,
   TypeUsageNode,
+  Statement,
 } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>;
@@ -57,7 +57,9 @@ export interface VariableData {
 export type VariableMap = Map<number, VariableData>;
 export type VariableStack = Map<string, number>;
 export type VariableClosure = Set<number>;
+export type AnalyzedStatement = Exclude<Statement, BlockStatementNode> | AnalyzedBlockStatementNode;
 export interface AnalyzedProgramNode extends ProgramNode {
+  body: AnalyzedStatement[];
   data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
 }
 export interface AnalyzedBlockStatementNode extends BlockStatementNode {
@@ -73,18 +75,12 @@ export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
     _typeStack: TypeStack;
   };
 }
-export interface AnalyzedVariableDefinitionNode extends VariableDefinitionNode {
-  global: boolean;
-  constant: boolean;
-  type: TypeLiteral;
-}
 
 export type AnalyzerNode =
   | AnalyzedProgramNode
   | AnalyzedBlockStatementNode
   | AnalyzedFunctionLiteralNode
-  | AnalyzedVariableDefinitionNode
-  | Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode | VariableDefinitionNode>;
+  | Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode>;
 export type AnalyzedExpression =
   | AnalyzedFunctionLiteralNode
   | Exclude<Expression, FunctionLiteralNode>;

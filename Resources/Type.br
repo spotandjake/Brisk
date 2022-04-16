@@ -21,6 +21,9 @@
 // interface TestInterface3 {
 //   test: TestInterface3;
 // }
+if (<Boolean>1) {
+  const test: i32 = 1n;
+};
 const test: i64 = <i64>1n;
 type TypeTest<GenericTest, GenericTest1> = String;
 interface TestInterface<GenericTest> {

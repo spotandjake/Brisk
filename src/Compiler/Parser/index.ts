@@ -999,7 +999,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.ConstantLiteral,
       category: Nodes.NodeCategory.Literal,
-      value: value.image,
+      value: <'true' | 'false' | 'void'>value.image,
       position: {
         offset: value.startOffset,
         length: <number>value.endOffset - value.startOffset + 1,

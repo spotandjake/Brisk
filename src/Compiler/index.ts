@@ -30,7 +30,7 @@ const compile = async (
   }
   // 5. Type Check
   // TODO: Rewrite Type Checker
-  // const typeChecked = typeCheck(rawProgram, analyzed);
+  const typeChecked = typeCheck(rawProgram, analyzed);
   // 6. Generate Code
   // 7. Make Export List
   const exports: ExportList = new Map();

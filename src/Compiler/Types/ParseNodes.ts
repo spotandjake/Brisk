@@ -345,7 +345,7 @@ export interface NumberLiteralNode {
 export interface ConstantLiteralNode {
   nodeType: NodeType.ConstantLiteral;
   category: NodeCategory.Literal;
-  value: string;
+  value: 'true' | 'false' | 'void';
   position: Position;
 }
 export interface FunctionLiteralNode {

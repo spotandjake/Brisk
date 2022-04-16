@@ -1,9 +1,89 @@
 import { Position } from '../Types/Types';
-import Node, { NodeType } from '../Types/ParseNodes';
-import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
-import AnalyzerNode, { AnalyzeNode, AnalyzedProgramNode } from '../Types/AnalyzerNodes';
+import {
+  NodeType,
+  NodeCategory,
+  PrimTypes,
+  primTypes,
+  TypePrimLiteralNode,
+  TypeLiteral,
+} from '../Types/ParseNodes';
+import { BriskError, BriskTypeError } from '../Errors/Compiler';
+import AnalyzerNode, {
+  AnalyzeNode,
+  AnalyzedProgramNode,
+  AnalyzedStatement,
+  AnalyzedExpression,
+} from '../Types/AnalyzerNodes';
 import { BriskErrorType } from '../Errors/Errors';
-// Helpers
+// Type Helpers
+const createPrimType = (primType: PrimTypes, position: Position): TypePrimLiteralNode => {
+  return {
+    nodeType: NodeType.TypePrimLiteral,
+    category: NodeCategory.Type,
+    name: primType,
+    position: position,
+  };
+};
+// Checking Helpers
+// const resolveType = (code: string, typeA: TypeLiteral, typeB: TypeLiteral): TypeLiteral => {};
+const typeCompatible = (code: string, typeA: TypeLiteral, typeB: TypeLiteral): boolean => {
+  // TODO: Ensure Types Are Compatible
+  return true;
+};
+const typeEqual = (code: string, typeA: TypeLiteral, typeB: TypeLiteral): boolean => {
+  // TODO: Check Type Equality
+  return true;
+};
+// TODO: Fix Analyzed Types, Remove Type Casts
+const getExpressionType = (code: string, expression: AnalyzedExpression): TypeLiteral => {
+  switch (expression.nodeType) {
+    case NodeType.ComparisonExpression:
+      return createPrimType('Boolean', expression.position);
+    case NodeType.ArithmeticExpression:
+      break;
+    case NodeType.UnaryExpression:
+      break;
+    case NodeType.ParenthesisExpression:
+      return getExpressionType(code, <AnalyzedExpression>expression.value);
+    case NodeType.TypeCastExpression:
+      console.log(expression);
+      break;
+    case NodeType.CallExpression:
+      break;
+    case NodeType.WasmCallExpression:
+      break;
+    case NodeType.StringLiteral:
+      return createPrimType('String', expression.position);
+    case NodeType.I32Literal:
+      return createPrimType('i32', expression.position);
+    case NodeType.I64Literal:
+      return createPrimType('i64', expression.position);
+    case NodeType.U32Literal:
+      return createPrimType('u32', expression.position);
+    case NodeType.U64Literal:
+      return createPrimType('u64', expression.position);
+    case NodeType.F32Literal:
+      return createPrimType('f32', expression.position);
+    case NodeType.F64Literal:
+      return createPrimType('f64', expression.position);
+    case NodeType.NumberLiteral:
+      return createPrimType('Number', expression.position);
+    case NodeType.ConstantLiteral:
+      if (expression.value == 'void') return createPrimType('Void', expression.position);
+      else if (expression.value == 'true' || expression.value == 'false')
+        return createPrimType('Boolean', expression.position);
+    case NodeType.FunctionLiteral:
+      break;
+    case NodeType.ArrayLiteral:
+      break;
+    case NodeType.ObjectLiteral:
+      break;
+    case NodeType.VariableUsage:
+      break;
+    case NodeType.MemberAccess:
+      break;
+  }
+};
 // TypeCheck Node
 const typeCheckNode = (
   // Code
@@ -11,8 +91,8 @@ const typeCheckNode = (
   // Stacks
   properties: AnalyzeNode,
   // Nodes
-  parentNode: Node | undefined,
-  node: Node
+  parentNode: AnalyzerNode | undefined,
+  node: AnalyzerNode
 ): AnalyzerNode => {
   const {
     // Our Global Variable And Type Pools
@@ -29,9 +109,9 @@ const typeCheckNode = (
     _typeStack,
   } = properties;
   const _typeCheckNode = (
-    childNode: Node,
+    childNode: AnalyzerNode,
     props: Partial<AnalyzeNode> = properties,
-    parentNode: Node = node
+    parentNode: AnalyzerNode = node
   ): AnalyzerNode => {
     return typeCheckNode(code, { ...properties, ...props }, parentNode, childNode);
   };
@@ -39,14 +119,26 @@ const typeCheckNode = (
   switch (node.nodeType) {
     // General
     case NodeType.Program:
-      // Resolve All Types In The Type Pool
-      // Resolve All Types In The Var Pool
       // Analyze Program Node
-      console.log(node);
-      BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      node.body = node.body.map((childNode) => <AnalyzedStatement>_typeCheckNode(childNode));
+      // Return The Node
+      return node;
     // Statements
     case NodeType.IfStatement:
+      // Analyze Condition
+      node.condition = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.condition);
+      // TypeCheck Condition
+      typeEqual(
+        code,
+        getExpressionType(code, <AnalyzedExpression>node.condition),
+        createPrimType('Boolean', node.condition.position)
+      );
+      // Analyze Body
+      node.body = <AnalyzedStatement>_typeCheckNode(<AnalyzedStatement>node.body);
+      // Analyze Alternative
+      if (node.alternative)
+        node.alternative = <AnalyzedStatement>_typeCheckNode(<AnalyzedStatement>node.alternative);
+      return node;
     case NodeType.FlagStatement:
     case NodeType.BlockStatement:
     case NodeType.ImportStatement:
@@ -63,9 +155,26 @@ const typeCheckNode = (
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
+      BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      process.exit(1);
     case NodeType.TypeCastExpression:
+      // Check if type is compatible
+      typeCompatible(
+        code,
+        node.typeLiteral,
+        getExpressionType(code, <AnalyzedExpression>node.value)
+      );
+      // Analyze Properties
+      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
+      node.typeLiteral = <TypeLiteral>_typeCheckNode(node.typeLiteral);
+      // Return Node
+      return node;
     case NodeType.UnaryExpression:
+      BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      process.exit(1);
     case NodeType.ParenthesisExpression:
+      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
+      return node;
     case NodeType.CallExpression:
     case NodeType.WasmCallExpression:
       BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
@@ -80,6 +189,7 @@ const typeCheckNode = (
     case NodeType.F64Literal:
     case NodeType.NumberLiteral:
     case NodeType.ConstantLiteral:
+      return node;
     case NodeType.FunctionLiteral:
     case NodeType.ArrayLiteral:
     case NodeType.ObjectLiteral:
@@ -88,7 +198,10 @@ const typeCheckNode = (
     // Types
     case NodeType.InterfaceDefinition:
     case NodeType.TypeAliasDefinition:
+      BriskError(code, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      process.exit(1);
     case NodeType.TypePrimLiteral:
+      return node;
     case NodeType.TypeUnionLiteral:
     case NodeType.ArrayTypeLiteral:
     case NodeType.ParenthesisTypeLiteral:
