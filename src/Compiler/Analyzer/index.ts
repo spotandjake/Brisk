@@ -37,6 +37,8 @@ import AnalyzerNode, {
   VariableMap,
   VariableStack,
   AnalyzedFunctionLiteralNode,
+  AnalyzedInterfaceDefinitionNode,
+  AnalyzedTypeAliasDefinitionNode,
 } from '../Types/AnalyzerNodes';
 import { BriskErrorType } from '../Errors/Errors';
 // Variable Interactions
@@ -63,23 +65,19 @@ const getVariable = (
   varStack: VariableStack,
   _closure: VariableClosure,
   varStacks: VariableStack[],
-  varReference: VariableUsage | string,
+  varReference: VariableUsageNode | string,
   position: Position,
   { used = true, exported = false }: { used?: boolean; exported?: boolean }
-): VariableData | void => {
+): VariableData => {
   // Get Variable Reference
   let varName: string;
   if (typeof varReference == 'string') varName = varReference;
-  else if (varReference.nodeType == NodeType.VariableUsage) varName = varReference.name;
-  else {
-    if (varReference.parent.nodeType == NodeType.VariableUsage) varName = varReference.parent.name;
-    return;
-  }
+  else varName = varReference.name;
   // Search The Stacks
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskParseError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
+    BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
   // Get Node
   const variableReference = <number>(<VariableStack>_varStack).get(varName);
   // Check If We need To Add To Closure
@@ -514,6 +512,7 @@ const analyzeNode = (
     case NodeType.PostFixStatement: {
       // Analyze Variable
       node.name = <VariableUsage>_analyzeNode(node.name);
+      if (node.name.nodeType == NodeType.MemberAccess) return node;
       // Verify That Var Exists And Is mutable
       const variableData = getVariable(
         rawProgram,
@@ -525,7 +524,6 @@ const analyzeNode = (
         node.position,
         { used: false }
       );
-      if (variableData == undefined) return node; // TODO: Better Member Analysis
       if (variableData.constant)
         BriskTypeError(
           rawProgram,
@@ -574,7 +572,7 @@ const analyzeNode = (
           _typeStacks: [..._typeStacks, _typeStack],
         });
       });
-      // TODO: Add To Type Stack
+      // Add To Type Stack
       createType(
         rawProgram,
         _types,
@@ -586,7 +584,7 @@ const analyzeNode = (
         },
         node.position
       );
-      // TODO: Add To Variable Stack
+      // Add To Variable Stack
       createVariable(
         rawProgram,
         _variables,
@@ -763,7 +761,12 @@ const analyzeNode = (
         exported: false,
         type: node.typeLiteral,
       });
-      return node;
+      return <AnalyzedInterfaceDefinitionNode | AnalyzedTypeAliasDefinitionNode>{
+        ...node,
+        data: {
+          _typeStack: typeStack,
+        },
+      };
     }
     case NodeType.TypePrimLiteral:
       return node;
@@ -834,6 +837,8 @@ const analyzeNode = (
       // Analyze Child
       node.property = <PropertyUsageNode>_analyzeNode(node.property);
     case NodeType.PropertyUsage:
+      // Analyze Node Property
+      if (node.property) node.property = <PropertyUsageNode>_analyzeNode(node.property);
       // Return node
       return node;
     case NodeType.Parameter: {

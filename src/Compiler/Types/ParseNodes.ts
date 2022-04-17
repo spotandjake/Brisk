@@ -529,6 +529,7 @@ export interface PropertyUsageNode {
   nodeType: NodeType.PropertyUsage;
   category: NodeCategory.Variable;
   name: string;
+  property?: PropertyUsageNode;
   position: Position;
 }
 export interface MemberAccessNode {

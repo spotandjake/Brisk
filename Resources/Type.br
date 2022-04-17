@@ -24,14 +24,24 @@
 if (<Boolean>1) {
   const test: i32 = 1n;
 };
-const test: i64 = <i64>1n;
-type TypeTest<GenericTest, GenericTest1> = String;
-interface TestInterface<GenericTest> {
-  test: GenericTest;
+let test: i64 = <i64>1n;
+test = 2N;
+// test.test = 1n;
+// type T = (i32 | i64);
+interface TestLiteral {
+  test: i32;
 }
-enum EnumTest<GenericTest> {
-  Test(GenericTest)
-}
+const testLiteral: TestLiteral = {
+  test: 1n
+};
+testLiteral.test = 2n;
+// type TypeTest<GenericTest, GenericTest1> = String;
+// interface TestInterface<GenericTest> {
+//   test: GenericTest;
+// }
+// enum EnumTest<GenericTest> {
+//   Test(GenericTest)
+// }
 // const nonGenericFunction: Function = (): Void => {
 //   return();
 // };

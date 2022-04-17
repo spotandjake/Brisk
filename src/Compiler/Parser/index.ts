@@ -1168,46 +1168,52 @@ class Parser extends EmbeddedActionsParser {
   });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
     // TODO: We Want To Allow The Main Object To Be Any Expression
-    const props: Nodes.PropertyUsageNode[] = [];
     const parent = this.OR([
       { ALT: () => this.SUBRULE(this.variableUsageNode) },
       // { ALT: () => this.SUBRULE(this.parenthesisExpression) },
       // { ALT: () => this.SUBRULE(this.objectLiteral) },
+      // { ALT: () => this.SUBRULE(this.callExpression) },
     ]);
-    this.AT_LEAST_ONE(() => {
-      this.CONSUME(Tokens.TknPeriod);
-      props.push(this.SUBRULE(this.propertyUsageNode));
-    });
+    const property = this.SUBRULE(this.propertyUsageNode);
     return this.ACTION((): Nodes.MemberAccessNode => {
-      return <Nodes.MemberAccessNode>props.reduce((prevValue: Nodes.Expression, currValue) => {
-        return {
-          nodeType: Nodes.NodeType.MemberAccess,
-          category: Nodes.NodeCategory.Variable,
-          parent: prevValue,
-          property: currValue,
-          position: {
-            ...prevValue.position,
-            length:
-              currValue.position.offset + currValue.position.length - prevValue.position.offset,
-          },
-        };
-      }, parent);
+      return {
+        nodeType: Nodes.NodeType.MemberAccess,
+        category: Nodes.NodeCategory.Variable,
+        parent: parent,
+        property: property,
+        position: {
+          offset: parent.position.offset,
+          length: parent.position.length + property.position.length,
+          line: parent.position.line,
+          col: parent.position.col,
+          file: this.file,
+        },
+      };
     });
   });
   private propertyUsageNode = this.RULE('PropertyUsageNode', (): Nodes.PropertyUsageNode => {
+    const start = this.CONSUME(Tokens.TknPeriod);
     const identifier = this.CONSUME(Tokens.TknIdentifier);
-    return {
-      nodeType: Nodes.NodeType.PropertyUsage,
-      category: Nodes.NodeCategory.Variable,
-      name: identifier.image,
-      position: {
-        offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset + 1,
-        line: identifier.startLine || 0,
-        col: identifier.startColumn || 0,
-        file: this.file,
-      },
-    };
+    const property = this.OPTION(() => this.SUBRULE(this.propertyUsageNode));
+    return this.ACTION((): Nodes.PropertyUsageNode => {
+      let length = <number>start.endOffset - identifier.startOffset + 1;
+      if (property) {
+        length += property.position.length;
+      }
+      return {
+        nodeType: Nodes.NodeType.PropertyUsage,
+        category: Nodes.NodeCategory.Variable,
+        name: identifier.image,
+        property: property,
+        position: {
+          offset: start.startOffset,
+          length: length,
+          line: start.startLine || 0,
+          col: start.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private functionDefinition = this.RULE('FunctionDefinition', (): Nodes.FunctionLiteralNode => {
     const params: Nodes.ParameterNode[] = [];

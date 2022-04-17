@@ -6,6 +6,8 @@ import Node, {
   TypeLiteral,
   TypeUsageNode,
   Statement,
+  InterfaceDefinitionNode,
+  TypeAliasDefinitionNode,
 } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>;
@@ -57,7 +59,11 @@ export interface VariableData {
 export type VariableMap = Map<number, VariableData>;
 export type VariableStack = Map<string, number>;
 export type VariableClosure = Set<number>;
-export type AnalyzedStatement = Exclude<Statement, BlockStatementNode> | AnalyzedBlockStatementNode;
+export type AnalyzedStatement =
+  | AnalyzedInterfaceDefinitionNode
+  | AnalyzedTypeAliasDefinitionNode
+  | AnalyzedBlockStatementNode
+  | Exclude<Statement, BlockStatementNode | InterfaceDefinitionNode | TypeAliasDefinitionNode>;
 export interface AnalyzedProgramNode extends ProgramNode {
   body: AnalyzedStatement[];
   data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
@@ -76,11 +82,31 @@ export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
   };
 }
 
+export interface AnalyzedInterfaceDefinitionNode extends InterfaceDefinitionNode {
+  data: {
+    _typeStack: TypeStack;
+  };
+}
+export interface AnalyzedTypeAliasDefinitionNode extends TypeAliasDefinitionNode {
+  data: {
+    _typeStack: TypeStack;
+  };
+}
+
 export type AnalyzerNode =
   | AnalyzedProgramNode
   | AnalyzedBlockStatementNode
   | AnalyzedFunctionLiteralNode
-  | Exclude<Node, ProgramNode | BlockStatementNode | FunctionLiteralNode>;
+  | AnalyzedInterfaceDefinitionNode
+  | AnalyzedTypeAliasDefinitionNode
+  | Exclude<
+      Node,
+      | ProgramNode
+      | BlockStatementNode
+      | FunctionLiteralNode
+      | InterfaceDefinitionNode
+      | TypeAliasDefinitionNode
+    >;
 export type AnalyzedExpression =
   | AnalyzedFunctionLiteralNode
   | Exclude<Expression, FunctionLiteralNode>;

@@ -18,6 +18,7 @@ export const enum BriskErrorType {
   InvalidTypeName,
   TypeHasAlreadyBeenDeclared,
   OptionalParametersMustAppearLast,
+  TypeMisMatch,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -42,11 +43,14 @@ export const BriskErrorMessage = {
   [BriskErrorType.InvalidTypeName]: 'Invalid Type Name %1',
   [BriskErrorType.TypeHasAlreadyBeenDeclared]: 'Type %1 Has Already Been Declared',
   [BriskErrorType.TypeNotFound]: 'Type %1 Not Found',
-  [BriskErrorType.OptionalParametersMustAppearLast]: 'Optional Parameters Must Appear Last In Function Defenition',
+  [BriskErrorType.OptionalParametersMustAppearLast]:
+    'Optional Parameters Must Appear Last In Function Definition',
+  [BriskErrorType.TypeMisMatch]: 'Mismatched Type Expected %1 Found %2',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1 Has Already Been Declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 Not Found',
   [BriskErrorType.ImportStatementExpectedAtTop]: 'Expected Import Statement At Top Of File',
   [BriskErrorType.ExportStatementExpectedAtBottom]: 'Expected Export Statement At Bottom Of File',
-  [BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement]: 'Declaration Cannot Occur Inside Single Line Statement'
+  [BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement]:
+    'Declaration Cannot Occur Inside Single Line Statement',
 };
