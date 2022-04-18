@@ -13,6 +13,7 @@ import Node, {
   EnumVariantNode,
   ProgramNode,
   UnaryExpressionOperator,
+  ParameterNode,
 } from '../Types/ParseNodes';
 import {
   AnalyzeNode,
@@ -23,7 +24,12 @@ import {
   TypeStack,
   TypeData,
 } from '../Types/AnalyzerNodes';
-import { createPrimType, createUnionType } from '../Helpers/index';
+import {
+  createPrimType,
+  createArrayType,
+  createFunctionSignatureType,
+  createUnionType,
+} from '../Helpers/index';
 import { BriskError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Type Helpers
@@ -211,13 +217,36 @@ const resolveType = (
         );
       }
       return type;
-    case NodeType.TypeUnionLiteral:
-      // TODO: Simplify Type
-      return {
-        ...type,
-        // Resolve Types
-        types: type.types.map((t) => resolveType(rawProgram, typePool, typeStack, typeStacks, t)),
-      };
+    case NodeType.TypeUnionLiteral: {
+      const types: TypeLiteral[] = [];
+      for (const t of type.types) {
+        const resolvedType = resolveType(rawProgram, typePool, typeStack, typeStacks, t);
+        if (
+          !types.some((checkType) => {
+            return typeEqual(
+              rawProgram,
+              typePool,
+              typeStack,
+              typeStacks,
+              resolvedType,
+              checkType,
+              false
+            );
+          })
+        ) {
+          types.push(resolvedType);
+        }
+      }
+      if (types.length == 1) {
+        return types[0];
+      } else {
+        return {
+          ...type,
+          // Resolve Types
+          types: types,
+        };
+      }
+    }
     case NodeType.ArrayTypeLiteral:
       return {
         ...type,
@@ -298,7 +327,7 @@ const typeCompatible = (
   );
   if (typesEqual) return true;
   // TODO: Ensure Types Are Compatible
-  return true;
+  return false;
 };
 const typeEqual = (
   rawProgram: string,
@@ -337,6 +366,21 @@ const typeEqual = (
     resolvedA.nodeType == NodeType.ArrayTypeLiteral &&
     resolvedB.nodeType == NodeType.ArrayTypeLiteral
   ) {
+    // TODO: Determine Array Length, Check Lengths
+    // if (resolvedA.length != resolvedB.length) {
+    //   if (throwError) {
+    //     BriskTypeError(
+    //       rawProgram,
+    //       BriskErrorType.TypeMisMatch,
+    //       [
+    //         rawProgram.slice(typeA.position.offset, typeA.position.offset + typeA.position.length),
+    //         rawProgram.slice(typeB.position.offset, typeB.position.offset + typeB.position.length),
+    //       ],
+    //       typeA.position
+    //     );
+    //   }
+    //   return false;
+    // }
     // Throw An Error If The Types Are Not The Same And ThrowError Is True
     return typeEqual(
       rawProgram,
@@ -349,9 +393,9 @@ const typeEqual = (
     );
   }
   // TODO: Check Type Equality
-  return true;
+  return false;
 };
-// TODO: Fix Analyzed Types, Remove Type Casts
+// TODO: Handle Resolving Generic Types
 // TODO: Implement Type Narrowing
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
@@ -363,7 +407,7 @@ const getExpressionType = (
   typePool: TypeMap,
   typeStack: TypeStack,
   typeStacks: TypeStack[],
-  expression: Expression,
+  expression: Expression | ParameterNode,
   props?: { mutable?: boolean }
 ): TypeLiteral => {
   switch (expression.nodeType) {
@@ -432,13 +476,62 @@ const getExpressionType = (
     case NodeType.NumberLiteral:
       return createPrimType(expression.position, 'Number');
     case NodeType.ConstantLiteral:
-      if (expression.value == 'void') return createPrimType(expression.position, 'Void');
-      else if (expression.value == 'true' || expression.value == 'false')
+      if (expression.value == 'true' || expression.value == 'false')
         return createPrimType(expression.position, 'Boolean');
+      else return createPrimType(expression.position, 'Void'); // Void Type
     case NodeType.FunctionLiteral:
-      break;
-    case NodeType.ArrayLiteral:
-      break;
+      // Build Type
+      return createFunctionSignatureType(
+        expression.position,
+        // Analyze Params
+        expression.params.map((p) =>
+          getExpressionType(
+            rawProgram,
+            varPool,
+            varStack,
+            varStacks,
+            typePool,
+            typeStack,
+            typeStacks,
+            p
+          )
+        ),
+        // Resolve Return Type
+        resolveType(rawProgram, typePool, typeStack, typeStacks, expression.returnType)
+      );
+    case NodeType.Parameter:
+      return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);
+    case NodeType.ArrayLiteral: {
+      // Get All Field Types
+      const elementTypes: TypeLiteral[] = [];
+      for (const element of expression.elements) {
+        // TODO: Support Array Spread
+        elementTypes.push(
+          getExpressionType(
+            rawProgram,
+            varPool,
+            varStack,
+            varStacks,
+            typePool,
+            typeStack,
+            typeStacks,
+            element
+          )
+        );
+      }
+      const arrayType = createArrayType(
+        expression.position,
+        resolveType(
+          rawProgram,
+          typePool,
+          typeStack,
+          typeStacks,
+          createUnionType(expression.position, ...elementTypes)
+        ),
+        elementTypes.length
+      );
+      return arrayType;
+    }
     case NodeType.ObjectLiteral: {
       // Handle Fields
       const fields: InterfaceFieldNode[] = [];
@@ -706,8 +799,7 @@ const typeCheckNode = <T extends Node>(
       process.exit(1);
     case NodeType.DeclarationStatement:
       // TODO: Handle TypeValidation Of Destructured Declarations
-      // Analyze Properties
-      node.varType = _typeCheckNode(node.varType);
+      // Analyze Value
       node.value = _typeCheckNode(node.value);
       // Infer Type
       if (node.varType.nodeType == NodeType.TypePrimLiteral) {
@@ -745,13 +837,15 @@ const typeCheckNode = <T extends Node>(
           } else {
             BriskTypeError(
               rawProgram,
-              BriskErrorType.TypeCouldNotBeInferred,
-              ['Array'],
+              BriskErrorType.ArrayTypeLengthCouldNotBeInferred,
+              [],
               node.position
             );
           }
         }
       }
+      // Analyze Type
+      node.varType = _typeCheckNode(node.varType);
       // Type Check
       typeEqual(
         rawProgram,
@@ -944,9 +1038,38 @@ const typeCheckNode = <T extends Node>(
     case NodeType.ConstantLiteral:
       return node;
     case NodeType.FunctionLiteral:
+      // TODO: Handle Generic Types
+      // Analyze ReturnType
+      node.returnType = _typeCheckNode(node.returnType);
+      // Analyze Parameters
+      node.params = node.params.map((param) => {
+        return _typeCheckNode(param, {
+          // Stacks
+          _closure: node.data._closure,
+          _varStack: node.data._varStack,
+          _typeStack: node.data._typeStack,
+          // Parent Stacks
+          _varStacks: [..._varStacks, _varStack],
+          _typeStacks: [..._typeStacks, _typeStack],
+        });
+      });
+      // Analyze Body
+      node.body = _typeCheckNode(node.body, {
+        // Stacks
+        _closure: node.data._closure,
+        _varStack: node.data._varStack,
+        _typeStack: node.data._typeStack,
+        // Parent Stacks
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
+      });
+      // TODO: Verify Return Type
+      // Return Node
+      return node;
     case NodeType.ArrayLiteral:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      // TODO: Support Array Spread
+      node.elements = node.elements.map((e) => _typeCheckNode(e));
+      return node;
     case NodeType.ObjectLiteral:
       // TODO: Check Type Of ObjectSpreads
       // Analyze Fields
@@ -990,6 +1113,15 @@ const typeCheckNode = <T extends Node>(
       // Return Node
       return node;
     case NodeType.TypePrimLiteral:
+      // We Infer Function Types Before Reaching This So If One Appears Here We Have An Issue
+      if (node.name == 'Function') {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeCouldNotBeInferred,
+          [node.name],
+          node.position
+        );
+      }
       return node;
     case NodeType.TypeUnionLiteral:
       node.types = node.types.map((type) => {
@@ -997,7 +1129,18 @@ const typeCheckNode = <T extends Node>(
       });
       return node;
     case NodeType.ArrayTypeLiteral:
+      // We Infer Array Length Before Reaching This So If One Appears Here We Have An Issue
+      if (node.length == undefined) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.ArrayTypeLengthCouldNotBeInferred,
+          [],
+          node.position
+        );
+      }
+      // Analyze Value
       node.value = _typeCheckNode(node.value);
+      // Ensure Length
       return node;
     case NodeType.ParenthesisTypeLiteral:
       node.value = _typeCheckNode(node.value);
@@ -1031,8 +1174,22 @@ const typeCheckNode = <T extends Node>(
       if (node.property) node.property = _typeCheckNode(node.property);
       return node;
     case NodeType.Parameter:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      // Analyze NodeType
+      node.paramType = _typeCheckNode(node.paramType);
+      // TODO: Handle Destructuring
+      // TODO: Handle Rest Syntax
+      // Set Variable Type To Be More Accurate
+      setVarType(
+        rawProgram,
+        _variables,
+        _varStack,
+        _varStacks,
+        node.name.name,
+        node.paramType,
+        node.position
+      );
+      // Return Value
+      return node;
   }
 };
 // Analyze Program

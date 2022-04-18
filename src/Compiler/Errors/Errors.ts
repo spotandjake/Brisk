@@ -20,6 +20,7 @@ export const enum BriskErrorType {
   OptionalParametersMustAppearLast,
   TypeMisMatch,
   TypeCouldNotBeInferred,
+  ArrayTypeLengthCouldNotBeInferred,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -48,6 +49,7 @@ export const BriskErrorMessage = {
     'Optional Parameters Must Appear Last In Function Definition',
   [BriskErrorType.TypeMisMatch]: 'Mismatched Type Expected %1 Found %2',
   [BriskErrorType.TypeCouldNotBeInferred]: 'Type %1 Could Not Be Inferred',
+  [BriskErrorType.ArrayTypeLengthCouldNotBeInferred]: 'Array Type Length Could Not Be Inferred',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1 Has Already Been Declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 Not Found',

@@ -26,6 +26,15 @@ if (<Boolean>1) {
 };
 let test: i64 = <i64>1n;
 test = 2N;
+// const arrayTest: (i32 | i64)[] = [
+//   1n,
+//   2n,
+//   3n,
+//   1N
+// ];
+const testFunction: Function = (t: i32, r: i32): i32 => {
+
+};
 // test.test = 1n;
 // type T = (i32 | i64);
 // type FunctionTypeTest = (i32, i64) => i32;
