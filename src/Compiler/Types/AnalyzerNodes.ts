@@ -1,14 +1,4 @@
-import Node, {
-  Expression,
-  ProgramNode,
-  BlockStatementNode,
-  FunctionLiteralNode,
-  TypeLiteral,
-  TypeUsageNode,
-  Statement,
-  InterfaceDefinitionNode,
-  TypeAliasDefinitionNode,
-} from './ParseNodes';
+import { Expression, TypeLiteral, TypeUsageNode } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>;
 interface ImportItem {
@@ -59,55 +49,3 @@ export interface VariableData {
 export type VariableMap = Map<number, VariableData>;
 export type VariableStack = Map<string, number>;
 export type VariableClosure = Set<number>;
-export type AnalyzedStatement =
-  | AnalyzedInterfaceDefinitionNode
-  | AnalyzedTypeAliasDefinitionNode
-  | AnalyzedBlockStatementNode
-  | Exclude<Statement, BlockStatementNode | InterfaceDefinitionNode | TypeAliasDefinitionNode>;
-export interface AnalyzedProgramNode extends ProgramNode {
-  body: AnalyzedStatement[];
-  data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
-}
-export interface AnalyzedBlockStatementNode extends BlockStatementNode {
-  data: {
-    _varStack: VariableStack;
-    _typeStack: TypeStack;
-  };
-}
-export interface AnalyzedFunctionLiteralNode extends FunctionLiteralNode {
-  data: {
-    _closure: VariableClosure;
-    _varStack: VariableStack;
-    _typeStack: TypeStack;
-  };
-}
-
-export interface AnalyzedInterfaceDefinitionNode extends InterfaceDefinitionNode {
-  data: {
-    _typeStack: TypeStack;
-  };
-}
-export interface AnalyzedTypeAliasDefinitionNode extends TypeAliasDefinitionNode {
-  data: {
-    _typeStack: TypeStack;
-  };
-}
-
-export type AnalyzerNode =
-  | AnalyzedProgramNode
-  | AnalyzedBlockStatementNode
-  | AnalyzedFunctionLiteralNode
-  | AnalyzedInterfaceDefinitionNode
-  | AnalyzedTypeAliasDefinitionNode
-  | Exclude<
-      Node,
-      | ProgramNode
-      | BlockStatementNode
-      | FunctionLiteralNode
-      | InterfaceDefinitionNode
-      | TypeAliasDefinitionNode
-    >;
-export type AnalyzedExpression =
-  | AnalyzedFunctionLiteralNode
-  | Exclude<Expression, FunctionLiteralNode>;
-export default AnalyzerNode;

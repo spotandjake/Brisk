@@ -19,6 +19,7 @@ export const enum BriskErrorType {
   TypeHasAlreadyBeenDeclared,
   OptionalParametersMustAppearLast,
   TypeMisMatch,
+  TypeCouldNotBeInferred,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -46,6 +47,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.OptionalParametersMustAppearLast]:
     'Optional Parameters Must Appear Last In Function Definition',
   [BriskErrorType.TypeMisMatch]: 'Mismatched Type Expected %1 Found %2',
+  [BriskErrorType.TypeCouldNotBeInferred]: 'Type %1 Could Not Be Inferred',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1 Has Already Been Declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 Not Found',

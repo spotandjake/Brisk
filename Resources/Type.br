@@ -28,20 +28,25 @@ let test: i64 = <i64>1n;
 test = 2N;
 // test.test = 1n;
 // type T = (i32 | i64);
-interface TestLiteral {
-  test: i32;
-}
-const testLiteral: TestLiteral = {
-  test: 1n
-};
-testLiteral.test = 2n;
+// type FunctionTypeTest = (i32, i64) => i32;
+// interface TestLiteral {
+//   let test: i32[];
+// }
+// const testObject: { test1: i32; } = {
+//   test1: 2n
+// };
+// const testLiteral: TestLiteral = {
+//   ...testObject,
+//   test: 1n
+// };
+// testLiteral.test = 2n;
 // type TypeTest<GenericTest, GenericTest1> = String;
 // interface TestInterface<GenericTest> {
 //   test: GenericTest;
 // }
-// enum EnumTest<GenericTest> {
-//   Test(GenericTest)
-// }
+enum EnumTest<GenericTest> {
+  Test(GenericTest)
+}
 // const nonGenericFunction: Function = (): Void => {
 //   return();
 // };

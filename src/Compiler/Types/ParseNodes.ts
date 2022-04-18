@@ -1,5 +1,6 @@
 // General Imports
 import { Position } from './Types';
+import { AnalyzeNode, VariableStack, TypeStack, VariableClosure } from './AnalyzerNodes';
 // Node Types
 export const enum NodeType {
   // Program
@@ -76,6 +77,7 @@ export interface ProgramNode {
   nodeType: NodeType.Program;
   category: NodeCategory.General;
   body: Statement[];
+  data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
   position: Position;
 }
 // Statements
@@ -112,6 +114,10 @@ export interface BlockStatementNode {
   nodeType: NodeType.BlockStatement;
   category: NodeCategory.Statement;
   body: Statement[];
+  data: {
+    _varStack: VariableStack;
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 export interface ImportStatementNode {
@@ -186,6 +192,9 @@ export interface EnumDefinitionStatementNode {
   name: string;
   variants: EnumVariantNode[];
   genericTypes: GenericTypeNode[] | undefined;
+  data: {
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 export interface EnumVariantNode {
@@ -354,6 +363,11 @@ export interface FunctionLiteralNode {
   returnType: TypeLiteral;
   params: ParameterNode[];
   body: Statement;
+  data: {
+    _closure: VariableClosure;
+    _varStack: VariableStack;
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 export interface ArrayLiteralNode {
@@ -403,14 +417,20 @@ export interface TypeAliasDefinitionNode {
   name: string;
   typeLiteral: TypeLiteral;
   genericTypes: GenericTypeNode[] | undefined;
+  data: {
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 export interface InterfaceDefinitionNode {
   nodeType: NodeType.InterfaceDefinition;
   category: NodeCategory.Type;
   name: string;
-  typeLiteral: TypeLiteral;
+  typeLiteral: InterfaceLiteralNode;
   genericTypes: undefined | GenericTypeNode[];
+  data: {
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 // TypeLiteral

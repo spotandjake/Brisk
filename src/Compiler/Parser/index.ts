@@ -26,6 +26,16 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.Program,
       category: Nodes.NodeCategory.General,
       body: body,
+      data: {
+        // Pools
+        _imports: new Map(),
+        _exports: new Map(),
+        _variables: new Map(),
+        _types: new Map(),
+        // Stacks
+        _varStack: new Map(),
+        _typeStack: new Map(),
+      },
       position: {
         offset: 0,
         length: (<number>this.input.at(-1)?.endOffset || -1) + 1,
@@ -117,6 +127,10 @@ class Parser extends EmbeddedActionsParser {
       nodeType: Nodes.NodeType.BlockStatement,
       category: Nodes.NodeCategory.Statement,
       body: body,
+      data: {
+        _varStack: new Map(),
+        _typeStack: new Map(),
+      },
       position: {
         offset: open.startOffset,
         length: <number>close.endOffset - open.startOffset + 1,
@@ -415,6 +429,9 @@ class Parser extends EmbeddedActionsParser {
           name: identifier.image,
           variants: variants,
           genericTypes: genericTypes,
+          data: {
+            _typeStack: new Map(),
+          },
           position: {
             offset: location.startOffset,
             length: <number>close.endOffset - location.startOffset + 1,
@@ -1255,6 +1272,11 @@ class Parser extends EmbeddedActionsParser {
         returnType: returnType,
         params: params,
         body: body,
+        data: {
+          _closure: new Set(),
+          _varStack: new Map(),
+          _typeStack: new Map(),
+        },
         position: {
           offset: location.startOffset,
           length: body.position.offset + body.position.length - location.startOffset,
@@ -1283,6 +1305,9 @@ class Parser extends EmbeddedActionsParser {
         name: name.image,
         typeLiteral: typeLiteral,
         genericTypes: genericTypes,
+        data: {
+          _typeStack: new Map(),
+        },
         position: {
           offset: location.startOffset,
           length: typeLiteral.position.offset + typeLiteral.position.length - location.startOffset,
@@ -1307,6 +1332,9 @@ class Parser extends EmbeddedActionsParser {
           name: name.image,
           typeLiteral: interfaceLiteral,
           genericTypes: genericTypes,
+          data: {
+            _typeStack: new Map(),
+          },
           position: {
             offset: location.startOffset,
             length:
@@ -1413,6 +1441,7 @@ class Parser extends EmbeddedActionsParser {
   private functionSignatureLiteral = this.RULE(
     'functionSignatureLiteral',
     (): Nodes.FunctionSignatureLiteralNode => {
+      // TODO: Support Generic Type On FunctionSignature Literals
       const params: Nodes.TypeLiteral[] = [];
       const location = this.CONSUME(Tokens.TknLParen);
       this.MANY_SEP({
@@ -1494,15 +1523,27 @@ class Parser extends EmbeddedActionsParser {
     });
   });
   // TypeUsage
-  private typeUsageNode = this.RULE('TypeUsage', (): Nodes.TypeUsageNode => {
-    const identifier = this.SUBRULE(this.typeIdentifier);
-    return {
-      nodeType: Nodes.NodeType.TypeUsage,
-      category: Nodes.NodeCategory.Type,
-      name: identifier.name,
-      position: identifier.position,
-    };
-  });
+  private typeUsageNode = this.RULE(
+    'TypeUsage',
+    (): Nodes.TypeUsageNode | Nodes.TypePrimLiteralNode => {
+      const identifier = this.SUBRULE(this.typeIdentifier);
+      if ((<Set<string>>Nodes.primTypes).has(identifier.name)) {
+        return {
+          nodeType: Nodes.NodeType.TypePrimLiteral,
+          category: Nodes.NodeCategory.Type,
+          name: <Nodes.PrimTypes>identifier.name,
+          position: identifier.position,
+        };
+      } else {
+        return {
+          nodeType: Nodes.NodeType.TypeUsage,
+          category: Nodes.NodeCategory.Type,
+          name: identifier.name,
+          position: identifier.position,
+        };
+      }
+    }
+  );
   // General Type Stuff
   private genericType = this.RULE('GenericType', (): Nodes.GenericTypeNode[] => {
     const identifiers: Nodes.TypeIdentifierNode[] = [];

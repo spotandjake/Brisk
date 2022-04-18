@@ -67,7 +67,7 @@ Object {
           Object {
             "category": 5,
             "name": "String",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -87,7 +87,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -146,7 +146,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -194,7 +194,7 @@ Object {
       "typeSignature": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -218,6 +218,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "A",
       "nodeType": 34,
@@ -231,7 +234,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 10,
           "file": "file",
@@ -243,6 +246,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "B",
       "nodeType": 34,
@@ -267,7 +273,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -279,7 +285,7 @@ Object {
           Object {
             "category": 5,
             "name": "i64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 16,
               "file": "file",
@@ -291,7 +297,7 @@ Object {
           Object {
             "category": 5,
             "name": "u32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 22,
               "file": "file",
@@ -303,7 +309,7 @@ Object {
           Object {
             "category": 5,
             "name": "u64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 28,
               "file": "file",
@@ -315,7 +321,7 @@ Object {
           Object {
             "category": 5,
             "name": "f32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 34,
               "file": "file",
@@ -327,7 +333,7 @@ Object {
           Object {
             "category": 5,
             "name": "f64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 40,
               "file": "file",
@@ -341,6 +347,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "C",
       "nodeType": 34,
@@ -365,7 +374,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -381,7 +390,7 @@ Object {
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 43,
+                "nodeType": 36,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -404,7 +413,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -416,7 +425,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 28,
                       "file": "file",
@@ -449,7 +458,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 36,
                     "file": "file",
@@ -461,7 +470,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 42,
                     "file": "file",
@@ -478,6 +487,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "D",
       "nodeType": 34,
@@ -502,7 +514,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -518,7 +530,7 @@ Object {
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 43,
+                "nodeType": 36,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -541,7 +553,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -553,7 +565,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 28,
                       "file": "file",
@@ -607,7 +619,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 43,
+                        "nodeType": 36,
                         "position": Object {
                           "col": 37,
                           "file": "file",
@@ -619,7 +631,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 43,
+                        "nodeType": 36,
                         "position": Object {
                           "col": 43,
                           "file": "file",
@@ -634,7 +646,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 50,
                     "file": "file",
@@ -651,6 +663,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "E",
       "nodeType": 35,
@@ -669,7 +684,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 11,
                 "file": "file",
@@ -695,7 +710,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 15,
                 "file": "file",
@@ -721,7 +736,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 12,
                 "file": "file",
@@ -752,7 +767,7 @@ Object {
                   "fieldType": Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 13,
                       "file": "file",
@@ -1248,7 +1263,7 @@ Object {
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 17,
+          "length": 10,
           "line": 40,
           "offset": 762,
         },
@@ -1257,12 +1272,13 @@ Object {
           "name": "field2",
           "nodeType": 49,
           "position": Object {
-            "col": 12,
+            "col": 11,
             "file": "file",
-            "length": 6,
+            "length": 0,
             "line": 40,
-            "offset": 773,
+            "offset": 772,
           },
+          "property": undefined,
         },
       },
       "nodeType": 8,
@@ -1329,6 +1345,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 8,
@@ -1379,6 +1399,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 30,
@@ -1475,6 +1499,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 13,
@@ -1694,6 +1722,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -1925,6 +1957,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 8,
@@ -1975,6 +2011,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -2049,6 +2089,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 8,
@@ -2099,6 +2143,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 18,
@@ -2171,6 +2219,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -2281,6 +2333,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -2355,6 +2411,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -2654,7 +2714,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -2737,7 +2797,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -2766,7 +2826,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 32,
+        "length": 25,
         "line": 90,
         "offset": 1538,
       },
@@ -2788,7 +2848,7 @@ Object {
         "position": Object {
           "col": 14,
           "file": "file",
-          "length": 18,
+          "length": 11,
           "line": 90,
           "offset": 1551,
         },
@@ -2797,18 +2857,19 @@ Object {
           "name": "field3",
           "nodeType": 49,
           "position": Object {
-            "col": 26,
+            "col": 25,
             "file": "file",
-            "length": 6,
+            "length": 0,
             "line": 90,
-            "offset": 1563,
+            "offset": 1562,
           },
+          "property": undefined,
         },
       },
       "varType": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -2869,6 +2930,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 36,
@@ -2879,6 +2944,11 @@ Object {
           },
         },
         "category": 4,
+        "data": Object {
+          "_closure": Set {},
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 29,
         "params": Array [
           Object {
@@ -2901,7 +2971,7 @@ Object {
             "paramType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 23,
                 "file": "file",
@@ -2929,7 +2999,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "i32",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 29,
             "file": "file",
@@ -2942,7 +3012,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Function",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -2990,7 +3060,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 10,
           "file": "file",
@@ -3077,6 +3147,10 @@ Object {
               },
             ],
             "category": 1,
+            "data": Object {
+              "_typeStack": Map {},
+              "_varStack": Map {},
+            },
             "nodeType": 3,
             "position": Object {
               "col": 13,
@@ -3087,6 +3161,11 @@ Object {
             },
           },
           "category": 4,
+          "data": Object {
+            "_closure": Set {},
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 29,
           "params": Array [],
           "position": Object {
@@ -3099,7 +3178,7 @@ Object {
           "returnType": Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 6,
               "file": "file",
@@ -3122,6 +3201,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3187,6 +3269,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3241,6 +3326,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3306,6 +3394,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3360,6 +3451,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3398,7 +3492,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "String",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 52,
           "file": "file",
@@ -3410,6 +3504,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3475,6 +3572,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -3575,7 +3675,7 @@ Object {
         "varType": Object {
           "category": 5,
           "name": "Number",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 17,
             "file": "file",
@@ -3707,6 +3807,14 @@ Object {
     },
   ],
   "category": 0,
+  "data": Object {
+    "_exports": Map {},
+    "_imports": Map {},
+    "_typeStack": Map {},
+    "_types": Map {},
+    "_varStack": Map {},
+    "_variables": Map {},
+  },
   "nodeType": 0,
   "position": Object {
     "col": 0,
@@ -3785,7 +3893,7 @@ Object {
           Object {
             "category": 5,
             "name": "String",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 21,
               "file": "file",
@@ -3805,7 +3913,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 32,
             "file": "file",
@@ -3864,7 +3972,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 22,
             "file": "file",
@@ -3912,7 +4020,7 @@ Object {
       "typeSignature": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 16,
           "file": "file",
@@ -3936,6 +4044,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "A",
       "nodeType": 34,
@@ -3949,7 +4060,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 10,
           "file": "file",
@@ -3961,6 +4072,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "B",
       "nodeType": 34,
@@ -3985,7 +4099,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -3997,7 +4111,7 @@ Object {
           Object {
             "category": 5,
             "name": "i64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 16,
               "file": "file",
@@ -4009,7 +4123,7 @@ Object {
           Object {
             "category": 5,
             "name": "u32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 22,
               "file": "file",
@@ -4021,7 +4135,7 @@ Object {
           Object {
             "category": 5,
             "name": "u64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 28,
               "file": "file",
@@ -4033,7 +4147,7 @@ Object {
           Object {
             "category": 5,
             "name": "f32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 34,
               "file": "file",
@@ -4045,7 +4159,7 @@ Object {
           Object {
             "category": 5,
             "name": "f64",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 40,
               "file": "file",
@@ -4059,6 +4173,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "C",
       "nodeType": 34,
@@ -4083,7 +4200,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -4099,7 +4216,7 @@ Object {
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 43,
+                "nodeType": 36,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -4122,7 +4239,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -4134,7 +4251,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 28,
                       "file": "file",
@@ -4167,7 +4284,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 36,
                     "file": "file",
@@ -4179,7 +4296,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 42,
                     "file": "file",
@@ -4196,6 +4313,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "D",
       "nodeType": 34,
@@ -4220,7 +4340,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 10,
               "file": "file",
@@ -4236,7 +4356,7 @@ Object {
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 43,
+                "nodeType": 36,
                 "position": Object {
                   "col": 17,
                   "file": "file",
@@ -4259,7 +4379,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 22,
                       "file": "file",
@@ -4271,7 +4391,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 28,
                       "file": "file",
@@ -4325,7 +4445,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 43,
+                        "nodeType": 36,
                         "position": Object {
                           "col": 37,
                           "file": "file",
@@ -4337,7 +4457,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 43,
+                        "nodeType": 36,
                         "position": Object {
                           "col": 43,
                           "file": "file",
@@ -4352,7 +4472,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 43,
+                  "nodeType": 36,
                   "position": Object {
                     "col": 50,
                     "file": "file",
@@ -4369,6 +4489,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": undefined,
       "name": "E",
       "nodeType": 35,
@@ -4387,7 +4510,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 11,
                 "file": "file",
@@ -4413,7 +4536,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 15,
                 "file": "file",
@@ -4439,7 +4562,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 12,
                 "file": "file",
@@ -4470,7 +4593,7 @@ Object {
                   "fieldType": Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 43,
+                    "nodeType": 36,
                     "position": Object {
                       "col": 13,
                       "file": "file",
@@ -4966,7 +5089,7 @@ Object {
         "position": Object {
           "col": 1,
           "file": "file",
-          "length": 17,
+          "length": 10,
           "line": 40,
           "offset": 762,
         },
@@ -4975,12 +5098,13 @@ Object {
           "name": "field2",
           "nodeType": 49,
           "position": Object {
-            "col": 12,
+            "col": 11,
             "file": "file",
-            "length": 6,
+            "length": 0,
             "line": 40,
-            "offset": 773,
+            "offset": 772,
           },
+          "property": undefined,
         },
       },
       "nodeType": 8,
@@ -5047,6 +5171,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 8,
@@ -5097,6 +5225,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 30,
@@ -5193,6 +5325,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 13,
@@ -5412,6 +5548,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -5643,6 +5783,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 8,
@@ -5693,6 +5837,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -5767,6 +5915,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 8,
@@ -5817,6 +5969,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 18,
@@ -5889,6 +6045,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -5999,6 +6159,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -6073,6 +6237,10 @@ Object {
           },
         ],
         "category": 1,
+        "data": Object {
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 3,
         "position": Object {
           "col": 11,
@@ -6372,7 +6540,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -6455,7 +6623,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -6484,7 +6652,7 @@ Object {
       "position": Object {
         "col": 1,
         "file": "file",
-        "length": 32,
+        "length": 25,
         "line": 90,
         "offset": 1538,
       },
@@ -6506,7 +6674,7 @@ Object {
         "position": Object {
           "col": 14,
           "file": "file",
-          "length": 18,
+          "length": 11,
           "line": 90,
           "offset": 1551,
         },
@@ -6515,18 +6683,19 @@ Object {
           "name": "field3",
           "nodeType": 49,
           "position": Object {
-            "col": 26,
+            "col": 25,
             "file": "file",
-            "length": 6,
+            "length": 0,
             "line": 90,
-            "offset": 1563,
+            "offset": 1562,
           },
+          "property": undefined,
         },
       },
       "varType": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -6587,6 +6756,10 @@ Object {
             },
           ],
           "category": 1,
+          "data": Object {
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 3,
           "position": Object {
             "col": 36,
@@ -6597,6 +6770,11 @@ Object {
           },
         },
         "category": 4,
+        "data": Object {
+          "_closure": Set {},
+          "_typeStack": Map {},
+          "_varStack": Map {},
+        },
         "nodeType": 29,
         "params": Array [
           Object {
@@ -6619,7 +6797,7 @@ Object {
             "paramType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 43,
+              "nodeType": 36,
               "position": Object {
                 "col": 23,
                 "file": "file",
@@ -6647,7 +6825,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "i32",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 29,
             "file": "file",
@@ -6660,7 +6838,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Function",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 8,
           "file": "file",
@@ -6708,7 +6886,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 10,
           "file": "file",
@@ -6795,6 +6973,10 @@ Object {
               },
             ],
             "category": 1,
+            "data": Object {
+              "_typeStack": Map {},
+              "_varStack": Map {},
+            },
             "nodeType": 3,
             "position": Object {
               "col": 13,
@@ -6805,6 +6987,11 @@ Object {
             },
           },
           "category": 4,
+          "data": Object {
+            "_closure": Set {},
+            "_typeStack": Map {},
+            "_varStack": Map {},
+          },
           "nodeType": 29,
           "params": Array [],
           "position": Object {
@@ -6817,7 +7004,7 @@ Object {
           "returnType": Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 43,
+            "nodeType": 36,
             "position": Object {
               "col": 6,
               "file": "file",
@@ -6840,6 +7027,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -6905,6 +7095,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -6959,6 +7152,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -7024,6 +7220,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -7078,6 +7277,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -7116,7 +7318,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "String",
-        "nodeType": 43,
+        "nodeType": 36,
         "position": Object {
           "col": 52,
           "file": "file",
@@ -7128,6 +7330,9 @@ Object {
     },
     Object {
       "category": 5,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -7193,6 +7398,9 @@ Object {
     },
     Object {
       "category": 1,
+      "data": Object {
+        "_typeStack": Map {},
+      },
       "genericTypes": Array [
         Object {
           "category": 5,
@@ -7293,7 +7501,7 @@ Object {
         "varType": Object {
           "category": 5,
           "name": "Number",
-          "nodeType": 43,
+          "nodeType": 36,
           "position": Object {
             "col": 17,
             "file": "file",
@@ -7425,6 +7633,14 @@ Object {
     },
   ],
   "category": 0,
+  "data": Object {
+    "_exports": Map {},
+    "_imports": Map {},
+    "_typeStack": Map {},
+    "_types": Map {},
+    "_varStack": Map {},
+    "_variables": Map {},
+  },
   "nodeType": 0,
   "position": Object {
     "col": 0,

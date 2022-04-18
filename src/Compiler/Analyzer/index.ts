@@ -6,29 +6,16 @@ import Node, {
   Expression,
   NodeCategory,
   DeclarationTypes,
-  TypeLiteral,
-  VariableUsage,
   VariableUsageNode,
-  TypeUnionLiteralNode,
-  TypePrimLiteralNode,
-  ParenthesisTypeLiteralNode,
   ObjectFieldNode,
   ObjectSpreadNode,
   primTypes,
   TypeUsageNode,
-  PropertyUsageNode,
-  NumberLiteralNode,
-  EnumVariantNode,
-  ExportStatementValue,
-  GenericTypeNode,
 } from '../Types/ParseNodes';
-import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
-import AnalyzerNode, {
+import {
   ImportMap,
   ExportMap,
   AnalyzeNode,
-  AnalyzedProgramNode,
-  AnalyzedBlockStatementNode,
   TypeMap,
   TypeStack,
   TypeData,
@@ -36,10 +23,9 @@ import AnalyzerNode, {
   VariableData,
   VariableMap,
   VariableStack,
-  AnalyzedFunctionLiteralNode,
-  AnalyzedInterfaceDefinitionNode,
-  AnalyzedTypeAliasDefinitionNode,
 } from '../Types/AnalyzerNodes';
+import { createPrimType, createParenthesisType, createUnionType } from '../Helpers/index';
+import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Variable Interactions
 const createVariable = (
@@ -133,12 +119,7 @@ const getType = (
   // Get Variable Reference
   let varName: string;
   if (typeof typeReference == 'string') varName = typeReference;
-  else if (typeReference.nodeType == NodeType.TypeUsage) varName = typeReference.name;
-  else {
-    // TODO: Implement Checking On Member Access
-    BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], position);
-    process.exit(1);
-  }
+  else varName = typeReference.name;
   // Search The Stacks
   const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
@@ -158,15 +139,15 @@ const getType = (
   return value;
 };
 // Analyze Node
-const analyzeNode = (
+const analyzeNode = <T extends Node>(
   // Code
   rawProgram: string,
   // Stacks
   properties: AnalyzeNode,
   // Nodes
   parentNode: Node | undefined,
-  node: Node
-): AnalyzerNode => {
+  node: T
+): T => {
   const {
     // Our Global Variable And Type Pools
     _imports,
@@ -181,11 +162,11 @@ const analyzeNode = (
     _varStack,
     _typeStack,
   } = properties;
-  const _analyzeNode = (
-    childNode: Node,
+  const _analyzeNode = <_T extends Node>(
+    childNode: _T,
     props: Partial<AnalyzeNode> = properties,
     parentNode: Node = node
-  ): AnalyzerNode => {
+  ): _T => {
     return analyzeNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
   };
   // Match The Node For Analysis
@@ -228,34 +209,34 @@ const analyzeNode = (
           );
         prevNode = statementNode;
       }
-      // Return Our Node
-      return <AnalyzedProgramNode>{
-        ...node,
-        body: node.body.map((child: Statement) =>
-          _analyzeNode(child, {
-            _imports: imports,
-            _exports: exports,
-            // Our Global Variable And Type Pools
-            _variables: variables,
-            _types: types,
-            // Parent Stacks
-            _varStacks: [],
-            _typeStacks: [],
-            // Stacks
-            _closure: new Set(),
-            _varStack: varStack,
-            _typeStack: typeStack,
-          })
-        ),
-        data: {
+      // Analyze Body
+      node.body = node.body.map((child: Statement) => {
+        return _analyzeNode(child, {
           _imports: imports,
           _exports: exports,
+          // Our Global Variable And Type Pools
           _variables: variables,
           _types: types,
+          // Parent Stacks
+          _varStacks: [],
+          _typeStacks: [],
+          // Stacks
+          _closure: new Set(),
           _varStack: varStack,
           _typeStack: typeStack,
-        },
+        });
+      });
+      // Set Data Payload
+      node.data = {
+        _imports: imports,
+        _exports: exports,
+        _variables: variables,
+        _types: types,
+        _varStack: varStack,
+        _typeStack: typeStack,
       };
+      // Return Our Node
+      return node;
     }
     // Statements
     case NodeType.IfStatement:
@@ -267,10 +248,10 @@ const analyzeNode = (
           [],
           node.position
         );
-      node.condition = <Expression>_analyzeNode(node.condition);
+      node.condition = _analyzeNode(node.condition);
       // Analyze Body And Alternative
-      node.body = <Statement>_analyzeNode(node.body);
-      if (node.alternative) node.alternative = <Statement>_analyzeNode(node.body);
+      node.body = _analyzeNode(node.body);
+      if (node.alternative) node.alternative = _analyzeNode(node.body);
       return node;
     case NodeType.FlagStatement:
       if (node.args.length != 0) {
@@ -297,26 +278,25 @@ const analyzeNode = (
       // Create Our New Stacks
       const varStack: VariableStack = new Map();
       const typeStack: TypeStack = new Map();
-      // Push Our Old Stack To The List
-      // Return Our Node
-      return <AnalyzedBlockStatementNode>{
-        ...node,
-        body: node.body.map((child: Statement) =>
-          _analyzeNode(child, {
-            // Stacks
-            _closure: _closure,
-            _varStack: varStack,
-            _typeStack: typeStack,
-            // Stack Pool
-            _varStacks: [..._varStacks, _varStack],
-            _typeStacks: [..._typeStacks, _typeStack],
-          })
-        ),
-        data: {
+      // Analyze Body
+      node.body = node.body.map((child: Statement) => {
+        return _analyzeNode(child, {
+          // Stacks
+          _closure: _closure,
           _varStack: varStack,
           _typeStack: typeStack,
-        },
+          // Stack Pool
+          _varStacks: [..._varStacks, _varStack],
+          _typeStacks: [..._typeStacks, _typeStack],
+        });
+      });
+      // Set Data Payload
+      node.data = {
+        _varStack: varStack,
+        _typeStack: typeStack,
       };
+      // Return Our Node
+      return node;
     }
     case NodeType.ImportStatement:
       _imports.set(node.variable.name, {
@@ -337,19 +317,14 @@ const analyzeNode = (
           import: true,
           wasmImport: false,
           used: false,
-          type: <TypePrimLiteralNode>{
-            nodeType: NodeType.TypePrimLiteral,
-            category: NodeCategory.Type,
-            name: 'Unknown',
-            position: node.variable.position,
-          },
+          type: createPrimType(node.variable.position, 'Unknown'),
         },
         node.position
       );
       return node;
     case NodeType.WasmImportStatement:
       // Analyze Type
-      node.typeSignature = <TypeLiteral>_analyzeNode(node.typeSignature);
+      node.typeSignature = _analyzeNode(node.typeSignature);
       // Add Variable
       createVariable(
         rawProgram,
@@ -372,7 +347,7 @@ const analyzeNode = (
       return node;
     case NodeType.ExportStatement: {
       // Analysis
-      node.value = <ExportStatementValue>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
       // Analyze Object Literal
       if (node.value.nodeType == NodeType.ObjectLiteral) {
         // Add Fields To Export
@@ -484,7 +459,7 @@ const analyzeNode = (
     case NodeType.DeclarationStatement:
       // TODO: Handle Destructuring
       // Analyze Type Variable
-      node.varType = <TypeLiteral>_analyzeNode(node.varType);
+      node.varType = _analyzeNode(node.varType);
       // Add Variable To Stack
       createVariable(
         rawProgram,
@@ -504,14 +479,14 @@ const analyzeNode = (
         node.position
       );
       // Analyze The Value
-      node.value = <Expression>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
       return node;
     case NodeType.AssignmentStatement:
       // Analyze Value
-      node.value = <Expression>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
     case NodeType.PostFixStatement: {
       // Analyze Variable
-      node.name = <VariableUsage>_analyzeNode(node.name);
+      node.name = _analyzeNode(node.name);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
       // Verify That Var Exists And Is mutable
       const variableData = getVariable(
@@ -534,7 +509,7 @@ const analyzeNode = (
       return node;
     }
     case NodeType.ReturnStatement:
-      if (node.returnValue) node.returnValue = <Expression>_analyzeNode(node.returnValue);
+      if (node.returnValue) node.returnValue = _analyzeNode(node.returnValue);
       return node;
     case NodeType.EnumDefinitionStatement: {
       // TODO: Add To Variable List As An Object Maybe
@@ -543,7 +518,7 @@ const analyzeNode = (
       // Analyze Generic Types
       if (node.genericTypes) {
         node.genericTypes = node.genericTypes.map((genericType) => {
-          return <GenericTypeNode>_analyzeNode(genericType, {
+          return _analyzeNode(genericType, {
             // Stacks
             _typeStack: typeStack,
             // Stack Pool
@@ -565,7 +540,7 @@ const analyzeNode = (
       }
       // Analyze Variants
       node.variants = node.variants.map((variant) => {
-        return <EnumVariantNode>_analyzeNode(variant, {
+        return _analyzeNode(variant, {
           // Stacks
           _typeStack: typeStack,
           // Stack Pool
@@ -607,37 +582,41 @@ const analyzeNode = (
         },
         node.position
       );
+      // Set Data Payload
+      node.data = {
+        _typeStack: typeStack,
+      };
       return node;
     }
     case NodeType.EnumVariant:
       // Analyze Value
       if (node.value) {
         if (Array.isArray(node.value))
-          node.value = node.value.map((typeLiteral) => <TypeLiteral>_analyzeNode(typeLiteral));
+          node.value = node.value.map((typeLiteral) => _analyzeNode(typeLiteral));
         else if (node.value.category == NodeCategory.Expression)
-          node.value = <Expression>_analyzeNode(node.value);
+          node.value = _analyzeNode(node.value);
       }
       return node;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
-      node.lhs = <Expression>_analyzeNode(node.lhs);
-      node.rhs = <Expression>_analyzeNode(node.rhs);
+      node.lhs = _analyzeNode(node.lhs);
+      node.rhs = _analyzeNode(node.rhs);
       return node;
     case NodeType.TypeCastExpression:
-      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral);
+      node.typeLiteral = _analyzeNode(node.typeLiteral);
     case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
-      node.value = <Expression>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
       return node;
     case NodeType.CallExpression:
       // Analyze Callee
-      node.callee = <Expression>_analyzeNode(node.callee);
+      node.callee = _analyzeNode(node.callee);
       // Analyze Arguments
-      node.args = node.args.map((arg: Expression) => <Expression>_analyzeNode(arg));
+      node.args = node.args.map((arg: Expression) => _analyzeNode(arg));
       return node;
     case NodeType.WasmCallExpression:
-      node.args = node.args.map((arg) => <Expression>_analyzeNode(arg));
+      node.args = node.args.map((arg) => _analyzeNode(arg));
       return node;
     // Literals
     case NodeType.StringLiteral:
@@ -667,22 +646,10 @@ const analyzeNode = (
             param.position
           );
       }
-      // Analyze Params
-      return <AnalyzedFunctionLiteralNode>{
-        ...node,
-        returnType: <TypeLiteral>_analyzeNode(node.returnType),
-        params: node.params.map((param) =>
-          _analyzeNode(param, {
-            // Parent Stacks
-            _varStacks: [..._varStacks, _varStack],
-            _typeStacks: [..._typeStacks, _typeStack],
-            // Stacks
-            _closure: closure,
-            _varStack: varStack,
-            _typeStack: typeStack,
-          })
-        ),
-        body: _analyzeNode(node.body, {
+      // Analyze node
+      node.returnType = _analyzeNode(node.returnType);
+      node.params = node.params.map((param) => {
+        return _analyzeNode(param, {
           // Parent Stacks
           _varStacks: [..._varStacks, _varStack],
           _typeStacks: [..._typeStacks, _typeStack],
@@ -690,17 +657,29 @@ const analyzeNode = (
           _closure: closure,
           _varStack: varStack,
           _typeStack: typeStack,
-        }),
-        data: {
-          _closure: closure,
-          _varStack: varStack,
-          _typeStack: typeStack,
-        },
+        });
+      });
+      node.body = _analyzeNode(node.body, {
+        // Parent Stacks
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
+        // Stacks
+        _closure: closure,
+        _varStack: varStack,
+        _typeStack: typeStack,
+      });
+      // Set Data Payload
+      node.data = {
+        _closure: closure,
+        _varStack: varStack,
+        _typeStack: typeStack,
       };
+      // Analyze Params
+      return node;
     }
     case NodeType.ArrayLiteral:
       // Analyze Elements
-      node.elements = node.elements.map((element) => <Expression>_analyzeNode(element));
+      node.elements = node.elements.map((element) => _analyzeNode(element));
       // Return Node
       return node;
     case NodeType.ObjectLiteral: {
@@ -708,7 +687,7 @@ const analyzeNode = (
       const fields: (ObjectFieldNode | ObjectSpreadNode)[] = [];
       for (const field of node.fields) {
         // field
-        field.fieldValue = <Expression>_analyzeNode(field.fieldValue);
+        field.fieldValue = _analyzeNode(field.fieldValue);
         // Check if field exists
         if (
           field.nodeType == NodeType.ObjectField &&
@@ -740,7 +719,7 @@ const analyzeNode = (
       // Analyze Generic Types
       if (node.genericTypes) {
         node.genericTypes = node.genericTypes.map((genericType) => {
-          return <GenericTypeNode>_analyzeNode(genericType, {
+          return _analyzeNode(genericType, {
             // Stacks
             _typeStack: typeStack,
             // Stack Pool
@@ -749,7 +728,7 @@ const analyzeNode = (
         });
       }
       // Analyze Interface
-      node.typeLiteral = <TypeLiteral>_analyzeNode(node.typeLiteral, {
+      node.typeLiteral = _analyzeNode(node.typeLiteral, {
         // Stacks
         _typeStack: typeStack,
         // Stack Pool
@@ -761,33 +740,32 @@ const analyzeNode = (
         exported: false,
         type: node.typeLiteral,
       });
-      return <AnalyzedInterfaceDefinitionNode | AnalyzedTypeAliasDefinitionNode>{
-        ...node,
-        data: {
-          _typeStack: typeStack,
-        },
+      // Set Data Payload
+      node.data = {
+        _typeStack: typeStack,
       };
+      return node;
     }
     case NodeType.TypePrimLiteral:
       return node;
     case NodeType.TypeUnionLiteral:
       // Analyze Types
-      node.types = node.types.map((type) => <TypeLiteral>_analyzeNode(type));
+      node.types = node.types.map((type) => _analyzeNode(type));
       return node;
     case NodeType.ArrayTypeLiteral:
       // Analyze Length
-      if (node.length) node.length = <NumberLiteralNode>_analyzeNode(node.length);
+      if (node.length) node.length = _analyzeNode(node.length);
       // Analyze Value
-      node.value = <TypeLiteral>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
       return node;
     case NodeType.ParenthesisTypeLiteral:
-      node.value = <TypeLiteral>_analyzeNode(node.value);
+      node.value = _analyzeNode(node.value);
       return node;
     case NodeType.FunctionSignatureLiteral:
       // Analyze Parameter Types
-      node.params = node.params.map((param) => <TypeLiteral>_analyzeNode(param));
+      node.params = node.params.map((param) => _analyzeNode(param));
       // Analyze Return Types
-      node.returnType = <TypeLiteral>_analyzeNode(node.returnType);
+      node.returnType = _analyzeNode(node.returnType);
       return node;
     case NodeType.InterfaceLiteral: {
       // Analyze Fields
@@ -795,22 +773,13 @@ const analyzeNode = (
       node.fields = node.fields.map((field) => {
         if (fields.has(field.name))
           BriskTypeError(rawProgram, BriskErrorType.DuplicateField, [field.name], field.position);
-        field.fieldType = <TypeLiteral>_analyzeNode(field.fieldType);
+        field.fieldType = _analyzeNode(field.fieldType);
         fields.add(field.name);
         return field;
       });
       return node;
     }
     case NodeType.TypeUsage:
-      // Check If Type Is A Primitive Type
-      if ((<Set<string>>primTypes).has(node.name)) {
-        return <TypePrimLiteralNode>{
-          nodeType: NodeType.TypePrimLiteral,
-          category: NodeCategory.Type,
-          name: node.name,
-          position: node.position,
-        };
-      }
       getType(rawProgram, _types, _typeStack, _typeStacks, node.name, node.position, {});
       return node;
     case NodeType.GenericType:
@@ -833,38 +802,24 @@ const analyzeNode = (
       return node;
     case NodeType.MemberAccess:
       // Analyze Parent
-      node.parent = <Expression>_analyzeNode(node.parent);
+      node.parent = _analyzeNode(node.parent);
       // Analyze Child
-      node.property = <PropertyUsageNode>_analyzeNode(node.property);
+      node.property = _analyzeNode(node.property);
     case NodeType.PropertyUsage:
       // Analyze Node Property
-      if (node.property) node.property = <PropertyUsageNode>_analyzeNode(node.property);
+      if (node.property) node.property = _analyzeNode(node.property);
       // Return node
       return node;
     case NodeType.Parameter: {
       if (node.optional) {
-        node.paramType = <TypeUnionLiteralNode>{
-          nodeType: NodeType.TypeUnionLiteral,
-          category: NodeCategory.Type,
-          types: [
-            <TypePrimLiteralNode>{
-              nodeType: NodeType.TypePrimLiteral,
-              category: NodeCategory.Type,
-              name: 'Void',
-              position: node.paramType.position,
-            },
-            <ParenthesisTypeLiteralNode>{
-              nodeType: NodeType.ParenthesisTypeLiteral,
-              category: NodeCategory.Type,
-              value: node.paramType,
-              position: node.paramType.position,
-            },
-          ],
-          position: node.paramType.position,
-        };
+        node.paramType = createUnionType(
+          node.paramType.position,
+          createPrimType(node.paramType.position, 'Void'),
+          createParenthesisType(node.paramType.position, node.paramType)
+        );
       }
       // Change Type To Include Void
-      node.paramType = <TypeLiteral>_analyzeNode(node.paramType);
+      node.paramType = _analyzeNode(node.paramType);
       // Add Variable To Stack
       // TODO: Support Destructuring
       createVariable(
@@ -889,8 +844,8 @@ const analyzeNode = (
   }
 };
 // Analyze Program
-const analyzeProgram = (rawProgram: string, program: ProgramNode): AnalyzedProgramNode => {
-  return <AnalyzedProgramNode>analyzeNode(
+const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode => {
+  return analyzeNode(
     rawProgram,
     {
       _imports: new Map(),

@@ -23,7 +23,7 @@ const _BriskError = (
   let errorTemplate = BriskErrorMessage[errorCode];
   // Replace Error Template
   errorParams.forEach((param, index) => {
-    errorTemplate = errorTemplate.replaceAll(`%${index+1}`, `\`${param}\``);
+    errorTemplate = errorTemplate.replaceAll(`%${index + 1}`, `\`${param}\``);
   });
   // Build Error Message
   const errorMessage = `${type}[${errorCode}]: ${errorTemplate}`;

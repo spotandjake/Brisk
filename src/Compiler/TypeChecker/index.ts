@@ -1,23 +1,21 @@
 import { Position } from '../Types/Types';
-import {
+import Node, {
   NodeType,
   NodeCategory,
-  PrimTypes,
-  TypePrimLiteralNode,
+  Expression,
   TypeLiteral,
   VariableUsageNode,
-  VariableUsage,
   TypeUsageNode,
   PropertyUsageNode,
   InterfaceLiteralNode,
+  InterfaceFieldNode,
   GenericTypeNode,
+  EnumVariantNode,
+  ProgramNode,
+  UnaryExpressionOperator,
 } from '../Types/ParseNodes';
-import { BriskError, BriskTypeError } from '../Errors/Compiler';
-import AnalyzerNode, {
+import {
   AnalyzeNode,
-  AnalyzedProgramNode,
-  AnalyzedStatement,
-  AnalyzedExpression,
   VariableMap,
   VariableStack,
   VariableData,
@@ -25,16 +23,10 @@ import AnalyzerNode, {
   TypeStack,
   TypeData,
 } from '../Types/AnalyzerNodes';
+import { createPrimType, createUnionType } from '../Helpers/index';
+import { BriskError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Type Helpers
-const createPrimType = (primType: PrimTypes, position: Position): TypePrimLiteralNode => {
-  return {
-    nodeType: NodeType.TypePrimLiteral,
-    category: NodeCategory.Type,
-    name: primType,
-    position: position,
-  };
-};
 const buildObjectType = (memberAccess: PropertyUsageNode): InterfaceLiteralNode | TypeLiteral => {
   if (memberAccess.property != undefined) {
     return {
@@ -54,23 +46,18 @@ const buildObjectType = (memberAccess: PropertyUsageNode): InterfaceLiteralNode 
       position: memberAccess.position,
     };
   } else {
-    return createPrimType('Any', memberAccess.position);
+    return createPrimType(memberAccess.position, 'Any');
   }
 };
-const getObjectPropertyType = (
+const getObjectPropertyField = (
   memberAccess: PropertyUsageNode,
   type: InterfaceLiteralNode
-): TypeLiteral | undefined => {
+): InterfaceFieldNode | undefined => {
   // Find Type
   const field = type.fields.find((f) => f.name == memberAccess.name);
-  if (
-    memberAccess.property != undefined &&
-    field?.fieldType.nodeType == NodeType.InterfaceLiteral
-  ) {
-    return getObjectPropertyType(memberAccess.property, field.fieldType);
-  } else {
-    return field?.fieldType;
-  }
+  if (memberAccess.property != undefined && field?.fieldType.nodeType == NodeType.InterfaceLiteral)
+    return getObjectPropertyField(memberAccess.property, field.fieldType);
+  else return field;
 };
 const getTypeReference = (
   rawProgram: string,
@@ -205,12 +192,162 @@ const setVarType = (
   });
 };
 // Checking Helpers
-// const resolveType = (rawProgram: string, typeA: TypeLiteral, typeB: TypeLiteral): TypeLiteral => {};
-const typeCompatible = (rawProgram: string, typeA: TypeLiteral, typeB: TypeLiteral): boolean => {
+const resolveType = (
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  type: TypeLiteral
+): TypeLiteral => {
+  // TODO: Handle Recursive Types
+  switch (type.nodeType) {
+    case NodeType.TypePrimLiteral:
+      if (type.name == 'Function') {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeCouldNotBeInferred,
+          [type.name],
+          type.position
+        );
+      }
+      return type;
+    case NodeType.TypeUnionLiteral:
+      // TODO: Simplify Type
+      return {
+        ...type,
+        // Resolve Types
+        types: type.types.map((t) => resolveType(rawProgram, typePool, typeStack, typeStacks, t)),
+      };
+    case NodeType.ArrayTypeLiteral:
+      return {
+        ...type,
+        // Resolve Base Type
+        value: resolveType(rawProgram, typePool, typeStack, typeStacks, type.value),
+      };
+    case NodeType.ParenthesisTypeLiteral:
+      // Resolve Wrapped Type
+      return resolveType(rawProgram, typePool, typeStack, typeStacks, type.value);
+    case NodeType.FunctionSignatureLiteral:
+      return {
+        ...type,
+        // Resolve Param Types
+        params: type.params.map((p) => resolveType(rawProgram, typePool, typeStack, typeStacks, p)),
+        // Resolve Return Type
+        returnType: resolveType(rawProgram, typePool, typeStack, typeStacks, type.returnType),
+      };
+    case NodeType.InterfaceLiteral:
+      return {
+        ...type,
+        fields: type.fields.map((field) => {
+          return {
+            ...field,
+            fieldType: resolveType(rawProgram, typePool, typeStack, typeStacks, field.fieldType),
+          };
+        }),
+      };
+    case NodeType.EnumDefinitionStatement: {
+      // Analyze Variants
+      const variants: EnumVariantNode[] = [];
+      for (const variant of type.variants) {
+        if (Array.isArray(variant.value)) {
+          variants.push({
+            ...variant,
+            value: variant.value.map((v) =>
+              resolveType(rawProgram, typePool, typeStack, typeStacks, v)
+            ),
+          });
+        } else variants.push(variant);
+      }
+      return {
+        ...type,
+        variants: variants,
+      };
+    }
+    case NodeType.TypeUsage:
+      return resolveType(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        getTypeVar(rawProgram, typePool, typeStack, typeStacks, type.name, type.position)
+      );
+    case NodeType.GenericType:
+      return type;
+  }
+};
+const typeCompatible = (
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral
+): boolean => {
+  // Resolve Both Types
+  const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
+  const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
+  // Check If Types Are Already Equal
+  const typesEqual = typeEqual(
+    rawProgram,
+    typePool,
+    typeStack,
+    typeStacks,
+    resolvedA,
+    resolvedB,
+    false
+  );
+  if (typesEqual) return true;
   // TODO: Ensure Types Are Compatible
   return true;
 };
-const typeEqual = (rawProgram: string, typeA: TypeLiteral, typeB: TypeLiteral): boolean => {
+const typeEqual = (
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral,
+  throwError = true
+): boolean => {
+  // Resolve Both Types
+  const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
+  const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
+  // If Either Type Is Any Then We Can Leave
+  // TODO: Remove Any Type
+  if (resolvedA.nodeType == NodeType.TypePrimLiteral && resolvedA.name == 'Any') return true;
+  if (resolvedB.nodeType == NodeType.TypePrimLiteral && resolvedB.name == 'Any') return true;
+  // Handle PrimLiteral Types
+  if (
+    resolvedA.nodeType == NodeType.TypePrimLiteral &&
+    resolvedB.nodeType == NodeType.TypePrimLiteral
+  ) {
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+    if (resolvedA.name != resolvedB.name && throwError) {
+      BriskTypeError(
+        rawProgram,
+        BriskErrorType.TypeMisMatch,
+        [resolvedA.name, resolvedB.name],
+        typeA.position
+      );
+    }
+    return resolvedA.name == resolvedB.name;
+  }
+  // Handle Array Types
+  if (
+    resolvedA.nodeType == NodeType.ArrayTypeLiteral &&
+    resolvedB.nodeType == NodeType.ArrayTypeLiteral
+  ) {
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+    return typeEqual(
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.value,
+      resolvedB.value,
+      throwError
+    );
+  }
   // TODO: Check Type Equality
   return true;
 };
@@ -223,22 +360,54 @@ const getExpressionType = (
   varPool: VariableMap,
   varStack: VariableStack,
   varStacks: VariableStack[],
-  expression: AnalyzedExpression
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  expression: Expression,
+  props?: { mutable?: boolean }
 ): TypeLiteral => {
   switch (expression.nodeType) {
     case NodeType.ComparisonExpression:
-      return createPrimType('Boolean', expression.position);
+      return createPrimType(expression.position, 'Boolean');
     case NodeType.ArithmeticExpression:
-      break;
+      return getExpressionType(
+        rawProgram,
+        varPool,
+        varStack,
+        varStacks,
+        typePool,
+        typeStack,
+        typeStacks,
+        expression.lhs
+      );
     case NodeType.UnaryExpression:
-      break;
+      if (expression.operator == UnaryExpressionOperator.UnaryNot) {
+        return createPrimType(expression.position, 'Boolean');
+      } else if (
+        expression.operator == UnaryExpressionOperator.UnaryNegative ||
+        expression.operator == UnaryExpressionOperator.UnaryPositive
+      ) {
+        return getExpressionType(
+          rawProgram,
+          varPool,
+          varStack,
+          varStacks,
+          typePool,
+          typeStack,
+          typeStacks,
+          expression.value
+        );
+      }
     case NodeType.ParenthesisExpression:
       return getExpressionType(
         rawProgram,
         varPool,
         varStack,
         varStacks,
-        <AnalyzedExpression>expression.value
+        typePool,
+        typeStack,
+        typeStacks,
+        expression.value
       );
     case NodeType.TypeCastExpression:
       return expression.typeLiteral;
@@ -247,31 +416,93 @@ const getExpressionType = (
     case NodeType.WasmCallExpression:
       break;
     case NodeType.StringLiteral:
-      return createPrimType('String', expression.position);
+      return createPrimType(expression.position, 'String');
     case NodeType.I32Literal:
-      return createPrimType('i32', expression.position);
+      return createPrimType(expression.position, 'i32');
     case NodeType.I64Literal:
-      return createPrimType('i64', expression.position);
+      return createPrimType(expression.position, 'i64');
     case NodeType.U32Literal:
-      return createPrimType('u32', expression.position);
+      return createPrimType(expression.position, 'u32');
     case NodeType.U64Literal:
-      return createPrimType('u64', expression.position);
+      return createPrimType(expression.position, 'u64');
     case NodeType.F32Literal:
-      return createPrimType('f32', expression.position);
+      return createPrimType(expression.position, 'f32');
     case NodeType.F64Literal:
-      return createPrimType('f64', expression.position);
+      return createPrimType(expression.position, 'f64');
     case NodeType.NumberLiteral:
-      return createPrimType('Number', expression.position);
+      return createPrimType(expression.position, 'Number');
     case NodeType.ConstantLiteral:
-      if (expression.value == 'void') return createPrimType('Void', expression.position);
+      if (expression.value == 'void') return createPrimType(expression.position, 'Void');
       else if (expression.value == 'true' || expression.value == 'false')
-        return createPrimType('Boolean', expression.position);
+        return createPrimType(expression.position, 'Boolean');
     case NodeType.FunctionLiteral:
       break;
     case NodeType.ArrayLiteral:
       break;
-    case NodeType.ObjectLiteral:
-      break;
+    case NodeType.ObjectLiteral: {
+      // Handle Fields
+      const fields: InterfaceFieldNode[] = [];
+      for (const field of expression.fields) {
+        if (field.nodeType == NodeType.ObjectField) {
+          fields.push({
+            nodeType: NodeType.InterfaceField,
+            category: NodeCategory.Type,
+            name: field.name,
+            fieldType: getExpressionType(
+              rawProgram,
+              varPool,
+              varStack,
+              varStacks,
+              typePool,
+              typeStack,
+              typeStacks,
+              field.fieldValue
+            ),
+            optional: false,
+            mutable: field.fieldMutable,
+            position: field.position,
+          });
+        } else {
+          // Get Var Type
+          const fieldSpreadType = <InterfaceLiteralNode>(
+            getExpressionType(
+              rawProgram,
+              varPool,
+              varStack,
+              varStacks,
+              typePool,
+              typeStack,
+              typeStacks,
+              field.fieldValue
+            )
+          );
+          for (const spreadField of fieldSpreadType.fields) {
+            fields.push({
+              nodeType: NodeType.InterfaceField,
+              category: NodeCategory.Type,
+              name: spreadField.name,
+              fieldType: resolveType(
+                rawProgram,
+                typePool,
+                typeStack,
+                typeStacks,
+                spreadField.fieldType
+              ),
+              optional: false,
+              mutable: spreadField.mutable,
+              position: spreadField.position,
+            });
+          }
+        }
+      }
+      // Return Value
+      return {
+        nodeType: NodeType.InterfaceLiteral,
+        category: NodeCategory.Type,
+        fields: fields,
+        position: expression.position,
+      };
+    }
     case NodeType.VariableUsage:
       return getVarType(
         rawProgram,
@@ -283,12 +514,21 @@ const getExpressionType = (
       );
     case NodeType.MemberAccess: {
       // Get Member Type
-      const objectType = getExpressionType(
+      const objectType = resolveType(
         rawProgram,
-        varPool,
-        varStack,
-        varStacks,
-        <AnalyzedExpression>expression.parent
+        typePool,
+        typeStack,
+        typeStacks,
+        getExpressionType(
+          rawProgram,
+          varPool,
+          varStack,
+          varStacks,
+          typePool,
+          typeStack,
+          typeStacks,
+          expression.parent
+        )
       );
       // Build Type
       const expectedObjectType: InterfaceLiteralNode = {
@@ -308,25 +548,35 @@ const getExpressionType = (
         position: expression.position,
       };
       // Check Type Compatibility
-      typeCompatible(rawProgram, expectedObjectType, objectType);
+      typeCompatible(rawProgram, typePool, typeStack, typeStacks, expectedObjectType, objectType);
       // Get Member Type
-      const elementType = <TypeLiteral>(
-        getObjectPropertyType(expression.property, <InterfaceLiteralNode>objectType)
+      const elementType = <InterfaceFieldNode>(
+        getObjectPropertyField(expression.property, <InterfaceLiteralNode>objectType)
       );
-      return elementType;
+      if (props?.mutable != undefined) {
+        if (elementType.mutable != props.mutable) {
+          BriskTypeError(
+            rawProgram,
+            BriskErrorType.ConstantAssignment,
+            [expression.property.name],
+            expression.position
+          );
+        }
+      }
+      return elementType.fieldType;
     }
   }
 };
 // TypeCheck Node
-const typeCheckNode = (
+const typeCheckNode = <T extends Node>(
   // Code
   rawProgram: string,
   // Stacks
   properties: AnalyzeNode,
   // Nodes
-  parentNode: AnalyzerNode | undefined,
-  node: AnalyzerNode
-): AnalyzerNode => {
+  parentNode: Node | undefined,
+  node: T
+): T => {
   const {
     // Our Global Variable And Type Pools
     _imports,
@@ -341,11 +591,11 @@ const typeCheckNode = (
     _varStack,
     _typeStack,
   } = properties;
-  const _typeCheckNode = (
-    childNode: AnalyzerNode,
+  const _typeCheckNode = <_T extends Node>(
+    childNode: _T,
     props: Partial<AnalyzeNode> = properties,
-    parentNode: AnalyzerNode = node
-  ): AnalyzerNode => {
+    parentNode: Node = node
+  ): _T => {
     return typeCheckNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
   };
   // Match The Node For Analysis
@@ -354,7 +604,7 @@ const typeCheckNode = (
     case NodeType.Program:
       // Analyze Program Node
       node.body = node.body.map((childNode) => {
-        return <AnalyzedStatement>_typeCheckNode(childNode, {
+        return _typeCheckNode(childNode, {
           _imports: node.data._imports,
           _exports: node.data._exports,
           // Our Global Variable And Type Pools
@@ -373,55 +623,72 @@ const typeCheckNode = (
     // Statements
     case NodeType.IfStatement:
       // Analyze Condition
-      node.condition = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.condition);
+      node.condition = _typeCheckNode(node.condition);
       // TypeCheck Condition
       typeEqual(
         rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
         getExpressionType(
           rawProgram,
           _variables,
           _varStack,
           _varStacks,
-          <AnalyzedExpression>node.condition
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.condition
         ),
-        createPrimType('Boolean', node.condition.position)
+        createPrimType(node.condition.position, 'Boolean')
       );
       // Analyze Body
-      node.body = <AnalyzedStatement>_typeCheckNode(<AnalyzedStatement>node.body);
+      node.body = _typeCheckNode(node.body);
       // Analyze Alternative
-      if (node.alternative)
-        node.alternative = <AnalyzedStatement>_typeCheckNode(<AnalyzedStatement>node.alternative);
+      if (node.alternative) node.alternative = _typeCheckNode(node.alternative);
       return node;
     case NodeType.FlagStatement:
       // We only allow arguments on the operator flag, we dont need to analyze these because they are only used in the compiler
       if (node.value == 'operator') {
         typeEqual(
           rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
           getExpressionType(
             rawProgram,
             _variables,
             _varStack,
             _varStacks,
-            <AnalyzedExpression>node.args.args[0]
+            _types,
+            _typeStack,
+            _typeStacks,
+            node.args.args[0]
           ),
-          createPrimType('String', node.args.args[0].position)
+          createPrimType(node.args.args[0].position, 'String')
         );
         typeEqual(
           rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
           getExpressionType(
             rawProgram,
             _variables,
             _varStack,
             _varStacks,
-            <AnalyzedExpression>node.args.args[0]
+            _types,
+            _typeStack,
+            _typeStacks,
+            node.args.args[0]
           ),
-          createPrimType('Number', node.args.args[0].position)
+          createPrimType(node.args.args[0].position, 'Number')
         );
       }
       return node;
     case NodeType.BlockStatement:
       node.body = node.body.map((childNode) => {
-        return <AnalyzedStatement>_typeCheckNode(<AnalyzedStatement>childNode, {
+        return _typeCheckNode(childNode, {
           // Stacks
           _varStack: node.data._varStack,
           _typeStack: node.data._typeStack,
@@ -440,18 +707,67 @@ const typeCheckNode = (
     case NodeType.DeclarationStatement:
       // TODO: Handle TypeValidation Of Destructured Declarations
       // Analyze Properties
-      node.varType = <TypeLiteral>_typeCheckNode(node.varType);
-      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
+      node.varType = _typeCheckNode(node.varType);
+      node.value = _typeCheckNode(node.value);
+      // Infer Type
+      if (node.varType.nodeType == NodeType.TypePrimLiteral) {
+        // Infer Function Type
+        if (node.varType.name == 'Function') {
+          if (node.value.nodeType != NodeType.FunctionLiteral) {
+            BriskTypeError(
+              rawProgram,
+              BriskErrorType.TypeCouldNotBeInferred,
+              ['Function'],
+              node.position
+            );
+          }
+          node.varType = getExpressionType(
+            rawProgram,
+            _variables,
+            _varStack,
+            _varStacks,
+            _types,
+            _typeStack,
+            _typeStacks,
+            node.value
+          );
+        }
+      } else if (node.varType.nodeType == NodeType.ArrayTypeLiteral) {
+        // Infer Array Type
+        if (node.varType.length == undefined) {
+          if (node.value.nodeType == NodeType.ArrayLiteral) {
+            node.varType.length = {
+              nodeType: NodeType.NumberLiteral,
+              category: NodeCategory.Literal,
+              value: `${node.value.length}`,
+              position: node.varType.position,
+            };
+          } else {
+            BriskTypeError(
+              rawProgram,
+              BriskErrorType.TypeCouldNotBeInferred,
+              ['Array'],
+              node.position
+            );
+          }
+        }
+      }
       // Type Check
       typeEqual(
         rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
         node.varType,
         getExpressionType(
           rawProgram,
           _variables,
           _varStack,
           _varStacks,
-          <AnalyzedExpression>node.value
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.value
         )
       );
       // Set Variable Type To Be More Accurate
@@ -468,32 +784,115 @@ const typeCheckNode = (
       return node;
     case NodeType.AssignmentStatement: {
       // Analyze Node
-      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
-      node.name = <VariableUsage>_typeCheckNode(node.name);
+      node.value = _typeCheckNode(node.value);
+      node.name = _typeCheckNode(node.name);
       // Get The Type Of The Variable
-      const varType = getExpressionType(rawProgram, _variables, _varStack, _varStacks, node.name);
-      // TODO: Analyze If Value Is Mutable
+      const varType = getExpressionType(
+        rawProgram,
+        _variables,
+        _varStack,
+        _varStacks,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.name,
+        { mutable: true }
+      );
       // Type Check Node
       typeEqual(
         rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
         varType,
         getExpressionType(
           rawProgram,
           _variables,
           _varStack,
           _varStacks,
-          <AnalyzedExpression>node.value
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.value
         )
       );
       // Return Node
       return node;
     }
-    case NodeType.PostFixStatement:
+    case NodeType.PostFixStatement: {
+      // Analyze Node
+      node.name = _typeCheckNode(node.name);
+      // Get The Type Of The Variable
+      const varType = getExpressionType(
+        rawProgram,
+        _variables,
+        _varStack,
+        _varStacks,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.name,
+        { mutable: true }
+      );
+      // Type Check Node
+      typeCompatible(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        varType,
+        createUnionType(
+          node.position,
+          createPrimType(node.position, 'u32'),
+          createPrimType(node.position, 'u64'),
+          createPrimType(node.position, 'i32'),
+          createPrimType(node.position, 'i64'),
+          createPrimType(node.position, 'f32'),
+          createPrimType(node.position, 'f64'),
+          createPrimType(node.position, 'Number')
+        )
+      );
+      // Return Node
+      return node;
+    }
     case NodeType.ReturnStatement:
-    case NodeType.EnumDefinitionStatement:
-    case NodeType.EnumVariant:
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
+    case NodeType.EnumDefinitionStatement:
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((type): GenericTypeNode => {
+          return _typeCheckNode(type, {
+            // Stacks
+            _typeStack: node.data._typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
+      // Analyze Variants
+      node.variants = node.variants.map((variant): EnumVariantNode => {
+        return _typeCheckNode(variant, {
+          // Stacks
+          _typeStack: node.data._typeStack,
+          // Stack Pool
+          _typeStacks: [..._typeStacks, _typeStack],
+        });
+      });
+      // Set Type Variable
+      setTypeVar(rawProgram, _types, _typeStack, _typeStacks, node.name, node, node.position);
+      // Return Node
+      return node;
+    case NodeType.EnumVariant:
+      if (Array.isArray(node.value)) {
+        // ADT Enum
+        node.value = node.value.map((value) =>
+          resolveType(rawProgram, _types, _typeStack, _typeStacks, _typeCheckNode(value))
+        );
+      } else if (node.value != undefined) {
+        node.value = _typeCheckNode(node.value);
+      }
+      return node;
     // Expressions
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
@@ -501,18 +900,24 @@ const typeCheckNode = (
       process.exit(1);
     case NodeType.TypeCastExpression:
       // Analyze Properties
-      node.typeLiteral = <TypeLiteral>_typeCheckNode(node.typeLiteral);
-      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
+      node.typeLiteral = _typeCheckNode(node.typeLiteral);
+      node.value = _typeCheckNode(node.value);
       // Check if type is compatible
       typeCompatible(
         rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
         node.typeLiteral,
         getExpressionType(
           rawProgram,
           _variables,
           _varStack,
           _varStacks,
-          <AnalyzedExpression>node.value
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.value
         )
       );
       // Return Node
@@ -521,7 +926,7 @@ const typeCheckNode = (
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
     case NodeType.ParenthesisExpression:
-      node.value = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.value);
+      node.value = _typeCheckNode(node.value);
       return node;
     case NodeType.CallExpression:
     case NodeType.WasmCallExpression:
@@ -540,16 +945,24 @@ const typeCheckNode = (
       return node;
     case NodeType.FunctionLiteral:
     case NodeType.ArrayLiteral:
-    case NodeType.ObjectLiteral:
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
+    case NodeType.ObjectLiteral:
+      // TODO: Check Type Of ObjectSpreads
+      // Analyze Fields
+      node.fields = node.fields.map((field) => {
+        field.fieldValue = _typeCheckNode(field.fieldValue);
+        return field;
+      });
+      return node;
     // Types
+    // TODO: Prevent Infinite Recursive Type Such As `type A = A` or `interface A { test: A }`
     case NodeType.InterfaceDefinition:
     case NodeType.TypeAliasDefinition:
       // Analyze Generic Types
       if (node.genericTypes) {
         node.genericTypes = node.genericTypes.map((type): GenericTypeNode => {
-          return <GenericTypeNode>_typeCheckNode(type, {
+          return _typeCheckNode(type, {
             // Stacks
             _typeStack: node.data._typeStack,
             // Stack Pool
@@ -558,7 +971,7 @@ const typeCheckNode = (
         });
       }
       // Analyze Type
-      node.typeLiteral = <TypeLiteral>_typeCheckNode(node.typeLiteral, {
+      node.typeLiteral = _typeCheckNode(node.typeLiteral, {
         // Stacks
         _typeStack: node.data._typeStack,
         // Stack Pool
@@ -580,24 +993,31 @@ const typeCheckNode = (
       return node;
     case NodeType.TypeUnionLiteral:
       node.types = node.types.map((type) => {
-        return <TypeLiteral>_typeCheckNode(type);
+        return _typeCheckNode(type);
       });
       return node;
     case NodeType.ArrayTypeLiteral:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      node.value = _typeCheckNode(node.value);
+      return node;
     case NodeType.ParenthesisTypeLiteral:
-      node.value = <TypeLiteral>_typeCheckNode(node.value);
+      node.value = _typeCheckNode(node.value);
       return node;
     case NodeType.FunctionSignatureLiteral:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      // TODO: Support Generic Type On FunctionSignature Literals
+      // Analyze Parameters
+      node.params = node.params.map((param) => {
+        return _typeCheckNode(param);
+      });
+      // Analyze Return Type
+      node.returnType = _typeCheckNode(node.returnType);
+      return node;
     case NodeType.InterfaceLiteral:
       // Analyze Field Nodes
-      console.log(node);
+      node.fields = node.fields.map((field) => {
+        field.fieldType = _typeCheckNode(field.fieldType);
+        return field;
+      });
     case NodeType.TypeUsage:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
     case NodeType.GenericType:
       return node;
     // Variables
@@ -605,11 +1025,10 @@ const typeCheckNode = (
       return node;
     case NodeType.MemberAccess:
       // Analyze Parent
-      node.parent = <AnalyzedExpression>_typeCheckNode(<AnalyzedExpression>node.parent);
+      node.parent = _typeCheckNode(node.parent);
     case NodeType.PropertyUsage:
       // Analyze Property
-      if (node.property)
-        node.property = <PropertyUsageNode>_typeCheckNode(<PropertyUsageNode>node.property);
+      if (node.property) node.property = _typeCheckNode(node.property);
       return node;
     case NodeType.Parameter:
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
@@ -617,11 +1036,8 @@ const typeCheckNode = (
   }
 };
 // Analyze Program
-const typeCheckProgram = (
-  rawProgram: string,
-  program: AnalyzedProgramNode
-): AnalyzedProgramNode => {
-  return <AnalyzedProgramNode>typeCheckNode(
+const typeCheckProgram = (rawProgram: string, program: ProgramNode): ProgramNode => {
+  return typeCheckNode(
     rawProgram,
     {
       _imports: new Map(),
