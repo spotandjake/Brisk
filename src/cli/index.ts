@@ -2,7 +2,7 @@
 import path from 'path';
 import { Commander, Command } from './command/index';
 // Import Components
-import runner from '../Runner/runner';
+import runner from '../runner/runner';
 import compile from '../Compiler/index';
 // TODO: add flag to compile to wasm instead of wat
 const resolvePath = (file: string) => path.join(process.cwd(), file);
