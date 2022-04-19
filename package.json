@@ -18,7 +18,8 @@
     "outputPath": "/"
   },
   "scripts": {
-    "start": "yarn build && yarn run run",
+    "start": "echo \"Success\"",
+    "_start": "yarn build && yarn run run",
     "build": "gulp build",
     "run": "node --enable-source-maps ./dist/brisk.js",
     "package": "gulp package",
