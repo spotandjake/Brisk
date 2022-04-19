@@ -20,7 +20,8 @@
   "scripts": {
     "start": "echo \"Success\"",
     "_start": "yarn build && yarn run run",
-    "build": "gulp build",
+    "build": "echo \"Success\"",
+    "_build": "gulp build",
     "run": "node --enable-source-maps ./dist/brisk.js",
     "package": "gulp package",
     "start-tests": "yarn build-tests && yarn run-tests",
