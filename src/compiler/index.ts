@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import TOML from '@iarna/toml';
 import binaryen from 'binaryen';
-import compile from './Compiler/index';
-import Linker from './Linker/Linker';
-import Optimizer from './BriskIr/Optimizer';
+import compile from '../Compiler/index';
+import Linker from '../Linker/Linker';
+import Optimizer from '../BriskIr/Optimizer';
 import BuildInfoSchema, { BuildInfoTemplate } from './Schemas/BuildInfo';
 import { CompilerOptions } from './Types';
 // Main Brisk Compiler Bundle
