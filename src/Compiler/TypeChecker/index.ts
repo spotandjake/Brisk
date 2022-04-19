@@ -1124,7 +1124,7 @@ const typeCheckNode = <T extends Node>(
         BriskTypeError(rawProgram, BriskErrorType.TypeMisMatch, [
           'Function', // Get Callee Type
           nameType(rawProgram, _types, _typeStack, _typeStacks, calleeType),
-        ]);
+        ], node.position);
         process.exit(1); // Let TypeScript Know That The Program Ends after This
       }
       if (node.args.length > calleeType.params.length) {
@@ -1135,17 +1135,21 @@ const typeCheckNode = <T extends Node>(
           `${node.args.length}`,
         ]);
       }
+      // TODO: Handle Generic's
       // Check Each Parameter
       for (const [index, param] of calleeType.params.entries()) {
         // Get Argument
         const arg = node.args[index];
         // Check If We Have Argument
         if (arg == undefined) {
-          // Check If The Param Was Optional
+          // TODO: Check If The Param Was Optional
           // if (param.)
+          break;
         }
+        // TODO: Check That Types Are Same
+        // TODO: Handle Generic's
       }
-      // TODO: Handle Generic's
+      // TODO: Check Return Type
       // Return Node
       console.log(node);
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);

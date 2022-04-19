@@ -7,7 +7,7 @@
 //   3n,
 //   4n
 // ];
-// TODO: ensure you put in the Array Length when it cant be inffered
+// TODO: ensure you put in the Array Length when it cant be inferred
 // const test: Test = 1n;
 // type Test = string | Test[];
 // type Te = string | Te;
@@ -32,12 +32,13 @@
 //   3n,
 //   1N
 // ];
-const testInt: i32 = 1n;
+// Ensure This Works ^
 type T = <GenericTest>(GenericTest) => GenericTest;
-const testFunction: Function = <Generic>(t: Generic): Generic => { // TODO: Ensure This type Is Not Equal To `T`
-
+const testFunction: Function = <Generic>(t: Generic, test?: i32): Generic => { // TODO: Ensure This type Is Not Equal To `T`
+    return(t);
 };
-const test: i32 = testFunction();
+const test: i32 = testInt();
+// const test1: i32 = 1n;
 // test.test = 1n;
 // type T = (i32 | i64);
 // type FunctionTypeTest = (i32, i64) => i32;
