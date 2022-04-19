@@ -703,13 +703,22 @@ class Parser extends EmbeddedActionsParser {
   // Simple Expressions
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
     return this.OR({
+      MAX_LOOKAHEAD: 6,
+      DEF: [
+        { ALT: () => this.SUBRULE(this._simpleExpression) },
+        { ALT: () => this.SUBRULE(this.functionDefinition) },
+      ],
+    });
+  });
+  private _simpleExpression = this.RULE('_SimpleExpression', (): Nodes.Expression => {
+    return this.OR({
       MAX_LOOKAHEAD: 3,
       DEF: [
         { ALT: () => this.SUBRULE(this.typeCastExpression) },
         { ALT: () => this.SUBRULE(this.unaryExpression) },
         { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false] }) },
         { ALT: () => this.SUBRULE(this.wasmCallExpression) },
-        { ALT: () => this.SUBRULE(this.literal) },
+        { ALT: () => this.SUBRULE(this._literal) },
       ],
     });
   });
@@ -717,7 +726,7 @@ class Parser extends EmbeddedActionsParser {
     const location = this.CONSUME(Tokens.TknComparisonLessThan);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
     this.CONSUME(Tokens.TknComparisonGreaterThan);
-    const value = this.SUBRULE(this.simpleExpression);
+    const value = this.SUBRULE(this._simpleExpression);
     return this.ACTION((): Nodes.TypeCastExpression => {
       return {
         nodeType: Nodes.NodeType.TypeCastExpression,
@@ -877,6 +886,12 @@ class Parser extends EmbeddedActionsParser {
   // Literals
   private literal = this.RULE('Literal', (): Nodes.Literal => {
     return this.OR([
+      { ALT: () => this.SUBRULE(this._literal) },
+      { ALT: () => this.SUBRULE(this.functionDefinition) },
+    ]);
+  });
+  private _literal = this.RULE('_Literal', (): Nodes.Literal => {
+    return this.OR([
       { ALT: () => this.SUBRULE(this.stringLiteral) },
       { ALT: () => this.SUBRULE(this.i32Literal) },
       { ALT: () => this.SUBRULE(this.i64Literal) },
@@ -888,7 +903,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.constantLiteral) },
       { ALT: () => this.SUBRULE(this.arrayLiteral) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
-      { ALT: () => this.SUBRULE(this.functionDefinition) },
     ]);
   });
   private stringLiteral = this.RULE('StringLiteral', (): Nodes.StringLiteralNode => {
@@ -1234,6 +1248,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private functionDefinition = this.RULE('FunctionDefinition', (): Nodes.FunctionLiteralNode => {
     const params: Nodes.ParameterNode[] = [];
+    const genericTypes = this.OPTION(() => this.SUBRULE(this.genericType));
     const location = this.CONSUME(Tokens.TknLParen);
     this.MANY_SEP({
       SEP: Tokens.TknComma,
@@ -1269,9 +1284,10 @@ class Parser extends EmbeddedActionsParser {
       return {
         nodeType: Nodes.NodeType.FunctionLiteral,
         category: Nodes.NodeCategory.Literal,
-        returnType: returnType,
         params: params,
+        returnType: returnType,
         body: body,
+        genericTypes: genericTypes,
         data: {
           _closure: new Set(),
           _varStack: new Map(),
@@ -1443,6 +1459,7 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.FunctionSignatureLiteralNode => {
       // TODO: Support Generic Type On FunctionSignature Literals
       const params: Nodes.TypeLiteral[] = [];
+      const genericTypes = this.OPTION(() => this.SUBRULE(this.genericType));
       const location = this.CONSUME(Tokens.TknLParen);
       this.MANY_SEP({
         SEP: Tokens.TknComma,
@@ -1457,6 +1474,10 @@ class Parser extends EmbeddedActionsParser {
           category: Nodes.NodeCategory.Type,
           params: params,
           returnType: returnType,
+          genericTypes: genericTypes,
+          data: {
+            _typeStack: new Map(),
+          },
           position: {
             offset: location.startOffset,
             length: returnType.position.offset + returnType.position.length - location.startOffset,
@@ -1560,6 +1581,7 @@ class Parser extends EmbeddedActionsParser {
           nodeType: Nodes.NodeType.GenericType,
           category: Nodes.NodeCategory.Type,
           name: identifier.name,
+          valueType: undefined,
           position: {
             offset: location.startOffset,
             length: <number>close.endOffset - location.startOffset + 1,

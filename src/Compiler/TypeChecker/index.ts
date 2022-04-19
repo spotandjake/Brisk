@@ -260,9 +260,17 @@ const resolveType = (
       return {
         ...type,
         // Resolve Param Types
-        params: type.params.map((p) => resolveType(rawProgram, typePool, typeStack, typeStacks, p)),
+        params: type.params.map((p) =>
+          resolveType(rawProgram, typePool, type.data._typeStack, [...typeStacks, typeStack], p)
+        ),
         // Resolve Return Type
-        returnType: resolveType(rawProgram, typePool, typeStack, typeStacks, type.returnType),
+        returnType: resolveType(
+          rawProgram,
+          typePool,
+          type.data._typeStack,
+          [...typeStacks, typeStack],
+          type.returnType
+        ),
       };
     case NodeType.InterfaceLiteral:
       return {
@@ -456,6 +464,7 @@ const getExpressionType = (
     case NodeType.TypeCastExpression:
       return expression.typeLiteral;
     case NodeType.CallExpression:
+      console.log(expression);
       break;
     case NodeType.WasmCallExpression:
       break;
@@ -483,21 +492,30 @@ const getExpressionType = (
       // Build Type
       return createFunctionSignatureType(
         expression.position,
+        // Resolve Generic Types
+        expression.genericTypes ?? [],
         // Analyze Params
         expression.params.map((p) =>
           getExpressionType(
             rawProgram,
             varPool,
-            varStack,
+            expression.data._varStack,
             varStacks,
             typePool,
-            typeStack,
-            typeStacks,
+            expression.data._typeStack,
+            [...typeStacks, typeStack],
             p
           )
         ),
         // Resolve Return Type
-        resolveType(rawProgram, typePool, typeStack, typeStacks, expression.returnType)
+        resolveType(
+          rawProgram,
+          typePool,
+          expression.data._typeStack,
+          [...typeStacks, typeStack],
+          expression.returnType
+        ),
+        expression.data._typeStack
       );
     case NodeType.Parameter:
       return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);
@@ -1038,9 +1056,17 @@ const typeCheckNode = <T extends Node>(
     case NodeType.ConstantLiteral:
       return node;
     case NodeType.FunctionLiteral:
-      // TODO: Handle Generic Types
-      // Analyze ReturnType
-      node.returnType = _typeCheckNode(node.returnType);
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((type): GenericTypeNode => {
+          return _typeCheckNode(type, {
+            // Stacks
+            _typeStack: node.data._typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
       // Analyze Parameters
       node.params = node.params.map((param) => {
         return _typeCheckNode(param, {
@@ -1052,6 +1078,16 @@ const typeCheckNode = <T extends Node>(
           _varStacks: [..._varStacks, _varStack],
           _typeStacks: [..._typeStacks, _typeStack],
         });
+      });
+      // Analyze ReturnType
+      node.returnType = _typeCheckNode(node.returnType, {
+        // Stacks
+        _closure: node.data._closure,
+        _varStack: node.data._varStack,
+        _typeStack: node.data._typeStack,
+        // Parent Stacks
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
       });
       // Analyze Body
       node.body = _typeCheckNode(node.body, {
@@ -1146,13 +1182,33 @@ const typeCheckNode = <T extends Node>(
       node.value = _typeCheckNode(node.value);
       return node;
     case NodeType.FunctionSignatureLiteral:
-      // TODO: Support Generic Type On FunctionSignature Literals
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((type): GenericTypeNode => {
+          return _typeCheckNode(type, {
+            // Stacks
+            _typeStack: node.data._typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
       // Analyze Parameters
       node.params = node.params.map((param) => {
-        return _typeCheckNode(param);
+        return _typeCheckNode(param, {
+          // Stacks
+          _typeStack: node.data._typeStack,
+          // Parent Stacks
+          _typeStacks: [..._typeStacks, _typeStack],
+        });
       });
       // Analyze Return Type
-      node.returnType = _typeCheckNode(node.returnType);
+      node.returnType = _typeCheckNode(node.returnType, {
+        // Stacks
+        _typeStack: node.data._typeStack,
+        // Parent Stacks
+        _typeStacks: [..._typeStacks, _typeStack],
+      });
       return node;
     case NodeType.InterfaceLiteral:
       // Analyze Field Nodes
@@ -1161,7 +1217,11 @@ const typeCheckNode = <T extends Node>(
         return field;
       });
     case NodeType.TypeUsage:
+      return node;
     case NodeType.GenericType:
+      // Set Type To Be More Accurate
+      setTypeVar(rawProgram, _types, _typeStack, _typeStacks, node.name, node, node.position);
+      // ReturnType
       return node;
     // Variables
     case NodeType.VariableUsage:

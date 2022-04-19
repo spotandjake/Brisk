@@ -62,6 +62,10 @@ Object {
       },
       "typeSignature": Object {
         "category": 5,
+        "data": Object {
+          "_typeStack": Map {},
+        },
+        "genericTypes": undefined,
         "nodeType": 40,
         "params": Array [
           Object {
@@ -134,6 +138,10 @@ Object {
       },
       "typeSignature": Object {
         "category": 5,
+        "data": Object {
+          "_typeStack": Map {},
+        },
+        "genericTypes": undefined,
         "nodeType": 40,
         "params": Array [],
         "position": Object {
@@ -385,6 +393,10 @@ Object {
           },
           Object {
             "category": 5,
+            "data": Object {
+              "_typeStack": Map {},
+            },
+            "genericTypes": undefined,
             "nodeType": 40,
             "params": Array [
               Object {
@@ -525,6 +537,10 @@ Object {
           },
           Object {
             "category": 5,
+            "data": Object {
+              "_typeStack": Map {},
+            },
+            "genericTypes": undefined,
             "nodeType": 40,
             "params": Array [
               Object {
@@ -2949,6 +2965,7 @@ Object {
           "_typeStack": Map {},
           "_varStack": Map {},
         },
+        "genericTypes": undefined,
         "nodeType": 29,
         "params": Array [
           Object {
@@ -3166,6 +3183,7 @@ Object {
             "_typeStack": Map {},
             "_varStack": Map {},
           },
+          "genericTypes": undefined,
           "nodeType": 29,
           "params": Array [],
           "position": Object {
@@ -3216,6 +3234,7 @@ Object {
             "line": 100,
             "offset": 1764,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
@@ -3284,6 +3303,7 @@ Object {
             "line": 103,
             "offset": 1837,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
@@ -3341,6 +3361,7 @@ Object {
             "line": 106,
             "offset": 1915,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_TestInterface",
@@ -3409,6 +3430,7 @@ Object {
             "line": 109,
             "offset": 1983,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_EnumTest",
@@ -3466,6 +3488,7 @@ Object {
             "line": 113,
             "offset": 2064,
           },
+          "valueType": undefined,
         },
         Object {
           "category": 5,
@@ -3478,6 +3501,7 @@ Object {
             "line": 113,
             "offset": 2064,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_TypeTest",
@@ -3519,6 +3543,7 @@ Object {
             "line": 114,
             "offset": 2134,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_TestInterface",
@@ -3587,6 +3612,7 @@ Object {
             "line": 117,
             "offset": 2197,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_EnumTest",
@@ -3888,6 +3914,10 @@ Object {
       },
       "typeSignature": Object {
         "category": 5,
+        "data": Object {
+          "_typeStack": Map {},
+        },
+        "genericTypes": undefined,
         "nodeType": 40,
         "params": Array [
           Object {
@@ -3960,6 +3990,10 @@ Object {
       },
       "typeSignature": Object {
         "category": 5,
+        "data": Object {
+          "_typeStack": Map {},
+        },
+        "genericTypes": undefined,
         "nodeType": 40,
         "params": Array [],
         "position": Object {
@@ -4211,6 +4245,10 @@ Object {
           },
           Object {
             "category": 5,
+            "data": Object {
+              "_typeStack": Map {},
+            },
+            "genericTypes": undefined,
             "nodeType": 40,
             "params": Array [
               Object {
@@ -4351,6 +4389,10 @@ Object {
           },
           Object {
             "category": 5,
+            "data": Object {
+              "_typeStack": Map {},
+            },
+            "genericTypes": undefined,
             "nodeType": 40,
             "params": Array [
               Object {
@@ -6775,6 +6817,7 @@ Object {
           "_typeStack": Map {},
           "_varStack": Map {},
         },
+        "genericTypes": undefined,
         "nodeType": 29,
         "params": Array [
           Object {
@@ -6992,6 +7035,7 @@ Object {
             "_typeStack": Map {},
             "_varStack": Map {},
           },
+          "genericTypes": undefined,
           "nodeType": 29,
           "params": Array [],
           "position": Object {
@@ -7042,6 +7086,7 @@ Object {
             "line": 100,
             "offset": 1764,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
@@ -7110,6 +7155,7 @@ Object {
             "line": 103,
             "offset": 1837,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
@@ -7167,6 +7213,7 @@ Object {
             "line": 106,
             "offset": 1915,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_TestInterface",
@@ -7235,6 +7282,7 @@ Object {
             "line": 109,
             "offset": 1983,
           },
+          "valueType": undefined,
         },
       ],
       "name": "OptionalSemi_EnumTest",
@@ -7292,6 +7340,7 @@ Object {
             "line": 113,
             "offset": 2064,
           },
+          "valueType": undefined,
         },
         Object {
           "category": 5,
@@ -7304,6 +7353,7 @@ Object {
             "line": 113,
             "offset": 2064,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_TypeTest",
@@ -7345,6 +7395,7 @@ Object {
             "line": 114,
             "offset": 2134,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_TestInterface",
@@ -7413,6 +7464,7 @@ Object {
             "line": 117,
             "offset": 2197,
           },
+          "valueType": undefined,
         },
       ],
       "name": "Generic_EnumTest",

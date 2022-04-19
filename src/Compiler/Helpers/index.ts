@@ -11,7 +11,9 @@ import {
   ArrayTypeLiteralNode,
   NumberLiteralNode,
   FunctionSignatureLiteralNode,
+  GenericTypeNode,
 } from '../Types/ParseNodes';
+import { TypeStack } from '../Types/AnalyzerNodes';
 // Type Builders
 export const createPrimType = (position: Position, primType: PrimTypes): TypePrimLiteralNode => {
   return {
@@ -36,14 +38,20 @@ export const createArrayType = (
 };
 export const createFunctionSignatureType = (
   position: Position,
+  genericTypes: GenericTypeNode[],
   paramTypes: TypeLiteral[],
-  returnType: TypeLiteral
+  returnType: TypeLiteral,
+  _typeStack: TypeStack
 ): FunctionSignatureLiteralNode => {
   return {
     nodeType: NodeType.FunctionSignatureLiteral,
     category: NodeCategory.Type,
     params: paramTypes,
     returnType: returnType,
+    genericTypes: genericTypes,
+    data: {
+      _typeStack: _typeStack,
+    },
     position: position,
   };
 };

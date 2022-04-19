@@ -646,8 +646,31 @@ const analyzeNode = <T extends Node>(
             param.position
           );
       }
-      // Analyze node
-      node.returnType = _analyzeNode(node.returnType);
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((genericType) => {
+          return _analyzeNode(genericType, {
+            // Parent Stacks
+            _varStacks: [..._varStacks, _varStack],
+            _typeStacks: [..._typeStacks, _typeStack],
+            // Stacks
+            _closure: closure,
+            _varStack: varStack,
+            _typeStack: typeStack,
+          });
+        });
+      }
+      // Analyze ReturnType
+      node.returnType = _analyzeNode(node.returnType, {
+        // Parent Stacks
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
+        // Stacks
+        _closure: closure,
+        _varStack: varStack,
+        _typeStack: typeStack,
+      });
+      // Analyze Params
       node.params = node.params.map((param) => {
         return _analyzeNode(param, {
           // Parent Stacks
@@ -659,6 +682,7 @@ const analyzeNode = <T extends Node>(
           _typeStack: typeStack,
         });
       });
+      // Analyze Body
       node.body = _analyzeNode(node.body, {
         // Parent Stacks
         _varStacks: [..._varStacks, _varStack],
@@ -761,12 +785,43 @@ const analyzeNode = <T extends Node>(
     case NodeType.ParenthesisTypeLiteral:
       node.value = _analyzeNode(node.value);
       return node;
-    case NodeType.FunctionSignatureLiteral:
+    case NodeType.FunctionSignatureLiteral: {
+      // Create New Type Stack
+      const typeStack: TypeStack = new Map();
+      // Analyze Generic Types
+      if (node.genericTypes) {
+        node.genericTypes = node.genericTypes.map((genericType) => {
+          return _analyzeNode(genericType, {
+            // Stacks
+            _typeStack: typeStack,
+            // Stack Pool
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+        });
+      }
       // Analyze Parameter Types
-      node.params = node.params.map((param) => _analyzeNode(param));
+      node.params = node.params.map((param) =>
+        _analyzeNode(param, {
+          // Stacks
+          _typeStack: typeStack,
+          // Stack Pool
+          _typeStacks: [..._typeStacks, _typeStack],
+        })
+      );
       // Analyze Return Types
-      node.returnType = _analyzeNode(node.returnType);
+      node.returnType = _analyzeNode(node.returnType, {
+        // Stacks
+        _typeStack: typeStack,
+        // Stack Pool
+        _typeStacks: [..._typeStacks, _typeStack],
+      });
+      // Set Data Payload
+      node.data = {
+        _typeStack: typeStack,
+      };
+      // Return Data Type
       return node;
+    }
     case NodeType.InterfaceLiteral: {
       // Analyze Fields
       const fields: Set<string> = new Set();

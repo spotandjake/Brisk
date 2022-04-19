@@ -360,9 +360,10 @@ export interface ConstantLiteralNode {
 export interface FunctionLiteralNode {
   nodeType: NodeType.FunctionLiteral;
   category: NodeCategory.Literal;
-  returnType: TypeLiteral;
   params: ParameterNode[];
+  returnType: TypeLiteral;
   body: Statement;
+  genericTypes: undefined | GenericTypeNode[];
   data: {
     _closure: VariableClosure;
     _varStack: VariableStack;
@@ -493,6 +494,10 @@ export interface FunctionSignatureLiteralNode {
   category: NodeCategory.Type;
   params: TypeLiteral[];
   returnType: TypeLiteral;
+  genericTypes: undefined | GenericTypeNode[];
+  data: {
+    _typeStack: TypeStack;
+  };
   position: Position;
 }
 export interface InterfaceLiteralNode {
@@ -522,6 +527,7 @@ export interface GenericTypeNode {
   nodeType: NodeType.GenericType;
   category: NodeCategory.Type;
   name: string;
+  valueType: undefined | TypeLiteral;
   position: Position;
 }
 export interface TypeIdentifierNode {
