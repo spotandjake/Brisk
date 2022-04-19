@@ -21,6 +21,7 @@ export const enum BriskErrorType {
   TypeMisMatch,
   TypeCouldNotBeInferred,
   ArrayTypeLengthCouldNotBeInferred,
+  InvalidArgumentLength,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -50,6 +51,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.TypeMisMatch]: 'Mismatched Type Expected %1 Found %2',
   [BriskErrorType.TypeCouldNotBeInferred]: 'Type %1 Could Not Be Inferred',
   [BriskErrorType.ArrayTypeLengthCouldNotBeInferred]: 'Array Type Length Could Not Be Inferred',
+  [BriskErrorType.InvalidArgumentLength]: 'Function Expects A Maximum Of %1 Arguments, Found %2',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1 Has Already Been Declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 Not Found',

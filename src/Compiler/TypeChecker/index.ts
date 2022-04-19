@@ -312,6 +312,66 @@ const resolveType = (
       return type;
   }
 };
+const nameType = (
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  type: TypeLiteral
+): string => {
+  // TODO: Handle Recursive Types
+  switch (type.nodeType) {
+    case NodeType.TypePrimLiteral:
+      return type.name;
+    case NodeType.TypeUnionLiteral: {
+      return type.types
+        .map((t) => nameType(rawProgram, typePool, typeStack, typeStacks, t))
+        .join(' | ');
+    }
+    case NodeType.ArrayTypeLiteral:
+      return `${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)}[]`;
+    case NodeType.ParenthesisTypeLiteral:
+      return `(${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)})`;
+    case NodeType.FunctionSignatureLiteral: {
+      const params = type.params.map((p) =>
+        nameType(rawProgram, typePool, type.data._typeStack, [...typeStacks, typeStack], p)
+      );
+      const returnType = nameType(
+        rawProgram,
+        typePool,
+        type.data._typeStack,
+        [...typeStacks, typeStack],
+        type.returnType
+      );
+      if (type.genericTypes) {
+        const generics = type.genericTypes.map((g) =>
+          nameType(rawProgram, typePool, typeStack, typeStacks, g)
+        );
+        return `<${generics.join(', ')}>(${params.join(', ')}) => ${returnType}`;
+      } else {
+        return `(${params.join(', ')}) => ${returnType}`;
+      }
+    }
+    case NodeType.InterfaceLiteral: {
+      const fields = type.fields.map((field) => {
+        return `${field.name}: ${nameType(
+          rawProgram,
+          typePool,
+          typeStack,
+          typeStacks,
+          field.fieldType
+        )}`;
+      });
+      return `{ ${fields.join(', ')} }`;
+    }
+    case NodeType.EnumDefinitionStatement:
+      return `Enum ${type.name}`; // TODO: Determine Better Type Name For This
+    case NodeType.TypeUsage:
+      return type.name;
+    case NodeType.GenericType:
+      return type.name;
+  }
+};
 const typeCompatible = (
   rawProgram: string,
   typePool: TypeMap,
@@ -1040,7 +1100,57 @@ const typeCheckNode = <T extends Node>(
     case NodeType.ParenthesisExpression:
       node.value = _typeCheckNode(node.value);
       return node;
-    case NodeType.CallExpression:
+    case NodeType.CallExpression: {
+      // Get Callee Type
+      const calleeType = resolveType(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.callee
+        )
+      );
+      // Compare Types
+      if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
+        // Ensure Callee Is A Function
+        BriskTypeError(rawProgram, BriskErrorType.TypeMisMatch, [
+          'Function', // Get Callee Type
+          nameType(rawProgram, _types, _typeStack, _typeStacks, calleeType),
+        ]);
+        process.exit(1); // Let TypeScript Know That The Program Ends after This
+      }
+      if (node.args.length > calleeType.params.length) {
+        // Ensure We Do Not Have Too Many Arguments Types
+        // Ensure Callee Is A Function
+        BriskTypeError(rawProgram, BriskErrorType.InvalidArgumentLength, [
+          `${calleeType.params.length}`, // Get Callee Type
+          `${node.args.length}`,
+        ]);
+      }
+      // Check Each Parameter
+      for (const [index, param] of calleeType.params.entries()) {
+        // Get Argument
+        const arg = node.args[index];
+        // Check If We Have Argument
+        if (arg == undefined) {
+          // Check If The Param Was Optional
+          // if (param.)
+        }
+      }
+      // TODO: Handle Generic's
+      // Return Node
+      console.log(node);
+      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      process.exit(1);
+    }
     case NodeType.WasmCallExpression:
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);

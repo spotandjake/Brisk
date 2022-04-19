@@ -32,8 +32,9 @@
 //   3n,
 //   1N
 // ];
+const testInt: i32 = 1n;
 type T = <GenericTest>(GenericTest) => GenericTest;
-const testFunction: T = <Generic>(t: Generic): Generic => {
+const testFunction: Function = <Generic>(t: Generic): Generic => { // TODO: Ensure This type Is Not Equal To `T`
 
 };
 const test: i32 = testFunction();
