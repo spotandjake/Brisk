@@ -378,7 +378,8 @@ const typeCompatible = (
   typeStack: TypeStack,
   typeStacks: TypeStack[],
   typeA: TypeLiteral,
-  typeB: TypeLiteral
+  typeB: TypeLiteral,
+  throwError = false
 ): boolean => {
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
@@ -395,6 +396,18 @@ const typeCompatible = (
   );
   if (typesEqual) return true;
   // TODO: Ensure Types Are Compatible
+  // Throw Error Or Return False
+  if (throwError) {
+    BriskTypeError(
+      rawProgram,
+      BriskErrorType.IncompatibleTypes,
+      [
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+      ],
+      resolvedB.position
+    );
+  }
   return false;
 };
 const typeEqual = (
@@ -409,6 +422,8 @@ const typeEqual = (
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
   const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
+  // Configurable Variables
+  let position = resolvedB.position;
   // If Either Type Is Any Then We Can Leave
   // TODO: Remove Any Type
   if (resolvedA.nodeType == NodeType.TypePrimLiteral && resolvedA.name == 'Any') return true;
@@ -428,6 +443,39 @@ const typeEqual = (
       );
     }
     return resolvedA.name == resolvedB.name;
+  }
+  // Compare Generics
+  if (
+    resolvedA.nodeType == NodeType.GenericType &&
+    resolvedB.nodeType == NodeType.GenericType &&
+    resolvedA.valueType == undefined &&
+    resolvedB.valueType == undefined
+  ) {
+    // Compare Generics
+    // TODO: Handle Generic Constraints
+    if (resolvedA.name == resolvedB.name && resolvedA.valueType) return true;
+  } else if (resolvedA.nodeType == NodeType.GenericType) { // If Type A Is Generic
+    // Compare Type Value
+    return typeEqual(
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.valueType,
+      resolvedB,
+      throwError
+    );
+  } else if (resolvedB.nodeType == NodeType.GenericType && resolvedB.valueType) { // If Type B Is Generic
+    // Compare Type Value
+    return typeEqual(
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.valueType,
+      resolvedB,
+      throwError
+    );
   }
   // Handle Array Types
   if (
@@ -460,7 +508,116 @@ const typeEqual = (
       throwError
     );
   }
+  // Handle Union Types
+  if (resolvedA.nodeType == NodeType.TypeUnionLiteral) { // If Type A Is Union
+    // Check Each Type Value
+    for (const type of resolvedA.types) {
+      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedB, false))
+        return true;
+    }
+  } else if (resolvedB.nodeType == NodeType.TypeUnionLiteral) { // If Type B Is Union
+    // Check Each Type Value
+    for (const type of resolvedB.types) {
+      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedA, false))
+        return true;
+    }
+  }
+  // Handle Function Types
+  if (
+    resolvedA.nodeType == NodeType.FunctionSignatureLiteral &&
+    resolvedB.nodeType == NodeType.FunctionSignatureLiteral
+  ) {
+    // Check That Generic States is The Same
+    if (
+      (resolvedA.genericTypes == undefined && resolvedB.genericTypes != undefined) ||
+      (resolvedA.genericTypes != undefined && resolvedB.genericTypes == undefined)
+    ) {
+      if (throwError) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+          ],
+          resolvedB.position
+        );
+      }
+      return false;
+    }
+    // Check That Generic Types Are Same
+    if (resolvedA.genericTypes && resolvedB.genericTypes) {
+      // Check Generics Are Same
+      for (const [ index, generic ] of resolvedA.genericTypes.entries()) {
+        // Get genericB
+        const genericB = resolvedB.genericTypes[index];
+        // Compare Generics
+        if (!typeEqual(
+          rawProgram,
+          typePool,
+          typeStack,
+          typeStacks,
+          generic,
+          genericB,
+          throwError
+        )) return false;
+        // TODO: Implement Generic Type Constraints
+      }
+    }
+    // Check That Params Are Same
+    if (resolvedA.params.length != resolvedB.params.length) {
+      if (throwError) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+          ],
+          resolvedB.position
+        );
+      }
+      return false;
+    }
+    for(const [ index, param ] of resolvedA.params.entries()) {
+      // Get TypeB Param
+      const paramB = resolvedB.params[index];
+      // TODO: Resolve Generics
+      // Compare Params
+      if (!typeEqual(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        param,
+        paramB,
+        throwError
+      )) return false;
+    }
+    // Check That ReturnType is Same
+    return typeEqual(
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.returnType,
+      resolvedB.returnType,
+      throwError
+    );
+  }
   // TODO: Check Type Equality
+  // Throw Error Or Return False
+  if (throwError) {
+    BriskTypeError(
+      rawProgram,
+      BriskErrorType.TypeMisMatch,
+      [
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+      ],
+      resolvedB.position
+    );
+  }
   return false;
 };
 // TODO: Handle Resolving Generic Types
@@ -523,9 +680,14 @@ const getExpressionType = (
       );
     case NodeType.TypeCastExpression:
       return expression.typeLiteral;
-    case NodeType.CallExpression:
+    case NodeType.CallExpression: {
+      // TODO: Analyze Generic Types
+      // TODO: AnaLyze Params
+      // TODO: Analyze ReturnType
+      // TODO: Build Node
       console.log(expression);
       break;
+    }
     case NodeType.WasmCallExpression:
       break;
     case NodeType.StringLiteral:
@@ -1130,30 +1292,63 @@ const typeCheckNode = <T extends Node>(
       if (node.args.length > calleeType.params.length) {
         // Ensure We Do Not Have Too Many Arguments Types
         // Ensure Callee Is A Function
-        BriskTypeError(rawProgram, BriskErrorType.InvalidArgumentLength, [
-          `${calleeType.params.length}`, // Get Callee Type
-          `${node.args.length}`,
-        ]);
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.InvalidArgumentLength,
+          [
+            `${calleeType.params.length}`, // Get Callee Type
+            `${node.args.length}`,
+          ],
+          node.position
+        );
       }
-      // TODO: Handle Generic's
       // Check Each Parameter
       for (const [index, param] of calleeType.params.entries()) {
         // Get Argument
         const arg = node.args[index];
         // Check If We Have Argument
         if (arg == undefined) {
-          // TODO: Check If The Param Was Optional
-          // if (param.)
-          break;
+          // Check If The Param Was Optional
+          if (
+            typeEqual(rawProgram, _types, _typeStack, _typeStacks, createPrimType(param.position, 'Void'), param, false)
+          ) {
+            break;
+          } else {
+            // TODO: Create better error Message
+            BriskTypeError(
+              rawProgram,
+              BriskErrorType.InvalidArgumentLength,
+              [
+                `${calleeType.params.length}`, // Get Callee Type
+                `${index}`,
+              ], 
+              node.position
+            );
+            process.exit(1); // Let TypeScript Know That The Program Ends after This
+          }
         }
-        // TODO: Check That Types Are Same
         // TODO: Handle Generic's
+        // Check That Types Are Same
+        typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          param,
+          getExpressionType(
+            rawProgram,
+            _variables,
+            _varStack,
+            _varStacks,
+            _types,
+            _typeStack,
+            _typeStacks,
+            arg
+          )
+        );
       }
-      // TODO: Check Return Type
       // Return Node
-      console.log(node);
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      return node;
     }
     case NodeType.WasmCallExpression:
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);

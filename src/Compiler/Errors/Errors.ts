@@ -19,6 +19,7 @@ export const enum BriskErrorType {
   TypeHasAlreadyBeenDeclared,
   OptionalParametersMustAppearLast,
   TypeMisMatch,
+  IncompatibleTypes,
   TypeCouldNotBeInferred,
   ArrayTypeLengthCouldNotBeInferred,
   InvalidArgumentLength,
@@ -49,6 +50,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.OptionalParametersMustAppearLast]:
     'Optional Parameters Must Appear Last In Function Definition',
   [BriskErrorType.TypeMisMatch]: 'Mismatched Type Expected %1 Found %2',
+  [BriskErrorType.IncompatibleTypes]: 'Type %1 is incompatible with %2',
   [BriskErrorType.TypeCouldNotBeInferred]: 'Type %1 Could Not Be Inferred',
   [BriskErrorType.ArrayTypeLengthCouldNotBeInferred]: 'Array Type Length Could Not Be Inferred',
   [BriskErrorType.InvalidArgumentLength]: 'Function Expects A Maximum Of %1 Arguments, Found %2',
