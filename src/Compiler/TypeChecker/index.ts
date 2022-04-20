@@ -403,7 +403,7 @@ const typeCompatible = (
       BriskErrorType.IncompatibleTypes,
       [
         nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
-        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
       ],
       resolvedB.position
     );
@@ -453,8 +453,9 @@ const typeEqual = (
   ) {
     // Compare Generics
     // TODO: Handle Generic Constraints
-    if (resolvedA.name == resolvedB.name && resolvedA.valueType) return true;
-  } else if (resolvedA.nodeType == NodeType.GenericType) { // If Type A Is Generic
+    if (resolvedA.name == resolvedB.name) return true;
+  } else if (resolvedA.nodeType == NodeType.GenericType && resolvedA.valueType) {
+    // If Type A Is Generic
     // Compare Type Value
     return typeEqual(
       rawProgram,
@@ -465,15 +466,16 @@ const typeEqual = (
       resolvedB,
       throwError
     );
-  } else if (resolvedB.nodeType == NodeType.GenericType && resolvedB.valueType) { // If Type B Is Generic
+  } else if (resolvedB.nodeType == NodeType.GenericType && resolvedB.valueType) {
+    // If Type B Is Generic
     // Compare Type Value
     return typeEqual(
       rawProgram,
       typePool,
       typeStack,
       typeStacks,
-      resolvedA.valueType,
-      resolvedB,
+      resolvedA,
+      resolvedB.valueType,
       throwError
     );
   }
@@ -509,13 +511,15 @@ const typeEqual = (
     );
   }
   // Handle Union Types
-  if (resolvedA.nodeType == NodeType.TypeUnionLiteral) { // If Type A Is Union
+  if (resolvedA.nodeType == NodeType.TypeUnionLiteral) {
+    // If Type A Is Union
     // Check Each Type Value
     for (const type of resolvedA.types) {
       if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedB, false))
         return true;
     }
-  } else if (resolvedB.nodeType == NodeType.TypeUnionLiteral) { // If Type B Is Union
+  } else if (resolvedB.nodeType == NodeType.TypeUnionLiteral) {
+    // If Type B Is Union
     // Check Each Type Value
     for (const type of resolvedB.types) {
       if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedA, false))
@@ -538,7 +542,7 @@ const typeEqual = (
           BriskErrorType.TypeMisMatch,
           [
             nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
-            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
           ],
           resolvedB.position
         );
@@ -548,19 +552,12 @@ const typeEqual = (
     // Check That Generic Types Are Same
     if (resolvedA.genericTypes && resolvedB.genericTypes) {
       // Check Generics Are Same
-      for (const [ index, generic ] of resolvedA.genericTypes.entries()) {
+      for (const [index, generic] of resolvedA.genericTypes.entries()) {
         // Get genericB
         const genericB = resolvedB.genericTypes[index];
         // Compare Generics
-        if (!typeEqual(
-          rawProgram,
-          typePool,
-          typeStack,
-          typeStacks,
-          generic,
-          genericB,
-          throwError
-        )) return false;
+        if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, generic, genericB, throwError))
+          return false;
         // TODO: Implement Generic Type Constraints
       }
     }
@@ -572,27 +569,20 @@ const typeEqual = (
           BriskErrorType.TypeMisMatch,
           [
             nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
-            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
           ],
-          resolvedB.position
+          position
         );
       }
       return false;
     }
-    for(const [ index, param ] of resolvedA.params.entries()) {
+    for (const [index, param] of resolvedA.params.entries()) {
       // Get TypeB Param
       const paramB = resolvedB.params[index];
       // TODO: Resolve Generics
       // Compare Params
-      if (!typeEqual(
-        rawProgram,
-        typePool,
-        typeStack,
-        typeStacks,
-        param,
-        paramB,
-        throwError
-      )) return false;
+      if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, param, paramB, throwError))
+        return false;
     }
     // Check That ReturnType is Same
     return typeEqual(
@@ -613,7 +603,7 @@ const typeEqual = (
       BriskErrorType.TypeMisMatch,
       [
         nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
-        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB)
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
       ],
       resolvedB.position
     );
@@ -1283,10 +1273,15 @@ const typeCheckNode = <T extends Node>(
       // Compare Types
       if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
         // Ensure Callee Is A Function
-        BriskTypeError(rawProgram, BriskErrorType.TypeMisMatch, [
-          'Function', // Get Callee Type
-          nameType(rawProgram, _types, _typeStack, _typeStacks, calleeType),
-        ], node.position);
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            'Function', // Get Callee Type
+            nameType(rawProgram, _types, _typeStack, _typeStacks, calleeType),
+          ],
+          node.position
+        );
         process.exit(1); // Let TypeScript Know That The Program Ends after This
       }
       if (node.args.length > calleeType.params.length) {
@@ -1310,7 +1305,15 @@ const typeCheckNode = <T extends Node>(
         if (arg == undefined) {
           // Check If The Param Was Optional
           if (
-            typeEqual(rawProgram, _types, _typeStack, _typeStacks, createPrimType(param.position, 'Void'), param, false)
+            typeEqual(
+              rawProgram,
+              _types,
+              _typeStack,
+              _typeStacks,
+              createPrimType(param.position, 'Void'),
+              param,
+              false
+            )
           ) {
             break;
           } else {
@@ -1321,7 +1324,7 @@ const typeCheckNode = <T extends Node>(
               [
                 `${calleeType.params.length}`, // Get Callee Type
                 `${index}`,
-              ], 
+              ],
               node.position
             );
             process.exit(1); // Let TypeScript Know That The Program Ends after This
