@@ -671,12 +671,92 @@ const getExpressionType = (
     case NodeType.TypeCastExpression:
       return expression.typeLiteral;
     case NodeType.CallExpression: {
-      // TODO: Analyze Generic Types
-      // TODO: AnaLyze Params
-      // TODO: Analyze ReturnType
-      // TODO: Build Node
-      console.log(expression);
-      break;
+      // Get Callee Type
+      const calleeType = resolveType(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        getExpressionType(
+          rawProgram,
+          varPool,
+          varStack,
+          varStacks,
+          typePool,
+          typeStack,
+          typeStacks,
+          expression.callee
+        )
+      );
+      // Ensure Callee is A Function
+      if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
+        // Ensure Callee Is A Function
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            'Function', // Get Callee Type
+            nameType(rawProgram, typePool, typeStack, typeStacks, calleeType),
+          ],
+          expression.position
+        );
+        process.exit(1); // Let TypeScript Know That The Program Ends after This
+      }
+      // Check Each Parameter
+      const args: TypeLiteral[] = [];
+      const genericValues: Map<string, TypeLiteral> = new Map();
+      for (const [index, arg] of expression.args.entries()) {
+        // Get Argument
+        const param = calleeType.params[index];
+        // Set The Type
+        console.log(param);
+        if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
+          genericValues.set(param.name, getExpressionType(
+            rawProgram,
+            varPool,
+            varStack,
+            varStacks,
+            typePool,
+            typeStack,
+            typeStacks,
+            arg
+          ));
+        }
+        // Return Type
+        args.push(getExpressionType(
+          rawProgram,
+          varPool,
+          varStack,
+          varStacks,
+          typePool,
+          typeStack,
+          typeStacks,
+          arg
+        ));
+      }
+      // Analyze ReturnType
+      if (calleeType.returnType.nodeType == NodeType.GenericType) {
+        if (genericValues.has(calleeType.returnType.name)) {
+          return <TypeLiteral>genericValues.get(calleeType.returnType.name);
+        }
+        // Handle Unresolved Generic
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeCouldNotBeInferred,
+          [
+            nameType(
+              rawProgram,
+              typePool,
+              calleeType.data._typeStack, 
+              [...typeStacks, typeStack], 
+              calleeType.returnType
+            )
+          ],
+          calleeType.returnType.position
+        );
+      }
+      // Build Node
+      return calleeType.returnType;
     }
     case NodeType.WasmCallExpression:
       break;
@@ -1330,7 +1410,21 @@ const typeCheckNode = <T extends Node>(
             process.exit(1); // Let TypeScript Know That The Program Ends after This
           }
         }
-        // TODO: Handle Generic's
+        // Handle Generic's
+        // TODO: I think this is too rigid
+        if (param.nodeType == NodeType.GenericType && param.valueType == undefined) {
+          // Set The Value Type
+          param.valueType = getExpressionType(
+            rawProgram,
+            _variables,
+            _varStack,
+            _varStacks,
+            _types,
+            _typeStack,
+            _typeStacks,
+            arg
+          );
+        }
         // Check That Types Are Same
         typeEqual(
           rawProgram,
