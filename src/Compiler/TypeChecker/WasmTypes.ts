@@ -1,3 +1,521 @@
+import { Position } from '../Types/Types';
+import {
+  TypeLiteral
+} from '../Types/ParseNodes';
+import {
+  createPrimType,
+  createArrayType,
+  createFunctionSignatureType,
+  createParenthesisType,
+  createUnionType
+} from '../Helpers/index';
+// Type Functions
+const u32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'u32');
+const u64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'u64');
+const i32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
+const i64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i64');
+const f32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f32');
+const f64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f64');
+const boolType = (pos: Position): TypeLiteral => createPrimType(pos, 'Boolean');
+const stringType = (pos: Position): TypeLiteral => createPrimType(pos, 'String');
+const voidType = (pos: Position): TypeLiteral => createPrimType(pos, 'Void');
+const funcType = (pos: Position): TypeLiteral => createPrimType(pos, 'Function'); // TODO: Implement A WasmFunction Type For Simple Functions
+const anyType = (pos: Position): TypeLiteral => createPrimType(pos, 'Any'); // TODO: This Should Not be Used
+const ptrType = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
+// WasmTypes Lists
+type wasmType = { [key: string]: ((pos: Position) => TypeLiteral) | wasmType };
+// TODO: Implement Wasm Statement Syntax
+// Wasm Expressions
+export const wasmExpressions: wasmType = {
+  // General
+  block: (pos: Position) => {
+    return createFunctionSignatureType(
+      pos,
+      [],
+      [ stringType(pos), funcType(pos) ],
+      voidType(pos),
+      new Map()
+    );
+  },
+  if: (pos: Position) => {
+    return createFunctionSignatureType(
+      pos,
+      [],
+      [ boolType(pos), funcType(pos), funcType(pos) ],
+      voidType(pos),
+      new Map()
+    );
+  },
+  loop: (pos: Position) => {
+    return createFunctionSignatureType(
+      pos,
+      [],
+      [ stringType(pos), funcType(pos) ],
+      voidType(pos),
+      new Map()
+    );
+  },
+  // TODO: br
+  // TODO: br_if
+  // TODO: switch
+  // TODO: Call
+  // TODO: Return_Call
+  // TODO: Call_Indirect
+  // TODO: Return_Call_Indirect
+  local: {
+    // TODO: Get
+    set: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), anyType(pos) ], // TODO: Handle Making Sure This Is The Correct Type
+        voidType(pos),
+        new Map()
+      );
+    },
+    // TODO: Tee
+  },
+  global: {
+    // TODO: Get
+    set: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), anyType(pos) ], // TODO: Handle Making Sure This Is The Correct Type
+        voidType(pos),
+        new Map()
+      );
+    },
+  },
+  table: {
+    // TODO: Get
+    // TODO: Set
+    // TODO: Size
+    // TODO: Grow
+    // TODO: Init
+    // TODO: Fill
+    // TODO: Copy
+  },
+  memory: {
+    // TODO: Size
+    // TODO: Grow
+    // TODO: Init
+    // TODO: Copy
+    // TODO: Fill
+    atomic: {
+      // TODO: Notify
+      // TODO: wait32
+      // TODO: wait64
+    }
+  },
+  data: {
+    drop: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [
+          createUnionType(
+            pos,
+            u32Type(pos),
+            u64Type(pos),
+            i32Type(pos),
+            i64Type(pos),
+            f32Type(pos),
+            f64Type(pos)
+          )
+        ],
+        voidType(pos),
+        new Map()
+      );
+    },
+  },
+  i32: {
+    load: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    load8_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    load8_u: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        u32Type(pos),
+        new Map()
+      );
+    },
+    load16_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    load16_u: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        u32Type(pos),
+        new Map()
+      );
+    },
+    store: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos) ],
+        voidType(pos),
+        new Map()
+      );
+    },
+    store8: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos) ],
+        voidType(pos),
+        new Map()
+      );
+    },
+    store16: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos) ],
+        voidType(pos),
+        new Map()
+      );
+    },
+    const: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    clz: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    ctz: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    popcnt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    eqz: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    trunc_s: {
+      f32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f32Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+      f64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f64Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+    },
+    trunc_u: {
+      f32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f32Type(pos) ],
+          u32Type(pos),
+          new Map()
+        );
+      },
+      f64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f64Type(pos) ],
+          u32Type(pos),
+          new Map()
+        );
+      },
+    },
+    trunc_s_sat: {
+      f32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f32Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+      f64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f64Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+    },
+    trunc_u_sat: {
+      f32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f32Type(pos) ],
+          u32Type(pos),
+          new Map()
+        );
+      },
+      f64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ f64Type(pos) ],
+          u32Type(pos),
+          new Map()
+        );
+      },
+    },
+    reinterpret: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    extend8_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    extend16_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    wrap: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i64Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    add: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    sub: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    mul: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    div_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    div_u: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        u32Type(pos),
+        new Map()
+      );
+    },
+    rem_s: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    rem_u: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    and: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    or: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    xor: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    shl: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos) ],
+        i32Type(pos),
+        new Map()
+      );
+    },
+    // shr_u(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // shr_s(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // rotl(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // rotr(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // eq(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // ne(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // lt_s(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // lt_u(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // le_s(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // le_u(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // gt_s(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // gt_u(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // ge_s(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // ge_u(left: ExpressionRef, right: ExpressionRef): ExpressionRef;
+    // atomic: {
+    //   load(offset: number, ptr: ExpressionRef): ExpressionRef;
+    //   load8_u(offset: number, ptr: ExpressionRef): ExpressionRef;
+    //   load16_u(offset: number, ptr: ExpressionRef): ExpressionRef;
+    //   store(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //   store8(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //   store16(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //   rmw: {
+    //     add(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     sub(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     and(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     or(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xor(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xchg(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     cmpxchg(offset: number, ptr: ExpressionRef, expected: ExpressionRef, replacement: ExpressionRef): ExpressionRef;
+    //   },
+    //   rmw8_u: {
+    //     add(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     sub(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     and(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     or(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xor(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xchg(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     cmpxchg(offset: number, ptr: ExpressionRef, expected: ExpressionRef, replacement: ExpressionRef): ExpressionRef;
+    //   },
+    //   rmw16_u: {
+    //     add(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     sub(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     and(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     or(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xor(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     xchg(offset: number, ptr: ExpressionRef, value: ExpressionRef): ExpressionRef;
+    //     cmpxchg(offset: number, ptr: ExpressionRef, expected: ExpressionRef, replacement: ExpressionRef): ExpressionRef;
+    //   },
+    // },
+    // pop(): ExpressionRef;
+  }
+};
+
+
 // import {
 //   NodeType,
 //   NodeCategory,
