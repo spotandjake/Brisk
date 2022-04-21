@@ -221,9 +221,10 @@ const resolveType = (
       const types: TypeLiteral[] = [];
       for (const t of type.types) {
         const resolvedType = resolveType(rawProgram, typePool, typeStack, typeStacks, t);
+        // TODO: Improve Type Simplification
         if (
           !types.some((checkType) => {
-            return typeEqual(
+            return strictTypeEqual(
               rawProgram,
               typePool,
               typeStack,
@@ -410,6 +411,39 @@ const typeCompatible = (
   }
   return false;
 };
+// Strict Equal
+const strictTypeEqual = (
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral,
+  throwError = true
+) => {
+  // Resolve Both Types
+  const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
+  const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
+  // Handle PrimLiteral Types
+  if (
+    resolvedA.nodeType == NodeType.TypePrimLiteral &&
+    resolvedB.nodeType == NodeType.TypePrimLiteral
+  ) {
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+    if (resolvedA.name != resolvedB.name && throwError) {
+      BriskTypeError(
+        rawProgram,
+        BriskErrorType.TypeMisMatch,
+        [resolvedA.name, resolvedB.name],
+        resolvedA.position
+      );
+    }
+    return resolvedA.name == resolvedB.name;
+  }
+  // Return False Normally
+  return false;
+};
+// General Equal
 const typeEqual = (
   rawProgram: string,
   typePool: TypeMap,
@@ -422,8 +456,6 @@ const typeEqual = (
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
   const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
-  // Configurable Variables
-  let position = resolvedB.position;
   // If Either Type Is Any Then We Can Leave
   // TODO: Remove Any Type
   if (resolvedA.nodeType == NodeType.TypePrimLiteral && resolvedA.name == 'Any') return true;
@@ -444,6 +476,17 @@ const typeEqual = (
     }
     return resolvedA.name == resolvedB.name;
   }
+  if (strictTypeEqual(
+    rawProgram,
+    typePool,
+    typeStack,
+    typeStacks,
+    resolvedA,
+    resolvedB,
+    throwError
+  )) { // Check If They Are Strict Equal
+    return true;
+  }
   // Compare Generics
   if (
     resolvedA.nodeType == NodeType.GenericType &&
@@ -454,51 +497,59 @@ const typeEqual = (
     // Compare Generics
     // TODO: Handle Generic Constraints
     if (resolvedA.name == resolvedB.name) return true;
-  } else if (resolvedA.nodeType == NodeType.GenericType && resolvedA.valueType) {
+  } else if (resolvedA.nodeType == NodeType.GenericType) {
     // If Type A Is Generic
     // Compare Type Value
-    return typeEqual(
-      rawProgram,
-      typePool,
-      typeStack,
-      typeStacks,
-      resolvedA.valueType,
-      resolvedB,
-      throwError
-    );
-  } else if (resolvedB.nodeType == NodeType.GenericType && resolvedB.valueType) {
+    if (resolvedA.valueType) {
+      return typeEqual(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA.valueType,
+        resolvedB,
+        throwError
+      );
+    }
+    // TODO: Check That Value Matches The Constraints
+    return true;
+  } else if (resolvedB.nodeType == NodeType.GenericType) {
     // If Type B Is Generic
     // Compare Type Value
-    return typeEqual(
-      rawProgram,
-      typePool,
-      typeStack,
-      typeStacks,
-      resolvedA,
-      resolvedB.valueType,
-      throwError
-    );
+    if (resolvedB.valueType) {
+      return typeEqual(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA,
+        resolvedB.valueType,
+        throwError
+      );
+    }
+    // TODO: Check That Value Matches The Constraints
+    return true;
   }
   // Handle Array Types
   if (
     resolvedA.nodeType == NodeType.ArrayTypeLiteral &&
     resolvedB.nodeType == NodeType.ArrayTypeLiteral
   ) {
-    // TODO: Determine Array Length, Check Lengths
-    // if (resolvedA.length != resolvedB.length) {
-    //   if (throwError) {
-    //     BriskTypeError(
-    //       rawProgram,
-    //       BriskErrorType.TypeMisMatch,
-    //       [
-    //         rawProgram.slice(typeA.position.offset, typeA.position.offset + typeA.position.length),
-    //         rawProgram.slice(typeB.position.offset, typeB.position.offset + typeB.position.length),
-    //       ],
-    //       typeA.position
-    //     );
-    //   }
-    //   return false;
-    // }
+    // Check Lengths
+    if (resolvedA.length != resolvedB.length) {
+      if (throwError) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            rawProgram.slice(typeA.position.offset, typeA.position.offset + typeA.position.length),
+            rawProgram.slice(typeB.position.offset, typeB.position.offset + typeB.position.length),
+          ],
+          typeA.position
+        );
+      }
+      return false;
+    }
     // Throw An Error If The Types Are Not The Same And ThrowError Is True
     return typeEqual(
       rawProgram,
@@ -571,7 +622,7 @@ const typeEqual = (
             nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
             nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
           ],
-          position
+          resolvedB.position
         );
       }
       return false;
@@ -709,7 +760,6 @@ const getExpressionType = (
         // Get Argument
         const param = calleeType.params[index];
         // Set The Type
-        console.log(param);
         if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
           genericValues.set(param.name, getExpressionType(
             rawProgram,
@@ -744,15 +794,15 @@ const getExpressionType = (
           rawProgram,
           BriskErrorType.TypeCouldNotBeInferred,
           [
-            nameType(
+            `ReturnType: ${nameType(
               rawProgram,
               typePool,
               calleeType.data._typeStack, 
               [...typeStacks, typeStack], 
               calleeType.returnType
-            )
+            )}`
           ],
-          calleeType.returnType.position
+          expression.position
         );
       }
       // Build Node
@@ -1378,6 +1428,7 @@ const typeCheckNode = <T extends Node>(
         );
       }
       // Check Each Parameter
+      const optionalTypes: Map<string, TypeLiteral> = new Map();
       for (const [index, param] of calleeType.params.entries()) {
         // Get Argument
         const arg = node.args[index];
@@ -1410,20 +1461,9 @@ const typeCheckNode = <T extends Node>(
             process.exit(1); // Let TypeScript Know That The Program Ends after This
           }
         }
-        // Handle Generic's
-        // TODO: I think this is too rigid
-        if (param.nodeType == NodeType.GenericType && param.valueType == undefined) {
-          // Set The Value Type
-          param.valueType = getExpressionType(
-            rawProgram,
-            _variables,
-            _varStack,
-            _varStacks,
-            _types,
-            _typeStack,
-            _typeStacks,
-            arg
-          );
+        // Deal With Generics
+        if (param.nodeType == NodeType.GenericType) {
+          // Deal With Generics
         }
         // Check That Types Are Same
         typeEqual(
