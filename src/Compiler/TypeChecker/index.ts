@@ -24,6 +24,8 @@ import {
   TypeStack,
   TypeData,
 } from '../Types/AnalyzerNodes';
+// import { wasmExpressions } from './WasmTypes';
+import './WasmTypes';
 import {
   createPrimType,
   createArrayType,
