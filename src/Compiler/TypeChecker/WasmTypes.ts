@@ -1,7 +1,7 @@
 import { Position } from '../Types/Types';
 import {
   TypeLiteral,
-  NodeType
+  // NodeType
 } from '../Types/ParseNodes';
 import {
   createPrimType,
@@ -15,43 +15,19 @@ const i32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
 const i64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i64');
 const f32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f32');
 const f64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f64');
-const boolType = (pos: Position): TypeLiteral => createPrimType(pos, 'Boolean');
-const stringType = (pos: Position): TypeLiteral => createPrimType(pos, 'String');
+// const boolType = (pos: Position): TypeLiteral => createPrimType(pos, 'Boolean');
+// const stringType = (pos: Position): TypeLiteral => createPrimType(pos, 'String');
 const voidType = (pos: Position): TypeLiteral => createPrimType(pos, 'Void');
-const funcType = (pos: Position): TypeLiteral => createPrimType(pos, 'Function'); // TODO: Implement A WasmFunction Type For Simple Functions
+// const funcType = (pos: Position): TypeLiteral => createPrimType(pos, 'Function'); // TODO: Implement A WasmFunction Type For Simple Functions
 const ptrType = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
 // WasmTypes Lists
 type wasmType = { [key: string]: ((pos: Position) => TypeLiteral) | wasmType };
 // Wasm Expressions
 export const wasmExpressions: wasmType = {
   // General
-  block: (pos: Position) => {
-    return createFunctionSignatureType(
-      pos,
-      [],
-      [ stringType(pos), funcType(pos) ],
-      voidType(pos),
-      new Map()
-    );
-  },
-  if: (pos: Position) => {
-    return createFunctionSignatureType(
-      pos,
-      [],
-      [ boolType(pos), funcType(pos), funcType(pos) ],
-      voidType(pos),
-      new Map()
-    );
-  },
-  loop: (pos: Position) => {
-    return createFunctionSignatureType(
-      pos,
-      [],
-      [ stringType(pos), funcType(pos) ],
-      voidType(pos),
-      new Map()
-    );
-  },
+  // TODO: Block
+  // TODO: If
+  // TODO: Loop
   // TODO: br
   // TODO: br_if
   // TODO: switch
@@ -162,9 +138,33 @@ export const wasmExpressions: wasmType = {
       );
     },
     atomic: {
-      // TODO: Notify
-      // TODO: wait32
-      // TODO: wait64
+      notify: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ ptrType(pos), i32Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+      wait32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ ptrType(pos), i32Type(pos), i64Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
+      wait64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ ptrType(pos), i64Type(pos), i64Type(pos) ],
+          i32Type(pos),
+          new Map()
+        );
+      },
     }
   },
   data: {
@@ -2005,66 +2005,333 @@ export const wasmExpressions: wasmType = {
       );
     },
   },
-  // TODO: V128
-  // TODO: Double Check
-};
-// name Type
-const nameType = (type: TypeLiteral): string => {
-  // TODO: Handle Recursive Types
-  switch (type.nodeType) {
-    case NodeType.TypePrimLiteral:
-      return type.name;
-    case NodeType.TypeUnionLiteral: {
-      return type.types
-        .map((t) => nameType(t))
-        .join(' | ');
-    }
-    case NodeType.ArrayTypeLiteral:
-      return `${nameType(type.value)}[]`;
-    case NodeType.ParenthesisTypeLiteral:
-      return `(${nameType(type.value)})`;
-    case NodeType.FunctionSignatureLiteral: {
-      const params = type.params.map((p) =>
-        nameType(p)
+  f64: {
+    load: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        f64Type(pos),
+        new Map()
       );
-      const returnType = nameType(type.returnType);
-      if (type.genericTypes) {
-        const generics = type.genericTypes.map((g) =>
-          nameType(g)
+    },
+    store: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos), f64Type(pos) ],
+        voidType(pos),
+        new Map()
+      );
+    },
+    const: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    neg: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    abs: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    ceil: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    floor: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    trunc: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    nearest: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    sqrt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    reinterpret: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    convert_s: {
+      i32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i32Type(pos) ],
+          f64Type(pos),
+          new Map()
         );
-        return `<${generics.join(', ')}>(${params.join(', ')}) => ${returnType}`;
-      } else {
-        return `(${params.join(', ')}) => ${returnType}`;
-      }
-    }
-    case NodeType.EnumDefinitionStatement:
-      return `Enum ${type.name}`; // TODO: Determine Better Type Name For This
-    case NodeType.TypeUsage:
-      return type.name;
-    case NodeType.GenericType:
-      return type.name;
-    default:
-      return 'Too Advanced';
-  }
+      },
+      i64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i64Type(pos) ],
+          f64Type(pos),
+          new Map()
+        );
+      },
+    },
+    convert_u: {
+      i32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i32Type(pos) ],
+          f64Type(pos),
+          new Map()
+        );
+      },
+      i64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i64Type(pos) ],
+          f64Type(pos),
+          new Map()
+        );
+      },
+    },
+    promote: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    add: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    sub: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    mul: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    div: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    copysign: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    min: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    max: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    eq: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    ne: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    lt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    le: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    gt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    ge: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f64Type(pos), f64Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+  },
+  // TODO: V128
+  // TODO: Double Check I Have All Instructions
 };
-// Serialize
-const parse = (root: string, parentObj: wasmType) => {
-  for (const [ key, value ] of Object.entries(parentObj)) {
-    if (typeof value == 'function') {
-      // Log The Type
-      console.log(`${root}.${key}${nameType(
-        value({
-          offset: 0,
-          length: 0,
-          line: 0,
-          col: 0,
-          file: '',
-        })
-      )}`);
-    } else {
-      // Parse The Inside
-      parse(`${root}.${key}`, value);
-    }
-  }
-};
-parse('@wasm', wasmExpressions);
+// // name Type
+// const nameType = (type: TypeLiteral): string => {
+//   // TODO: Handle Recursive Types
+//   switch (type.nodeType) {
+//     case NodeType.TypePrimLiteral:
+//       return type.name;
+//     case NodeType.TypeUnionLiteral: {
+//       return type.types
+//         .map((t) => nameType(t))
+//         .join(' | ');
+//     }
+//     case NodeType.ArrayTypeLiteral:
+//       return `${nameType(type.value)}[]`;
+//     case NodeType.ParenthesisTypeLiteral:
+//       return `(${nameType(type.value)})`;
+//     case NodeType.FunctionSignatureLiteral: {
+//       const params = type.params.map((p) =>
+//         nameType(p)
+//       );
+//       const returnType = nameType(type.returnType);
+//       if (type.genericTypes) {
+//         const generics = type.genericTypes.map((g) =>
+//           nameType(g)
+//         );
+//         return `<${generics.join(', ')}>(${params.join(', ')}) => ${returnType}`;
+//       } else {
+//         return `(${params.join(', ')}) => ${returnType}`;
+//       }
+//     }
+//     case NodeType.EnumDefinitionStatement:
+//       return `Enum ${type.name}`; // TODO: Determine Better Type Name For This
+//     case NodeType.TypeUsage:
+//       return type.name;
+//     case NodeType.GenericType:
+//       return type.name;
+//     default:
+//       return 'Too Advanced';
+//   }
+// };
+// // Serialize
+// const parse = (root: string, parentObj: wasmType) => {
+//   for (const [ key, value ] of Object.entries(parentObj)) {
+//     if (typeof value == 'function') {
+//       // Log The Type
+//       console.log(`${root}.${key}${nameType(
+//         value({
+//           offset: 0,
+//           length: 0,
+//           line: 0,
+//           col: 0,
+//           file: '',
+//         })
+//       )}`);
+//     } else {
+//       // Parse The Inside
+//       parse(`${root}.${key}`, value);
+//     }
+//   }
+// };
+// parse('@wasm', wasmExpressions);

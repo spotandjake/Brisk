@@ -23,6 +23,7 @@ export const enum BriskErrorType {
   TypeCouldNotBeInferred,
   ArrayTypeLengthCouldNotBeInferred,
   InvalidArgumentLength,
+  WasmExpressionUnknown,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -54,6 +55,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.TypeCouldNotBeInferred]: 'Type %1 Could Not Be Inferred',
   [BriskErrorType.ArrayTypeLengthCouldNotBeInferred]: 'Array Type Length Could Not Be Inferred',
   [BriskErrorType.InvalidArgumentLength]: 'Function Expects A Maximum Of %1 Arguments, Found %2',
+  [BriskErrorType.WasmExpressionUnknown]: 'Wasm Expression %1 Could Not be Found',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1 Has Already Been Declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 Not Found',

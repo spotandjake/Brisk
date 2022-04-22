@@ -24,8 +24,7 @@ import {
   TypeStack,
   TypeData,
 } from '../Types/AnalyzerNodes';
-// import { wasmExpressions } from './WasmTypes';
-import './WasmTypes';
+import { wasmExpressions } from './WasmTypes';
 import {
   createPrimType,
   createArrayType,
@@ -811,6 +810,7 @@ const getExpressionType = (
       return calleeType.returnType;
     }
     case NodeType.WasmCallExpression:
+      console.log(expression);
       break;
     case NodeType.StringLiteral:
       return createPrimType(expression.position, 'String');
@@ -1430,7 +1430,7 @@ const typeCheckNode = <T extends Node>(
         );
       }
       // Check Each Parameter
-      const optionalTypes: Map<string, TypeLiteral> = new Map();
+      const genericValues: Map<string, TypeLiteral> = new Map();
       for (const [index, param] of calleeType.params.entries()) {
         // Get Argument
         const arg = node.args[index];
@@ -1463,9 +1463,25 @@ const typeCheckNode = <T extends Node>(
             process.exit(1); // Let TypeScript Know That The Program Ends after This
           }
         }
+        let argType: TypeLiteral = getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          arg
+        );
         // Deal With Generics
         if (param.nodeType == NodeType.GenericType) {
-          // Deal With Generics
+          // TODO: Deal With Constraints
+          // Set Generic
+          if (!genericValues.has(param.name)) {
+            genericValues.set(param.name, argType);
+          }
+          // get Generic Value
+          argType = <TypeLiteral>genericValues.get(param.name);
         }
         // Check That Types Are Same
         typeEqual(
@@ -1474,24 +1490,41 @@ const typeCheckNode = <T extends Node>(
           _typeStack,
           _typeStacks,
           param,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _varStack,
-            _varStacks,
-            _types,
-            _typeStack,
-            _typeStacks,
-            arg
-          )
+          argType
         );
       }
       // Return Node
       return node;
     }
-    case NodeType.WasmCallExpression:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+    case NodeType.WasmCallExpression: {
+      // Split Path
+      const wasmPath = node.name.split('.').slice(1);
+      // Get Type
+      // TODO: Convert The Wasm Expression Object Into A Bunch of If Statements
+      let wasmInstructions = wasmExpressions;
+      let exprType: TypeLiteral | undefined = undefined;
+      while (wasmPath.length != 0) {
+        const currentSegment = wasmInstructions[<string>wasmPath.shift()];
+        // Check if parent Has Type
+        if (currentSegment != undefined && typeof currentSegment != 'function') {
+          wasmInstructions = currentSegment;
+        } else if (typeof currentSegment == 'function' && wasmPath.length == 0) {
+          exprType = currentSegment(node.position);
+        }
+      }
+      if (exprType == undefined) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.WasmExpressionUnknown,
+          [ node.name ],
+          node.position
+        );
+      } else {
+        // Type Check Node
+        //  TODO: Check The Types Are Equal
+      }
+      return node;
+    }
     // Literals
     case NodeType.StringLiteral:
     case NodeType.I32Literal:
