@@ -1737,7 +1737,276 @@ export const wasmExpressions: wasmType = {
         },
       }
     }
-  }
+  },
+  f32: {
+    load: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    store: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos), i32Type(pos), ptrType(pos), f32Type(pos) ],
+        voidType(pos),
+        new Map()
+      );
+    },
+    const: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    neg: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    abs: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    ceil: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    floor: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    trunc: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    nearest: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    sqrt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    reinterpret: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ i32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    convert_s: {
+      i32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i32Type(pos) ],
+          f32Type(pos),
+          new Map()
+        );
+      },
+      i64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i64Type(pos) ],
+          f32Type(pos),
+          new Map()
+        );
+      },
+    },
+    convert_u: {
+      i32: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i32Type(pos) ],
+          f32Type(pos),
+          new Map()
+        );
+      },
+      i64: (pos: Position) => {
+        return createFunctionSignatureType(
+          pos,
+          [],
+          [ i64Type(pos) ],
+          f32Type(pos),
+          new Map()
+        );
+      },
+    },
+    demote: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos) ],
+        f64Type(pos),
+        new Map()
+      );
+    },
+    add: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    sub: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    mul: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    div: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    copysign: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    min: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    max: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    eq: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    ne: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    lt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    le: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    gt: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+    ge: (pos: Position) => {
+      return createFunctionSignatureType(
+        pos,
+        [],
+        [ f32Type(pos), f32Type(pos) ],
+        f32Type(pos),
+        new Map()
+      );
+    },
+  },
+  // TODO: V128
+  // TODO: Double Check
 };
 // name Type
 const nameType = (type: TypeLiteral): string => {
@@ -1782,13 +2051,6 @@ const nameType = (type: TypeLiteral): string => {
 const parse = (root: string, parentObj: wasmType) => {
   for (const [ key, value ] of Object.entries(parentObj)) {
     if (typeof value == 'function') {
-      const v = value({
-        offset: 0,
-        length: 0,
-        line: 0,
-        col: 0,
-        file: '',
-      });
       // Log The Type
       console.log(`${root}.${key}${nameType(
         value({
