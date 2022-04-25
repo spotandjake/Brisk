@@ -22,7 +22,7 @@ const voidType = (pos: Position): TypeLiteral => createPrimType(pos, 'Void');
 const ptrType = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
 // WasmTypes Lists
 type wasmType = { [key: string]: ((pos: Position) => TypeLiteral) | wasmType };
-// Wasm Expressions
+// Wasm Expression Type Signatures
 export const wasmExpressions: wasmType = {
   // General
   // TODO: Block
