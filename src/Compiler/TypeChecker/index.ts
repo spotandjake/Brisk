@@ -477,15 +477,10 @@ const typeEqual = (
     }
     return resolvedA.name == resolvedB.name;
   }
-  if (strictTypeEqual(
-    rawProgram,
-    typePool,
-    typeStack,
-    typeStacks,
-    resolvedA,
-    resolvedB,
-    throwError
-  )) { // Check If They Are Strict Equal
+  if (
+    strictTypeEqual(rawProgram, typePool, typeStack, typeStacks, resolvedA, resolvedB, throwError)
+  ) {
+    // Check If They Are Strict Equal
     return true;
   }
   // Compare Generics
@@ -762,7 +757,23 @@ const getExpressionType = (
         const param = calleeType.params[index];
         // Set The Type
         if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
-          genericValues.set(param.name, getExpressionType(
+          genericValues.set(
+            param.name,
+            getExpressionType(
+              rawProgram,
+              varPool,
+              varStack,
+              varStacks,
+              typePool,
+              typeStack,
+              typeStacks,
+              arg
+            )
+          );
+        }
+        // Return Type
+        args.push(
+          getExpressionType(
             rawProgram,
             varPool,
             varStack,
@@ -771,19 +782,8 @@ const getExpressionType = (
             typeStack,
             typeStacks,
             arg
-          ));
-        }
-        // Return Type
-        args.push(getExpressionType(
-          rawProgram,
-          varPool,
-          varStack,
-          varStacks,
-          typePool,
-          typeStack,
-          typeStacks,
-          arg
-        ));
+          )
+        );
       }
       // Analyze ReturnType
       if (calleeType.returnType.nodeType == NodeType.GenericType) {
@@ -798,10 +798,10 @@ const getExpressionType = (
             `ReturnType: ${nameType(
               rawProgram,
               typePool,
-              calleeType.data._typeStack, 
-              [...typeStacks, typeStack], 
+              calleeType.data._typeStack,
+              [...typeStacks, typeStack],
               calleeType.returnType
-            )}`
+            )}`,
           ],
           expression.position
         );
@@ -810,6 +810,10 @@ const getExpressionType = (
       return calleeType.returnType;
     }
     case NodeType.WasmCallExpression:
+      // TODO: Check Type Exists
+      // TODO: Get Type
+      // TODO: Resolve Generics
+      // TODO: Return Type
       console.log(expression);
       break;
     case NodeType.StringLiteral:
@@ -1484,14 +1488,7 @@ const typeCheckNode = <T extends Node>(
           argType = <TypeLiteral>genericValues.get(param.name);
         }
         // Check That Types Are Same
-        typeEqual(
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          param,
-          argType
-        );
+        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);
       }
       // Return Node
       return node;
@@ -1516,7 +1513,7 @@ const typeCheckNode = <T extends Node>(
         BriskTypeError(
           rawProgram,
           BriskErrorType.WasmExpressionUnknown,
-          [ node.name ],
+          [node.name],
           node.position
         );
       } else {
