@@ -809,13 +809,93 @@ const getExpressionType = (
       // Build Node
       return calleeType.returnType;
     }
-    case NodeType.WasmCallExpression:
+    case NodeType.WasmCallExpression: {
       // TODO: Check Type Exists
-      // TODO: Get Type
-      // TODO: Resolve Generics
-      // TODO: Return Type
-      console.log(expression);
-      break;
+      // Split Path
+      const wasmPath = expression.name.split('.').slice(1);
+      // Get Type
+      // TODO: Convert The Wasm Expression Object Into A Bunch of If Statements
+      let wasmInstructions = wasmExpressions;
+      let exprType: TypeLiteral | undefined = undefined;
+      while (wasmPath.length != 0) {
+        const currentSegment = wasmInstructions[<string>wasmPath.shift()];
+        // Check if parent Has Type
+        if (currentSegment != undefined && typeof currentSegment != 'function') {
+          wasmInstructions = currentSegment;
+        } else if (typeof currentSegment == 'function' && wasmPath.length == 0) {
+          exprType = currentSegment(expression.position);
+        }
+      }
+      // The Node Does Not Exist
+      if (exprType == undefined || exprType.nodeType != NodeType.FunctionSignatureLiteral) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.WasmExpressionUnknown,
+          [expression.name],
+          expression.position
+        );
+        process.exit(1); // Let TypeScript Know The Program Exits
+      }
+      // Check Each Parameter
+      const args: TypeLiteral[] = [];
+      const genericValues: Map<string, TypeLiteral> = new Map();
+      for (const [index, arg] of expression.args.entries()) {
+        // Get Argument
+        const param = exprType.params[index];
+        // Set The Type
+        if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
+          genericValues.set(
+            param.name,
+            getExpressionType(
+              rawProgram,
+              varPool,
+              varStack,
+              varStacks,
+              typePool,
+              typeStack,
+              typeStacks,
+              arg
+            )
+          );
+        }
+        // Return Type
+        args.push(
+          getExpressionType(
+            rawProgram,
+            varPool,
+            varStack,
+            varStacks,
+            typePool,
+            typeStack,
+            typeStacks,
+            arg
+          )
+        );
+      }
+      // Analyze ReturnType
+      if (exprType.returnType.nodeType == NodeType.GenericType) {
+        if (genericValues.has(exprType.returnType.name)) {
+          return <TypeLiteral>genericValues.get(exprType.returnType.name);
+        }
+        // Handle Unresolved Generic
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeCouldNotBeInferred,
+          [
+            `ReturnType: ${nameType(
+              rawProgram,
+              typePool,
+              exprType.data._typeStack,
+              [...typeStacks, typeStack],
+              exprType.returnType
+            )}`,
+          ],
+          expression.position
+        );
+      }
+      // Return Type
+      return exprType.returnType;
+    }
     case NodeType.StringLiteral:
       return createPrimType(expression.position, 'String');
     case NodeType.I32Literal:
@@ -1494,6 +1574,7 @@ const typeCheckNode = <T extends Node>(
       return node;
     }
     case NodeType.WasmCallExpression: {
+      // TODO: Deal With Generics
       // Split Path
       const wasmPath = node.name.split('.').slice(1);
       // Get Type
@@ -1509,17 +1590,86 @@ const typeCheckNode = <T extends Node>(
           exprType = currentSegment(node.position);
         }
       }
-      if (exprType == undefined) {
+      if (exprType == undefined || exprType.nodeType != NodeType.FunctionSignatureLiteral) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.WasmExpressionUnknown,
           [node.name],
           node.position
         );
-      } else {
-        // Type Check Node
-        //  TODO: Check The Types Are Equal
+        process.exit(1); // Let TypeScript Know That The Program Exits
       }
+      if (node.args.length > exprType.params.length) {
+        // Ensure We Do Not Have Too Many Arguments Types
+        // Ensure Callee Is A Function
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.InvalidArgumentLength,
+          [
+            `${exprType.params.length}`, // Get Callee Type
+            `${node.args.length}`,
+          ],
+          node.position
+        );
+      }
+      // Check Each Parameter
+      const genericValues: Map<string, TypeLiteral> = new Map();
+      for (const [index, param] of exprType.params.entries()) {
+        // Get Argument
+        const arg = node.args[index];
+        // Check If We Have Argument
+        if (arg == undefined) {
+          // Check If The Param Was Optional
+          if (
+            typeEqual(
+              rawProgram,
+              _types,
+              _typeStack,
+              _typeStacks,
+              createPrimType(param.position, 'Void'),
+              param,
+              false
+            )
+          ) {
+            break;
+          } else {
+            // TODO: Create better error Message
+            BriskTypeError(
+              rawProgram,
+              BriskErrorType.InvalidArgumentLength,
+              [
+                `${exprType.params.length}`, // Get Callee Type
+                `${index}`,
+              ],
+              node.position
+            );
+            process.exit(1); // Let TypeScript Know That The Program Ends after This
+          }
+        }
+        let argType: TypeLiteral = getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          arg
+        );
+        // Deal With Generics
+        if (param.nodeType == NodeType.GenericType) {
+          // TODO: Deal With Constraints
+          // Set Generic
+          if (!genericValues.has(param.name)) {
+            genericValues.set(param.name, argType);
+          }
+          // get Generic Value
+          argType = <TypeLiteral>genericValues.get(param.name);
+        }
+        // Check That Types Are Same
+        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);
+      }
+      // Return Node
       return node;
     }
     // Literals
