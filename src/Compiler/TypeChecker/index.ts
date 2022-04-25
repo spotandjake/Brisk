@@ -1434,10 +1434,64 @@ const typeCheckNode = <T extends Node>(
       }
       return node;
     // Expressions
-    case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      // Check That Types Are Numeric
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.lhs
+        ),
+        createUnionType(
+          node.lhs.position,
+          createPrimType(node.lhs.position, 'f32'),
+          createPrimType(node.lhs.position, 'f64'),
+          createPrimType(node.lhs.position, 'i32'),
+          createPrimType(node.lhs.position, 'i64'),
+          createPrimType(node.lhs.position, 'u32'),
+          createPrimType(node.lhs.position, 'u64'),
+          createPrimType(node.lhs.position, 'Number')
+        )
+      );
+    case NodeType.ComparisonExpression:
+      // Check Both Type A And B Are The Same
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.lhs
+        ),
+        getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.rhs
+        )
+      );
+      // Return Node
+      return node;
     case NodeType.TypeCastExpression:
       // Analyze Properties
       node.typeLiteral = _typeCheckNode(node.typeLiteral);
@@ -1462,9 +1516,43 @@ const typeCheckNode = <T extends Node>(
       );
       // Return Node
       return node;
-    case NodeType.UnaryExpression:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+    case NodeType.UnaryExpression: {
+      // Check What Operator Is Being Used
+      let expectedType: TypeLiteral;
+      if (node.operator == UnaryExpressionOperator.UnaryNot) {
+        expectedType = createPrimType(node.position, 'Boolean');
+      } else {
+        // -, +
+        expectedType = createUnionType(
+          node.position,
+          createPrimType(node.position, 'f32'),
+          createPrimType(node.position, 'f64'),
+          createPrimType(node.position, 'i32'),
+          createPrimType(node.position, 'i64'),
+          createPrimType(node.position, 'u32'),
+          createPrimType(node.position, 'u64'),
+          createPrimType(node.position, 'Number')
+        );
+      }
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        expectedType,
+        getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.value
+        )
+      );
+      return node;
+    }
     case NodeType.ParenthesisExpression:
       node.value = _typeCheckNode(node.value);
       return node;
