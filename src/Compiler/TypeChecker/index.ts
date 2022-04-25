@@ -1239,7 +1239,11 @@ const typeCheckNode = <T extends Node>(
       return node;
     case NodeType.ImportStatement:
     case NodeType.WasmImportStatement:
+      // TODO: Figure Out Type Checking For This
+      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      process.exit(1);
     case NodeType.ExportStatement:
+      // TODO: Set Export Info
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
@@ -1662,7 +1666,6 @@ const typeCheckNode = <T extends Node>(
       return node;
     }
     case NodeType.WasmCallExpression: {
-      // TODO: Deal With Generics
       // Split Path
       const wasmPath = node.name.split('.').slice(1);
       // Get Type
