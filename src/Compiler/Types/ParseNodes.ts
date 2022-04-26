@@ -101,6 +101,10 @@ export interface IfStatementNode {
   condition: Expression;
   body: Statement;
   alternative?: Statement;
+
+  data: {
+    pathReturns: boolean;
+  };
   position: Position;
 }
 export interface FlagNode {
@@ -115,8 +119,11 @@ export interface BlockStatementNode {
   category: NodeCategory.Statement;
   body: Statement[];
   data: {
+    // Properties
     _varStack: VariableStack;
     _typeStack: TypeStack;
+
+    pathReturns: boolean;
   };
   position: Position;
 }
@@ -172,6 +179,9 @@ export interface ReturnStatementNode {
   nodeType: NodeType.ReturnStatement;
   category: NodeCategory.Statement;
   returnValue: Expression | undefined;
+  data: {
+    pathReturns: boolean;
+  };
   position: Position;
 }
 export const enum PostFixOperator {
@@ -368,6 +378,8 @@ export interface FunctionLiteralNode {
     _closure: VariableClosure;
     _varStack: VariableStack;
     _typeStack: TypeStack;
+
+    pathReturns: boolean;
   };
   position: Position;
 }

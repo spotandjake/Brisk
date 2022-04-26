@@ -1849,7 +1849,18 @@ const typeCheckNode = <T extends Node>(
         // Type Information
         _returnType: node.returnType,
       });
-      // TODO: Verify Return Type
+      // Verify We Return
+      if (!node.data.pathReturns) {
+        // Ensure That If We Don't Return Our ReturnType Is Void
+        typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.returnType,
+          createPrimType(node.position, 'Void')
+        );
+      }
       // Return Node
       return node;
     case NodeType.ArrayLiteral:

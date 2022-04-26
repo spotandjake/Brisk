@@ -73,7 +73,11 @@ const t: i32 = @wasm.i32.add(1n, 1n);
 //   return(arg);
 // };
 const retTest: Function = (t: i32): i32 => {
-  return(t);
+  if (true) {
+    return(1n);
+  } else {
+    return(1n);
+  };
 };
 
 // let comparisonCheckPass: Boolean = 1 < 1;

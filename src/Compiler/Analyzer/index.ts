@@ -251,7 +251,27 @@ const analyzeNode = <T extends Node>(
       node.condition = _analyzeNode(node.condition);
       // Analyze Body And Alternative
       node.body = _analyzeNode(node.body);
-      if (node.alternative) node.alternative = _analyzeNode(node.body);
+      if (node.alternative != undefined) {
+        // Analyze The Alternative Path
+        node.alternative = _analyzeNode(node.alternative);
+        // Check If Both Paths Return
+        if (
+          // TODO: Figure Out Why TypeScript doesn't Like This
+          //@ts-ignore
+          node.body.data &&
+          //@ts-ignore
+          node.body.data.pathReturns != undefined &&
+          //@ts-ignore
+          node.body.data.pathReturns &&
+          //@ts-ignore
+          node.alternative.data &&
+          //@ts-ignore
+          node.alternative.data.pathReturns != undefined &&
+          //@ts-ignore
+          node.alternative.data.pathReturns
+        )
+          node.data.pathReturns = true;
+      }
       return node;
     case NodeType.FlagStatement:
       if (node.args.length != 0) {
@@ -278,9 +298,12 @@ const analyzeNode = <T extends Node>(
       // Create Our New Stacks
       const varStack: VariableStack = new Map();
       const typeStack: TypeStack = new Map();
-      // Analyze Body
-      node.body = node.body.map((child: Statement) => {
-        return _analyzeNode(child, {
+      let pathReturns = false;
+      // Remove Dead Code After ReturnStatement
+      const body: Statement[] = [];
+      for (const [index, child] of node.body.entries()) {
+        // Analyze Body
+        const analyzedChild = _analyzeNode(child, {
           // Stacks
           _closure: _closure,
           _varStack: varStack,
@@ -289,11 +312,29 @@ const analyzeNode = <T extends Node>(
           _varStacks: [..._varStacks, _varStack],
           _typeStacks: [..._typeStacks, _typeStack],
         });
-      });
+        // Push Child To Body
+        body.push(analyzedChild);
+        // TODO: Deal With Exceptions, Break, Continue, Exit, If () With Return On Both Branches
+        // No Point In Analyzing After A Return Statement
+        // TODO: Determine Why TypeScript Is Upset
+        //@ts-ignore
+        if (child.data && child.data.pathReturns != undefined && child.data.pathReturns) {
+          // Disallow Dead Code
+          if (index != node.body.length - 1) {
+            BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[index + 1].position);
+          }
+          // Set Block Data To Include Info That This Block Returns
+          pathReturns = true;
+        }
+      }
+      // Set Body
+      node.body = body;
       // Set Data Payload
       node.data = {
         _varStack: varStack,
         _typeStack: typeStack,
+
+        pathReturns: pathReturns,
       };
       // Return Our Node
       return node;
@@ -692,11 +733,16 @@ const analyzeNode = <T extends Node>(
         _varStack: varStack,
         _typeStack: typeStack,
       });
+      // TODO: Handle Single Line Functions
       // Set Data Payload
       node.data = {
         _closure: closure,
         _varStack: varStack,
         _typeStack: typeStack,
+
+        // TODO: Determine Why TypeScript Is Mad
+        // @ts-ignore
+        pathReturns: node.body.data?.pathReturns ?? false,
       };
       // Analyze Params
       return node;

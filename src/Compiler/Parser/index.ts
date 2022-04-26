@@ -130,6 +130,8 @@ class Parser extends EmbeddedActionsParser {
       data: {
         _varStack: new Map(),
         _typeStack: new Map(),
+
+        pathReturns: false,
       },
       position: {
         offset: open.startOffset,
@@ -194,6 +196,9 @@ class Parser extends EmbeddedActionsParser {
       condition: condition,
       body: body,
       alternative: alternative,
+      data: {
+        pathReturns: false,
+      },
       position: {
         offset: location.startOffset,
         length:
@@ -361,6 +366,9 @@ class Parser extends EmbeddedActionsParser {
         nodeType: Nodes.NodeType.ReturnStatement,
         category: Nodes.NodeCategory.Statement,
         returnValue: returnValue,
+        data: {
+          pathReturns: true,
+        },
         position: {
           offset: location.startOffset,
           length: <number>close.endOffset - location.startOffset + 1,
@@ -1292,6 +1300,8 @@ class Parser extends EmbeddedActionsParser {
           _closure: new Set(),
           _varStack: new Map(),
           _typeStack: new Map(),
+
+          pathReturns: false,
         },
         position: {
           offset: location.startOffset,
