@@ -1,4 +1,4 @@
-import { WasmType, WasmFunctionType, WasmExpression } from '../Types/Nodes';
+import { WasmExpression, WasmFunctionType, WasmType } from '../Types/Nodes';
 // TODO: Implement Wasm Function
 
 export const wasmFunction = (

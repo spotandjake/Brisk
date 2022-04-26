@@ -1,17 +1,16 @@
 // General Imports
 import { Position } from '../Types/Types';
 import {
-  NodeType,
-  NodeCategory,
-  PrimTypes,
-  TypePrimLiteralNode,
-  TypeLiteral,
-  TypeUnionLiteralNode,
-  ParenthesisTypeLiteralNode,
   ArrayTypeLiteralNode,
-  NumberLiteralNode,
   FunctionSignatureLiteralNode,
-  GenericTypeNode,
+  NodeCategory,
+  NodeType,
+  NumberLiteralNode,
+  ParenthesisTypeLiteralNode,
+  PrimTypes,
+  TypeLiteral,
+  TypePrimLiteralNode,
+  TypeUnionLiteralNode,
 } from '../Types/ParseNodes';
 import { TypeStack } from '../Types/AnalyzerNodes';
 // Type Builders

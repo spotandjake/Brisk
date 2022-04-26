@@ -1,6 +1,6 @@
 import { Position } from '../Types/Types';
 import { prettyError } from './ErrorBuilder';
-import { BriskErrorType, BriskErrorMessage } from './Errors';
+import { BriskErrorMessage, BriskErrorType } from './Errors';
 //@ts-ignore
 import { __DEBUG__ } from '@brisk/config';
 export const _BriskCustomError = (code: string, msg: string, pos?: Position, exit = true): void => {

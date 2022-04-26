@@ -1,6 +1,6 @@
 // General Imports
 import { Position } from './Types';
-import { AnalyzeNode, VariableStack, TypeStack, VariableClosure } from './AnalyzerNodes';
+import { AnalyzerProperties, TypeStack, VariableClosure, VariableStack } from './AnalyzerNodes';
 // Node Types
 export const enum NodeType {
   // Program
@@ -77,7 +77,7 @@ export interface ProgramNode {
   nodeType: NodeType.Program;
   category: NodeCategory.General;
   body: Statement[];
-  data: Omit<AnalyzeNode, '_closure' | '_varStacks' | '_typeStacks'>;
+  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
   position: Position;
 }
 // Statements

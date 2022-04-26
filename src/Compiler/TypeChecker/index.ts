@@ -1,37 +1,37 @@
 import { Position } from '../Types/Types';
 import Node, {
-  NodeType,
-  NodeCategory,
-  Expression,
-  TypeLiteral,
-  VariableUsageNode,
-  TypeUsageNode,
-  PropertyUsageNode,
-  InterfaceLiteralNode,
-  InterfaceFieldNode,
-  GenericTypeNode,
   EnumVariantNode,
-  ProgramNode,
-  UnaryExpressionOperator,
+  Expression,
+  GenericTypeNode,
+  InterfaceFieldNode,
+  InterfaceLiteralNode,
+  NodeCategory,
+  NodeType,
   ParameterNode,
+  ProgramNode,
+  PropertyUsageNode,
+  TypeLiteral,
+  TypeUsageNode,
+  UnaryExpressionOperator,
+  VariableUsageNode,
 } from '../Types/ParseNodes';
 import {
-  AnalyzeNode,
-  VariableMap,
-  VariableStack,
-  VariableData,
+  TypeData,
   TypeMap,
   TypeStack,
-  TypeData,
+  VariableData,
+  VariableMap,
+  VariableStack,
 } from '../Types/AnalyzerNodes';
+import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { wasmExpressions } from './WasmTypes';
 import {
-  createPrimType,
   createArrayType,
   createFunctionSignatureType,
+  createPrimType,
   createUnionType,
 } from '../Helpers/index';
-import { BriskError, BriskTypeError } from '../Errors/Compiler';
+import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Type Helpers
 const buildObjectType = (memberAccess: PropertyUsageNode): InterfaceLiteralNode | TypeLiteral => {
@@ -657,7 +657,6 @@ const typeEqual = (
   }
   return false;
 };
-// TODO: Handle Resolving Generic Types
 // TODO: Implement Type Narrowing
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
@@ -810,7 +809,6 @@ const getExpressionType = (
       return calleeType.returnType;
     }
     case NodeType.WasmCallExpression: {
-      // TODO: Check Type Exists
       // Split Path
       const wasmPath = expression.name.split('.').slice(1);
       // Get Type
@@ -1111,7 +1109,7 @@ const typeCheckNode = <T extends Node>(
   // Code
   rawProgram: string,
   // Stacks
-  properties: AnalyzeNode,
+  properties: TypeCheckProperties,
   // Nodes
   parentNode: Node | undefined,
   node: T
@@ -1129,10 +1127,12 @@ const typeCheckNode = <T extends Node>(
     _closure,
     _varStack,
     _typeStack,
+    // TypeChecking Information
+    _returnType,
   } = properties;
   const _typeCheckNode = <_T extends Node>(
     childNode: _T,
-    props: Partial<AnalyzeNode> = properties,
+    props: Partial<TypeCheckProperties> = properties,
     parentNode: Node = node
   ): _T => {
     return typeCheckNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
@@ -1399,9 +1399,39 @@ const typeCheckNode = <T extends Node>(
       // Return Node
       return node;
     }
-    case NodeType.ReturnStatement:
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+    case NodeType.ReturnStatement: {
+      // Deal With Invalid Returns
+      if (_returnType == undefined) {
+        BriskSyntaxError(
+          rawProgram,
+          BriskErrorType.ReturnStatementsOnlyValidInsideFunction,
+          [],
+          node.position
+        );
+        process.exit(1); // Let TypeScript Know That Program Exits
+      }
+      // Analyze Value
+      if (node.returnValue) node.returnValue = _typeCheckNode(node.returnValue);
+      // Perform TypeChecking
+      // Check If Return Type Is Void
+      // TODO: Allow For Multiple Return Values
+      let returnValueType: TypeLiteral = createPrimType(node.position, 'Void');
+      if (node.returnValue != undefined) {
+        returnValueType = getExpressionType(
+          rawProgram,
+          _variables,
+          _varStack,
+          _varStacks,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.returnValue
+        );
+      }
+      // Type Check Return
+      typeEqual(rawProgram, _types, _typeStack, _typeStacks, _returnType, returnValueType);
+      return node;
+    }
     case NodeType.EnumDefinitionStatement:
       // Analyze Generic Types
       if (node.genericTypes) {
@@ -1626,7 +1656,6 @@ const typeCheckNode = <T extends Node>(
           ) {
             break;
           } else {
-            // TODO: Create better error Message
             BriskTypeError(
               rawProgram,
               BriskErrorType.InvalidArgumentLength,
@@ -1724,7 +1753,6 @@ const typeCheckNode = <T extends Node>(
           ) {
             break;
           } else {
-            // TODO: Create better error Message
             BriskTypeError(
               rawProgram,
               BriskErrorType.InvalidArgumentLength,
@@ -1808,6 +1836,7 @@ const typeCheckNode = <T extends Node>(
         _varStacks: [..._varStacks, _varStack],
         _typeStacks: [..._typeStacks, _typeStack],
       });
+      // TODO: Deal With Single Functions, ReturnTypes
       // Analyze Body
       node.body = _typeCheckNode(node.body, {
         // Stacks
@@ -1817,6 +1846,8 @@ const typeCheckNode = <T extends Node>(
         // Parent Stacks
         _varStacks: [..._varStacks, _varStack],
         _typeStacks: [..._typeStacks, _typeStack],
+        // Type Information
+        _returnType: node.returnType,
       });
       // TODO: Verify Return Type
       // Return Node
@@ -1985,6 +2016,8 @@ const typeCheckProgram = (rawProgram: string, program: ProgramNode): ProgramNode
       _closure: new Set(),
       _varStack: new Map(),
       _typeStack: new Map(),
+      // TypeChecking Information
+      _returnType: undefined,
     },
     undefined,
     program

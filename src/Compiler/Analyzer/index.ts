@@ -1,30 +1,30 @@
 import { Position } from '../Types/Types';
 import Node, {
-  NodeType,
-  ProgramNode,
-  Statement,
+  DeclarationTypes,
   Expression,
   NodeCategory,
-  DeclarationTypes,
-  VariableUsageNode,
+  NodeType,
   ObjectFieldNode,
   ObjectSpreadNode,
-  primTypes,
+  ProgramNode,
+  Statement,
   TypeUsageNode,
+  VariableUsageNode,
+  primTypes,
 } from '../Types/ParseNodes';
 import {
-  ImportMap,
+  AnalyzerProperties,
   ExportMap,
-  AnalyzeNode,
+  ImportMap,
+  TypeData,
   TypeMap,
   TypeStack,
-  TypeData,
   VariableClosure,
   VariableData,
   VariableMap,
   VariableStack,
 } from '../Types/AnalyzerNodes';
-import { createPrimType, createParenthesisType, createUnionType } from '../Helpers/index';
+import { createParenthesisType, createPrimType, createUnionType } from '../Helpers/index';
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Variable Interactions
@@ -143,7 +143,7 @@ const analyzeNode = <T extends Node>(
   // Code
   rawProgram: string,
   // Stacks
-  properties: AnalyzeNode,
+  properties: AnalyzerProperties,
   // Nodes
   parentNode: Node | undefined,
   node: T
@@ -164,7 +164,7 @@ const analyzeNode = <T extends Node>(
   } = properties;
   const _analyzeNode = <_T extends Node>(
     childNode: _T,
-    props: Partial<AnalyzeNode> = properties,
+    props: Partial<AnalyzerProperties> = properties,
     parentNode: Node = node
   ): _T => {
     return analyzeNode(rawProgram, { ...properties, ...props }, parentNode, childNode);

@@ -6,6 +6,7 @@ export const enum BriskErrorType {
   ImportNotSupported,
   // Syntax Error
   CannotUseReservedKeyword,
+  ReturnStatementsOnlyValidInsideFunction,
   // Reference Error
   TypeNotFound,
   VariableNotFound,
@@ -38,6 +39,8 @@ export const BriskErrorMessage = {
   [BriskErrorType.ImportNotSupported]: 'Your Current Environment Does Not Support Imports',
   // Syntax Error
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot Use Reserved Keyword %1',
+  [BriskErrorType.ReturnStatementsOnlyValidInsideFunction]:
+    'Return Statements Only Valid Inside Function',
   // Reference Error
   // Type Error
   [BriskErrorType.InvalidFlag]: 'Flag %1 Is Not A Valid Flag',

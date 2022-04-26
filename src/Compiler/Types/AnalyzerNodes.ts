@@ -13,7 +13,7 @@ interface ExportItem {
   valueExport: boolean;
 }
 export type ExportMap = Map<string, ExportItem>;
-export interface AnalyzeNode {
+export interface AnalyzerProperties {
   // Pools
   _imports: ImportMap;
   _exports: ExportMap;

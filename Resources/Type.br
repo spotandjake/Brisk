@@ -72,6 +72,10 @@ const t: i32 = @wasm.i32.add(1n, 1n);
 // const genericFunction: Function = <T>(arg: T): T => {
 //   return(arg);
 // };
+const retTest: Function = (t: i32): i32 => {
+  return(t);
+};
 
-let comparisonCheckPass: Boolean = 1 < 1;
-let arithmeticCheckPass: Number = 1 + 1;
+// let comparisonCheckPass: Boolean = 1 < 1;
+// let arithmeticCheckPass: Number = 1 + 1;
+

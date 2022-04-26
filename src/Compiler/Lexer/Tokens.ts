@@ -1,4 +1,4 @@
-import { Lexer, createToken, IToken, CustomPatternMatcherReturn } from 'chevrotain';
+import { CustomPatternMatcherReturn, IToken, Lexer, createToken } from 'chevrotain';
 import { LexerTokenType } from '../Types/LexerNodes';
 // =================================================================
 const enum NumberType {

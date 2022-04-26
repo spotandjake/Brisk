@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, TokenType, ILexingResult } from 'chevrotain';
+import { EmbeddedActionsParser, ILexingResult, TokenType } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import { LexerTokenType } from '../Types/LexerNodes';
