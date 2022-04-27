@@ -367,7 +367,7 @@ const nameType = (
       return `{ ${fields.join(', ')} }`;
     }
     case NodeType.EnumDefinitionStatement:
-      return `Enum ${type.name}`; // TODO: Determine Better Type Name For This
+      return `Enum ${type.name}`;
     case NodeType.TypeUsage:
       return type.name;
     case NodeType.GenericType:
@@ -812,7 +812,6 @@ const getExpressionType = (
       // Split Path
       const wasmPath = expression.name.split('.').slice(1);
       // Get Type
-      // TODO: Convert The Wasm Expression Object Into A Bunch of If Statements
       let wasmInstructions = wasmExpressions;
       let exprType: TypeLiteral | undefined = undefined;
       while (wasmPath.length != 0) {
@@ -1281,7 +1280,7 @@ const typeCheckNode = <T extends Node>(
             node.varType.length = {
               nodeType: NodeType.NumberLiteral,
               category: NodeCategory.Literal,
-              value: `${node.value.length}`,
+              value: node.value.length,
               position: node.varType.position,
             };
           } else {
@@ -1698,7 +1697,6 @@ const typeCheckNode = <T extends Node>(
       // Split Path
       const wasmPath = node.name.split('.').slice(1);
       // Get Type
-      // TODO: Convert The Wasm Expression Object Into A Bunch of If Statements
       let wasmInstructions = wasmExpressions;
       let exprType: TypeLiteral | undefined = undefined;
       while (wasmPath.length != 0) {

@@ -82,4 +82,3 @@ const retTest: Function = (t: i32): i32 => {
 
 // let comparisonCheckPass: Boolean = 1 < 1;
 // let arithmeticCheckPass: Number = 1 + 1;
-

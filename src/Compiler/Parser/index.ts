@@ -930,108 +930,122 @@ class Parser extends EmbeddedActionsParser {
   });
   private i32Literal = this.RULE('I32Literal', (): Nodes.I32LiteralNode => {
     const value = this.CONSUME(Tokens.TknI32);
-    return {
-      nodeType: Nodes.NodeType.I32Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.I32Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: Number(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private i64Literal = this.RULE('I64Literal', (): Nodes.I64LiteralNode => {
     const value = this.CONSUME(Tokens.TknI64);
-    return {
-      nodeType: Nodes.NodeType.I64Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.I64Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: BigInt(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private u32Literal = this.RULE('U32Literal', (): Nodes.U32LiteralNode => {
     const value = this.CONSUME(Tokens.TknU32);
-    return {
-      nodeType: Nodes.NodeType.U32Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.U32Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: Number(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private u64Literal = this.RULE('U64Literal', (): Nodes.U64LiteralNode => {
     const value = this.CONSUME(Tokens.TknU64);
-    return {
-      nodeType: Nodes.NodeType.U64Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.U64Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: BigInt(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private f32Literal = this.RULE('F32Literal', (): Nodes.F32LiteralNode => {
     const value = this.CONSUME(Tokens.TknF32);
-    return {
-      nodeType: Nodes.NodeType.F32Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.F32Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: Number(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private f64Literal = this.RULE('F64Literal', (): Nodes.F64LiteralNode => {
     const value = this.CONSUME(Tokens.TknF64);
-    return {
-      nodeType: Nodes.NodeType.F64Literal,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.F64Literal,
+        category: Nodes.NodeCategory.Literal,
+        value: Number(value.image.slice(0, -1)),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private numberLiteral = this.RULE('NumberLiteral', (): Nodes.NumberLiteralNode => {
     const value = this.CONSUME(Tokens.TknNumber);
-    return {
-      nodeType: Nodes.NodeType.NumberLiteral,
-      category: Nodes.NodeCategory.Literal,
-      value: value.image,
-      position: {
-        offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
-        line: value.startLine || 0,
-        col: value.startColumn || 0,
-        file: this.file,
-      },
-    };
+    return this.ACTION(() => {
+      return {
+        nodeType: Nodes.NodeType.NumberLiteral,
+        category: Nodes.NodeCategory.Literal,
+        value: Number(value.image),
+        position: {
+          offset: value.startOffset,
+          length: <number>value.endOffset - value.startOffset + 1,
+          line: value.startLine || 0,
+          col: value.startColumn || 0,
+          file: this.file,
+        },
+      };
+    });
   });
   private constantLiteral = this.RULE('ConstantLiteral', (): Nodes.ConstantLiteralNode => {
     const value = this.CONSUME(Tokens.TknConstant);
