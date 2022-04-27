@@ -1,21 +1,7 @@
 import { CustomPatternMatcherReturn, IToken, Lexer, createToken } from 'chevrotain';
 import { LexerTokenType } from '../Types/LexerNodes';
+import { NumberStyle, NumberType } from '../Types/Types';
 // =================================================================
-const enum NumberType {
-  I32,
-  I64,
-  U32,
-  U64,
-  F32,
-  F64,
-  Number,
-}
-const enum NumberStyle {
-  Decimal = 10,
-  Binary = 2,
-  Octal = 8,
-  Hexadecimal = 16,
-}
 const matchNumber = (numberType: NumberType) => {
   // Matching
   return (

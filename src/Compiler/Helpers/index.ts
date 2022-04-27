@@ -3,6 +3,7 @@ import { Position } from '../Types/Types';
 import {
   ArrayTypeLiteralNode,
   FunctionSignatureLiteralNode,
+  GenericTypeNode,
   NodeCategory,
   NodeType,
   NumberLiteralNode,
@@ -13,6 +14,9 @@ import {
   TypeUnionLiteralNode,
 } from '../Types/ParseNodes';
 import { TypeStack } from '../Types/AnalyzerNodes';
+import { NumberStyle, NumberType } from '../Types/Types';
+import { BriskErrorType } from '../Errors/Errors';
+import { BriskSyntaxError } from '../Errors/Compiler';
 // Type Builders
 export const createPrimType = (position: Position, primType: PrimTypes): TypePrimLiteralNode => {
   return {
@@ -84,4 +88,25 @@ export const createNumberTypeLiteral = (position: Position, value: number): Numb
     value: `${value}`,
     position: position,
   };
+};
+
+// Parsing Helpers
+export const parseNumber = (
+  rawProgram: string,
+  position: Position,
+  numberType: NumberType,
+  str: string
+): number[] => {
+  // Create Output Pool
+  const bitSets: number[] = []; // Upper And Lower Bits Split Into sets of 32, i32 = [1], i64 = [2]
+  // Check If Number Style Is Different
+  const currChar = str[0].charCodeAt(0);
+  // parseNumber
+  for (const currentChar of str) {
+    // Get Char Code
+    const currChar = currentChar.charCodeAt(0);
+    console.log(currChar);
+  }
+  // Return output
+  return bitSets;
 };

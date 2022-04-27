@@ -7,6 +7,7 @@ export const enum BriskErrorType {
   // Syntax Error
   CannotUseReservedKeyword,
   ReturnStatementsOnlyValidInsideFunction,
+  InvalidNumber,
   // Reference Error
   TypeNotFound,
   VariableNotFound,
@@ -42,6 +43,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot Use Reserved Keyword %1',
   [BriskErrorType.ReturnStatementsOnlyValidInsideFunction]:
     'Return Statements Only Valid Inside Function',
+  [BriskErrorType.InvalidNumber]: 'Number `%1` Is Invalid',
   // Reference Error
   // Type Error
   [BriskErrorType.InvalidFlag]: 'Flag %1 Is Not A Valid Flag',
