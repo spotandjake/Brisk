@@ -1,6 +1,5 @@
 import { IParserErrorMessageProvider, TokenType } from 'chevrotain';
 const errorHandler = (): IParserErrorMessageProvider => {
-  // TODO: Error Number and better errors
   return {
     buildMismatchTokenMessage: ({ actual, expected }) => {
       return `Failed to Parse Found: \`${actual.tokenType.LABEL}\`, Expected \`${expected.LABEL}\``;

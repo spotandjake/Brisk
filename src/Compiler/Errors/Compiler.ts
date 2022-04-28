@@ -1,7 +1,6 @@
 import _BriskError, { _BriskCustomError } from './index';
 import { Position } from '../Types/Types';
 import { BriskErrorType } from './Errors';
-// TODO: add information for fixing
 type ErrCode = BriskErrorType;
 type Pos = Position;
 const BriskCustomError = (code: string, type: string, msg: string, pos?: Pos, exit = true) =>
@@ -16,12 +15,12 @@ const BriskTypeError = (code: string, err: ErrCode, eParams: string[], pos: Pos,
   _BriskError(code, 'TypeError', err, eParams, pos, exit);
 const BriskParseError = (code: string, err: ErrCode, eParams: string[], pos: Pos, exit = true) =>
   _BriskError(code, 'ParseError', err, eParams, pos, exit);
-// Exports 
+// Exports
 export {
   BriskCustomError,
   BriskError,
   BriskSyntaxError,
   BriskReferenceError,
   BriskTypeError,
-  BriskParseError
+  BriskParseError,
 };

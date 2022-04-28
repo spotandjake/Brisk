@@ -626,7 +626,6 @@ const typeEqual = (
     for (const [index, param] of resolvedA.params.entries()) {
       // Get TypeB Param
       const paramB = resolvedB.params[index];
-      // TODO: Resolve Generics
       // Compare Params
       if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, param, paramB, throwError))
         return false;
@@ -1123,7 +1122,6 @@ const typeCheckNode = <T extends Node>(
     _varStacks,
     _typeStacks,
     // Stacks
-    _closure,
     _varStack,
     _typeStack,
     // TypeChecking Information

@@ -29,7 +29,6 @@ const compile = async (
     }
   }
   // 5. Type Check
-  // TODO: Rewrite Type Checker
   const typeChecked = typeCheck(rawProgram, analyzed);
   // 6. Generate Code
   // 7. Make Export List
@@ -39,7 +38,7 @@ const compile = async (
     // output: '',
     // TODO: remove This Ignore
     //@ts-ignore
-    output: analyzed,
+    output: typeChecked,
     exports: exports,
   };
 };

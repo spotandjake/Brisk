@@ -286,7 +286,6 @@ const analyzeNode = <T extends Node>(
           node.args.position
         );
       }
-      // TODO: Ensure Flag is at valid position
       return node;
     case NodeType.BlockStatement: {
       // Create Our New Stacks
@@ -308,7 +307,6 @@ const analyzeNode = <T extends Node>(
         });
         // Push Child To Body
         body.push(analyzedChild);
-        // TODO: Deal With Exceptions, Break, Continue, exit
         // No Point In Analyzing After A Return Statement
         if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
           // Disallow Dead Code
