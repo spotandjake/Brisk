@@ -1301,7 +1301,13 @@ class Parser extends EmbeddedActionsParser {
     this.CONSUME1(Tokens.TknColon);
     const returnType = this.SUBRULE1(this.typeLiteral);
     this.CONSUME(Tokens.TknThickArrow);
-    const body = this.SUBRULE(this._statement);
+    const body = this.OR([
+      {
+        GATE: this.BACKTRACK(this.blockStatement),
+        ALT: () => this.SUBRULE(this.blockStatement),
+      },
+      { ALT: () => this.SUBRULE(this.expression) },
+    ]);
     return this.ACTION((): Nodes.FunctionLiteralNode => {
       return {
         nodeType: Nodes.NodeType.FunctionLiteral,

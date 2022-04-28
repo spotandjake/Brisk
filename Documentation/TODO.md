@@ -4,13 +4,13 @@
     + [x] Do Not Replace The Variables Names With There Numbers
   + [ ] Rewrite Type Checker And Analyzer
     + [ ] Things We Dont Have But We Need To Support
-      + [ ] Generics
+      + [x] Generics
         + [x] General Generics
-        + [ ] Implement Generics On Functions
+        + [x] Implement Generics On Functions
       + [x] Member Access On Expression
       + [ ] Destructuring
-    + [ ] Restrict the Function type to Variable Definitions, Do not allow it on `Parameters` Allow it on returns too
-      + [ ] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
+    + [x] Restrict the Function type to Variable Definitions, Do not allow it on `Parameters` Allow it on returns too
+      + [x] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
     + [x] Determine Scoping On Generics
       + [x] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
     + [x] Add Support For Recursive Types
@@ -18,17 +18,17 @@
       + [ ] Perform Value Narrowing And Type Narrowing
     + [ ] Consider Values As Types
       + [ ] i.e you could create a type alias that allowed either 1n | 2n
-      + [ ] This should make Enums simplier because then they are both values and types 
-    + [ ] Support Member Access Calls
-    + [ ] Reduce Complexity Of Both The TypeChecker And Analyzer
+      + [ ] This should make Enums simpler because then they are both values and types 
+    + [x] Support Member Access Calls
+    + [x] Reduce Complexity Of Both The TypeChecker And Analyzer
     + [x] We Do Not Want To Map The Variable Name To The Variable Reference Anymore
     + [x] Consider ADT Enums And Generic Types
     + [x] Implement Nicer Errors For This
     + [x] Allow Exporting Any Expression Or Type
     + [x] Allow For Mutable And Optional Fields
-    + [ ] Check That You Are Not Modifying A immutable Field
+    + [x] Check That You Are Not Modifying A immutable Field
     + [x] Implement Export Analysis
-    + [ ] Implement Better Mutable Checking
+    + [x] Implement Better Mutable Checking
   + [ ] Parser Additions
     + [x] Implement Generics
     + [ ] Implement Match Syntax
@@ -54,8 +54,6 @@
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
   + [ ] Fix `// TODO:`
   + [ ] Start Writing CodeGen
-    + [ ] Implement Support For Arbitrary Precision Numbers In Compiler
-      + [ ] This is needed for proper compilation of things like i64, u64, f64 and The Number Type
 + [ ] Tasks For Day 3
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
@@ -83,14 +81,14 @@
     + [x] generics
   + [ ] Add Destructuring
   + [x] Add Objects
-+ [ ] Analyzer
++ [x] Analyzer
   + [x] Deal With MemberAccess
-  + [ ] Parseliterals
+  + [x] Parseliterals
     + This will also allow us to make typefiles for compiled program so we can type imports
 + [ ] TypeChecker
-  + [ ] Determine function actual return type
+  + [x] Determine function actual return type
   + [ ] Add TypeChecking For Imports
-  + [ ] Add Better TypeChecking On Wasm Calls
+  + [x] Add Better TypeChecking On Wasm Calls
   + [x] Deal With MemberAccess
 + [ ] Compiler
 + [ ] lsp
@@ -219,23 +217,21 @@
           + [x] Function Call
           + [x] Wasm Call Expression
       + [x] We want to remove all newlines from the input and double check that we get the same output, i.e remove significance of newlines
-    + [ ] Analyzer
+    + [x] Analyzer
       + [x] Rewrite to be simpler and simplify Variable References
       + [x] Find closures
       + [x] Discover Unused Variables
       + [x] Type Stack
       + [x] Find Globals
-      + [ ] Constant Propagation
-      + [ ] Simplify Constants
-      + [ ] Parse Literals
+      + [x] Parse Literals
     + [ ] TypeChecker
-      + [ ] Member Access Typing
-      + [ ] Generics
-      + [ ] Enums
+      + [x] Member Access Typing
+      + [x] Generics
+      + [x] Enums
       + [ ] Recursive Types
       + [ ] Imports
-      + [ ] Check Function Type Matches Function Return
-        + [ ] Determine That We Reach The Return As Well
+      + [x] Check Function Type Matches Function Return
+        + [x] Determine That We Reach The Return As Well
       + [ ] Start Creating Type Guards
         + [ ] And Syntax For Creating Custom Type Guards
       + [x] Union Types

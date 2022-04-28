@@ -256,18 +256,12 @@ const analyzeNode = <T extends Node>(
         node.alternative = _analyzeNode(node.alternative);
         // Check If Both Paths Return
         if (
-          // TODO: Figure Out Why TypeScript doesn't Like This
-          //@ts-ignore
-          node.body.data &&
-          //@ts-ignore
-          node.body.data.pathReturns != undefined &&
-          //@ts-ignore
+          'data' in node.body &&
+          'pathReturns' in node.body.data &&
           node.body.data.pathReturns &&
-          //@ts-ignore
+          'data' in node.alternative &&
           node.alternative.data &&
-          //@ts-ignore
-          node.alternative.data.pathReturns != undefined &&
-          //@ts-ignore
+          'pathReturns' in node.alternative.data &&
           node.alternative.data.pathReturns
         )
           node.data.pathReturns = true;
@@ -314,11 +308,9 @@ const analyzeNode = <T extends Node>(
         });
         // Push Child To Body
         body.push(analyzedChild);
-        // TODO: Deal With Exceptions, Break, Continue, Exit, If () With Return On Both Branches
+        // TODO: Deal With Exceptions, Break, Continue, exit
         // No Point In Analyzing After A Return Statement
-        // TODO: Determine Why TypeScript Is Upset
-        //@ts-ignore
-        if (child.data && child.data.pathReturns != undefined && child.data.pathReturns) {
+        if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
           // Disallow Dead Code
           if (index != node.body.length - 1) {
             BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[index + 1].position);
@@ -733,16 +725,22 @@ const analyzeNode = <T extends Node>(
         _varStack: varStack,
         _typeStack: typeStack,
       });
-      // TODO: Handle Single Line Functions
+      // Set Return Type
+      let pathReturns = false;
+      if ('data' in node.body && 'pathReturns' in node.body.data) {
+        // Has Return Value
+        pathReturns = node.body.data?.pathReturns;
+      } else if (node.body.nodeType != NodeType.BlockStatement) {
+        // Is A Single Line Function
+        pathReturns = true;
+      }
       // Set Data Payload
       node.data = {
         _closure: closure,
         _varStack: varStack,
         _typeStack: typeStack,
 
-        // TODO: Determine Why TypeScript Is Mad
-        // @ts-ignore
-        pathReturns: node.body.data?.pathReturns ?? false,
+        pathReturns: pathReturns,
       };
       // Analyze Params
       return node;

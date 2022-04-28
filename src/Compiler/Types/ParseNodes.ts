@@ -372,7 +372,7 @@ export interface FunctionLiteralNode {
   category: NodeCategory.Literal;
   params: ParameterNode[];
   returnType: TypeLiteral;
-  body: Statement;
+  body: BlockStatementNode | Expression;
   genericTypes: undefined | GenericTypeNode[];
   data: {
     _closure: VariableClosure;

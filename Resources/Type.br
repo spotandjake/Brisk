@@ -7,7 +7,6 @@
 //   3n,
 //   4n
 // ];
-// TODO: ensure you put in the Array Length when it cant be inferred
 // const test: Test = 1n;
 // type Test = string | Test[];
 // type Te = string | Te;
@@ -79,6 +78,6 @@ const retTest: Function = (t: i32): i32 => {
     return(1n);
   };
 };
-
+const funcTest: Function = (t: i32): i32 => 1n + 1n;
 // let comparisonCheckPass: Boolean = 1 < 1;
 // let arithmeticCheckPass: Number = 1 + 1;

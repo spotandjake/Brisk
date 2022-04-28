@@ -1834,7 +1834,6 @@ const typeCheckNode = <T extends Node>(
         _varStacks: [..._varStacks, _varStack],
         _typeStacks: [..._typeStacks, _typeStack],
       });
-      // TODO: Deal With Single Functions, ReturnTypes
       // Analyze Body
       node.body = _typeCheckNode(node.body, {
         // Stacks
@@ -1847,6 +1846,40 @@ const typeCheckNode = <T extends Node>(
         // Type Information
         _returnType: node.returnType,
       });
+      // Handle Validation Of Single Line Return
+      if (node.body.nodeType != NodeType.BlockStatement) {
+        /// Check If Type Is Not Void
+        if (
+          !typeEqual(
+            rawProgram,
+            _types,
+            _typeStack,
+            _typeStacks,
+            node.returnType,
+            createPrimType(node.position, 'Void'),
+            false
+          )
+        ) {
+          // Type Check Return
+          typeEqual(
+            rawProgram,
+            _types,
+            _typeStack,
+            _typeStacks,
+            node.returnType,
+            getExpressionType(
+              rawProgram,
+              _variables,
+              _varStack,
+              _varStacks,
+              _types,
+              _typeStack,
+              _typeStacks,
+              node.body
+            )
+          );
+        }
+      }
       // Verify We Return
       if (!node.data.pathReturns) {
         // Ensure That If We Don't Return Our ReturnType Is Void
