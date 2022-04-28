@@ -16,14 +16,15 @@ const lex = (code: string, file: string) => {
     BriskSyntaxError(
       code,
       BriskErrorType.CannotUseReservedKeyword,
-      [ tokenized.groups.Reserved[0].image ],
+      [tokenized.groups.Reserved[0].image],
       {
         offset: tokenized.groups.Reserved[0].startOffset,
         length: tokenized.groups.Reserved[0].image.length,
         line: tokenized.groups.Reserved[0].startLine || 0,
         col: tokenized.groups.Reserved[0].startColumn || 0,
         file: file,
-      });
+      }
+    );
   if (tokenized.errors.length > 0) {
     const { offset, line, column, length, message } = tokenized.errors[0];
     const position = {

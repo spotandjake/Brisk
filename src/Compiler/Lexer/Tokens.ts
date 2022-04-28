@@ -574,6 +574,7 @@ export const Tokens = [
   separatorTokens,
   operators,
   reserved,
+  postFixOperators,
   comparisonOperators,
   assignmentOperators,
   arithmeticOperators,

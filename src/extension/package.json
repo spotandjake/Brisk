@@ -1,0 +1,37 @@
+{
+  "name": "brisk",
+  "displayName": "Brisk Language Support",
+  "description": "Language Support For The Brisk Programming Language",
+  "version": "0.0.1",
+  "publisher": "spotandjake",
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "brisk",
+        "aliases": [
+          "Brisk",
+          "brisk",
+          "br"
+        ],
+        "extensions": [
+          "br",
+          "bk"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "brisk",
+        "scopeName": "source.brisk",
+        "path": "./syntaxes/br.tmLanguage.json"
+      }
+    ]
+  }
+}

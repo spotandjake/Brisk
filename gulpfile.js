@@ -4,6 +4,7 @@ import * as rollup from 'rollup';
 import swc from './rollup-plugins/swc/index.js';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import fs from 'fs';
+import path from 'path';
 // Configs
 const compileTypeScriptFile = async (name, input, output, debug) => {
   // Read Configuration
@@ -124,4 +125,32 @@ gulp.task('mock', async () => {
     './__tests__/dist/Data.js',
     false
   );
+});
+gulp.task('buildExtension', async () => {
+  // Clean the original
+  const folder = './dist/extension/';
+  if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
+  await fs.promises.mkdir(folder);
+  // Build the Builder
+  await compileTypeScriptFile('Builder', './src/extension/Builder.ts', './dist/Builder.js', false);
+  // Copy Extension Files
+  await fs.promises.copyFile('./src/extension/package.json', './dist/extension/package.json');
+  await fs.promises.copyFile(
+    './src/extension/language-configuration.json',
+    './dist/extension/language-configuration.json'
+  );
+});
+gulp.task('injectExtension', async () => {
+  const extPath = path.join(
+    process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'],
+    '/.vscode/extensions/briskSupport'
+  );
+  // Move Extension To Extension Land
+  if (fs.existsSync(extPath)) {
+    await fs.promises.rm(extPath, { recursive: true });
+  }
+  await fs.promises.cp('./dist/extension/', extPath, {
+    recursive: true,
+    force: true,
+  });
 });
