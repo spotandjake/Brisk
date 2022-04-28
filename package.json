@@ -14,7 +14,7 @@
     "start": "gulp build && node --enable-source-maps ./dist/brisk.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "gulp build",
-    "buildExtension": "gulp buildExtension && node --enable-source-maps ./dist/Builder.js",
+    "buildExtension": "gulp buildExtension",
     "injectExtension": " gulp injectExtension",
     "clean": "gulp clean",
     "typecheck": "tsc --project tsconfig.json",

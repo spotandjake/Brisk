@@ -131,13 +131,16 @@ gulp.task('buildExtension', async () => {
   const folder = './dist/extension/';
   if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
   await fs.promises.mkdir(folder);
-  // Build the Builder
-  await compileTypeScriptFile('Builder', './src/extension/Builder.ts', './dist/Builder.js', false);
+  await fs.promises.mkdir(`${folder}/syntaxes/`);
   // Copy Extension Files
   await fs.promises.copyFile('./src/extension/package.json', './dist/extension/package.json');
   await fs.promises.copyFile(
     './src/extension/language-configuration.json',
     './dist/extension/language-configuration.json'
+  );
+  await fs.promises.copyFile(
+    './src/extension/syntaxes/br.tmLanguage.json',
+    './dist/extension/syntaxes/br.tmLanguage.json'
   );
 });
 gulp.task('injectExtension', async () => {

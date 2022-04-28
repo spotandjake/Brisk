@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "brisk",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#constant"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.br",
+          "match": "/\\/.*$"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.br",
+          "match": "\\b(if|else|return|interface|type|enum|let|const|import|wasm|from|export)\\b"
+        },
+        {
+          "name": "keyword.other.reserved.br",
+          "match": "\\b(match|class|implements|extends|for|while|await|async)\\b"
+        },
+        {
+          "name": "keyword.operator.arithmetic.br",
+          "match": "(\\+|\\-|\\/|\\*|\\^)"
+        },
+        {
+          "name": "keyword.operator.separator.br",
+          "match": "(\\(|\\)|\\{|\\}|\\[|\\]|\\,|\\.|\\:|\\;)"
+        },
+        {
+          "name": "keyword.operator.comparison.br",
+          "match": "(==|!=|<=|>=|>|<|&&|\\||\\|)"
+        },
+        {
+          "name": "keyword.operator.comparison.br",
+          "match": "(\\+\\+|\\-\\-)"
+        },
+        {
+          "name": "keyword.operator.assignment.br",
+          "match": "(\\=)"
+        },
+        {
+          "name": "keyword.operator.logic.br",
+          "match": "(\\!)"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.br",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.br",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "match": "\\b(\\d[\\d_]*)\\s*/\\s*(\\d[\\d_]*)\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "match": "\\b(\\d[\\d_]*)(\\.[\\d_]*)?([eE][+-]?\\d[\\d_]*)?[fF]?\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "match": "\\b(\\d[\\d_]*)([uUfFnN]?)\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "match": "\\b(0[xX][\\da-fA-F][\\da-fA-F_]*)([uUfFnN]?)\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "match": "\\b(0[oO][0-7][0-7_]*)([uUfFnN]?)\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "match": "\\b(0[bB][01][01_]*)([uUfFnN]?)\\b",
+          "name": "constant.numeric.br"
+        },
+        {
+          "name": "constant.language.br",
+          "match": "\\b(true|false|void)\\b"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.brisk"
+}
