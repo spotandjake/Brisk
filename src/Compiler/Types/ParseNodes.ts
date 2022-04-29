@@ -539,6 +539,7 @@ export interface GenericTypeNode {
   nodeType: NodeType.GenericType;
   category: NodeCategory.Type;
   name: string;
+  constraints: undefined | TypeLiteral;
   valueType: undefined | TypeLiteral;
   position: Position;
 }

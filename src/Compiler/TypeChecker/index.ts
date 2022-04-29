@@ -490,9 +490,24 @@ const typeEqual = (
     resolvedA.valueType == undefined &&
     resolvedB.valueType == undefined
   ) {
-    // Compare Generics
-    // TODO: Handle Generic Constraints
-    if (resolvedA.name == resolvedB.name) return true;
+    // Compare Generic Names
+    if (resolvedA.name == resolvedB.name) {
+      // Compare generic Constraints
+      if (resolvedA.constraints != undefined && resolvedB.constraints != undefined) {
+        if (
+          typeEqual(
+            rawProgram,
+            typePool,
+            typeStack,
+            typeStacks,
+            resolvedA.constraints,
+            resolvedB.constraints,
+            throwError
+          )
+        )
+          return true;
+      }
+    }
   } else if (resolvedA.nodeType == NodeType.GenericType) {
     // If Type A Is Generic
     // Compare Type Value
@@ -507,8 +522,18 @@ const typeEqual = (
         throwError
       );
     }
-    // TODO: Check That Value Matches The Constraints
-    return true;
+    // If there are restraints ensure they work
+    if (resolvedA.constraints != undefined) {
+      return typeEqual(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA.constraints,
+        resolvedB,
+        throwError
+      );
+    } else return true;
   } else if (resolvedB.nodeType == NodeType.GenericType) {
     // If Type B Is Generic
     // Compare Type Value
@@ -523,8 +548,18 @@ const typeEqual = (
         throwError
       );
     }
-    // TODO: Check That Value Matches The Constraints
-    return true;
+    // If there are restraints ensure they work
+    if (resolvedB.constraints != undefined) {
+      return typeEqual(
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA,
+        resolvedB.constraints,
+        throwError
+      );
+    } else return true;
   }
   // Handle Array Types
   if (
@@ -605,7 +640,6 @@ const typeEqual = (
         // Compare Generics
         if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, generic, genericB, throwError))
           return false;
-        // TODO: Implement Generic Type Constraints
       }
     }
     // Check That Params Are Same
@@ -1677,9 +1711,12 @@ const typeCheckNode = <T extends Node>(
         );
         // Deal With Generics
         if (param.nodeType == NodeType.GenericType) {
-          // TODO: Deal With Constraints
           // Set Generic
           if (!genericValues.has(param.name)) {
+            // Ensure Generic Type Works
+            if (param.constraints != undefined)
+              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);
+            // Set Generic Value
             genericValues.set(param.name, argType);
           }
           // get Generic Value
@@ -1773,9 +1810,12 @@ const typeCheckNode = <T extends Node>(
         );
         // Deal With Generics
         if (param.nodeType == NodeType.GenericType) {
-          // TODO: Deal With Constraints
           // Set Generic
           if (!genericValues.has(param.name)) {
+            // Ensure Generic Type Works
+            if (param.constraints != undefined)
+              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);
+            // Set Generic Value
             genericValues.set(param.name, argType);
           }
           // get Generic Value

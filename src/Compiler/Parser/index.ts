@@ -1597,20 +1597,40 @@ class Parser extends EmbeddedActionsParser {
   );
   // General Type Stuff
   private genericType = this.RULE('GenericType', (): Nodes.GenericTypeNode[] => {
-    const identifiers: Nodes.TypeIdentifierNode[] = [];
+    const generics: {
+      identifier: Nodes.TypeIdentifierNode;
+      constraints: Nodes.TypeLiteral | undefined;
+    }[] = [];
     const location = this.CONSUME(Tokens.TknComparisonLessThan);
-    identifiers.push(this.SUBRULE(this.typeIdentifier));
+    const identifier = this.SUBRULE(this.typeIdentifier);
+    const constraint = this.OPTION(() => {
+      this.CONSUME(Tokens.TknEqual);
+      return this.SUBRULE(this.typeLiteral);
+    });
+    generics.push({
+      identifier: identifier,
+      constraints: constraint,
+    });
     this.MANY(() => {
       this.CONSUME(Tokens.TknComma);
-      identifiers.push(this.SUBRULE1(this.typeIdentifier));
+      const identifier = this.SUBRULE1(this.typeIdentifier);
+      const constraint = this.OPTION1(() => {
+        this.CONSUME1(Tokens.TknEqual);
+        return this.SUBRULE1(this.typeLiteral);
+      });
+      generics.push({
+        identifier: identifier,
+        constraints: constraint,
+      });
     });
     const close = this.CONSUME(Tokens.TknComparisonGreaterThan);
     return this.ACTION((): Nodes.GenericTypeNode[] => {
-      return identifiers.map((identifier): Nodes.GenericTypeNode => {
+      return generics.map((generic): Nodes.GenericTypeNode => {
         return {
           nodeType: Nodes.NodeType.GenericType,
           category: Nodes.NodeCategory.Type,
-          name: identifier.name,
+          name: generic.identifier.name,
+          constraints: generic.constraints,
           valueType: undefined,
           position: {
             offset: location.startOffset,

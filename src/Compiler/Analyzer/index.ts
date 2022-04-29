@@ -880,6 +880,8 @@ const analyzeNode = <T extends Node>(
       getType(rawProgram, _types, _typeStack, _typeStacks, node.name, node.position, {});
       return node;
     case NodeType.GenericType:
+      // Analyze Constraints
+      if (node.constraints) node.constraints = _analyzeNode(node.constraints);
       // Create Type
       createType(
         rawProgram,
