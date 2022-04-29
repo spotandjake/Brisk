@@ -1274,7 +1274,6 @@ const typeCheckNode = <T extends Node>(
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
     case NodeType.ExportStatement:
-      // TODO: Set Export Info
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
@@ -1445,7 +1444,6 @@ const typeCheckNode = <T extends Node>(
       if (node.returnValue) node.returnValue = _typeCheckNode(node.returnValue);
       // Perform TypeChecking
       // Check If Return Type Is Void
-      // TODO: Allow For Multiple Return Values
       let returnValueType: TypeLiteral = createPrimType(node.position, 'Void');
       if (node.returnValue != undefined) {
         returnValueType = getExpressionType(
