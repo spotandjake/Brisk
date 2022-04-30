@@ -5,10 +5,10 @@ import Node, {
   NodeCategory,
   NodeType,
   ObjectFieldNode,
-  ObjectSpreadNode,
   ProgramNode,
   Statement,
   TypeUsageNode,
+  ValueSpreadNode,
   VariableUsageNode,
   primTypes,
 } from '../Types/ParseNodes';
@@ -383,7 +383,7 @@ const analyzeNode = <T extends Node>(
       if (node.value.nodeType == NodeType.ObjectLiteral) {
         // Add Fields To Export
         for (const field of node.value.fields) {
-          if (field.nodeType == NodeType.ObjectSpread) {
+          if (field.nodeType == NodeType.ValueSpread) {
             // TODO: Support Exporting Spread Objects
             BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], field.position);
           } else {
@@ -743,17 +743,22 @@ const analyzeNode = <T extends Node>(
       // Analyze Params
       return node;
     }
-    case NodeType.ArrayLiteral:
+    case NodeType.ArrayLiteral: {
       // Analyze Elements
-      node.elements = node.elements.map((element) => _analyzeNode(element));
+      node.elements = node.elements.map((element) => {
+        if (element.nodeType == NodeType.ValueSpread) return _analyzeNode(element.value);
+        else return _analyzeNode(element);
+      });
       // Return Node
       return node;
+    }
     case NodeType.ObjectLiteral: {
       // Analyze Fields
-      const fields: (ObjectFieldNode | ObjectSpreadNode)[] = [];
+      const fields: (ObjectFieldNode | ValueSpreadNode)[] = [];
       for (const field of node.fields) {
         // field
-        field.fieldValue = _analyzeNode(field.fieldValue);
+        if (field.nodeType == NodeType.ValueSpread) field.value = _analyzeNode(field.value);
+        else field.fieldValue = _analyzeNode(field.fieldValue);
         // Check if field exists
         if (
           field.nodeType == NodeType.ObjectField &&

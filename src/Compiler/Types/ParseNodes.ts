@@ -41,7 +41,7 @@ export const enum NodeType {
   ArrayLiteral,
   ObjectLiteral,
   ObjectField,
-  ObjectSpread,
+  ValueSpread,
   // Types
   TypeAliasDefinition,
   InterfaceDefinition,
@@ -387,13 +387,13 @@ export interface ArrayLiteralNode {
   nodeType: NodeType.ArrayLiteral;
   length: number;
   category: NodeCategory.Literal;
-  elements: Expression[];
+  elements: (Expression | ValueSpreadNode)[];
   position: Position;
 }
 export interface ObjectLiteralNode {
   nodeType: NodeType.ObjectLiteral;
   category: NodeCategory.Literal;
-  fields: (ObjectFieldNode | ObjectSpreadNode)[];
+  fields: (ObjectFieldNode | ValueSpreadNode)[];
   position: Position;
 }
 export interface ObjectFieldNode {
@@ -404,10 +404,10 @@ export interface ObjectFieldNode {
   fieldMutable: boolean;
   position: Position;
 }
-export interface ObjectSpreadNode {
-  nodeType: NodeType.ObjectSpread;
+export interface ValueSpreadNode {
+  nodeType: NodeType.ValueSpread;
   category: NodeCategory.Literal;
-  fieldValue: Expression;
+  value: Expression;
   position: Position;
 }
 

@@ -331,7 +331,9 @@ const nameType = (
         .join(' | ');
     }
     case NodeType.ArrayTypeLiteral:
-      return `${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)}[]`;
+      return `${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)}[${
+        type.length?.value ?? ''
+      }]`;
     case NodeType.ParenthesisTypeLiteral:
       return `(${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)})`;
     case NodeType.FunctionSignatureLiteral: {
@@ -356,7 +358,7 @@ const nameType = (
     }
     case NodeType.InterfaceLiteral: {
       const fields = type.fields.map((field) => {
-        return `${field.name}: ${nameType(
+        return `${field.mutable ? 'let' : ''} ${field.name}${field.optional ? '?' : ''}: ${nameType(
           rawProgram,
           typePool,
           typeStack,
@@ -506,6 +508,8 @@ const typeEqual = (
           )
         )
           return true;
+      } else if (resolvedA.constraints == undefined && resolvedB.constraints == undefined) {
+        return true;
       }
     }
   } else if (resolvedA.nodeType == NodeType.GenericType) {
@@ -567,14 +571,19 @@ const typeEqual = (
     resolvedB.nodeType == NodeType.ArrayTypeLiteral
   ) {
     // Check Lengths
-    if (resolvedA.length != resolvedB.length) {
+    if (resolvedA.length == undefined || resolvedB.length == undefined) {
+      // We Always Resolve Or Throw Before Reaching Here
+      BriskError(rawProgram, BriskErrorType.CompilerError, [], resolvedA.position);
+      process.exit(1); // Let TypeScript Know We Exit
+    }
+    if (resolvedA.length.value != resolvedB.length.value) {
       if (throwError) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
           [
-            rawProgram.slice(typeA.position.offset, typeA.position.offset + typeA.position.length),
-            rawProgram.slice(typeB.position.offset, typeB.position.offset + typeB.position.length),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
           ],
           typeA.position
         );
@@ -591,6 +600,56 @@ const typeEqual = (
       resolvedB.value,
       throwError
     );
+  }
+  // Handle Interface Type
+  if (
+    resolvedA.nodeType == NodeType.InterfaceLiteral &&
+    resolvedB.nodeType == NodeType.InterfaceLiteral
+  ) {
+    // Ensure That The Desired Interface Does Not Have Less Fields Then The Given Interface
+    // It May Have More If Some Fields Are Optional
+    if (resolvedA.fields.length >= resolvedB.fields.length) {
+      // Check Fields Are All Equal
+      let valid = true;
+      for (const field of resolvedA.fields) {
+        // Get Field B From Interface B
+        const fieldB = resolvedB.fields.find((f) => f.name == field.name);
+        // If Field B Does Not Exist It Could Be Optional
+        if (fieldB == undefined) {
+          // Check If Field Is Optional
+          if (field.optional) continue;
+        } else {
+          // Ensure Both Fields Are Mutable
+          if (field.mutable != fieldB.mutable) valid = false;
+          // Check If They Are Equal
+          if (
+            !typeEqual(
+              rawProgram,
+              typePool,
+              typeStack,
+              typeStacks,
+              field.fieldType,
+              fieldB.fieldType,
+              throwError
+            )
+          )
+            valid = false;
+        }
+      }
+      // Return Valid
+      if (!valid && throwError) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          resolvedB.position
+        );
+      }
+      return valid;
+    }
   }
   // Handle Union Types
   if (resolvedA.nodeType == NodeType.TypeUnionLiteral) {
@@ -675,7 +734,6 @@ const typeEqual = (
       throwError
     );
   }
-  // TODO: Check Type Equality
   // Throw Error Or Return False
   if (throwError) {
     BriskTypeError(
@@ -978,9 +1036,15 @@ const getExpressionType = (
     case NodeType.Parameter:
       return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);
     case NodeType.ArrayLiteral: {
+      // TODO: Support Dynamic Arrays
+      // TODO: Accidentally Made All Arrays Require Static Sizes At Compile Time
       // Get All Field Types
       const elementTypes: TypeLiteral[] = [];
       for (const element of expression.elements) {
+        if (element.nodeType == NodeType.ValueSpread) {
+          BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], element.position);
+          process.exit(1);
+        }
         // TODO: Support Array Spread
         elementTypes.push(
           getExpressionType(
@@ -1032,7 +1096,7 @@ const getExpressionType = (
             position: field.position,
           });
         } else {
-          // Get Var Type
+          // Get Value Type
           const fieldSpreadType = <InterfaceLiteralNode>(
             getExpressionType(
               rawProgram,
@@ -1042,7 +1106,7 @@ const getExpressionType = (
               typePool,
               typeStack,
               typeStacks,
-              field.fieldValue
+              field.value
             )
           );
           for (const spreadField of fieldSpreadType.fields) {
@@ -1269,12 +1333,25 @@ const typeCheckNode = <T extends Node>(
       });
       return node;
     case NodeType.ImportStatement:
-    case NodeType.WasmImportStatement:
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
+    case NodeType.WasmImportStatement:
+      // TODO: Handle TypeValidation Of Destructured Declarations
+      // Analyze Type
+      node.typeSignature = _typeCheckNode(node.typeSignature);
+      // Set Variable
+      setVarType(
+        rawProgram,
+        _variables,
+        _varStack,
+        _varStacks,
+        node.variable.name,
+        node.typeSignature,
+        node.position
+      );
+      return node;
     case NodeType.ExportStatement:
-      // TODO: Set Export Info
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);

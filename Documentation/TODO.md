@@ -13,9 +13,10 @@
       + [x] This is because on returns and Variable Definitions it is easy to Determine The Type From The Value in Types, Parameters and interfaces it is much harder to determine the actual type. Consider How Type Inferring Works And a system for determine the function type in a function
     + [x] Determine Scoping On Generics
       + [x] Generics Are Usually Scoped To Interfaces, Enums, Or Functions But I Need To Determine where the scope starts and ends
-    + [x] Add Support For Recursive Types
-    + [ ] Perform Path Analysis That Can Be Used For Determining Dead Code And Return Paths
-      + [ ] Perform Value Narrowing And Type Narrowing
+    + [ ] Add Support For Recursive Types
+      + [x] Support For Recursive Types In The Analyzer
+      + [ ] Support For Recursive Types In The TypeChecker
+    + [ ] Perform Value Narrowing And Type Narrowing
     + [ ] Consider Values As Types
       + [ ] i.e you could create a type alias that allowed either 1n | 2n
       + [ ] This should make Enums simpler because then they are both values and types 
@@ -52,7 +53,6 @@
     + [x] Analyze Arrays
   + [x] Better Error Messages
   + [ ] Make Sure We Are Caught Up TO MVP Before we start codegen
-  + [ ] Fix `// TODO:`
   + [ ] Start Writing CodeGen
 + [ ] Tasks For Day 3
   + [ ] Implement wasm multivalue types and syntax

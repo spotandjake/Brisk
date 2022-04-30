@@ -20,7 +20,7 @@ interface E {
 // Member Access Testing
 let objectTest: E = {
   field1: 1n,
-  field2: 1n,
+  let field2: 1n,
   field3: 1n,
   field4: {
     field1: 1n
@@ -28,7 +28,7 @@ let objectTest: E = {
 };
 let objectTest2: E = {
   field1: 1n,
-  field2: 1n,
+  let field2: 1n,
   field4: {
     field1: 1n
   }

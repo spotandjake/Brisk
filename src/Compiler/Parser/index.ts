@@ -219,14 +219,14 @@ class Parser extends EmbeddedActionsParser {
       const variable = this.OR([
         {
           ALT: () => {
+            // TODO: Support Destructuring Imports
             return this.SUBRULE(this.variableDefinition);
           },
         },
         {
           ALT: () => {
-            // TODO: We Dont Want To Allow Destructuring Of Wasm Foreign Imports
             this.CONSUME(Tokens.TknWasm);
-            const variable = this.SUBRULE1(this.variableDefinition);
+            const variable = this.SUBRULE1(this.variableDefinitionNode);
             this.CONSUME(Tokens.TknColon);
             typeSignature = this.SUBRULE(this.typeLiteral);
             return variable;
@@ -951,7 +951,7 @@ class Parser extends EmbeddedActionsParser {
       return {
         nodeType: Nodes.NodeType.I64Literal,
         category: Nodes.NodeCategory.Literal,
-        value: BigInt(value.image.slice(0, -1)),
+        value: BigInt(value.image.slice(0, -1).replace(/_/g, '')),
         position: {
           offset: value.startOffset,
           length: <number>value.endOffset - value.startOffset + 1,
@@ -985,7 +985,7 @@ class Parser extends EmbeddedActionsParser {
       return {
         nodeType: Nodes.NodeType.U64Literal,
         category: Nodes.NodeCategory.Literal,
-        value: BigInt(value.image.slice(0, -1)),
+        value: BigInt(value.image.slice(0, -1).replace(/_/g, '')),
         position: {
           offset: value.startOffset,
           length: <number>value.endOffset - value.startOffset + 1,
@@ -1087,7 +1087,7 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private objectLiteral = this.RULE('ObjectLiteralNode', (): Nodes.ObjectLiteralNode => {
-    const fields: (Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode)[] = [];
+    const fields: (Nodes.ObjectFieldNode | Nodes.ValueSpreadNode)[] = [];
     const location = this.CONSUME(Tokens.TknLBrace);
     fields.push(this.SUBRULE(this.objectFieldValue));
     this.MANY(() => {
@@ -1111,9 +1111,9 @@ class Parser extends EmbeddedActionsParser {
   });
   private objectFieldValue = this.RULE(
     'ObjectFieldValue',
-    (): Nodes.ObjectFieldNode | Nodes.ObjectSpreadNode => {
+    (): Nodes.ObjectFieldNode | Nodes.ValueSpreadNode => {
       return this.OR([
-        { ALT: () => this.SUBRULE(this.objectSpread) },
+        { ALT: () => this.SUBRULE(this.valueSpread) },
         { ALT: () => this.SUBRULE(this.objectField) },
         {
           ALT: () => {
@@ -1155,14 +1155,14 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private objectSpread = this.RULE('ObjectSpread', (): Nodes.ObjectSpreadNode => {
+  private valueSpread = this.RULE('ValueSpread', (): Nodes.ValueSpreadNode => {
     const location = this.CONSUME(Tokens.TknEllipsis);
     const fieldValue = this.SUBRULE(this.expression);
-    return this.ACTION((): Nodes.ObjectSpreadNode => {
+    return this.ACTION((): Nodes.ValueSpreadNode => {
       return {
-        nodeType: Nodes.NodeType.ObjectSpread,
+        nodeType: Nodes.NodeType.ValueSpread,
         category: Nodes.NodeCategory.Literal,
-        fieldValue: fieldValue,
+        value: fieldValue,
         position: {
           offset: location.startOffset,
           length: fieldValue.position.offset + fieldValue.position.length - location.startOffset,
@@ -1220,7 +1220,7 @@ class Parser extends EmbeddedActionsParser {
     };
   });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
-    // TODO: We Want To Allow The Main Object To Be Any Expression
+    // TODO: Allow Member Access Nodes On Any Expression
     const parent = this.OR([
       { ALT: () => this.SUBRULE(this.variableUsageNode) },
       // { ALT: () => this.SUBRULE(this.parenthesisExpression) },

@@ -1,3 +1,4 @@
+import wasm print: (i32) => i32 from 'env';
 // type Test = String[4];
 // type Test1 = String | String[4];
 // type Test2 = (String | String[4]);
@@ -36,7 +37,7 @@
 
 // };
 // testFunc(1n);
-const t: i32 = @wasm.i32.add(1n, 1n);
+// const t: i32 = @wasm.i32.add(1n, 1n);
 // type T = <GenericTest>(GenericTest) => GenericTest;
 // const testFunction: Function = <Generic>(t: Generic, test?: Generic): Generic => {
     
@@ -71,14 +72,14 @@ const t: i32 = @wasm.i32.add(1n, 1n);
 // const genericFunction: Function = <T>(arg: T): T => {
 //   return(arg);
 // };
-const retTest: Function = (t: i32): i32 => {
-  if (true) {
-    return(1n);
-  } else {
-    return(1n);
-  };
-};
-const funcTest: Function = <T = (i32 | i64)>(t: T): i32 => 1n + 1n;
-const funcTest2: Function = <T>(t: T): i32 => 1n + 1n;
+// const retTest: Function = (t: i32): i32 => {
+//   if (true) {
+//     return(1n);
+//   } else {
+//     return(1n);
+//   };
+// };
+// const funcTest: Function = <T = (i32 | i64)>(t: T): i32 => 1n + 1n;
+// const funcTest2: Function = <T>(t: T): i32 => 1n + 1n;
 // let comparisonCheckPass: Boolean = 1 < 1;
 // let arithmeticCheckPass: Number = 1 + 1;

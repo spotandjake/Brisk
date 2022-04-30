@@ -21,7 +21,7 @@ const t: Void = void;
 const u: Function = (v: String): Void => {};
 const v: { field1: i32; let field2: i32; field3?: i32; } = {
   field1: 1n,
-  field2: 1n,
+  let field2: 1n,
   field3: 1n
 };
 const w: i32[] = [ 1n, 2n, 3n ];
