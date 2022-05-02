@@ -1048,8 +1048,6 @@ const getExpressionType = (
     case NodeType.Parameter:
       return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);
     case NodeType.ArrayLiteral: {
-      // TODO: Support Dynamic Arrays
-      // TODO: Accidentally Made All Arrays Require Static Sizes At Compile Time
       // Get All Field Types
       const elementTypes: TypeLiteral[] = [];
       for (const element of expression.elements) {
