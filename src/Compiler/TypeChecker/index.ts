@@ -570,13 +570,25 @@ const typeEqual = (
     resolvedA.nodeType == NodeType.ArrayTypeLiteral &&
     resolvedB.nodeType == NodeType.ArrayTypeLiteral
   ) {
-    // Check Lengths
-    if (resolvedA.length == undefined || resolvedB.length == undefined) {
-      // We Always Resolve Or Throw Before Reaching Here
-      BriskError(rawProgram, BriskErrorType.CompilerError, [], resolvedA.position);
-      process.exit(1); // Let TypeScript Know We Exit
+    // Handle Lengths
+    if (resolvedA.length != undefined && resolvedB.length != undefined) {
+      // Check That If A Length Is Specified B Length Should Be Specified
+      if (throwError) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          typeA.position
+        );
+      }
+      return false;
     }
-    if (resolvedA.length.value != resolvedB.length.value) {
+    // If A Length Is Specified Then B Length Should Be Same
+    if (resolvedA.length != undefined && resolvedA.length.value != resolvedB.length?.value) {
+      // Check That If A Length Is Specified B Length Should Be Specified
       if (throwError) {
         BriskTypeError(
           rawProgram,
@@ -1392,13 +1404,6 @@ const typeCheckNode = <T extends Node>(
               value: node.value.length,
               position: node.varType.position,
             };
-          } else {
-            BriskTypeError(
-              rawProgram,
-              BriskErrorType.ArrayTypeLengthCouldNotBeInferred,
-              [],
-              node.position
-            );
           }
         }
       }
@@ -2016,7 +2021,9 @@ const typeCheckNode = <T extends Node>(
       // TODO: Check Type Of ObjectSpreads
       // Analyze Fields
       node.fields = node.fields.map((field) => {
-        field.fieldValue = _typeCheckNode(field.fieldValue);
+        if (field.nodeType == NodeType.ValueSpread) {
+          field.value = _typeCheckNode(field.value);
+        } else field.fieldValue = _typeCheckNode(field.fieldValue);
         return field;
       });
       return node;
@@ -2071,15 +2078,6 @@ const typeCheckNode = <T extends Node>(
       });
       return node;
     case NodeType.ArrayTypeLiteral:
-      // We Infer Array Length Before Reaching This So If One Appears Here We Have An Issue
-      if (node.length == undefined) {
-        BriskTypeError(
-          rawProgram,
-          BriskErrorType.ArrayTypeLengthCouldNotBeInferred,
-          [],
-          node.position
-        );
-      }
       // Analyze Value
       node.value = _typeCheckNode(node.value);
       // Ensure Length

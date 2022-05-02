@@ -2,12 +2,13 @@ import wasm print: (i32) => i32 from 'env';
 // type Test = String[4];
 // type Test1 = String | String[4];
 // type Test2 = (String | String[4]);
-// const array: i32[] = [
-//   1n,
-//   2n,
-//   3n,
-//   4n
-// ];
+type TestArrayLength = i32[];
+const array: TestArrayLength = [
+  1n,
+  2n,
+  3n,
+  4n
+];
 // const test: Test = 1n;
 // type Test = string | Test[];
 // type Te = string | Te;
