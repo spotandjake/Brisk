@@ -384,8 +384,7 @@ const analyzeNode = <T extends Node>(
         // Add Fields To Export
         for (const field of node.value.fields) {
           if (field.nodeType == NodeType.ValueSpread) {
-            // TODO: Support Exporting Spread Objects
-            BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], field.position);
+            BriskError(rawProgram, BriskErrorType.InvalidExport, ['Object Spread'], field.position);
           } else {
             if (_exports.has(field.name))
               BriskTypeError(
@@ -925,7 +924,7 @@ const analyzeNode = <T extends Node>(
       // Change Type To Include Void
       node.paramType = _analyzeNode(node.paramType);
       // Add Variable To Stack
-      // TODO: Support Destructuring
+      // TODO: Support Rest Syntax
       createVariable(
         rawProgram,
         _variables,

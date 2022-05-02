@@ -1052,12 +1052,8 @@ const getExpressionType = (
       const elementTypes: TypeLiteral[] = [];
       for (const element of expression.elements) {
         if (element.nodeType == NodeType.ValueSpread) {
-          BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], element.position);
-          process.exit(1);
-        }
-        // TODO: Support Array Spread
-        elementTypes.push(
-          getExpressionType(
+          // Check That Spread Value Is an ArrayLiteral
+          const valueType = getExpressionType(
             rawProgram,
             varPool,
             varStack,
@@ -1065,9 +1061,34 @@ const getExpressionType = (
             typePool,
             typeStack,
             typeStacks,
-            element
-          )
-        );
+            element.value
+          );
+          const resolvedType = resolveType(rawProgram, typePool, typeStack, typeStacks, valueType);
+          if (resolvedType.nodeType != NodeType.ArrayTypeLiteral) {
+            BriskTypeError(
+              rawProgram,
+              BriskErrorType.TypeMisMatch,
+              ['Array<Any>', nameType(rawProgram, typePool, typeStack, typeStacks, valueType)],
+              element.value.position
+            );
+            process.exit(1); // Let TypeScript Know The Program Exits
+          }
+          // Build Onto The Type
+          elementTypes.push(resolvedType.value);
+        } else {
+          elementTypes.push(
+            getExpressionType(
+              rawProgram,
+              varPool,
+              varStack,
+              varStacks,
+              typePool,
+              typeStack,
+              typeStacks,
+              element
+            )
+          );
+        }
       }
       const arrayType = createArrayType(
         expression.position,
@@ -1395,7 +1416,10 @@ const typeCheckNode = <T extends Node>(
       } else if (node.varType.nodeType == NodeType.ArrayTypeLiteral) {
         // Infer Array Type
         if (node.varType.length == undefined) {
-          if (node.value.nodeType == NodeType.ArrayLiteral) {
+          if (
+            node.value.nodeType == NodeType.ArrayLiteral &&
+            !node.value.elements.some((e) => e.nodeType == NodeType.ValueSpread)
+          ) {
             node.varType.length = {
               nodeType: NodeType.NumberLiteral,
               category: NodeCategory.Literal,
@@ -2012,8 +2036,14 @@ const typeCheckNode = <T extends Node>(
       // Return Node
       return node;
     case NodeType.ArrayLiteral:
-      // TODO: Support Array Spread
-      node.elements = node.elements.map((e) => _typeCheckNode(e));
+      node.elements = node.elements.map((e) => {
+        if (e.nodeType == NodeType.ValueSpread) {
+          // Analyze Value
+          e.value = _typeCheckNode(e.value);
+          return e;
+        }
+        return _typeCheckNode(e);
+      });
       return node;
     case NodeType.ObjectLiteral:
       // TODO: Check Type Of ObjectSpreads
