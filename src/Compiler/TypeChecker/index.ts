@@ -1364,11 +1364,11 @@ const typeCheckNode = <T extends Node>(
       });
       return node;
     case NodeType.ImportStatement:
+      // TODO: Handle TypeValidation Of Destructured Declarations
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
     case NodeType.WasmImportStatement:
-      // TODO: Handle TypeValidation Of Destructured Declarations
       // Analyze Type
       node.typeSignature = _typeCheckNode(node.typeSignature);
       // Set Variable
@@ -1382,10 +1382,65 @@ const typeCheckNode = <T extends Node>(
         node.position
       );
       return node;
-    case NodeType.ExportStatement:
-      // TODO: Figure Out Type Checking For This
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+    case NodeType.ExportStatement: {
+      // TypeCheck Value
+      node.value == _typeCheckNode(node.value);
+      // TypeCheck Object Literal
+      if (node.value.nodeType == NodeType.ObjectLiteral) {
+        // Add Fields To Export
+        for (const field of node.value.fields) {
+          if (field.nodeType == NodeType.ValueSpread) {
+            // A Value Spread Will Be Caught At Analysis And Should Never Make It Here
+            BriskError(rawProgram, BriskErrorType.CompilerError, [], field.position);
+          } else {
+            // Update The Export Info
+            _exports.set(field.name, {
+              name: field.name,
+              value: field.fieldValue,
+              typeExport: false,
+              valueExport: true,
+            });
+          }
+        }
+        return node;
+      } else if (
+        node.value.nodeType == NodeType.InterfaceDefinition ||
+        node.value.nodeType == NodeType.EnumDefinitionStatement ||
+        node.value.nodeType == NodeType.TypeAliasDefinition
+      ) {
+        // Set Exported
+        _exports.set(node.value.name, {
+          name: node.value.name,
+          value: <TypeUsageNode>{
+            nodeType: NodeType.TypeUsage,
+            category: NodeCategory.Type,
+            name: node.value.name,
+            position: node.position,
+          },
+          typeExport: true,
+          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement,
+        });
+      } else {
+        // Regular Export
+        const exportName: string =
+          node.value.nodeType == NodeType.DeclarationStatement
+            ? node.value.name.name
+            : node.value.name;
+        // Set Exported
+        _exports.set(exportName, {
+          name: exportName,
+          value: <VariableUsageNode>{
+            nodeType: NodeType.VariableUsage,
+            category: NodeCategory.Variable,
+            name: exportName,
+            position: node.position,
+          },
+          typeExport: false,
+          valueExport: true,
+        });
+      }
+      return node;
+    }
     case NodeType.DeclarationStatement:
       // TODO: Handle TypeValidation Of Destructured Declarations
       // Analyze Value
@@ -2046,7 +2101,6 @@ const typeCheckNode = <T extends Node>(
       });
       return node;
     case NodeType.ObjectLiteral:
-      // TODO: Check Type Of ObjectSpreads
       // Analyze Fields
       node.fields = node.fields.map((field) => {
         if (field.nodeType == NodeType.ValueSpread) {
@@ -2168,7 +2222,6 @@ const typeCheckNode = <T extends Node>(
     case NodeType.Parameter:
       // Analyze NodeType
       node.paramType = _typeCheckNode(node.paramType);
-      // TODO: Handle Destructuring
       // TODO: Handle Rest Syntax
       // Set Variable Type To Be More Accurate
       setVarType(

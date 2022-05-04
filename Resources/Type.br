@@ -84,3 +84,15 @@ const array: TestArrayLength = [
 // const funcTest2: Function = <T>(t: T): i32 => 1n + 1n;
 // let comparisonCheckPass: Boolean = 1 < 1;
 // let arithmeticCheckPass: Number = 1 + 1;
+const t: i32 = 1n;
+export {
+  test: 1n,
+  test2: 2n,
+};
+export interface TestInterface {
+  test: i32;
+  test2: i32;
+};
+export type Test = i32;
+export let test3: i32 = 1n;
+export t;

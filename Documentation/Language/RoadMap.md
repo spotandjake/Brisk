@@ -17,9 +17,8 @@
   + [x] Enums
   + [ ] Match Statements
   + [ ] Build Operator Definition Syntax Into The Language
-+ [ ] Implement A Powerful Analyzer
-  + [ ] Linking Flags With Nodes
-    + [ ] Flags Can Only Occur Above Variable Definitions
++ [x] Implement A Powerful Analyzer
+  + [x] Linking Flags With Nodes
     - List Of Flags
       - Inline
         - Inlines The Current Value In All Call Spots
@@ -27,18 +26,18 @@
         - Same As Inline Where N Is The Max Number Of Inlines Before We Stop Inlining this is useful if you want to manage executable size while not losing performance
       - Runtime
         - This is unknown at the moment
-  + [ ] Path Analysis
-    + [ ] We Need this because we need to be able in the typechecker to make sure that all paths lead to a return statement
-    + [ ] This Also Tells Us Which Code Is Dead
-  + [ ] Variable Aliasing
-  + [ ] Closure Analysis
-  + [ ] No Modifying Immutable Data
-  + [ ] Ensure That The Function Type Is Only Used Directly When The Function Type Can Be Inferred
-  + [ ] Create Type Stack
-+ [ ] Implement A Powerful TypeChecker
-  + [ ] Check Types Match
-  + [ ] Ensure All Code Paths Lead To A Return
-  + [ ] Ensure Types Are Valid
+  + [x] Path Analysis
+    + [x] We Need this because we need to be able in the typechecker to make sure that all paths lead to a return statement
+    + [x] This Also Tells Us Which Code Is Dead
+  + [x] Variable Aliasing
+  + [x] Closure Analysis
+  + [x] No Modifying Immutable Data
+  + [x] Ensure That The Function Type Is Only Used Directly When The Function Type Can Be Inferred
+  + [x] Create Type Stack
++ [x] Implement A Powerful TypeChecker
+  + [x] Check Types Match
+  + [x] Ensure All Code Paths Lead To A Return
+  + [x] Ensure Types Are Valid
 + [ ] Implement A Powerful Compiler
   + [ ] Generate IR
   + [ ] Compile To Wasm
