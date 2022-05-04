@@ -1,6 +1,4 @@
 import { WasmExpression, WasmFunctionType, WasmType } from '../Types/Nodes';
-// TODO: Implement Wasm Function
-
 export const wasmFunction = (
   name: string,
   params: WasmType,
@@ -8,7 +6,8 @@ export const wasmFunction = (
   vars: WasmType[],
   body: WasmExpression[]
 ): WasmFunctionType => {
-  // Internal Ir State
+  // TODO: Validate Function Generation Works
+  // Internal Ir
   return {
     name: name,
     params: params,

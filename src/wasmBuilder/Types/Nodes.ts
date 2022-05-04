@@ -6,6 +6,20 @@ const enum WasmPrimitiveType {
   f64,
 }
 export type WasmType = WasmPrimitiveType | WasmPrimitiveType[]; // TODO: I Dont Really Like How This Works, Consider A Map With Type References For Multi Types
+// Wasm Module State
+export interface WasmModuleType {
+  // Section Data
+  // Variable Data
+  // Function Data
+  functions: WasmFunctionType[];
+  functionTable: Map<number, WasmFunctionType>;
+  // Import Data
+  // Export Data
+  functionExports: Map<string, number>;
+  // tableExports
+  // memExports
+  // globalExports
+}
 // Wasm Function State
 export interface WasmFunctionType {
   name: string;
