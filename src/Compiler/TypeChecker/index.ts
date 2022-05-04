@@ -1,4 +1,4 @@
-import { Position } from '../Types/Types';
+import { Position, ExportList } from '../Types/Types';
 import Node, {
   EnumVariantNode,
   Expression,
@@ -460,7 +460,6 @@ const typeEqual = (
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
   const resolvedB = resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);
   // If Either Type Is Any Then We Can Leave
-  // TODO: Remove Any Type
   if (resolvedA.nodeType == NodeType.TypePrimLiteral && resolvedA.name == 'Any') return true;
   if (resolvedB.nodeType == NodeType.TypePrimLiteral && resolvedB.name == 'Any') return true;
   // Handle PrimLiteral Types
@@ -1235,6 +1234,8 @@ const getExpressionType = (
 const typeCheckNode = <T extends Node>(
   // Code
   rawProgram: string,
+  // ImportData
+  importData: Map<string, ExportList>,
   // Stacks
   properties: TypeCheckProperties,
   // Nodes
@@ -1261,7 +1262,13 @@ const typeCheckNode = <T extends Node>(
     props: Partial<TypeCheckProperties> = properties,
     parentNode: Node = node
   ): _T => {
-    return typeCheckNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
+    return typeCheckNode(
+      rawProgram,
+      importData,
+      { ...properties, ...props },
+      parentNode,
+      childNode
+    );
   };
   // Match The Node For Analysis
   switch (node.nodeType) {
@@ -1363,11 +1370,24 @@ const typeCheckNode = <T extends Node>(
         });
       });
       return node;
-    case NodeType.ImportStatement:
+    case NodeType.ImportStatement: {
+      // // Get Import
+      // const importModule = importData.get(node.source.value);
+      // if (importModule == undefined) {
+      //   BriskTypeError(
+      //     rawProgram,
+      //     BriskErrorType.ModuleDoesNotExist,
+      //     [node.source.value],
+      //     node.source.position
+      //   );
+      //   process.exit(1); // Let TypeScript Know This Exists
+      // }
       // TODO: Handle TypeValidation Of Destructured Declarations
+      // Set Variable Type
       // TODO: Figure Out Type Checking For This
       BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       process.exit(1);
+    }
     case NodeType.WasmImportStatement:
       // Analyze Type
       node.typeSignature = _typeCheckNode(node.typeSignature);
@@ -2238,9 +2258,14 @@ const typeCheckNode = <T extends Node>(
   }
 };
 // Analyze Program
-const typeCheckProgram = (rawProgram: string, program: ProgramNode): ProgramNode => {
+const typeCheckProgram = (
+  rawProgram: string,
+  program: ProgramNode,
+  importData: Map<string, ExportList>
+): ProgramNode => {
   return typeCheckNode(
     rawProgram,
+    importData,
     {
       _imports: new Map(),
       _exports: new Map(),

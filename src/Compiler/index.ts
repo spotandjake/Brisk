@@ -19,17 +19,19 @@ const compile = async (
   // 3. Analyze ParseTree
   const analyzed = analyze(rawProgram, parsed);
   // 4. Handle Compilation Of Other Files
+  const importData: Map<string, ExportList> = new Map();
   for (const sourceInfo of analyzed.data._imports.values()) {
     if (fileCompiler) {
       // Compile File
-      fileCompiler(sourceInfo.path);
-      // TODO: Handle Export Map
+      const { exports } = await fileCompiler(sourceInfo.path);
+      // Set Export Map
+      importData.set(sourceInfo.path, exports);
     } else {
       BriskError(rawProgram, BriskErrorType.ImportNotSupported, [], sourceInfo.position);
     }
   }
   // 5. Type Check
-  const typeChecked = typeCheck(rawProgram, analyzed);
+  const typeChecked = typeCheck(rawProgram, analyzed, importData);
   // 6. Generate Code
   // 7. Make Export List
   const exports: ExportList = new Map();
