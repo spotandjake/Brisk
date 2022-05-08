@@ -1190,7 +1190,15 @@ Object {
         "fields": Array [
           Object {
             "category": 4,
-            "fieldValue": Object {
+            "nodeType": 33,
+            "position": Object {
+              "col": 3,
+              "file": "file",
+              "length": 14,
+              "line": 37,
+              "offset": 727,
+            },
+            "value": Object {
               "category": 6,
               "name": "objectTest2",
               "nodeType": 47,
@@ -1201,14 +1209,6 @@ Object {
                 "line": 37,
                 "offset": 730,
               },
-            },
-            "nodeType": 33,
-            "position": Object {
-              "col": 3,
-              "file": "file",
-              "length": 14,
-              "line": 37,
-              "offset": 727,
             },
           },
           Object {
@@ -5104,7 +5104,15 @@ Object {
         "fields": Array [
           Object {
             "category": 4,
-            "fieldValue": Object {
+            "nodeType": 33,
+            "position": Object {
+              "col": 3,
+              "file": "file",
+              "length": 14,
+              "line": 37,
+              "offset": 727,
+            },
+            "value": Object {
               "category": 6,
               "name": "objectTest2",
               "nodeType": 47,
@@ -5115,14 +5123,6 @@ Object {
                 "line": 37,
                 "offset": 730,
               },
-            },
-            "nodeType": 33,
-            "position": Object {
-              "col": 3,
-              "file": "file",
-              "length": 14,
-              "line": 37,
-              "offset": 727,
             },
           },
           Object {
