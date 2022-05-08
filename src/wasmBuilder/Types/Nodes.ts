@@ -41,6 +41,11 @@ export const enum WasmExpressions {
   returnExpr,
   callExpr,
   callIndirectExpr,
+  dropExpr,
+  // TODO: Select
+  local_getExpr,
+  local_setExpr,
+  // TODO: local_Tee
 }
 export interface UnreachableExpression {
   nodeType: WasmExpressions.unreachableExpr;
@@ -68,13 +73,28 @@ export interface ReturnExpression {
 export interface CallExpression {
   nodeType: WasmExpressions.callExpr;
   funcName: string;
-  args: WasmExpression[];
+  body: WasmExpression[];
 }
 export interface CallIndirectExpression {
   nodeType: WasmExpressions.callIndirectExpr;
   funcIndex: number;
-  args: WasmExpression[];
+  body: WasmExpression[];
 }
+export interface DropExpression {
+  nodeType: WasmExpressions.dropExpr;
+  body: WasmExpression;
+}
+// TODO: select
+export interface Local_GetExpression {
+  nodeType: WasmExpressions.local_getExpr;
+  localIndex: number;
+}
+export interface Local_SetExpression {
+  nodeType: WasmExpressions.local_setExpr;
+  localIndex: number;
+  body: WasmExpression;
+}
+// TODO: local_Tee
 export type WasmExpression =
   | UnreachableExpression
   | NopExpression
@@ -82,4 +102,7 @@ export type WasmExpression =
   | IfExpression
   | ReturnExpression
   | CallExpression
-  | CallIndirectExpression;
+  | CallIndirectExpression
+  | DropExpression
+  | Local_GetExpression
+  | Local_SetExpression;

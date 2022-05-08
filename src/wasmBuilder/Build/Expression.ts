@@ -2,7 +2,10 @@ import {
   BlockExpression,
   CallExpression,
   CallIndirectExpression,
+  DropExpression,
   IfExpression,
+  Local_GetExpression,
+  Local_SetExpression,
   NopExpression,
   ReturnExpression,
   UnreachableExpression,
@@ -46,24 +49,42 @@ export const returnExpression = (body: WasmExpression): ReturnExpression => {
     body: body,
   };
 };
-export const callExpression = (funcName: string, args: WasmExpression[]): CallExpression => {
+export const callExpression = (funcName: string, body: WasmExpression[]): CallExpression => {
   return {
     nodeType: WasmExpressions.callExpr,
     funcName: funcName,
-    args: args,
+    body: body,
   };
 };
 export const callIndirectExpression = (
   funcIndex: number,
-  args: WasmExpression[]
+  body: WasmExpression[]
 ): CallIndirectExpression => {
   return {
     nodeType: WasmExpressions.callIndirectExpr,
     funcIndex: funcIndex,
-    args: args,
+    body: body,
   };
 };
-// i32
-// i64
-// f32
-// f64
+export const dropExpression = (body: WasmExpression): DropExpression => {
+  return {
+    nodeType: WasmExpressions.dropExpr,
+    body: body,
+  };
+};
+export const local_GetExpression = (localIndex: number): Local_GetExpression => {
+  return {
+    nodeType: WasmExpressions.local_getExpr,
+    localIndex: localIndex,
+  };
+};
+export const local_SetExpression = (
+  localIndex: number,
+  body: WasmExpression
+): Local_SetExpression => {
+  return {
+    nodeType: WasmExpressions.local_setExpr,
+    localIndex: localIndex,
+    body: body,
+  };
+};
