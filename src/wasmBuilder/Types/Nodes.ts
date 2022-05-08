@@ -29,4 +29,57 @@ export interface WasmFunctionType {
   body: WasmExpression[]; // TODO: Add Type For Wasm Expression
 }
 // Wasm Expression
-export type WasmExpression = undefined; // TODO: Add Expression Types
+export const enum WasmExpressions {
+  // General
+  unreachableExpr,
+  nopExpr,
+  blockExpr,
+  ifExpr,
+  // TODO: br
+  // TODO: br_if
+  // TODO: br_table
+  returnExpr,
+  callExpr,
+  callIndirectExpr,
+}
+export interface UnreachableExpression {
+  nodeType: WasmExpressions.unreachableExpr;
+}
+export interface NopExpression {
+  nodeType: WasmExpressions.nopExpr;
+}
+export interface BlockExpression {
+  nodeType: WasmExpressions.blockExpr;
+  body: WasmExpression[];
+}
+export interface IfExpression {
+  nodeType: WasmExpressions.ifExpr;
+  condition: WasmExpression;
+  body: WasmExpression;
+  alternative?: WasmExpression;
+}
+// TODO: br
+// TODO: br_if
+// TODO: br_table
+export interface ReturnExpression {
+  nodeType: WasmExpressions.returnExpr;
+  body: WasmExpression;
+}
+export interface CallExpression {
+  nodeType: WasmExpressions.callExpr;
+  funcName: string;
+  args: WasmExpression[];
+}
+export interface CallIndirectExpression {
+  nodeType: WasmExpressions.callIndirectExpr;
+  funcIndex: number;
+  args: WasmExpression[];
+}
+export type WasmExpression =
+  | UnreachableExpression
+  | NopExpression
+  | BlockExpression
+  | IfExpression
+  | ReturnExpression
+  | CallExpression
+  | CallIndirectExpression;
