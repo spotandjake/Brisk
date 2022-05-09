@@ -1,9 +1,8 @@
-const enum WasmPrimitiveType {
-  none,
-  i32,
-  i64,
-  f32,
-  f64,
+export const enum WasmPrimitiveType {
+  WasmI32,
+  WasmI64,
+  WasmF32,
+  WasmF64,
 }
 export type WasmType = WasmPrimitiveType | WasmPrimitiveType[]; // TODO: I Dont Really Like How This Works, Consider A Map With Type References For Multi Types
 // Wasm Module State
@@ -45,7 +44,11 @@ export const enum WasmExpressions {
   // TODO: Select
   local_getExpr,
   local_setExpr,
-  // TODO: local_Tee
+  local_teeExpr,
+  global_getExpr,
+  global_setExpr,
+  // TODO: table_get
+  // TODO: table_set
 }
 export interface UnreachableExpression {
   nodeType: WasmExpressions.unreachableExpr;
@@ -88,13 +91,31 @@ export interface DropExpression {
 export interface Local_GetExpression {
   nodeType: WasmExpressions.local_getExpr;
   localIndex: number;
+  wasmType: WasmType;
 }
 export interface Local_SetExpression {
   nodeType: WasmExpressions.local_setExpr;
   localIndex: number;
   body: WasmExpression;
 }
-// TODO: local_Tee
+export interface Local_TeeExpression {
+  nodeType: WasmExpressions.local_teeExpr;
+  localIndex: number;
+  body: WasmExpression;
+  wasmType: WasmType;
+}
+export interface Global_GetExpression {
+  nodeType: WasmExpressions.global_getExpr;
+  globalName: string;
+  wasmType: WasmType;
+}
+export interface Global_SetExpression {
+  nodeType: WasmExpressions.global_setExpr;
+  globalName: string;
+  body: WasmExpression;
+}
+// TODO: table_get
+// TODO: table_set
 export type WasmExpression =
   | UnreachableExpression
   | NopExpression
@@ -105,4 +126,7 @@ export type WasmExpression =
   | CallIndirectExpression
   | DropExpression
   | Local_GetExpression
-  | Local_SetExpression;
+  | Local_SetExpression
+  | Local_TeeExpression
+  | Global_GetExpression
+  | Global_SetExpression;
