@@ -524,153 +524,83 @@ export interface Global_SetExpression {
 }
 // TODO: table_get
 // TODO: table_set
-export interface I32_LoadExpression {
+interface WasmLoad {
+  offset: number;
+  align: number;
+  ptr: WasmExpression;
+}
+interface WasmStore extends WasmLoad {
+  value: WasmExpression;
+}
+export interface I32_LoadExpression extends WasmLoad {
   nodeType: WasmExpressions.i32_loadExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_LoadExpression {
+export interface I64_LoadExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_loadExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface F32_LoadExpression {
+export interface F32_LoadExpression extends WasmLoad {
   nodeType: WasmExpressions.f32_loadExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface F64_LoadExpression {
+export interface F64_LoadExpression extends WasmLoad {
   nodeType: WasmExpressions.f64_loadExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I32_Load8_SExpression {
+export interface I32_Load8_SExpression extends WasmLoad {
   nodeType: WasmExpressions.i32_load8_sExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I32_Load8_UExpression {
+export interface I32_Load8_UExpression extends WasmLoad {
   nodeType: WasmExpressions.i32_load8_uExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I32_Load16_SExpression {
+export interface I32_Load16_SExpression extends WasmLoad {
   nodeType: WasmExpressions.i32_load16_sExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I32_Load16_UExpression {
+export interface I32_Load16_UExpression extends WasmLoad {
   nodeType: WasmExpressions.i32_load16_uExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load8_SExpression {
+export interface I64_Load8_SExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load8_sExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load8_UExpression {
+export interface I64_Load8_UExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load8_uExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load16_SExpression {
+export interface I64_Load16_SExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load16_sExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load16_UExpression {
+export interface I64_Load16_UExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load16_uExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load32_SExpression {
+export interface I64_Load32_SExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load32_sExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
-export interface I64_Load32_UExpression {
+export interface I64_Load32_UExpression extends WasmLoad {
   nodeType: WasmExpressions.i64_load32_uExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
 }
 
-export interface I32_StoreExpression {
+export interface I32_StoreExpression extends WasmStore {
   nodeType: WasmExpressions.i32_storeExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I64_StoreExpression {
+export interface I64_StoreExpression extends WasmStore {
   nodeType: WasmExpressions.i64_storeExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface F32_StoreExpression {
+export interface F32_StoreExpression extends WasmStore {
   nodeType: WasmExpressions.f32_storeExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface F64_StoreExpression {
+export interface F64_StoreExpression extends WasmStore {
   nodeType: WasmExpressions.f64_storeExpr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I32_Store8Expression {
+export interface I32_Store8Expression extends WasmStore {
   nodeType: WasmExpressions.i32_store8Expr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I32_Store16Expression {
+export interface I32_Store16Expression extends WasmStore {
   nodeType: WasmExpressions.i32_store16Expr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I64_Store8Expression {
+export interface I64_Store8Expression extends WasmStore {
   nodeType: WasmExpressions.i64_store8Expr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I64_Store16Expression {
+export interface I64_Store16Expression extends WasmStore {
   nodeType: WasmExpressions.i64_store16Expr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
-export interface I64_Store32Expression {
+export interface I64_Store32Expression extends WasmStore {
   nodeType: WasmExpressions.i64_store32Expr;
-  offset: number;
-  align: number;
-  ptr: WasmExpression;
-  value: WasmExpression;
 }
 export interface Memory_SizeExpression {
   nodeType: WasmExpressions.memory_sizeExpr;
@@ -683,10 +613,9 @@ export interface I32_ConstExpression {
   nodeType: WasmExpressions.i32_constExpr;
   value: number;
 }
-// TODO: Switch This to BigInt
 export interface I64_ConstExpression {
   nodeType: WasmExpressions.i64_constExpr;
-  value: number;
+  value: BigInt;
 }
 export interface F32_ConstExpression {
   nodeType: WasmExpressions.f32_constExpr;
