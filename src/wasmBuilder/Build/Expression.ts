@@ -13,9 +13,23 @@ export const nopExpression = (): wasmTypes.WasmEmptyExpression => {
     nodeType: WasmExpressions.nopExpr,
   };
 };
-export const blockExpression = (body: WasmExpression[]): wasmTypes.BlockExpression => {
+export const blockExpression = (
+  label: string | undefined,
+  body: WasmExpression[]
+): wasmTypes.WasmBlockExpression => {
   return {
     nodeType: WasmExpressions.blockExpr,
+    label: label,
+    body: body,
+  };
+};
+export const loopExpression = (
+  label: string | undefined,
+  body: WasmExpression[]
+): wasmTypes.WasmBlockExpression => {
+  return {
+    nodeType: WasmExpressions.blockExpr,
+    label: label,
     body: body,
   };
 };
@@ -29,6 +43,22 @@ export const ifExpression = (
     condition: condition,
     body: body,
     alternative: alternative,
+  };
+};
+export const brExpression = (depth: string | number): wasmTypes.BrExpression => {
+  return {
+    nodeType: WasmExpressions.brExpr,
+    depth: depth,
+  };
+};
+export const br_IfExpression = (
+  condition: WasmExpression,
+  depth: string | number
+): wasmTypes.Br_IfExpression => {
+  return {
+    nodeType: WasmExpressions.br_ifExpr,
+    condition: condition,
+    depth: depth,
   };
 };
 export const returnExpression = (body: WasmExpression): wasmTypes.ReturnExpression => {

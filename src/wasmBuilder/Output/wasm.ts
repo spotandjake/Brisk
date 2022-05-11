@@ -4,52 +4,98 @@ import { encodeString, ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 const magicModuleHeader = [0x00, 0x61, 0x73, 0x6d];
 const moduleVersion = [0x01, 0x00, 0x00, 0x00];
 // Wasm Build
-const compileBody = (expr: WasmExpression): number[] => {
+const compileBody = (
+  expr: WasmExpression,
+  functionMap: Map<string, number>,
+  brStack: (string | undefined)[]
+): number[] => {
   // Initialize Binary Array
   const code: number[] = [];
   // Match Expression
+  // TODO: Keep Track Of Depth And Depth Labels For Br and br_if
   switch (expr.nodeType) {
-    // unreachableExpr,
     case WasmExpressions.unreachableExpr:
       code.push(0x00); // unreachable Wasm Instruction
       break;
     case WasmExpressions.nopExpr:
       code.push(0x01); // unreachable Wasm Instruction
       break;
-    // loop
     case WasmExpressions.blockExpr:
       code.push(0x02); // If Wasm Instruction
       code.push(0x40); // Wasm Control Flow Block Tag
       for (const expression of expr.body) {
-        code.push(...compileBody(expression));
+        code.push(...compileBody(expression, functionMap, [...brStack, expr.label]));
+      }
+      code.push(0x0b);
+      break;
+    case WasmExpressions.loopExpr:
+      code.push(0x03); // loop Wasm Instruction
+      code.push(0x40); // Wasm Control Flow Block Tag
+      for (const expression of expr.body) {
+        code.push(...compileBody(expression, functionMap, [...brStack, expr.label]));
       }
       code.push(0x0b);
       break;
     case WasmExpressions.ifExpr:
-      code.push(...compileBody(expr.condition));
+      code.push(...compileBody(expr.condition, functionMap, brStack));
       code.push(0x04); // If Wasm Instruction
       code.push(0x40); // Wasm Control Flow Block Tag
-      code.push(...compileBody(expr.body));
+      code.push(...compileBody(expr.body, functionMap, brStack));
       if (expr.alternative != undefined) {
         code.push(0x05); // Else Wasm Instruction
-        code.push(...compileBody(expr.alternative));
+        code.push(...compileBody(expr.alternative, functionMap, brStack));
       }
       code.push(0x0b);
       break;
-    // br
-    // br_if
+    case WasmExpressions.brExpr:
+      code.push(0x0c); // br Wasm Instruction
+      if (typeof expr.depth == 'string') {
+        if (!brStack.includes(expr.depth)) throw new Error(`Label ${expr.depth} is not defined`);
+        code.push(...unsignedLEB128(brStack.indexOf(expr.depth)));
+      } else {
+        if (brStack.length >= expr.depth)
+          throw new Error(`Depth ${expr.depth} has not been reached`);
+        code.push(...unsignedLEB128(expr.depth));
+      }
+      break;
+    case WasmExpressions.br_ifExpr:
+      code.push(...compileBody(expr.condition, functionMap, brStack));
+      code.push(0x0d); // br_if Wasm Instruction
+      if (typeof expr.depth == 'string') {
+        if (!brStack.includes(expr.depth)) throw new Error(`Label ${expr.depth} is not defined`);
+        code.push(...unsignedLEB128(brStack.indexOf(expr.depth)));
+      } else {
+        if (brStack.length >= expr.depth)
+          throw new Error(`Depth ${expr.depth} has not been reached`);
+        code.push(...unsignedLEB128(expr.depth));
+      }
+      break;
     // br_table
-    // returnExpr,
-    // callExpr,
+    case WasmExpressions.returnExpr:
+      code.push(...compileBody(expr.body, functionMap, brStack));
+      code.push(0x0f); // return Wasm Instruction
+      break;
+    case WasmExpressions.callExpr:
+      for (const param of expr.body) {
+        code.push(...compileBody(param, functionMap, brStack));
+      }
+      code.push(0x10); // call Wasm Instruction
+      if (!functionMap.has(expr.funcName))
+        throw new Error(`Function ${expr.funcName} is not defined`);
+      code.push(...unsignedLEB128(<number>functionMap.get(expr.funcName)));
+      break;
     // callIndirectExpr,
-    // dropExpr,
+    case WasmExpressions.dropExpr:
+      code.push(...compileBody(expr.body, functionMap, brStack));
+      code.push(0x1a); // drop Wasm Instruction
+      break;
     // Select
     case WasmExpressions.local_getExpr:
       code.push(0x20); // local.get Wasm Instruction
       code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Output Type Matches
       break;
     case WasmExpressions.local_setExpr:
-      code.push(...compileBody(expr.body));
+      code.push(...compileBody(expr.body, functionMap, brStack));
       code.push(0x21); // local.set Wasm Instruction
       code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Type Matches
       break;
@@ -85,7 +131,7 @@ const compileBody = (expr: WasmExpression): number[] => {
       code.push(0x3f); // memory.size Wasm Instruction
       break;
     case WasmExpressions.memory_growExpr:
-      code.push(...compileBody(expr.value));
+      code.push(...compileBody(expr.value, functionMap, brStack));
       code.push(0x40); // memory.size Wasm Instruction
       break;
     case WasmExpressions.i32_constExpr:
@@ -144,8 +190,8 @@ const compileBody = (expr: WasmExpression): number[] => {
     // i32_popcntExpr,
     case WasmExpressions.i32_addExpr:
       // Analyze The Values
-      code.push(...compileBody(expr.valueLeft));
-      code.push(...compileBody(expr.valueRight));
+      code.push(...compileBody(expr.valueLeft, functionMap, brStack));
+      code.push(...compileBody(expr.valueRight, functionMap, brStack));
       // Add The Values
       code.push(0x6a); // I32.add Instruction Code
       break;
@@ -545,7 +591,7 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
     // TODO: Build Function Body
     const bodyData: number[] = [];
     for (const expr of func.body) {
-      bodyData.push(...compileBody(expr));
+      bodyData.push(...compileBody(expr, functionMap, []));
     }
     bodyData.push(0x0b); // Push Wasm End Instruction
     // Append Data To Code Section

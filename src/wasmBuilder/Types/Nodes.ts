@@ -33,11 +33,11 @@ export const enum WasmExpressions {
   // General
   unreachableExpr,
   nopExpr,
-  // loop
   blockExpr,
+  loopExpr,
   ifExpr,
-  // TODO: br
-  // TODO: br_if
+  brExpr,
+  br_ifExpr,
   // TODO: br_table
   returnExpr,
   callExpr,
@@ -462,8 +462,9 @@ export const enum WasmExpressions {
 export interface WasmEmptyExpression {
   nodeType: WasmExpressions.unreachableExpr | WasmExpressions.nopExpr;
 }
-export interface BlockExpression {
-  nodeType: WasmExpressions.blockExpr;
+export interface WasmBlockExpression {
+  nodeType: WasmExpressions.blockExpr | WasmExpressions.loopExpr;
+  label: string | undefined;
   body: WasmExpression[];
 }
 export interface IfExpression {
@@ -471,6 +472,15 @@ export interface IfExpression {
   condition: WasmExpression;
   body: WasmExpression;
   alternative?: WasmExpression;
+}
+export interface BrExpression {
+  nodeType: WasmExpressions.brExpr;
+  depth: number | string;
+}
+export interface Br_IfExpression {
+  nodeType: WasmExpressions.br_ifExpr;
+  condition: WasmExpression;
+  depth: number | string;
 }
 export interface ReturnExpression {
   nodeType: WasmExpressions.returnExpr;
@@ -578,8 +588,10 @@ export interface WasmBinopExpression {
 // Wasm Expression Types
 export type WasmExpression =
   | WasmEmptyExpression
-  | BlockExpression
+  | WasmBlockExpression
   | IfExpression
+  | BrExpression
+  | Br_IfExpression
   | ReturnExpression
   | CallExpression
   | CallIndirectExpression
