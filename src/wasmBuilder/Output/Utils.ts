@@ -3,7 +3,7 @@ export const ieee754 = (n: number) => {
   buf.writeFloatLE(n, 0);
   return Uint8Array.from(buf);
 };
-// TODO: Deal With UTF-8
+// TODO: Deal With UTF-8 encoding like \n, \r, \t, etc
 export const encodeString = (str: string) => [
   str.length,
   ...str.split('').map((s) => s.charCodeAt(0)),

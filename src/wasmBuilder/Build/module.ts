@@ -4,7 +4,9 @@ export const wasmModule = (
   // Function Section
   functions: WasmFunctionType[],
   // Export Section
-  exports: Map<string, { type: ExportType; internalName: number | string }>
+  exports: Map<string, { type: ExportType; internalName: number | string }>,
+  // Start Function
+  startFunction?: string | number
 ): WasmModuleType => {
   // TODO: Validate Module Generation
   // Return Wasm Module IR
@@ -13,6 +15,8 @@ export const wasmModule = (
     functions: functions,
     // Export Section
     exports: exports,
+    // Start Function
+    startFunction: startFunction,
   };
 };
 // Wasm Module Additions
@@ -36,4 +40,13 @@ export const addExport = (
     internalName: internalName,
   });
   return wasmModule;
+};
+export const setStart = (
+  wasmModule: WasmModuleType,
+  startFunction: string | number
+): WasmModuleType => {
+  return {
+    ...wasmModule,
+    startFunction: startFunction,
+  };
 };

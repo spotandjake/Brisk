@@ -3,12 +3,12 @@ import { WasmExpression, WasmExpressions, WasmType } from '../Types/Nodes';
 // Generate Wasm Expression
 // TODO: Implement Wasm Expressions
 // General
-export const unreachableExpression = (): wasmTypes.UnreachableExpression => {
+export const unreachableExpression = (): wasmTypes.WasmEmptyExpression => {
   return {
     nodeType: WasmExpressions.unreachableExpr,
   };
 };
-export const nopExpression = (): wasmTypes.NopExpression => {
+export const nopExpression = (): wasmTypes.WasmEmptyExpression => {
   return {
     nodeType: WasmExpressions.nopExpr,
   };
@@ -119,7 +119,7 @@ export const i32_LoadExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I32_LoadExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i32_loadExpr,
     offset: offset,
@@ -131,7 +131,7 @@ export const i64_LoadExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_LoadExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_loadExpr,
     offset: offset,
@@ -143,7 +143,7 @@ export const f32_LoadExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.F32_LoadExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.f32_loadExpr,
     offset: offset,
@@ -155,7 +155,7 @@ export const f64_LoadExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.F64_LoadExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.f64_loadExpr,
     offset: offset,
@@ -167,7 +167,7 @@ export const i32_Load8_SExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I32_Load8_SExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i32_load8_sExpr,
     offset: offset,
@@ -179,7 +179,7 @@ export const i32_Load8_UExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I32_Load8_UExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i32_load8_uExpr,
     offset: offset,
@@ -191,7 +191,7 @@ export const i32_Load16_SExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I32_Load16_SExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i32_load16_sExpr,
     offset: offset,
@@ -203,7 +203,7 @@ export const i32_Load16_UExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I32_Load16_UExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i32_load16_uExpr,
     offset: offset,
@@ -215,7 +215,7 @@ export const i64_Load8_SExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load8_SExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load8_sExpr,
     offset: offset,
@@ -227,7 +227,7 @@ export const i64_Load8_UExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load8_UExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load8_uExpr,
     offset: offset,
@@ -239,7 +239,7 @@ export const i64_Load16_SExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load16_SExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load16_sExpr,
     offset: offset,
@@ -251,7 +251,7 @@ export const i64_Load16_UExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load16_UExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load16_uExpr,
     offset: offset,
@@ -263,7 +263,7 @@ export const i64_Load32_SExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load32_SExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load32_sExpr,
     offset: offset,
@@ -275,7 +275,7 @@ export const i64_Load32_UExpression = (
   offset: number,
   align: number,
   ptr: WasmExpression
-): wasmTypes.I64_Load32_UExpression => {
+): wasmTypes.WasmLoadExpression => {
   return {
     nodeType: WasmExpressions.i64_load32_uExpr,
     offset: offset,
@@ -288,7 +288,7 @@ export const i32_StoreExpression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I32_StoreExpression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i32_storeExpr,
     offset: offset,
@@ -302,7 +302,7 @@ export const i64_StoreExpression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I64_StoreExpression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i64_storeExpr,
     offset: offset,
@@ -316,7 +316,7 @@ export const f32_StoreExpression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.F32_StoreExpression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.f32_storeExpr,
     offset: offset,
@@ -330,7 +330,7 @@ export const f64_StoreExpression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.F64_StoreExpression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.f64_storeExpr,
     offset: offset,
@@ -344,7 +344,7 @@ export const i32_Store8Expression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I32_Store8Expression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i32_store8Expr,
     offset: offset,
@@ -358,7 +358,7 @@ export const i32_Store16Expression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I32_Store16Expression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i32_store16Expr,
     offset: offset,
@@ -372,7 +372,7 @@ export const i64_Store8Expression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I64_Store8Expression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i64_store8Expr,
     offset: offset,
@@ -386,7 +386,7 @@ export const i64_Store16Expression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I64_Store16Expression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i64_store16Expr,
     offset: offset,
@@ -400,7 +400,7 @@ export const i64_Store32Expression = (
   align: number,
   ptr: WasmExpression,
   value: WasmExpression
-): wasmTypes.I64_Store32Expression => {
+): wasmTypes.WasmStoreExpression => {
   return {
     nodeType: WasmExpressions.i64_store32Expr,
     offset: offset,
@@ -421,7 +421,7 @@ export const memory_GrowExpression = (value: WasmExpression): wasmTypes.Memory_G
     value: value,
   };
 };
-export const i32_ConstExpression = (value: number): wasmTypes.I32_ConstExpression => {
+export const i32_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
   return {
     nodeType: WasmExpressions.i32_constExpr,
     value: value,
@@ -433,13 +433,13 @@ export const i64_ConstExpression = (value: BigInt): wasmTypes.I64_ConstExpressio
     value: value,
   };
 };
-export const f32_ConstExpression = (value: number): wasmTypes.F32_ConstExpression => {
+export const f32_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
   return {
     nodeType: WasmExpressions.f32_constExpr,
     value: value,
   };
 };
-export const f64_ConstExpression = (value: number): wasmTypes.F64_ConstExpression => {
+export const f64_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
   return {
     nodeType: WasmExpressions.f64_constExpr,
     value: value,
@@ -448,7 +448,7 @@ export const f64_ConstExpression = (value: number): wasmTypes.F64_ConstExpressio
 export const i32_AddExpression = (
   valueLeft: WasmExpression,
   valueRight: WasmExpression
-): wasmTypes.I32_AddExpression => {
+): wasmTypes.WasmBinopExpression => {
   return {
     nodeType: WasmExpressions.i32_addExpr,
     valueLeft: valueLeft,

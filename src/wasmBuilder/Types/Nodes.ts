@@ -17,6 +17,8 @@ export interface WasmModuleType {
   functions: WasmFunctionType[];
   // Export Section
   exports: Map<string, { type: ExportType; internalName: number | string }>;
+  // StartFunction
+  startFunction?: string | number;
 }
 // Wasm Function State
 export interface WasmFunctionType {
@@ -31,6 +33,7 @@ export const enum WasmExpressions {
   // General
   unreachableExpr,
   nopExpr,
+  // loop
   blockExpr,
   ifExpr,
   // TODO: br
@@ -456,11 +459,8 @@ export const enum WasmExpressions {
   // f64x2_convert_low_i32x4_sExpr,
   // f64x2_convert_low_i32x4_uExpr,
 }
-export interface UnreachableExpression {
-  nodeType: WasmExpressions.unreachableExpr;
-}
-export interface NopExpression {
-  nodeType: WasmExpressions.nopExpr;
+export interface WasmEmptyExpression {
+  nodeType: WasmExpressions.unreachableExpr | WasmExpressions.nopExpr;
 }
 export interface BlockExpression {
   nodeType: WasmExpressions.blockExpr;
@@ -472,9 +472,6 @@ export interface IfExpression {
   body: WasmExpression;
   alternative?: WasmExpression;
 }
-// TODO: br
-// TODO: br_if
-// TODO: br_table
 export interface ReturnExpression {
   nodeType: WasmExpressions.returnExpr;
   body: WasmExpression;
@@ -493,7 +490,6 @@ export interface DropExpression {
   nodeType: WasmExpressions.dropExpr;
   body: WasmExpression;
 }
-// TODO: select
 export interface Local_GetExpression {
   nodeType: WasmExpressions.local_getExpr;
   localIndex: number;
@@ -520,85 +516,41 @@ export interface Global_SetExpression {
   globalName: string;
   body: WasmExpression;
 }
-// TODO: table_get
-// TODO: table_set
-interface WasmLoad {
+export interface WasmLoadExpression {
+  nodeType:
+    | WasmExpressions.i32_loadExpr
+    | WasmExpressions.i64_loadExpr
+    | WasmExpressions.f32_loadExpr
+    | WasmExpressions.f64_loadExpr
+    | WasmExpressions.i32_load8_sExpr
+    | WasmExpressions.i32_load8_uExpr
+    | WasmExpressions.i32_load16_sExpr
+    | WasmExpressions.i32_load16_uExpr
+    | WasmExpressions.i64_load8_sExpr
+    | WasmExpressions.i64_load8_uExpr
+    | WasmExpressions.i64_load16_sExpr
+    | WasmExpressions.i64_load16_uExpr
+    | WasmExpressions.i64_load32_sExpr
+    | WasmExpressions.i64_load32_uExpr;
   offset: number;
   align: number;
   ptr: WasmExpression;
 }
-interface WasmStore extends WasmLoad {
+export interface WasmStoreExpression {
+  nodeType:
+    | WasmExpressions.i32_storeExpr
+    | WasmExpressions.i64_storeExpr
+    | WasmExpressions.f32_storeExpr
+    | WasmExpressions.f64_storeExpr
+    | WasmExpressions.i32_store8Expr
+    | WasmExpressions.i32_store16Expr
+    | WasmExpressions.i64_store8Expr
+    | WasmExpressions.i64_store16Expr
+    | WasmExpressions.i64_store32Expr;
+  offset: number;
+  align: number;
+  ptr: WasmExpression;
   value: WasmExpression;
-}
-export interface I32_LoadExpression extends WasmLoad {
-  nodeType: WasmExpressions.i32_loadExpr;
-}
-export interface I64_LoadExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_loadExpr;
-}
-export interface F32_LoadExpression extends WasmLoad {
-  nodeType: WasmExpressions.f32_loadExpr;
-}
-export interface F64_LoadExpression extends WasmLoad {
-  nodeType: WasmExpressions.f64_loadExpr;
-}
-export interface I32_Load8_SExpression extends WasmLoad {
-  nodeType: WasmExpressions.i32_load8_sExpr;
-}
-export interface I32_Load8_UExpression extends WasmLoad {
-  nodeType: WasmExpressions.i32_load8_uExpr;
-}
-export interface I32_Load16_SExpression extends WasmLoad {
-  nodeType: WasmExpressions.i32_load16_sExpr;
-}
-export interface I32_Load16_UExpression extends WasmLoad {
-  nodeType: WasmExpressions.i32_load16_uExpr;
-}
-export interface I64_Load8_SExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load8_sExpr;
-}
-export interface I64_Load8_UExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load8_uExpr;
-}
-export interface I64_Load16_SExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load16_sExpr;
-}
-export interface I64_Load16_UExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load16_uExpr;
-}
-export interface I64_Load32_SExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load32_sExpr;
-}
-export interface I64_Load32_UExpression extends WasmLoad {
-  nodeType: WasmExpressions.i64_load32_uExpr;
-}
-
-export interface I32_StoreExpression extends WasmStore {
-  nodeType: WasmExpressions.i32_storeExpr;
-}
-export interface I64_StoreExpression extends WasmStore {
-  nodeType: WasmExpressions.i64_storeExpr;
-}
-export interface F32_StoreExpression extends WasmStore {
-  nodeType: WasmExpressions.f32_storeExpr;
-}
-export interface F64_StoreExpression extends WasmStore {
-  nodeType: WasmExpressions.f64_storeExpr;
-}
-export interface I32_Store8Expression extends WasmStore {
-  nodeType: WasmExpressions.i32_store8Expr;
-}
-export interface I32_Store16Expression extends WasmStore {
-  nodeType: WasmExpressions.i32_store16Expr;
-}
-export interface I64_Store8Expression extends WasmStore {
-  nodeType: WasmExpressions.i64_store8Expr;
-}
-export interface I64_Store16Expression extends WasmStore {
-  nodeType: WasmExpressions.i64_store16Expr;
-}
-export interface I64_Store32Expression extends WasmStore {
-  nodeType: WasmExpressions.i64_store32Expr;
 }
 export interface Memory_SizeExpression {
   nodeType: WasmExpressions.memory_sizeExpr;
@@ -607,32 +559,25 @@ export interface Memory_GrowExpression {
   nodeType: WasmExpressions.memory_growExpr;
   value: WasmExpression;
 }
-export interface I32_ConstExpression {
-  nodeType: WasmExpressions.i32_constExpr;
+export interface WasmConstExpression {
+  nodeType:
+    | WasmExpressions.i32_constExpr
+    | WasmExpressions.f32_constExpr
+    | WasmExpressions.f64_constExpr;
   value: number;
 }
 export interface I64_ConstExpression {
   nodeType: WasmExpressions.i64_constExpr;
   value: BigInt;
 }
-export interface F32_ConstExpression {
-  nodeType: WasmExpressions.f32_constExpr;
-  value: number;
-}
-export interface F64_ConstExpression {
-  nodeType: WasmExpressions.f64_constExpr;
-  value: number;
-}
-
-export interface I32_AddExpression {
+export interface WasmBinopExpression {
   nodeType: WasmExpressions.i32_addExpr;
   valueLeft: WasmExpression;
   valueRight: WasmExpression;
 }
 // Wasm Expression Types
 export type WasmExpression =
-  | UnreachableExpression
-  | NopExpression
+  | WasmEmptyExpression
   | BlockExpression
   | IfExpression
   | ReturnExpression
@@ -644,33 +589,10 @@ export type WasmExpression =
   | Local_TeeExpression
   | Global_GetExpression
   | Global_SetExpression
-  | I32_LoadExpression
-  | I64_LoadExpression
-  | F32_LoadExpression
-  | F64_LoadExpression
-  | I32_Load8_SExpression
-  | I32_Load8_UExpression
-  | I32_Load16_SExpression
-  | I32_Load16_UExpression
-  | I64_Load8_SExpression
-  | I64_Load8_UExpression
-  | I64_Load16_SExpression
-  | I64_Load16_UExpression
-  | I64_Load32_SExpression
-  | I64_Load32_UExpression
-  | I32_StoreExpression
-  | I64_StoreExpression
-  | F32_StoreExpression
-  | F64_StoreExpression
-  | I32_Store8Expression
-  | I32_Store16Expression
-  | I64_Store8Expression
-  | I64_Store16Expression
-  | I64_Store32Expression
+  | WasmLoadExpression
+  | WasmStoreExpression
   | Memory_SizeExpression
   | Memory_GrowExpression
-  | I32_ConstExpression
+  | WasmConstExpression
   | I64_ConstExpression
-  | F32_ConstExpression
-  | F64_ConstExpression
-  | I32_AddExpression;
+  | WasmBinopExpression;

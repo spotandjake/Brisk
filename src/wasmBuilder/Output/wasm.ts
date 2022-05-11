@@ -1,5 +1,5 @@
-import { ExportType, WasmModuleType, WasmExpression, WasmExpressions } from '../Types/Nodes';
-import { encodeString, signedLEB128, unsignedLEB128, ieee754 } from './Utils';
+import { ExportType, WasmExpression, WasmExpressions, WasmModuleType } from '../Types/Nodes';
+import { encodeString, ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Helpers
 const magicModuleHeader = [0x00, 0x61, 0x73, 0x6d];
 const moduleVersion = [0x01, 0x00, 0x00, 0x00];
@@ -16,7 +16,15 @@ const compileBody = (expr: WasmExpression): number[] => {
     case WasmExpressions.nopExpr:
       code.push(0x01); // unreachable Wasm Instruction
       break;
-    // blockExpr,
+    // loop
+    case WasmExpressions.blockExpr:
+      code.push(0x02); // If Wasm Instruction
+      code.push(0x40); // Wasm Control Flow Block Tag
+      for (const expression of expr.body) {
+        code.push(...compileBody(expression));
+      }
+      code.push(0x0b);
+      break;
     case WasmExpressions.ifExpr:
       code.push(...compileBody(expr.condition));
       code.push(0x04); // If Wasm Instruction
@@ -570,6 +578,21 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
     exportSection.push(...unsignedLEB128(index)); // Export Index
     exportCount++;
   }
+  // Handle Start Section
+  if (wasmModule.startFunction != undefined) {
+    let index: number;
+    // Resolve Export
+    if (typeof wasmModule.startFunction == 'string') {
+      // Try To Resolve
+      if (!functionMap.has(wasmModule.startFunction))
+        throw new Error(
+          `Export Function By Name ${wasmModule.startFunction} Could Not Be Resolved`
+        );
+      index = <number>functionMap.get(wasmModule.startFunction);
+    } else index = wasmModule.startFunction;
+    // Set Start Section
+    startSection.push(...unsignedLEB128(index));
+  }
   // Assemble Module
   const module: number[] = [];
   module.push(...magicModuleHeader); // Add Magic Header
@@ -604,7 +627,8 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
       ...unsignedLEB128(exportCount),
       ...exportSection
     );
-  // if (startSection.length > 0) module.push(0x8, ...varuint32(startSection.length), ...startSection);
+  if (startSection.length > 0)
+    module.push(0x8, ...unsignedLEB128(startSection.length), ...startSection);
   // if (elementSection.length > 0)
   //   module.push(0x9, ...varuint32(elementSection.length), ...elementSection);
   if (codeSection.length > 0)
