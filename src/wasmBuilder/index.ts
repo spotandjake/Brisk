@@ -10,6 +10,7 @@ import {
 import { wasmFunction } from './Build/Function';
 import { wasmModule, addFunction, addExport } from './Build/Module';
 import { compileWasm } from './Output/wasm';
+import fs from 'fs';
 // Test
 export default async () => {
   // Create Module
@@ -17,20 +18,29 @@ export default async () => {
     // Function Sections
     [],
     // Export Section
+    new Map(),
+    // Function Exports
     new Map()
   );
   // Create Function
+  // const func = wasmFunction(
+  //   'add',
+  //   [WasmType.WasmI32, WasmType.WasmI32],
+  //   [WasmType.WasmI32],
+  //   [WasmType.WasmI32],
+  //   [
+  //     // Addition
+  //     local_SetExpression(0, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1))),
+  //     // Return
+  //     returnExpression(local_GetExpression(0, WasmType.WasmI32)),
+  //   ]
+  // );
   const func = wasmFunction(
     'add',
     [WasmType.WasmI32, WasmType.WasmI32],
     [WasmType.WasmI32],
     [WasmType.WasmI32],
-    [
-      // Addition
-      local_SetExpression(0, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1))),
-      // Return
-      returnExpression(local_GetExpression(0, WasmType.WasmI32)),
-    ]
+    [i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1))]
   );
   // Add Function
   module = addFunction(module, func);
@@ -39,6 +49,8 @@ export default async () => {
   // Compile
   const compiled = compileWasm(module);
   console.log(compiled);
+  // Write To File
+  await fs.promises.writeFile('./wasm.wasm', compiled);
   // Try To Run
   console.log('Loading Wasm');
   const wasmInstance = await WebAssembly.compile(compiled);
