@@ -415,7 +415,7 @@ export const memory_SizeExpression = (): wasmTypes.Memory_SizeExpression => {
   };
 };
 // TODO: Ensure value isn't defined at runtime and doesn't take a wasmExpression
-export const memory_GrowExpression = (value: number): wasmTypes.Memory_GrowExpression => {
+export const memory_GrowExpression = (value: WasmExpression): wasmTypes.Memory_GrowExpression => {
   return {
     nodeType: WasmExpressions.memory_growExpr,
     value: value,

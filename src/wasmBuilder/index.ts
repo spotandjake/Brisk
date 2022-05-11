@@ -59,5 +59,5 @@ export default async () => {
   const wasmInstance = await WebAssembly.instantiate(compiled);
   console.log('Wasm Loaded');
   console.log(wasmInstance);
-  console.log(wasmInstance.instance);
+  console.log(wasmInstance.instance.exports.add(1, 1));
 };

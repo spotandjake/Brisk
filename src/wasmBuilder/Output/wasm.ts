@@ -1,5 +1,5 @@
 import { ExportType, WasmModuleType, WasmExpression, WasmExpressions } from '../Types/Nodes';
-import { encodeString, signedLEB128, unsignedLEB128 } from './Utils';
+import { encodeString, signedLEB128, unsignedLEB128, ieee754 } from './Utils';
 // Helpers
 const magicModuleHeader = [0x00, 0x61, 0x73, 0x6d];
 const moduleVersion = [0x01, 0x00, 0x00, 0x00];
@@ -9,11 +9,25 @@ const compileBody = (expr: WasmExpression): number[] => {
   const code: number[] = [];
   // Match Expression
   switch (expr.nodeType) {
-    // General
     // unreachableExpr,
-    // nopExpr,
+    case WasmExpressions.unreachableExpr:
+      code.push(0x00); // unreachable Wasm Instruction
+      break;
+    case WasmExpressions.nopExpr:
+      code.push(0x01); // unreachable Wasm Instruction
+      break;
     // blockExpr,
-    // ifExpr,
+    case WasmExpressions.ifExpr:
+      code.push(...compileBody(expr.condition));
+      code.push(0x04); // If Wasm Instruction
+      code.push(0x40); // Wasm Control Flow Block Tag
+      code.push(...compileBody(expr.body));
+      if (expr.alternative != undefined) {
+        code.push(0x05); // Else Wasm Instruction
+        code.push(...compileBody(expr.alternative));
+      }
+      code.push(0x0b);
+      break;
     // br
     // br_if
     // br_table
@@ -59,15 +73,30 @@ const compileBody = (expr: WasmExpression): number[] => {
     // i64_store8Expr,
     // i64_store16Expr,
     // i64_store32Expr,
-    // memory_sizeExpr,
-    // memory_growExpr,
+    case WasmExpressions.memory_sizeExpr:
+      code.push(0x3f); // memory.size Wasm Instruction
+      break;
+    case WasmExpressions.memory_growExpr:
+      code.push(...compileBody(expr.value));
+      code.push(0x40); // memory.size Wasm Instruction
+      break;
     case WasmExpressions.i32_constExpr:
       code.push(0x41);
       code.push(...signedLEB128(expr.value));
       break;
-    // i64_constExpr,
-    // f32_constExpr,
-    // f64_constExpr,
+    // TODO: Fix This to support bigint
+    // case WasmExpressions.i64_constExpr:
+    //   code.push(0x42);
+    //   code.push(...signedLEB128(expr.value));
+    //   break;
+    case WasmExpressions.f32_constExpr:
+      code.push(0x43);
+      code.push(...ieee754(expr.value));
+      break;
+    case WasmExpressions.f64_constExpr:
+      code.push(0x44);
+      code.push(...ieee754(expr.value));
+      break;
     // i32_eqzExpr,
     // i32_eqExpr,
     // i32_neExpr,

@@ -605,7 +605,7 @@ export interface Memory_SizeExpression {
 }
 export interface Memory_GrowExpression {
   nodeType: WasmExpressions.memory_growExpr;
-  value: number;
+  value: WasmExpression;
 }
 export interface I32_ConstExpression {
   nodeType: WasmExpressions.i32_constExpr;
