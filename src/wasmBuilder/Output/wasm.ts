@@ -1,5 +1,5 @@
-import { ExportType, WasmModuleType, WasmExpression } from '../Types/Nodes';
-import { encodeString, unsignedLEB128 } from './Utils';
+import { ExportType, WasmModuleType, WasmExpression, WasmExpressions } from '../Types/Nodes';
+import { encodeString, signedLEB128, unsignedLEB128 } from './Utils';
 // Helpers
 const magicModuleHeader = [0x00, 0x61, 0x73, 0x6d];
 const moduleVersion = [0x01, 0x00, 0x00, 0x00];
@@ -22,8 +22,15 @@ const compileBody = (expr: WasmExpression): number[] => {
     // callIndirectExpr,
     // dropExpr,
     // Select
-    // local_getExpr,
-    // local_setExpr,
+    case WasmExpressions.local_getExpr:
+      code.push(0x20); // local.get Wasm Instruction
+      code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Output Type Matches
+      break;
+    case WasmExpressions.local_setExpr:
+      code.push(...compileBody(expr.body));
+      code.push(0x21); // local.set Wasm Instruction
+      code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Type Matches
+      break;
     // local_teeExpr,
     // global_getExpr,
     // global_setExpr,
@@ -54,7 +61,10 @@ const compileBody = (expr: WasmExpression): number[] => {
     // i64_store32Expr,
     // memory_sizeExpr,
     // memory_growExpr,
-    // i32_constExpr,
+    case WasmExpressions.i32_constExpr:
+      code.push(0x41);
+      code.push(...signedLEB128(expr.value));
+      break;
     // i64_constExpr,
     // f32_constExpr,
     // f64_constExpr,
@@ -95,7 +105,13 @@ const compileBody = (expr: WasmExpression): number[] => {
     // i32_clzExpr,
     // i32_ctzExpr,
     // i32_popcntExpr,
-    i32_addExpr,
+    case WasmExpressions.i32_addExpr:
+      // Analyze The Values
+      code.push(...compileBody(expr.valueLeft));
+      code.push(...compileBody(expr.valueRight));
+      // Add The Values
+      code.push(0x6a); // I32.add Instruction Code
+      break;
     // i32_subExpr,
     // i32_mulExpr,
     // i32_div_sExpr,

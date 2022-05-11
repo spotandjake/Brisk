@@ -40,7 +40,10 @@ export default async () => {
     [WasmType.WasmI32, WasmType.WasmI32],
     [WasmType.WasmI32],
     [WasmType.WasmI32],
-    [i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1))]
+    [
+      local_SetExpression(2, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1))),
+      local_GetExpression(2, WasmType.WasmI32),
+    ]
   );
   // Add Function
   module = addFunction(module, func);
@@ -53,7 +56,8 @@ export default async () => {
   await fs.promises.writeFile('./wasm.wasm', compiled);
   // Try To Run
   console.log('Loading Wasm');
-  const wasmInstance = await WebAssembly.compile(compiled);
+  const wasmInstance = await WebAssembly.instantiate(compiled);
   console.log('Wasm Loaded');
   console.log(wasmInstance);
+  console.log(wasmInstance.instance);
 };
