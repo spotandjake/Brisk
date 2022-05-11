@@ -1,35 +1,29 @@
-export const enum WasmPrimitiveType {
-  WasmI32,
-  WasmI64,
-  WasmF32,
-  WasmF64,
+export const enum WasmType {
+  WasmI32 = 0x7f,
+  WasmI64 = 0x7e,
+  WasmF32 = 0x7d,
+  WasmF64 = 0x7c,
 }
-export type WasmType = WasmPrimitiveType | WasmPrimitiveType[]; // TODO: I Dont Really Like How This Works, Consider A Map With Type References For Multi Types
+// Wasm Info
+export const enum ExportType {
+  function = 0x00,
+  table = 0x01,
+  memory = 0x02,
+  global = 0x03,
+}
 // Wasm Module State
 export interface WasmModuleType {
-  // TODO: Custom Section
-  // TODO: Type Section
-  // TODO: Import Section
-  // TODO: Function Section
+  // Function Section
   functions: WasmFunctionType[];
-  // TODO: Table Section
-  // functionTable: Map<number, WasmFunctionType>;
-  // TODO: Memory Section
-  // TODO: Global Section
-  // TODO: Export Section
-  // functionExports: Map<string, number>;
-  // TODO: Start Section
-  // TODO: Element Section
-  // TODO: Code Section
-  // TODO: Data Section
-  // TODO: Data Count Section
+  // Export Section
+  exports: Map<string, { type: ExportType; internalName: number | string }>;
 }
 // Wasm Function State
 export interface WasmFunctionType {
   name: string;
-  params: WasmType;
-  results: WasmType;
-  vars: WasmType[];
+  params: WasmType[];
+  results: WasmType[];
+  locals: WasmType[];
   body: WasmExpression[]; // TODO: Add Type For Wasm Expression
 }
 // Wasm Expression

@@ -9,7 +9,7 @@ import { ExportList } from '../Compiler/Types/Types';
 //@ts-ignore
 import { __VERSION__ } from '@brisk/config';
 // TODO: Remove this because it is just for testing
-import '../wasmBuilder/index';
+import testCompile from '../wasmBuilder/index';
 // Commander Setup
 const program = new Command();
 // Config
@@ -37,6 +37,9 @@ program.argument('<file>', 'File to compile').action(async (filePath) => {
   console.log('================================================================');
   console.dir(output, { depth: null });
   // Link
+});
+program.command('compileTest').action(async () => {
+  await testCompile();
 });
 // Start
 program.parse(process.argv);

@@ -49,6 +49,7 @@ export const u64 = (n: number): number[] => {
   return b;
 };
 export const varuint = (n: bigint): number[] => {
+  // TODO: This Is Broken
   const code: number[] = [];
   let v = BigInt(n);
   if (v < 0) throw new Error('Number cannot be negative');
@@ -82,6 +83,7 @@ export const varint = (_n: bigint): number[] => {
   return code;
 };
 export const varint32 = (n: number | bigint): number[] => {
+  // TODO: This Is Broken
   let v = BigInt(n);
   if (v > BigInt('0xFFFFFFFF')) throw new Error('Number too big');
   if (v > BigInt('0x7FFFFFFF')) throw new Error('Number too big');

@@ -1,38 +1,18 @@
-import { WasmFunctionType, WasmModuleType } from '../Types/Nodes';
+import { ExportType, WasmFunctionType, WasmModuleType } from '../Types/Nodes';
 // Main Wasm Module Creator
 export const wasmModule = (
-  // TODO: Custom Section
-  // TODO: Type Section
-  // TODO: Import Section
-  // TODO: Function Section
-  functions: WasmFunctionType[]
-  // TODO: Table Section
-  // TODO: Memory Section
-  // TODO: Global Section
-  // TODO: Export Section
-  // TODO: Start Section
-  // TODO: Element Section
-  // TODO: Code Section
-  // TODO: Data Section
-  // TODO: Data Count Section
+  // Function Section
+  functions: WasmFunctionType[],
+  // Export Section
+  exports: Map<string, { type: ExportType; internalName: number | string }>
 ): WasmModuleType => {
   // TODO: Validate Module Generation
   // Return Wasm Module IR
   return {
-    // TODO: Custom Section
-    // TODO: Type Section
-    // TODO: Import Section
-    // TODO: Function Section
+    // Function Section
     functions: functions,
-    // TODO: Table Section
-    // TODO: Memory Section
-    // TODO: Global Section
-    // TODO: Export Section
-    // TODO: Start Section
-    // TODO: Element Section
-    // TODO: Code Section
-    // TODO: Data Section
-    // TODO: Data Count Section
+    // Export Section
+    exports: exports,
   };
 };
 // Wasm Module Additions
@@ -44,4 +24,16 @@ export const addFunction = (
     ...wasmModule,
     functions: [...wasmModule.functions, functionType],
   };
+};
+export const addExport = (
+  wasmModule: WasmModuleType,
+  exportName: string,
+  exportType: ExportType,
+  internalName: number | string
+): WasmModuleType => {
+  wasmModule.exports.set(exportName, {
+    type: exportType,
+    internalName: internalName,
+  });
+  return wasmModule;
 };

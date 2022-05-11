@@ -1,9 +1,9 @@
 import { WasmExpression, WasmFunctionType, WasmType } from '../Types/Nodes';
 export const wasmFunction = (
   name: string,
-  params: WasmType,
-  results: WasmType,
-  vars: WasmType[],
+  params: WasmType[],
+  results: WasmType[],
+  locals: WasmType[],
   body: WasmExpression[]
 ): WasmFunctionType => {
   // TODO: Validate Function Generation Works
@@ -12,7 +12,7 @@ export const wasmFunction = (
     name: name,
     params: params,
     results: results,
-    vars: vars,
+    locals: locals,
     body: body,
   };
 };
