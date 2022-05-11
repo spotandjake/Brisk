@@ -445,3 +445,13 @@ export const f64_ConstExpression = (value: number): wasmTypes.F64_ConstExpressio
     value: value,
   };
 };
+export const i32_AddExpression = (
+  valueLeft: WasmExpression,
+  valueRight: WasmExpression
+): wasmTypes.I32_AddExpression => {
+  return {
+    nodeType: WasmExpressions.i32_addExpr,
+    valueLeft: valueLeft,
+    valueRight: valueRight,
+  };
+};

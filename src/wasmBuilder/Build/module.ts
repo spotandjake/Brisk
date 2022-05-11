@@ -1,26 +1,38 @@
 import { WasmFunctionType, WasmModuleType } from '../Types/Nodes';
 // Main Wasm Module Creator
 export const wasmModule = (
-  // Section Data
-  // Variable Data
-  // Function Data
-  functions: WasmFunctionType[],
-  functionTable: Map<number, WasmFunctionType>,
-  // Import Data
-  // Export Data
-  functionExports: Map<string, number>
+  // TODO: Custom Section
+  // TODO: Type Section
+  // TODO: Import Section
+  // TODO: Function Section
+  functions: WasmFunctionType[]
+  // TODO: Table Section
+  // TODO: Memory Section
+  // TODO: Global Section
+  // TODO: Export Section
+  // TODO: Start Section
+  // TODO: Element Section
+  // TODO: Code Section
+  // TODO: Data Section
+  // TODO: Data Count Section
 ): WasmModuleType => {
   // TODO: Validate Module Generation
   // Return Wasm Module IR
   return {
-    // Section Data
-    // Variable Data
-    // Function Data
+    // TODO: Custom Section
+    // TODO: Type Section
+    // TODO: Import Section
+    // TODO: Function Section
     functions: functions,
-    functionTable: functionTable,
-    // Import Data
-    // Export Data
-    functionExports,
+    // TODO: Table Section
+    // TODO: Memory Section
+    // TODO: Global Section
+    // TODO: Export Section
+    // TODO: Start Section
+    // TODO: Element Section
+    // TODO: Code Section
+    // TODO: Data Section
+    // TODO: Data Count Section
   };
 };
 // Wasm Module Additions

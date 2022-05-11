@@ -8,12 +8,14 @@ import { BriskCustomError } from '../Compiler/Errors/Compiler';
 import { ExportList } from '../Compiler/Types/Types';
 //@ts-ignore
 import { __VERSION__ } from '@brisk/config';
+// TODO: Remove this because it is just for testing
+import '../wasmBuilder/index';
 // Commander Setup
 const program = new Command();
 // Config
 program.version(__VERSION__);
 // File Compiler
-const compileFile = async (filePath: string): Promise<{ output: string, exports: ExportList}> => {
+const compileFile = async (filePath: string): Promise<{ output: string; exports: ExportList }> => {
   // Normalize File Path
   const _filePath = path.resolve(process.cwd(), filePath);
   // Read File
