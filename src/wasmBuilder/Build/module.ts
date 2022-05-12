@@ -1,8 +1,16 @@
-import { ExportType, WasmFunctionType, WasmModuleType } from '../Types/Nodes';
+import {
+  ExportType,
+  WasmFunctionType,
+  WasmGlobal,
+  WasmMemory,
+  WasmModuleType,
+} from '../Types/Nodes';
 // Main Wasm Module Creator
 export const wasmModule = (
   // Memory Section
-  memory: { minPages: number; maxPages?: number }[],
+  memory: WasmMemory[],
+  // Global Section
+  globals: WasmGlobal[],
   // Function Section
   functions: WasmFunctionType[],
   // Export Section
@@ -13,7 +21,9 @@ export const wasmModule = (
   // Return Wasm Module IR
   return {
     // Memory Section
-    memory,
+    memory: memory,
+    // Global Section
+    globals: globals,
     // Function Section
     functions: functions,
     // Export Section

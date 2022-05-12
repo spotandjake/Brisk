@@ -11,10 +11,24 @@ export const enum ExportType {
   memory = 0x02,
   global = 0x03,
 }
+// Wasm Information Types
+export interface WasmMemory {
+  // TODO: label
+  minPages: number;
+  maxPages?: number;
+}
+export interface WasmGlobal {
+  // TODO: label
+  mutable: boolean;
+  type: WasmType;
+  value: WasmExpression;
+}
 // Wasm Module State
 export interface WasmModuleType {
   // Memory Section
-  memory: { minPages: number; maxPages?: number }[];
+  memory: WasmMemory[];
+  // Global Section
+  globals: WasmGlobal[];
   // Function Section
   functions: WasmFunctionType[];
   // Export Section

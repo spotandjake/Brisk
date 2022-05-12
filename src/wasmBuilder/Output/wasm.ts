@@ -12,7 +12,6 @@ const compileBody = (
   // Initialize Binary Array
   const code: number[] = [];
   // Match Expression
-  // TODO: Keep Track Of Depth And Depth Labels For Br and br_if
   switch (expr.nodeType) {
     case WasmExpressions.unreachableExpr:
       code.push(0x00); // unreachable Wasm Instruction
@@ -555,6 +554,7 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   const memorySection: number[] = [];
   let memCount = 0;
   const globalSection: number[] = [];
+  let globalCount = 0;
   const exportSection: number[] = [];
   let exportCount = 0;
   const startSection: number[] = [];
@@ -564,7 +564,6 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   const dataSection: number[] = [];
   const dataCountSection: number[] = [];
   // Build Memory
-  // Build Module
   for (const memory of wasmModule.memory) {
     // Add Memory To Memory Section
     memorySection.push(memory.maxPages == undefined ? 0x00 : 0x01);
@@ -573,6 +572,15 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
     // Increment Memory Count
     memCount++;
   }
+  // Build Global
+  for (const wasmGlobal of wasmModule.globals) {
+    // Add Global Data To The Global Section
+    globalSection.push(wasmGlobal.type);
+    globalSection.push(wasmGlobal.mutable ? 0x01 : 0x00);
+    globalSection.push(...compileBody(wasmGlobal.value, functionMap, []));
+    globalSection.push(0x0b); // end Instruction
+  }
+  // Build Module
   for (let i = 0; i < wasmModule.functions.length; i++) {
     const func = wasmModule.functions[i];
     // Add To Function Map
