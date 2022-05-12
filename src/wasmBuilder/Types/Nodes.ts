@@ -13,6 +13,8 @@ export const enum ExportType {
 }
 // Wasm Module State
 export interface WasmModuleType {
+  // Memory Section
+  memory: { minPages: number; maxPages?: number }[];
   // Function Section
   functions: WasmFunctionType[];
   // Export Section

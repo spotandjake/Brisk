@@ -1,6 +1,8 @@
 import { ExportType, WasmFunctionType, WasmModuleType } from '../Types/Nodes';
 // Main Wasm Module Creator
 export const wasmModule = (
+  // Memory Section
+  memory: { minPages: number; maxPages?: number }[],
   // Function Section
   functions: WasmFunctionType[],
   // Export Section
@@ -8,9 +10,10 @@ export const wasmModule = (
   // Start Function
   startFunction?: string | number
 ): WasmModuleType => {
-  // TODO: Validate Module Generation
   // Return Wasm Module IR
   return {
+    // Memory Section
+    memory,
     // Function Section
     functions: functions,
     // Export Section

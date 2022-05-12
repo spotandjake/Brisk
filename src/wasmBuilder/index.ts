@@ -9,10 +9,13 @@ import {
 import { wasmFunction } from './Build/Function';
 import { addExport, addFunction, setStart, wasmModule } from './Build/Module';
 import { compileWasm } from './Output/wasm';
+import { promises as fs } from 'fs';
 // Test
 export default async () => {
   // Create Module
   let module = wasmModule(
+    // Memory Section
+    [{ minPages: 2 }],
     // Function Sections
     [],
     // Export Section
@@ -58,4 +61,5 @@ export default async () => {
   console.log('Wasm Loaded');
   console.log(wasmInstance);
   console.log(wasmInstance.instance.exports.add(1, 2));
+  await fs.writeFile('test.wasm', compiled);
 };

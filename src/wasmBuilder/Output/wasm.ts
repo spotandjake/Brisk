@@ -553,6 +553,7 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   let funcCount = 0;
   const tableSection: number[] = [];
   const memorySection: number[] = [];
+  let memCount = 0;
   const globalSection: number[] = [];
   const exportSection: number[] = [];
   let exportCount = 0;
@@ -562,7 +563,16 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   let codeCount = 0;
   const dataSection: number[] = [];
   const dataCountSection: number[] = [];
-  // TODO: Build Module
+  // Build Memory
+  // Build Module
+  for (const memory of wasmModule.memory) {
+    // Add Memory To Memory Section
+    memorySection.push(memory.maxPages == undefined ? 0x00 : 0x01);
+    memorySection.push(...unsignedLEB128(memory.minPages));
+    if (memory.maxPages != undefined) memorySection.push(...unsignedLEB128(memory.maxPages));
+    // Increment Memory Count
+    memCount++;
+  }
   for (let i = 0; i < wasmModule.functions.length; i++) {
     const func = wasmModule.functions[i];
     // Add To Function Map
@@ -662,8 +672,13 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
       ...functionSection
     );
   // if (tableSection.length > 0) module.push(0x4, ...varuint32(tableSection.length), ...tableSection);
-  // if (memorySection.length > 0)
-  //   module.push(0x5, ...varuint32(memorySection.length), ...memorySection);
+  if (memorySection.length > 0)
+    module.push(
+      0x5,
+      ...unsignedLEB128(memorySection.length + 1),
+      ...unsignedLEB128(memCount),
+      ...memorySection
+    );
   // if (globalSection.length > 0)
   //   module.push(0x6, ...varuint32(globalSection.length), ...globalSection);
   if (exportSection.length > 0)
