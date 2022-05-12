@@ -1,5 +1,5 @@
 // Imports
-import { ExportType, WasmType } from './Types/Nodes';
+import { WasmExternalType, WasmType } from './Types/Nodes';
 import {
   i32_AddExpression,
   i32_ConstExpression,
@@ -16,6 +16,8 @@ export default async () => {
   let module = wasmModule(
     // Memory Section
     [{ minPages: 2 }],
+    // Global Section
+    [],
     // Function Sections
     [],
     // Export Section
@@ -49,7 +51,7 @@ export default async () => {
   module = addFunction(module, func);
   module = addFunction(module, mainFunc);
   // Export Function
-  module = addExport(module, 'add', ExportType.function, 'add');
+  module = addExport(module, 'add', WasmExternalType.function, 'add');
   // Set Start Function
   module = setStart(module, 'main');
   // Compile

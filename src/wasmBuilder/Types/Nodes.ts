@@ -5,13 +5,18 @@ export const enum WasmType {
   WasmF64 = 0x7c,
 }
 // Wasm Info
-export const enum ExportType {
+export const enum WasmExternalType {
   function = 0x00,
   table = 0x01,
   memory = 0x02,
   global = 0x03,
 }
 // Wasm Information Types
+export interface WasmImport {
+  module: string;
+  name: string;
+  type: WasmType;
+}
 export interface WasmMemory {
   // TODO: label
   minPages: number;
@@ -32,7 +37,7 @@ export interface WasmModuleType {
   // Function Section
   functions: WasmFunctionType[];
   // Export Section
-  exports: Map<string, { type: ExportType; internalName: number | string }>;
+  exports: Map<string, { type: WasmExternalType; internalName: number | string }>;
   // StartFunction
   startFunction?: string | number;
 }
@@ -523,23 +528,23 @@ export interface Local_GetExpression {
 }
 export interface Local_SetExpression {
   nodeType: WasmExpressions.local_setExpr;
-  localIndex: number;
+  localIndex: number; // Allow For Local Names
   body: WasmExpression;
 }
 export interface Local_TeeExpression {
   nodeType: WasmExpressions.local_teeExpr;
-  localIndex: number;
+  localIndex: number; // Allow For Local Names
   body: WasmExpression;
   wasmType: WasmType;
 }
 export interface Global_GetExpression {
   nodeType: WasmExpressions.global_getExpr;
-  globalName: string;
+  globalIndex: number; // Allow For Global Names
   wasmType: WasmType;
 }
 export interface Global_SetExpression {
   nodeType: WasmExpressions.global_setExpr;
-  globalName: string;
+  globalIndex: number; // Allow For Global Names
   body: WasmExpression;
 }
 export interface WasmLoadExpression {

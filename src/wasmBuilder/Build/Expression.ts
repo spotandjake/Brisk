@@ -126,22 +126,22 @@ export const local_TeeExpression = (
   };
 };
 export const global_GetExpression = (
-  globalName: string,
+  globalIndex: number,
   wasmType: WasmType
 ): wasmTypes.Global_GetExpression => {
   return {
     nodeType: WasmExpressions.global_getExpr,
-    globalName: globalName,
+    globalIndex: globalIndex,
     wasmType: wasmType,
   };
 };
 export const global_SetExpression = (
-  globalName: string,
+  globalIndex: number,
   body: WasmExpression
 ): wasmTypes.Global_SetExpression => {
   return {
     nodeType: WasmExpressions.global_setExpr,
-    globalName: globalName,
+    globalIndex: globalIndex,
     body: body,
   };
 };

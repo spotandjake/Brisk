@@ -1,4 +1,4 @@
-import { ExportType, WasmExpression, WasmExpressions, WasmModuleType } from '../Types/Nodes';
+import { WasmExpression, WasmExpressions, WasmExternalType, WasmModuleType } from '../Types/Nodes';
 import { encodeString, ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Helpers
 const magicModuleHeader = [0x00, 0x61, 0x73, 0x6d];
@@ -98,9 +98,20 @@ const compileBody = (
       code.push(0x21); // local.set Wasm Instruction
       code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Type Matches
       break;
-    // local_teeExpr,
-    // global_getExpr,
-    // global_setExpr,
+    case WasmExpressions.local_teeExpr:
+      code.push(...compileBody(expr.body, functionMap, brStack));
+      code.push(0x22); // local.tee Wasm Instruction
+      code.push(...unsignedLEB128(expr.localIndex)); // TODO: Verify The Local Exists And The Type Matches
+      break;
+    case WasmExpressions.global_getExpr:
+      code.push(0x23); // local.get Wasm Instruction
+      code.push(...unsignedLEB128(expr.globalIndex)); // TODO: Verify The Local Exists And The Output Type Matches
+      break;
+    case WasmExpressions.global_setExpr:
+      code.push(...compileBody(expr.body, functionMap, brStack));
+      code.push(0x24); // local.set Wasm Instruction
+      code.push(...unsignedLEB128(expr.globalIndex)); // TODO: Verify The Local Exists And The Type Matches
+      break;
     // table_get
     // table_set
     // i32_loadExpr,
@@ -548,6 +559,7 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   const typeSection: number[] = [];
   let typeCount = 0;
   const importSection: number[] = [];
+  let importCount = 0;
   const functionSection: number[] = [];
   let funcCount = 0;
   const tableSection: number[] = [];
@@ -563,6 +575,26 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   let codeCount = 0;
   const dataSection: number[] = [];
   const dataCountSection: number[] = [];
+  // TODO: Build Imports
+  // for (const [key, data] of wasmModule.imports.entries()) {
+  //   let index: number;
+  //   // Resolve Export
+  //   if (typeof data.internalName == 'string') {
+  //     // Try To Resolve
+  //     if (data.type == WasmExternalType.function) {
+  //       if (!functionMap.has(data.internalName))
+  //         throw new Error(`Export Function By Name ${data.internalName} Could Not Be Resolved`);
+  //       index = <number>functionMap.get(data.internalName);
+  //     } else {
+  //       throw new Error(`Export Type ${data.type} By String Not Supported`);
+  //     }
+  //   } else index = data.internalName;
+  //   // Add Export To Export Section
+  //   exportSection.push(...encodeString(key)); // Export Name
+  //   exportSection.push(data.type); // Export Kind
+  //   exportSection.push(...unsignedLEB128(index)); // Export Index
+  //   exportCount++;
+  // }
   // Build Memory
   for (const memory of wasmModule.memory) {
     // Add Memory To Memory Section
@@ -628,7 +660,7 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
     // Resolve Export
     if (typeof data.internalName == 'string') {
       // Try To Resolve
-      if (data.type == ExportType.function) {
+      if (data.type == WasmExternalType.function) {
         if (!functionMap.has(data.internalName))
           throw new Error(`Export Function By Name ${data.internalName} Could Not Be Resolved`);
         index = <number>functionMap.get(data.internalName);
@@ -670,8 +702,13 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
       ...unsignedLEB128(typeCount),
       ...typeSection
     );
-  // if (importSection.length > 0)
-  //   module.push(0x2, ...varuint32(importSection.length), ...importSection);
+  if (importSection.length > 0)
+    module.push(
+      0x2,
+      ...unsignedLEB128(importSection.length + 1),
+      ...unsignedLEB128(importCount),
+      ...importSection
+    );
   if (functionSection.length > 0)
     module.push(
       0x3,
@@ -687,8 +724,13 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
       ...unsignedLEB128(memCount),
       ...memorySection
     );
-  // if (globalSection.length > 0)
-  //   module.push(0x6, ...varuint32(globalSection.length), ...globalSection);
+  if (globalSection.length > 0)
+    module.push(
+      0x6,
+      ...unsignedLEB128(globalSection.length + 1),
+      ...unsignedLEB128(globalCount),
+      ...globalSection
+    );
   if (exportSection.length > 0)
     module.push(
       0x7,
