@@ -1,9 +1,9 @@
 {
-  "name": "brisk",
-  "displayName": "Brisk Language Support",
-  "description": "Language Support For The Brisk Programming Language",
+  "name": "vscode-brisk",
+  "displayName": "Brisk",
+  "description": "Visual Studio Code Support For Brisk.",
   "version": "0.0.1",
-  "publisher": "spotandjake",
+  "publisher": "brisk-dev",
   "engines": {
     "vscode": "^1.66.0"
   },
