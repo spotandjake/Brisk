@@ -30,7 +30,6 @@ Brisk is a super basic easy to use, and easy to extend the language with only th
 git clone https://github.com/spotandjake/Brisk
 cd Brisk
 yarn install
-yarn lint
 yarn build
 ```
 # Yarn Instructions
