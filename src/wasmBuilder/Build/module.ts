@@ -1,12 +1,15 @@
 import {
-  ExportType,
+  WasmExternalType,
   WasmFunctionType,
   WasmGlobal,
+  WasmImport,
   WasmMemory,
   WasmModuleType,
 } from '../Types/Nodes';
 // Main Wasm Module Creator
 export const wasmModule = (
+  // Import Section
+  imports: WasmImport[],
   // Memory Section
   memory: WasmMemory[],
   // Global Section
@@ -14,12 +17,14 @@ export const wasmModule = (
   // Function Section
   functions: WasmFunctionType[],
   // Export Section
-  exports: Map<string, { type: ExportType; internalName: number | string }>,
+  exports: Map<string, { type: WasmExternalType; internalName: number | string }>,
   // Start Function
   startFunction?: string | number
 ): WasmModuleType => {
   // Return Wasm Module IR
   return {
+    // Imports Section
+    imports: imports,
     // Memory Section
     memory: memory,
     // Global Section
@@ -45,7 +50,7 @@ export const addFunction = (
 export const addExport = (
   wasmModule: WasmModuleType,
   exportName: string,
-  exportType: ExportType,
+  exportType: WasmExternalType,
   internalName: number | string
 ): WasmModuleType => {
   wasmModule.exports.set(exportName, {

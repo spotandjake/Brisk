@@ -1,8 +1,17 @@
-export const enum WasmType {
+// Type Nodes
+export const enum NumericType {
   WasmI32 = 0x7f,
   WasmI64 = 0x7e,
   WasmF32 = 0x7d,
   WasmF64 = 0x7c,
+}
+export const enum TypeVariant {
+  WasmNumericType,
+  WasmFunctionType,
+}
+export interface WasmType {
+  typeVariant: TypeVariant;
+  value: NumericType;
 }
 // Wasm Info
 export const enum WasmExternalType {
@@ -30,6 +39,8 @@ export interface WasmGlobal {
 }
 // Wasm Module State
 export interface WasmModuleType {
+  // Imports Section
+  imports: WasmImport[];
   // Memory Section
   memory: WasmMemory[];
   // Global Section

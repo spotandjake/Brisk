@@ -575,26 +575,16 @@ export const compileWasm = (wasmModule: WasmModuleType): Uint8Array => {
   let codeCount = 0;
   const dataSection: number[] = [];
   const dataCountSection: number[] = [];
-  // TODO: Build Imports
-  // for (const [key, data] of wasmModule.imports.entries()) {
-  //   let index: number;
-  //   // Resolve Export
-  //   if (typeof data.internalName == 'string') {
-  //     // Try To Resolve
-  //     if (data.type == WasmExternalType.function) {
-  //       if (!functionMap.has(data.internalName))
-  //         throw new Error(`Export Function By Name ${data.internalName} Could Not Be Resolved`);
-  //       index = <number>functionMap.get(data.internalName);
-  //     } else {
-  //       throw new Error(`Export Type ${data.type} By String Not Supported`);
-  //     }
-  //   } else index = data.internalName;
-  //   // Add Export To Export Section
-  //   exportSection.push(...encodeString(key)); // Export Name
-  //   exportSection.push(data.type); // Export Kind
-  //   exportSection.push(...unsignedLEB128(index)); // Export Index
-  //   exportCount++;
-  // }
+  // Build Imports
+  for (const wasmImport of wasmModule.imports) {
+    // Build Import Signature
+    // Add Export To Export Section
+    importSection.push(...encodeString(wasmImport.module)); // Import Module Name
+    importSection.push(...encodeString(wasmImport.name)); // Import Field Name
+    importSection.push(wasmImport.kind); // Import Kind
+    importSection.push(); // Import Signature Index
+    importCount++;
+  }
   // Build Memory
   for (const memory of wasmModule.memory) {
     // Add Memory To Memory Section
