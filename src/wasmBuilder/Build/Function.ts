@@ -1,18 +1,16 @@
-import { WasmExpression, WasmFunctionType, WasmType } from '../Types/Nodes';
-export const wasmFunction = (
+import { WasmFunction } from '../Types/Nodes';
+// Function Creator
+export const createFunction = (
   name: string,
-  params: WasmType[],
-  results: WasmType[],
-  locals: WasmType[],
-  body: WasmExpression[]
-): WasmFunctionType => {
-  // TODO: Validate Function Generation Works
-  // Internal Ir
+  functionType: number[],
+  locals: number[][],
+  body: number[][]
+): WasmFunction => {
   return {
     name: name,
-    params: params,
-    results: results,
+    functionType: functionType,
     locals: locals,
     body: body,
   };
 };
+// Function Mutators

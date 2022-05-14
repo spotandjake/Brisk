@@ -16,6 +16,7 @@ rules:
   '@typescript-eslint/explicit-module-boundary-types': 0
   '@typescript-eslint/ban-ts-comment': 0
   '@typescript-eslint/switch-exhaustiveness-check': 1
+  '@typescript-eslint/no-non-null-assertion': 0
   no-invalid-regexp: warn
   no-unreachable: warn
   no-eval: warn

@@ -63,14 +63,14 @@ const getVariable = (
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
+    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
   // Get Node
-  const variableReference = <number>(<VariableStack>_varStack).get(varName);
+  const variableReference = _varStack.get(varName)!;
   // Check If We need To Add To Closure
   if (!varStack.has(varName)) _closure.add(variableReference);
   if (!varPool.has(variableReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  const value = <VariableData>varPool.get(variableReference);
+    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
+  const value = varPool.get(variableReference)!;
   // Set Variable To used
   varPool.set(variableReference, {
     ...value,
@@ -115,7 +115,7 @@ const getType = (
   typeReference: TypeUsageNode | string,
   position: Position,
   { exported = false }: { exported?: boolean }
-): VariableData => {
+): TypeData => {
   // Get Variable Reference
   let varName: string;
   if (typeof typeReference == 'string') varName = typeReference;
@@ -124,12 +124,12 @@ const getType = (
   const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskTypeError(rawProgram, BriskErrorType.TypeNotFound, [varName], position);
+    return BriskTypeError(rawProgram, BriskErrorType.TypeNotFound, [varName], position);
   // Get Node
-  const variableReference = <number>(<VariableStack>_varStack).get(varName);
+  const variableReference = _varStack.get(varName)!;
   if (!typePool.has(variableReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  const value = <VariableData>typePool.get(variableReference);
+    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
+  const value = typePool.get(variableReference)!;
   // Set Variable To used
   typePool.set(variableReference, {
     ...value,

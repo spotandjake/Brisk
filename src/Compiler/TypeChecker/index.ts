@@ -1,4 +1,4 @@
-import { Position, ExportList } from '../Types/Types';
+import { ExportList, Position } from '../Types/Types';
 import Node, {
   EnumVariantNode,
   Expression,
@@ -81,9 +81,9 @@ const getTypeReference = (
   const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(typeName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [typeName], position);
+    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [typeName], position);
   // Get Node
-  return <number>(<VariableStack>_varStack).get(typeName);
+  return _varStack.get(typeName)!;
 };
 const getTypeVar = (
   rawProgram: string,
@@ -102,9 +102,9 @@ const getTypeVar = (
   );
   // Ensure Var Is In Pool
   if (!typePool.has(_typeReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
+    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
   // Return Value
-  return (<TypeData>typePool.get(_typeReference)).type;
+  return typePool.get(_typeReference)!.type;
 };
 const setTypeVar = (
   rawProgram: string,
@@ -147,9 +147,9 @@ const getVarReference = (
   const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
   // Check If It Exists
   if (_varStack == undefined)
-    BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
+    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
   // Get Node
-  return <number>(<VariableStack>_varStack).get(varName);
+  return _varStack.get(varName)!;
 };
 const getVarType = (
   rawProgram: string,
@@ -168,9 +168,9 @@ const getVarType = (
   );
   // Ensure Var Is In Pool
   if (!varPool.has(_variableReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
+    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
   // Return Value
-  return (<VariableData>varPool.get(_variableReference)).type;
+  return varPool.get(_variableReference)!.type;
 };
 const setVarType = (
   rawProgram: string,
@@ -192,7 +192,7 @@ const setVarType = (
   if (!varPool.has(_variableReference))
     BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
   // Value
-  const varData = <VariableData>varPool.get(_variableReference);
+  const varData = varPool.get(_variableReference)!;
   varPool.set(_variableReference, {
     ...varData,
     type: type,
@@ -889,7 +889,7 @@ const getExpressionType = (
       // Analyze ReturnType
       if (calleeType.returnType.nodeType == NodeType.GenericType) {
         if (genericValues.has(calleeType.returnType.name)) {
-          return <TypeLiteral>genericValues.get(calleeType.returnType.name);
+          return genericValues.get(calleeType.returnType.name)!;
         }
         // Handle Unresolved Generic
         BriskTypeError(
@@ -974,7 +974,7 @@ const getExpressionType = (
       // Analyze ReturnType
       if (exprType.returnType.nodeType == NodeType.GenericType) {
         if (genericValues.has(exprType.returnType.name)) {
-          return <TypeLiteral>genericValues.get(exprType.returnType.name);
+          return genericValues.get(exprType.returnType.name)!;
         }
         // Handle Unresolved Generic
         BriskTypeError(
@@ -1898,7 +1898,7 @@ const typeCheckNode = <T extends Node>(
             genericValues.set(param.name, argType);
           }
           // get Generic Value
-          argType = <TypeLiteral>genericValues.get(param.name);
+          argType = genericValues.get(param.name)!;
         }
         // Check That Types Are Same
         typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);
@@ -1997,7 +1997,7 @@ const typeCheckNode = <T extends Node>(
             genericValues.set(param.name, argType);
           }
           // get Generic Value
-          argType = <TypeLiteral>genericValues.get(param.name);
+          argType = genericValues.get(param.name)!;
         }
         // Check That Types Are Same
         typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);

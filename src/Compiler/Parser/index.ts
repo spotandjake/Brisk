@@ -38,7 +38,7 @@ class Parser extends EmbeddedActionsParser {
       },
       position: {
         offset: 0,
-        length: (<number>this.input.at(-1)?.endOffset || -1) + 1,
+        length: (this.input.at(-1)?.endOffset || -1) + 1,
         line: 0,
         col: 0,
         file: this.file,
@@ -108,7 +108,7 @@ class Parser extends EmbeddedActionsParser {
       args: args,
       position: {
         offset: flag.startOffset,
-        length: <number>flag.endOffset - flag.startOffset + 1,
+        length: flag.endOffset! - flag.startOffset + 1,
         line: flag.startLine || 0,
         col: flag.startColumn || 0,
         file: this.file,
@@ -135,7 +135,7 @@ class Parser extends EmbeddedActionsParser {
       },
       position: {
         offset: open.startOffset,
-        length: <number>close.endOffset - open.startOffset + 1,
+        length: close.endOffset! - open.startOffset + 1,
         line: open.startLine || 0,
         col: open.startColumn || 0,
         file: this.file,
@@ -371,7 +371,7 @@ class Parser extends EmbeddedActionsParser {
         },
         position: {
           offset: location.startOffset,
-          length: <number>close.endOffset - location.startOffset + 1,
+          length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -403,7 +403,7 @@ class Parser extends EmbeddedActionsParser {
         name: name,
         position: {
           ...name.position,
-          length: <number>location.endOffset - name.position.offset,
+          length: location.endOffset! - name.position.offset,
         },
       };
     });
@@ -442,7 +442,7 @@ class Parser extends EmbeddedActionsParser {
           },
           position: {
             offset: location.startOffset,
-            length: <number>close.endOffset - location.startOffset + 1,
+            length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
             file: this.file,
@@ -490,7 +490,7 @@ class Parser extends EmbeddedActionsParser {
         value: value?.value,
         position: {
           offset: identifier.startOffset,
-          length: (value?.endOffset ?? <number>identifier.endOffset) - identifier.startOffset + 1,
+          length: (value?.endOffset ?? identifier.endOffset) - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
           file: this.file,
@@ -765,7 +765,7 @@ class Parser extends EmbeddedActionsParser {
       const FunctionHead = () => {
         this.AT_LEAST_ONE(() => calls.push(this.SUBRULE(this.arguments)));
         return this.ACTION((): Nodes.CallExpressionNode => {
-          return <Nodes.CallExpressionNode>calls.reduce((prevValue, currValue) => {
+          return calls.reduce((prevValue, currValue) => {
             return {
               nodeType: Nodes.NodeType.CallExpression,
               category: Nodes.NodeCategory.Expression,
@@ -841,7 +841,7 @@ class Parser extends EmbeddedActionsParser {
           value: expression,
           position: {
             offset: location.startOffset,
-            length: <number>close.endOffset - location.startOffset + 1,
+            length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
             file: this.file,
@@ -884,7 +884,7 @@ class Parser extends EmbeddedActionsParser {
       args: args,
       position: {
         offset: location.startOffset,
-        length: <number>close.endOffset - location.startOffset + 1,
+        length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -921,7 +921,7 @@ class Parser extends EmbeddedActionsParser {
       value: value.image.slice(1, -1),
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
+        length: value.endOffset! - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -937,7 +937,7 @@ class Parser extends EmbeddedActionsParser {
         value: Number(value.image.slice(0, -1)),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -954,7 +954,7 @@ class Parser extends EmbeddedActionsParser {
         value: BigInt(value.image.slice(0, -1).replace(/_/g, '')),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -971,7 +971,7 @@ class Parser extends EmbeddedActionsParser {
         value: Number(value.image.slice(0, -1)),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -988,7 +988,7 @@ class Parser extends EmbeddedActionsParser {
         value: BigInt(value.image.slice(0, -1).replace(/_/g, '')),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -1005,7 +1005,7 @@ class Parser extends EmbeddedActionsParser {
         value: Number(value.image.slice(0, -1)),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -1022,7 +1022,7 @@ class Parser extends EmbeddedActionsParser {
         value: Number(value.image.slice(0, -1)),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -1039,7 +1039,7 @@ class Parser extends EmbeddedActionsParser {
         value: Number(value.image),
         position: {
           offset: value.startOffset,
-          length: <number>value.endOffset - value.startOffset + 1,
+          length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
           file: this.file,
@@ -1055,7 +1055,7 @@ class Parser extends EmbeddedActionsParser {
       value: <'true' | 'false' | 'void'>value.image,
       position: {
         offset: value.startOffset,
-        length: <number>value.endOffset - value.startOffset + 1,
+        length: value.endOffset! - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
         file: this.file,
@@ -1079,7 +1079,7 @@ class Parser extends EmbeddedActionsParser {
       elements: elements,
       position: {
         offset: location.startOffset,
-        length: <number>close.endOffset - location.startOffset + 1,
+        length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -1102,7 +1102,7 @@ class Parser extends EmbeddedActionsParser {
       fields: fields,
       position: {
         offset: location.startOffset,
-        length: <number>close.endOffset - location.startOffset + 1,
+        length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
         file: this.file,
@@ -1121,7 +1121,7 @@ class Parser extends EmbeddedActionsParser {
             return {
               nodeType: Nodes.NodeType.ObjectField,
               category: Nodes.NodeCategory.Literal,
-              name: <string>fieldValue.name,
+              name: fieldValue.name,
               fieldValue: fieldValue,
               position: fieldValue.position,
             };
@@ -1195,7 +1195,7 @@ class Parser extends EmbeddedActionsParser {
         name: identifier.image,
         position: {
           offset: identifier.startOffset,
-          length: <number>identifier.endOffset - identifier.startOffset + 1,
+          length: identifier.endOffset! - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
           file: this.file,
@@ -1212,7 +1212,7 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset + 1,
+        length: identifier.endOffset! - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,
@@ -1249,7 +1249,7 @@ class Parser extends EmbeddedActionsParser {
     const identifier = this.CONSUME(Tokens.TknIdentifier);
     const property = this.OPTION(() => this.SUBRULE(this.propertyUsageNode));
     return this.ACTION((): Nodes.PropertyUsageNode => {
-      let length = <number>start.endOffset - identifier.startOffset + 1;
+      let length = start.endOffset! - identifier.startOffset + 1;
       if (property) {
         length += property.position.length;
       }
@@ -1444,7 +1444,7 @@ class Parser extends EmbeddedActionsParser {
           value: value,
           position: {
             offset: value.position.offset,
-            length: <number>closeValue.endOffset - value.position.offset + 1,
+            length: closeValue.endOffset! - value.position.offset + 1,
             line: value.position.line,
             col: value.position.col,
             file: this.file,
@@ -1476,7 +1476,7 @@ class Parser extends EmbeddedActionsParser {
         value: value,
         position: {
           offset: location.startOffset,
-          length: <number>close.endOffset - location.startOffset + 1,
+          length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -1535,7 +1535,7 @@ class Parser extends EmbeddedActionsParser {
         fields: fields,
         position: {
           offset: location.startOffset,
-          length: <number>close.endOffset - location.startOffset + 1,
+          length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           file: this.file,
@@ -1634,7 +1634,7 @@ class Parser extends EmbeddedActionsParser {
           valueType: undefined,
           position: {
             offset: location.startOffset,
-            length: <number>close.endOffset - location.startOffset + 1,
+            length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
             file: this.file,
@@ -1651,7 +1651,7 @@ class Parser extends EmbeddedActionsParser {
       name: identifier.image,
       position: {
         offset: identifier.startOffset,
-        length: <number>identifier.endOffset - identifier.startOffset + 1,
+        length: identifier.endOffset! - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
         file: this.file,

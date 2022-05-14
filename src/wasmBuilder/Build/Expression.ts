@@ -1,487 +1,513 @@
-import * as wasmTypes from '../Types/Nodes';
-import { WasmExpression, WasmExpressions, WasmType } from '../Types/Nodes';
-// Generate Wasm Expression
-// TODO: Implement Wasm Expressions
-// General
-export const unreachableExpression = (): wasmTypes.WasmEmptyExpression => {
-  return {
-    nodeType: WasmExpressions.unreachableExpr,
-  };
-};
-export const nopExpression = (): wasmTypes.WasmEmptyExpression => {
-  return {
-    nodeType: WasmExpressions.nopExpr,
-  };
-};
-export const blockExpression = (
-  label: string | undefined,
-  body: WasmExpression[]
-): wasmTypes.WasmBlockExpression => {
-  return {
-    nodeType: WasmExpressions.blockExpr,
-    label: label,
-    body: body,
-  };
-};
-export const loopExpression = (
-  label: string | undefined,
-  body: WasmExpression[]
-): wasmTypes.WasmBlockExpression => {
-  return {
-    nodeType: WasmExpressions.blockExpr,
-    label: label,
-    body: body,
-  };
-};
+import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
+// Expressions
+export const unreachableExpression = () => [0x00]; // Wasm Unreachable Instruction
+export const nopExpression = () => [0x01]; // Wasm nop Instruction
+export const blockExpression = (label: string | undefined, body: number[][]): number[] => [
+  // TODO: Handle Label
+  0x02, // Wasm Block Instruction
+  0x40, // Wasm Control Flow Block Tag
+  // TODO: Simplify The Flat
+  ...body.flat(), // Body Content
+  0x0b, // End Instruction
+];
+export const loopExpression = (label: string | undefined, body: number[][]): number[] => [
+  // TODO: Handle Label
+  0x03, // Wasm Loop Instruction
+  0x40, // Wasm Control Flow Block Tag
+  // TODO: Simplify The Flat
+  ...body.flat(), // Body Content
+  0x0b, // End Instruction
+];
 export const ifExpression = (
-  condition: WasmExpression,
-  body: WasmExpression,
-  alternative?: WasmExpression
-): wasmTypes.IfExpression => {
-  return {
-    nodeType: WasmExpressions.ifExpr,
-    condition: condition,
-    body: body,
-    alternative: alternative,
-  };
-};
-export const brExpression = (depth: string | number): wasmTypes.BrExpression => {
-  return {
-    nodeType: WasmExpressions.brExpr,
-    depth: depth,
-  };
-};
-export const br_IfExpression = (
-  condition: WasmExpression,
-  depth: string | number
-): wasmTypes.Br_IfExpression => {
-  return {
-    nodeType: WasmExpressions.br_ifExpr,
-    condition: condition,
-    depth: depth,
-  };
-};
-export const returnExpression = (body: WasmExpression): wasmTypes.ReturnExpression => {
-  return {
-    nodeType: WasmExpressions.returnExpr,
-    body: body,
-  };
-};
-export const callExpression = (
-  funcName: string,
-  body: WasmExpression[]
-): wasmTypes.CallExpression => {
-  return {
-    nodeType: WasmExpressions.callExpr,
-    funcName: funcName,
-    body: body,
-  };
-};
-export const callIndirectExpression = (
-  funcIndex: number,
-  body: WasmExpression[]
-): wasmTypes.CallIndirectExpression => {
-  return {
-    nodeType: WasmExpressions.callIndirectExpr,
-    funcIndex: funcIndex,
-    body: body,
-  };
-};
-export const dropExpression = (body: WasmExpression): wasmTypes.DropExpression => {
-  return {
-    nodeType: WasmExpressions.dropExpr,
-    body: body,
-  };
-};
-export const local_GetExpression = (
-  localIndex: number,
-  wasmType: WasmType
-): wasmTypes.Local_GetExpression => {
-  return {
-    nodeType: WasmExpressions.local_getExpr,
-    localIndex: localIndex,
-    wasmType: wasmType,
-  };
-};
-export const local_SetExpression = (
-  localIndex: number,
-  body: WasmExpression
-): wasmTypes.Local_SetExpression => {
-  return {
-    nodeType: WasmExpressions.local_setExpr,
-    localIndex: localIndex,
-    body: body,
-  };
-};
-export const local_TeeExpression = (
-  localIndex: number,
-  body: WasmExpression,
-  wasmType: WasmType
-): wasmTypes.Local_TeeExpression => {
-  return {
-    nodeType: WasmExpressions.local_teeExpr,
-    localIndex: localIndex,
-    body: body,
-    wasmType: wasmType,
-  };
-};
-export const global_GetExpression = (
-  globalIndex: number,
-  wasmType: WasmType
-): wasmTypes.Global_GetExpression => {
-  return {
-    nodeType: WasmExpressions.global_getExpr,
-    globalIndex: globalIndex,
-    wasmType: wasmType,
-  };
-};
-export const global_SetExpression = (
-  globalIndex: number,
-  body: WasmExpression
-): wasmTypes.Global_SetExpression => {
-  return {
-    nodeType: WasmExpressions.global_setExpr,
-    globalIndex: globalIndex,
-    body: body,
-  };
-};
-export const i32_LoadExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i32_loadExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_LoadExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_loadExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const f32_LoadExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.f32_loadExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const f64_LoadExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.f64_loadExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i32_Load8_SExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i32_load8_sExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i32_Load8_UExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i32_load8_uExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i32_Load16_SExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i32_load16_sExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i32_Load16_UExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i32_load16_uExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load8_SExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load8_sExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load8_UExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load8_uExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load16_SExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load16_sExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load16_UExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load16_uExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load32_SExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load32_sExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i64_Load32_UExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression
-): wasmTypes.WasmLoadExpression => {
-  return {
-    nodeType: WasmExpressions.i64_load32_uExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-  };
-};
-export const i32_StoreExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i32_storeExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i64_StoreExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i64_storeExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const f32_StoreExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.f32_storeExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const f64_StoreExpression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.f64_storeExpr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i32_Store8Expression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i32_store8Expr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i32_Store16Expression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i32_store16Expr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i64_Store8Expression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i64_store8Expr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i64_Store16Expression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i64_store16Expr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const i64_Store32Expression = (
-  offset: number,
-  align: number,
-  ptr: WasmExpression,
-  value: WasmExpression
-): wasmTypes.WasmStoreExpression => {
-  return {
-    nodeType: WasmExpressions.i64_store32Expr,
-    offset: offset,
-    align: align,
-    ptr: ptr,
-    value: value,
-  };
-};
-export const memory_SizeExpression = (): wasmTypes.Memory_SizeExpression => {
-  return {
-    nodeType: WasmExpressions.memory_sizeExpr,
-  };
-};
-// TODO: Ensure value isn't defined at runtime and doesn't take a wasmExpression
-export const memory_GrowExpression = (value: WasmExpression): wasmTypes.Memory_GrowExpression => {
-  return {
-    nodeType: WasmExpressions.memory_growExpr,
-    value: value,
-  };
-};
-export const i32_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
-  return {
-    nodeType: WasmExpressions.i32_constExpr,
-    value: value,
-  };
-};
-export const i64_ConstExpression = (value: BigInt): wasmTypes.I64_ConstExpression => {
-  return {
-    nodeType: WasmExpressions.i64_constExpr,
-    value: value,
-  };
-};
-export const f32_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
-  return {
-    nodeType: WasmExpressions.f32_constExpr,
-    value: value,
-  };
-};
-export const f64_ConstExpression = (value: number): wasmTypes.WasmConstExpression => {
-  return {
-    nodeType: WasmExpressions.f64_constExpr,
-    value: value,
-  };
-};
-export const i32_AddExpression = (
-  valueLeft: WasmExpression,
-  valueRight: WasmExpression
-): wasmTypes.WasmBinopExpression => {
-  return {
-    nodeType: WasmExpressions.i32_addExpr,
-    valueLeft: valueLeft,
-    valueRight: valueRight,
-  };
-};
+  condition: number[],
+  body: number[],
+  alternative?: number[]
+): number[] => [
+  ...condition, // Condition Content
+  0x04, // Wasm If Instruction
+  0x40, // Wasm Control Flow Block Tag
+  ...body, // Body Content
+  ...(alternative != undefined ? [0x05, ...alternative] : []),
+  0x0b, // End Instruction
+];
+export const brExpression = (depth: number): number[] => [
+  0x0c, // br Wasm Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(depth), // Encoded Depth
+];
+export const br_IfExpression = (condition: number[], depth: number): number[] => [
+  ...condition, // Condition Content
+  0x0d, // br_if Wasm Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(depth), // Encoded Depth
+];
+// TODO: br_table
+export const returnExpression = (body: number[]): number[] => [
+  ...body, // Body Content
+  0x0f, // Wasm Return Instruction
+];
+export const callExpression = (func: number, params: number[][]): number[] => [
+  ...params.flat(), // TODO: Optimize This
+  0x10, // Wasm Call Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(func), // Encoded Function Index
+];
+// TODO: Call Indirect
+export const dropExpression = (body: number[]): number[] => [
+  ...body, // Body Content
+  0x1a, // Wasm Drop Instruction
+];
+// TODO: Select
+export const local_GetExpression = (localIndex: number): number[] => [
+  0x20, // Wasm Local.Get Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(localIndex), // Encoded Local Index
+];
+export const local_SetExpression = (localIndex: number, body: number[]): number[] => [
+  ...body, // Body Content
+  0x21, // Wasm Local.Set Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(localIndex), // Encoded Local Index
+];
+export const local_TeeExpression = (localIndex: number, body: number[]): number[] => [
+  ...body, // Body Content
+  0x22, // Wasm Local.Set Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(localIndex), // Encoded Local Index
+];
+export const global_GetExpression = (globalIndex: number): number[] => [
+  0x23, // Wasm Global.Get Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(globalIndex),
+];
+export const global_SetExpression = (globalIndex: number, body: number[]): number[] => [
+  ...body, // Body Content
+  0x24, // Wasm Local.Set Instruction
+  // TODO: Handle Label
+  ...unsignedLEB128(globalIndex), // Encoded Local Index
+];
+// TODO: table_get
+// TODO: table_set
+// TODO: i32_loadExpr,
+// TODO: i64_loadExpr,
+// TODO: f32_loadExpr,
+// TODO: f64_loadExpr,
+// TODO: i32_load8_sExpr,
+// TODO: i32_load8_uExpr,
+// TODO: i32_load16_sExpr,
+// TODO: i32_load16_uExpr,
+// TODO: i64_load8_sExpr,
+// TODO: i64_load8_uExpr,
+// TODO: i64_load16_sExpr,
+// TODO: i64_load16_uExpr,
+// TODO: i64_load32_sExpr,
+// TODO: i64_load32_uExpr,
+// TODO: i32_storeExpr,
+// TODO: i64_storeExpr,
+// TODO: f32_storeExpr,
+// TODO: f64_storeExpr,
+// TODO: i32_store8Expr,
+// TODO: i32_store16Expr,
+// TODO: i64_store8Expr,
+// TODO: i64_store16Expr,
+// TODO: i64_store32Expr,
+export const memory_SizeExpression = () => [0x3f]; // Wasm memory.size Instruction
+
+export const memory_GrowExpression = (body: number[]): number[] => [
+  ...body, // Body Content
+  0x40, // Wasm Memory.Size Instruction
+];
+export const i32_ConstExpression = (value: number): number[] => [
+  0x41, // Wasm i32.Const Instruction
+  ...signedLEB128(value),
+];
+// TODO: i64_Const
+export const f32_ConstExpression = (value: number): number[] => [
+  0x43, // Wasm f32.Const Instruction
+  ...ieee754(value),
+];
+export const f64_ConstExpression = (value: number): number[] => [
+  0x44, // Wasm f64.Const Instruction
+  ...ieee754(value),
+];
+// TODO: i32_eqzExpr,
+// TODO: i32_eqExpr,
+// TODO: i32_neExpr,
+// TODO: i32_lt_sExpr,
+// TODO: i32_lt_uExpr,
+// TODO: i32_gt_sExpr,
+// TODO: i32_gt_uExpr,
+// TODO: i32_le_sExpr,
+// TODO: i32_le_uExpr,
+// TODO: i32_ge_sExpr,
+// TODO: i32_ge_uExpr,
+// TODO: i64_eqzExpr,
+// TODO: i64_eqExpr,
+// TODO: i64_neExpr,
+// TODO: i64_lt_sExpr,
+// TODO: i64_lt_uExpr,
+// TODO: i64_gt_sExpr,
+// TODO: i64_gt_uExpr,
+// TODO: i64_le_sExpr,
+// TODO: i64_le_uExpr,
+// TODO: i64_ge_sExpr,
+// TODO: i64_ge_uExpr,
+// TODO: f32_eqExpr,
+// TODO: f32_neExpr,
+// TODO: f32_ltExpr,
+// TODO: f32_gtExpr,
+// TODO: f32_leExpr,
+// TODO: f32_geExpr,
+// TODO: f64_eqExpr,
+// TODO: f64_neExpr,
+// TODO: f64_ltExpr,
+// TODO: f64_gtExpr,
+// TODO: f64_leExpr,
+// TODO: f64_geExpr,
+// TODO: i32_clzExpr,
+// TODO: i32_ctzExpr,
+// TODO: i32_popcntExpr,
+export const i32_AddExpression = (valueA: number[], valueB: number[]): number[] => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x6a, // Wasm i32.Add Instruction
+];
+// TODO: i32_subExpr,
+// TODO: i32_mulExpr,
+// TODO: i32_div_sExpr,
+// TODO: i32_div_uExpr,
+// TODO: i32_rem_sExpr,
+// TODO: i32_rem_uExpr,
+// TODO: i32_andExpr,
+// TODO: i32_orExpr,
+// TODO: i32_xorExpr,
+// TODO: i32_shlExpr,
+// TODO: i32_shr_sExpr,
+// TODO: i32_shr_uExpr,
+// TODO: i32_rotlExpr,
+// TODO: i32_rotrExpr,
+// TODO: i64_clzExpr,
+// TODO: i64_ctzExpr,
+// TODO: i64_popcntExpr,
+// TODO: i64_addExpr,
+// TODO: i64_subExpr,
+// TODO: i64_mulExpr,
+// TODO: i64_div_sExpr,
+// TODO: i64_div_uExpr,
+// TODO: i64_rem_sExpr,
+// TODO: i64_rem_uExpr,
+// TODO: i64_andExpr,
+// TODO: i64_orExpr,
+// TODO: i64_xorExpr,
+// TODO: i64_shlExpr,
+// TODO: i64_shr_sExpr,
+// TODO: i64_shr_uExpr,
+// TODO: i64_rotlExpr,
+// TODO: i64_rotrExpr,
+// TODO: f32_absExpr,
+// TODO: f32_negExpr,
+// TODO: f32_ceilExpr,
+// TODO: f32_floorExpr,
+// TODO: f32_truncExpr,
+// TODO: f32_nearestExpr,
+// TODO: f32_sqrtExpr,
+// TODO: f32_addExpr,
+// TODO: f32_subExpr,
+// TODO: f32_mulExpr,
+// TODO: f32_divExpr,
+// TODO: f32_minExpr,
+// TODO: f32_maxExpr,
+// TODO: f32_copysignExpr,
+// TODO: f64_absExpr,
+// TODO: f64_negExpr,
+// TODO: f64_ceilExpr,
+// TODO: f64_floorExpr,
+// TODO: f64_truncExpr,
+// TODO: f64_nearestExpr,
+// TODO: f64_sqrtExpr,
+// TODO: f64_addExpr,
+// TODO: f64_subExpr,
+// TODO: f64_mulExpr,
+// TODO: f64_divExpr,
+// TODO: f64_minExpr,
+// TODO: f64_maxExpr,
+// TODO: f64_copysignExpr,
+// TODO: i32_wrap_i64Expr,
+// TODO: i32_trunc_f32_sExpr,
+// TODO: i32_trunc_f32_uExpr,
+// TODO: i32_trunc_f64_sExpr,
+// TODO: i32_trunc_f64_uExpr,
+// TODO: i64_extend_i32_sExpr,
+// TODO: i64_extend_i32_uExpr,
+// TODO: i64_trunc_f32_sExpr,
+// TODO: i64_trunc_f32_uExpr,
+// TODO: i64_trunc_f64_sExpr,
+// TODO: i64_trunc_f64_uExpr,
+// TODO: f32_convert_i32_sExpr,
+// TODO: f32_convert_i32_uExpr,
+// TODO: f32_convert_i64_sExpr,
+// TODO: f32_convert_i64_uExpr,
+// TODO: f32_demote_f64Expr,
+// TODO: f64_convert_i32_sExpr,
+// TODO: f64_convert_i32_uExpr,
+// TODO: f64_convert_i64_sExpr,
+// TODO: f64_convert_i64_uExpr,
+// TODO: f64_promote_f32Expr,
+// TODO: i32_reinterpret_f32Expr,
+// TODO: i64_reinterpret_f64Expr,
+// TODO: f32_reinterpret_i32Expr,
+// TODO: f64_reinterpret_i64Expr,
+// TODO: i32_extend8_sExpr,
+// TODO: i32_extend16_sExpr,
+// TODO: i64_extend8_sExpr,
+// TODO: i64_extend16_sExpr,
+// TODO: i64_extend32_sExpr,
+// TODO: ref_nullExpr,
+// TODO: ref_is_nullExpr,
+// TODO: ref_funcExpr,
+// TODO: i32_trunc_sat_f32_sExpr,
+// TODO: i32_trunc_sat_f32_uExpr,
+// TODO: i32_trunc_sat_f64_sExpr,
+// TODO: i32_trunc_sat_f64_uExpr,
+// TODO: i64_trunc_sat_f32_sExpr,
+// TODO: i64_trunc_sat_f32_uExpr,
+// TODO: i64_trunc_sat_f64_sExpr,
+// TODO: i64_trunc_sat_f64_uExpr,
+// TODO: memory_initExpr,
+// TODO: data_dropExpr,
+// TODO: memory_copyExpr,
+// TODO: memory_fillExpr,
+// TODO: table_initExpr,
+// TODO: elem_dropExpr,
+// TODO: table_copyExpr,
+// TODO: table_growExpr,
+// TODO: table_sizeExpr,
+// TODO: table_fillExpr,
+// TODO: v128_loadExpr,
+// TODO: v128_load_8x8_sExpr,
+// TODO: v128_load_8x8_uExpr,
+// TODO: v128_load_16x4_sExpr,
+// TODO: v128_load_16x4_uExpr,
+// TODO: v128_load_32x2_sExpr,
+// TODO: v128_load_32x2_uExpr,
+// TODO: v128_load_splatExpr,
+// TODO: v128_constExpr,
+// TODO: i8x16_shuffleExpr,
+// TODO: i8x16_swizzleExpr,
+// TODO: i8x16_splatExpr,
+// TODO: i16x8_splatExpr,
+// TODO: i32x4_splatExpr,
+// TODO: i64x2_splatExpr,
+// TODO: f32x4_splatExpr,
+// TODO: f64x2_splatExpr,
+// TODO: i8x16_extract_lane_sExpr,
+// TODO: i8x16_extract_lane_uExpr,
+// TODO: i8x16_replace_laneExpr,
+// TODO: i16x8_extract_lane_sExpr,
+// TODO: i16x8_extract_lane_uExpr,
+// TODO: i16x8_replace_laneExpr,
+// TODO: i32x4_extract_laneExpr,
+// TODO: i32x4_replace_laneExpr,
+// TODO: i64x2_extract_laneExpr,
+// TODO: i64x2_replace_laneExpr,
+// TODO: f32x4_extract_laneExpr,
+// TODO: f32x4_replace_laneExpr,
+// TODO: f64x2_extract_laneExpr,
+// TODO: f64x2_replace_laneExpr,
+// TODO: i8x16_eqExpr,
+// TODO: i8x16_neExpr,
+// TODO: i8x16_lt_sExpr,
+// TODO: i8x16_lt_uExpr,
+// TODO: i8x16_gt_sExpr,
+// TODO: i8x16_gt_uExpr,
+// TODO: i8x16_le_sExpr,
+// TODO: i8x16_le_uExpr,
+// TODO: i8x16_ge_sExpr,
+// TODO: i8x16_ge_uExpr,
+// TODO: i16x8_eqExpr,
+// TODO: i16x8_neExpr,
+// TODO: i16x8_lt_sExpr,
+// TODO: i16x8_lt_uExpr,
+// TODO: i16x8_gt_sExpr,
+// TODO: i16x8_gt_uExpr,
+// TODO: i16x8_le_sExpr,
+// TODO: i16x8_le_uExpr,
+// TODO: i16x8_ge_sExpr,
+// TODO: i16x8_ge_uExpr,
+// TODO: i32x4_eqExpr,
+// TODO: i32x4_neExpr,
+// TODO: i32x4_lt_sExpr,
+// TODO: i32x4_lt_uExpr,
+// TODO: i32x4_gt_sExpr,
+// TODO: i32x4_gt_uExpr,
+// TODO: i32x4_le_sExpr,
+// TODO: i32x4_le_uExpr,
+// TODO: i32x4_ge_sExpr,
+// TODO: i32x4_ge_uExpr,
+// TODO: f32x4_eqExpr,
+// TODO: f32x4_neExpr,
+// TODO: f32x4_ltExpr,
+// TODO: f32x4_gtExpr,
+// TODO: f32x4_leExpr,
+// TODO: f32x4_geExpr,
+// TODO: f64x2_eqExpr,
+// TODO: f64x2_neExpr,
+// TODO: f64x2_ltExpr,
+// TODO: f64x2_gtExpr,
+// TODO: f64x2_leExpr,
+// TODO: f64x2_geExpr,
+// TODO: v128_notExpr,
+// TODO: v128_andExpr,
+// TODO: v128_andnotExpr,
+// TODO: v128_orExpr,
+// TODO: v128_xorExpr,
+// TODO: v128_bitselectExpr,
+// TODO: v128_any_trueExpr,
+// TODO: v128_load8_laneExpr,
+// TODO: v128_load16_laneExpr,
+// TODO: v128_load32_laneExpr,
+// TODO: v128_load64_laneExpr,
+// TODO: v128_store8_laneExpr,
+// TODO: v128_store16_laneExpr,
+// TODO: v128_store32_laneExpr,
+// TODO: v128_store64_laneExpr,
+// TODO: v128_load32_zeroExpr,
+// TODO: v128_load64_zeroExpr,
+// TODO: i8x16_absExpr,
+// TODO: i8x16_negExpr,
+// TODO: i8x16_popcntExpr,
+// TODO: i8x16_all_trueExpr,
+// TODO: i8x16_bitmaskExpr,
+// TODO: i8x16_narrow_i16x8_sExpr,
+// TODO: i8x16_narrow_i16x8_uExpr,
+// TODO: f32x4_ceilExpr,
+// TODO: f32x4_floorExpr,
+// TODO: f32x4_truncExpr,
+// TODO: f32x4_nearestExpr,
+// TODO: i8x16_shlExpr,
+// TODO: i8x16_shr_sExpr,
+// TODO: i8x16_shr_uExpr,
+// TODO: i8x16_addExpr,
+// TODO: i8x16_add_sat_sExpr,
+// TODO: i8x16_add_sat_uExpr,
+// TODO: i8x16_subExpr,
+// TODO: i8x16_sub_sat_sExpr,
+// TODO: i8x16_sub_sat_uExpr,
+// TODO: f64x2_ceilExpr,
+// TODO: f64x2_floorExpr,
+// TODO: i8x16_min_sExpr,
+// TODO: i8x16_min_uExpr,
+// TODO: i8x16_max_sExpr,
+// TODO: i8x16_max_uExpr,
+// TODO: f64x2_truncExpr,
+// TODO: i16x8_extadd_pairwise_i8x16_sExpr,
+// TODO: i16x8_extadd_pairwise_i8x16_uExpr,
+// TODO: i32x4_extadd_pairwise_i16x8_sExpr,
+// TODO: i32x4_extadd_pairwise_i16x8_uExpr,
+// TODO: i16x8_absExpr,
+// TODO: i16x8_negExpr,
+// TODO: i16x8_q15mulr_sat_sExpr,
+// TODO: i16x8_all_trueExpr,
+// TODO: i16x8_bitmaskExpr,
+// TODO: i16x8_narrow_i32x4_sExpr,
+// TODO: i16x8_narrow_i32x4_uExpr,
+// TODO: i16x8_extend_low_i8x16_sExpr,
+// TODO: i16x8_extend_high_i8x16_sExpr,
+// TODO: i16x8_extend_low_i8x16_uExpr,
+// TODO: i16x8_extend_high_i8x16_uExpr,
+// TODO: i16x8_shr_sExpr,
+// TODO: i16x8_shr_uExpr,
+// TODO: i16x8_addExpr,
+// TODO: i16x8_add_sat_sExpr,
+// TODO: i16x8_add_sat_uExpr,
+// TODO: i16x8_subExpr,
+// TODO: i16x8_sub_sat_sExpr,
+// TODO: i16x8_sub_sat_uExpr,
+// TODO: f64x2_nearestExpr,
+// TODO: i16x8_mulExpr,
+// TODO: i16x8_min_sExpr,
+// TODO: i16x8_min_uExpr,
+// TODO: i16x8_max_sExpr,
+// TODO: i16x8_max_uExpr,
+// TODO: i16x8_avgr_uExpr,
+// TODO: i16x8_extmul_low_i8x16_sExpr,
+// TODO: i16x8_extmul_high_i8x16_sExpr,
+// TODO: i16x8_extmul_low_i8x16_uExpr,
+// TODO: i16x8_extmul_high_i8x16_uExpr,
+// TODO: i32x4_abExpr,
+// TODO: i32x4_negExpr,
+// TODO: i32x4_all_trueExpr,
+// TODO: i32x4_bitmaskExpr,
+// TODO: i32x4_extend_low_i16x8_sExpr,
+// TODO: i32x4_extend_high_i16x8_sExpr,
+// TODO: i32x4_extend_low_i16x8_uExpr,
+// TODO: i32x4_extend_high_i16x8_uExpr,
+// TODO: i32x4_shlExpr,
+// TODO: i32x4_shr_sExpr,
+// TODO: i32x4_shr_uExpr,
+// TODO: i32x4_addExpr,
+// TODO: i32x4_subExpr,
+// TODO: i32x4_mulExpr,
+// TODO: i32x4_min_sExpr,
+// TODO: i32x4_min_uExpr,
+// TODO: i32x4_max_sExpr,
+// TODO: i32x4_max_uExpr,
+// TODO: i32x4_dot_i16x8_sExpr,
+// TODO: i32x4_extmul_low_i16x8_sExpr,
+// TODO: i32x4_extmul_high_i16x8_sExpr,
+// TODO: i32x4_extmul_low_i16x8_uExpr,
+// TODO: i32x4_extmul_high_i16x8_uExpr,
+// TODO: i64x2_absExpr,
+// TODO: i64x2_negExpr,
+// TODO: i64x2_all_trueExpr,
+// TODO: i64x2_bitmaskExpr,
+// TODO: i64x2_extend_low_i32x4_sExpr,
+// TODO: i64x2_extend_high_i32x4_sExpr,
+// TODO: i64x2_extend_low_i32x4_uExpr,
+// TODO: i64x2_extend_high_i32x4_uExpr,
+// TODO: i64x2_shlExpr,
+// TODO: i64x2_shr_sExpr,
+// TODO: i64x2_shr_uExpr,
+// TODO: i64x2_addExpr,
+// TODO: i64x2_subExpr,
+// TODO: i64x2_mulExpr,
+// TODO: i64x2_eqExpr,
+// TODO: i64x2_neExpr,
+// TODO: i64x2_lt_sExpr,
+// TODO: i64x2_gt_sExpr,
+// TODO: i64x2_le_sExpr,
+// TODO: i64x2_ge_sExpr,
+// TODO: i64x2_extmul_low_i32x4_sExpr,
+// TODO: i64x2_extmul_high_i32x4_sExpr,
+// TODO: i64x2_extmul_low_i32x4_uExpr,
+// TODO: i64x2_extmul_high_i32x4_uExpr,
+// TODO: f32x4_absExpr,
+// TODO: f32x4_negExpr,
+// TODO: f32x4_sqrtExpr,
+// TODO: f32x4_addExpr,
+// TODO: f32x4_subExpr,
+// TODO: f32x4_mulExpr,
+// TODO: f32x4_divExpr,
+// TODO: f32x4_minExpr,
+// TODO: f32x4_maxExpr,
+// TODO: f32x4_pmin,
+// TODO: f32x4_pmax,
+// TODO: f64x2_abs,
+// TODO: f64x2_neg,
+// TODO: f64x2_sqrt,
+// TODO: f64x2_add,
+// TODO: f64x2_sub,
+// TODO: f64x2_mul
+// TODO: f64x2_div
+// TODO: f64x2_min
+// TODO: f64x2_max
+// TODO: f64x2_pmin
+// TODO: f64x2_pmax
+// TODO: i32x4_trunc_sat_f32x4_sExpr
+// TODO: i32x4_trunc_sat_f32x4_uExpr
+// TODO: f32x4_convert_i32x4_sExpr
+// TODO: f32x4_convert_i32x4_uExpr
+// TODO: i32x4_trunc_sat_f64x2_s_zeroExpr
+// TODO: i32x4_trunc_sat_f64x2_u_zeroExpr
+// TODO: f64x2_convert_low_i32x4_sExpr
+// TODO: f64x2_convert_low_i32x4_uExpr

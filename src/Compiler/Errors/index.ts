@@ -3,29 +3,26 @@ import { prettyError } from './ErrorBuilder';
 import { BriskErrorMessage, BriskErrorType } from './Errors';
 //@ts-ignore
 import { __DEBUG__ } from '@brisk/config';
-export const _BriskCustomError = (code: string, msg: string, pos?: Position, exit = true): void => {
+export const _BriskCustomError = (code: string, msg: string, pos?: Position): never => {
   // Build Pretty Errror
   const errorMessage = pos ? prettyError(code, msg, pos) : msg;
   // Log Error
-  const color = exit ? '\x1b[31m' : '\x1b[33m';
+  const color = '\x1b[31m';
   console.log(`${color}\x1b[1m${errorMessage}\x1b[0m`);
   if (pos) console.log(`${color}\x1b[1mat ${pos.file}:${pos.line}:${pos.col}\x1b[0m`);
-  if (exit) {
-    if (__DEBUG__) {
-      // In Debug We Throw To Get Call Stack
-      console.trace('Debug Position');
-    }
-    process.exit(1);
+  if (__DEBUG__) {
+    // In Debug We Throw To Get Call Stack
+    console.trace('Debug Position');
   }
+  return process.exit(1);
 };
 const _BriskError = (
   code: string,
   type: string,
   errorCode: BriskErrorType,
   errorParams: string[],
-  pos?: Position,
-  exit = true
-): void => {
+  pos?: Position
+): never => {
   // Get Error Message
   let errorTemplate = BriskErrorMessage[errorCode];
   // Replace Error Template
@@ -35,6 +32,6 @@ const _BriskError = (
   // Build Error Message
   const errorMessage = `${type}[${errorCode}]: ${errorTemplate}`;
   // Log Error Message
-  _BriskCustomError(code, errorMessage, pos, exit);
+  return _BriskCustomError(code, errorMessage, pos);
 };
 export default _BriskError;

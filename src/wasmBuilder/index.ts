@@ -1,67 +1,49 @@
-// Imports
-import { WasmExternalType, WasmType } from './Types/Nodes';
+import { promises as fs } from 'fs';
+import { addExport, addFunction, compileModule, createModule, setStart } from './Build/Module';
+import { createFunction } from './Build/Function';
+import { createFunctionType, createNumericType } from './Build/WasmTypes';
 import {
   i32_AddExpression,
   i32_ConstExpression,
   local_GetExpression,
   local_SetExpression,
 } from './Build/Expression';
-import { wasmFunction } from './Build/Function';
-import { addExport, addFunction, setStart, wasmModule } from './Build/Module';
-import { compileWasm } from './Output/wasm';
-import { promises as fs } from 'fs';
+import { WasmExportKind, WasmNumberType } from './Types/Nodes';
 // Test
 export default async () => {
   // Create Module
-  let module = wasmModule(
-    // Memory Section
-    [{ minPages: 2 }],
-    // Global Section
-    [],
-    // Function Sections
-    [],
-    // Export Section
-    new Map()
-  );
-  // Create Function
-  const func = wasmFunction(
+  let module = createModule();
+  // create A Test Function
+  const testAddFunction = createFunction(
     'add',
-    [WasmType.WasmI32, WasmType.WasmI32],
-    [WasmType.WasmI32],
-    [WasmType.WasmI32],
-    [
-      local_SetExpression(
-        2,
-        i32_AddExpression(
-          local_GetExpression(0, WasmType.WasmI32),
-          local_GetExpression(1, WasmType.WasmI32)
-        )
-      ),
-      local_GetExpression(2, WasmType.WasmI32),
-    ]
+    createFunctionType(
+      [createNumericType(WasmNumberType.WasmI32), createNumericType(WasmNumberType.WasmI32)],
+      [createNumericType(WasmNumberType.WasmI32)]
+    ),
+    [],
+    [i32_AddExpression(local_GetExpression(0), local_GetExpression(1))]
   );
-  const mainFunc = wasmFunction(
+  const mainFunc = createFunction(
     'main',
-    [],
-    [],
-    [WasmType.WasmI32],
+    createFunctionType([], []),
+    [createNumericType(WasmNumberType.WasmI32)],
     [local_SetExpression(0, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1)))]
   );
-  // Add Function
-  module = addFunction(module, func);
+  // Add Function To Module
+  module = addFunction(module, testAddFunction);
   module = addFunction(module, mainFunc);
-  // Export Function
-  module = addExport(module, 'add', WasmExternalType.function, 'add');
+  // Set Start Function`
+  module = addExport(module, 'add', WasmExportKind.function, 'add');
   // Set Start Function
   module = setStart(module, 'main');
-  // Compile
-  const compiled = compileWasm(module);
+  // Compile Module
+  const compiled = compileModule(module);
   console.log(compiled);
-  // Try To Run
-  console.log('Loading Wasm');
+  // Write Module To File
+  await fs.writeFile('test.wasm', compiled);
+  // Try to run module
   const wasmInstance = await WebAssembly.instantiate(compiled);
   console.log('Wasm Loaded');
   console.log(wasmInstance);
   console.log(wasmInstance.instance.exports.add(1, 2));
-  await fs.writeFile('test.wasm', compiled);
 };

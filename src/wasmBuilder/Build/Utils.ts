@@ -1,14 +1,14 @@
-export const ieee754 = (n: number) => {
-  const buf = Buffer.allocUnsafe(4);
-  buf.writeFloatLE(n, 0);
-  return Uint8Array.from(buf);
-};
+export const encodeVector = (data: number[]) => [...unsignedLEB128(data.length), ...data];
 // TODO: Deal With UTF-8 encoding like \n, \r, \t, etc
 export const encodeString = (str: string) => [
   str.length,
   ...str.split('').map((s) => s.charCodeAt(0)),
 ];
-
+export const ieee754 = (n: number) => {
+  const buf = Buffer.allocUnsafe(4);
+  buf.writeFloatLE(n, 0);
+  return Uint8Array.from(buf);
+};
 export const signedLEB128 = (n: number) => {
   const buffer = [];
   let more = true;
@@ -29,7 +29,6 @@ export const signedLEB128 = (n: number) => {
   }
   return buffer;
 };
-
 export const unsignedLEB128 = (n: number) => {
   const buffer = [];
   do {
