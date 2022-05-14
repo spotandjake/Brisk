@@ -1,4 +1,5 @@
 // Wasm Info
+export type UnresolvedBytes = (number | string)[];
 export const enum WasmExportKind {
   function = 0x00,
   table = 0x01,
@@ -21,6 +22,10 @@ export const enum WasmSection {
   DataCount = 0x0c,
 }
 // Wasm Module State
+export interface WasmImport {
+  kind: WasmExportKind;
+  importData: number[];
+}
 export interface WasmModule {
   // Label Maps
   functionMap: Map<string, number>;
@@ -43,8 +48,9 @@ export interface WasmModule {
 export interface WasmFunction {
   name: string; // TODO: Not All Functions Need Names
   functionType: number[];
-  locals: number[][];
-  body: number[][];
+  paramNames: string[];
+  locals: [number[], string][];
+  body: UnresolvedBytes[];
 }
 export const enum WasmNumberType {
   WasmI32 = 0x7f,

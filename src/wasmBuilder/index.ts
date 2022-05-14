@@ -20,13 +20,15 @@ export default async () => {
       [createNumericType(WasmNumberType.WasmI32), createNumericType(WasmNumberType.WasmI32)],
       [createNumericType(WasmNumberType.WasmI32)]
     ),
+    ['valueX', 'valueY'],
     [],
-    [i32_AddExpression(local_GetExpression(0), local_GetExpression(1))]
+    [i32_AddExpression(local_GetExpression('valueX'), local_GetExpression(1))]
   );
   const mainFunc = createFunction(
     'main',
     createFunctionType([], []),
-    [createNumericType(WasmNumberType.WasmI32)],
+    [],
+    [[createNumericType(WasmNumberType.WasmI32), 'x']],
     [local_SetExpression(0, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1)))]
   );
   // Add Function To Module
@@ -45,5 +47,6 @@ export default async () => {
   const wasmInstance = await WebAssembly.instantiate(compiled);
   console.log('Wasm Loaded');
   console.log(wasmInstance);
+  //@ts-ignore
   console.log(wasmInstance.instance.exports.add(1, 2));
 };

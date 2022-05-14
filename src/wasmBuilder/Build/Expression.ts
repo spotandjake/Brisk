@@ -1,28 +1,78 @@
+import { UnresolvedBytes } from '../Types/Nodes';
 import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Expressions
 export const unreachableExpression = () => [0x00]; // Wasm Unreachable Instruction
 export const nopExpression = () => [0x01]; // Wasm nop Instruction
-export const blockExpression = (label: string | undefined, body: number[][]): number[] => [
-  // TODO: Handle Label
-  0x02, // Wasm Block Instruction
-  0x40, // Wasm Control Flow Block Tag
+// TODO: Test This Logic
+export const blockExpression = (
+  label: string | undefined,
+  body: UnresolvedBytes[]
+): UnresolvedBytes => {
+  // Resolve Any Labels
+  const wasmBody = [];
+  let depthCount = 0;
   // TODO: Simplify The Flat
-  ...body.flat(), // Body Content
-  0x0b, // End Instruction
-];
-export const loopExpression = (label: string | undefined, body: number[][]): number[] => [
-  // TODO: Handle Label
-  0x03, // Wasm Loop Instruction
-  0x40, // Wasm Control Flow Block Tag
+  for (const byte of body.flat()) {
+    // Handle Depth
+    if (
+      byte == 0x02 || // Block Instruction
+      byte == 0x03 // Loop Instruction
+    )
+      depthCount++;
+    // Handle Resolution
+    // If label is a string and the last byte is a br or a br_if Instruction
+    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
+      if (byte == label) {
+        // Determine Depth
+        wasmBody.push(...unsignedLEB128(depthCount));
+      }
+    } else wasmBody.push(byte);
+  }
+  // Return Wasm
+  return [
+    0x02, // Wasm Block Instruction
+    0x40, // Wasm Control Flow Block Tag
+    ...wasmBody, // Body Content
+    0x0b, // End Instruction
+  ];
+};
+export const loopExpression = (
+  label: string | undefined,
+  body: UnresolvedBytes[]
+): UnresolvedBytes => {
+  // Resolve Any Labels
+  const wasmBody = [];
+  let depthCount = 0;
   // TODO: Simplify The Flat
-  ...body.flat(), // Body Content
-  0x0b, // End Instruction
-];
+  for (const byte of body.flat()) {
+    // Handle Depth
+    if (
+      byte == 0x02 || // Block Instruction
+      byte == 0x03 // Loop Instruction
+    )
+      depthCount++;
+    // Handle Resolution
+    // If label is a string and the last byte is a br or a br_if Instruction
+    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
+      if (byte == label) {
+        // Determine Depth
+        wasmBody.push(...unsignedLEB128(depthCount));
+      }
+    } else wasmBody.push(byte);
+  }
+  // Return Wasm
+  return [
+    0x03, // Wasm Loop Instruction
+    0x40, // Wasm Control Flow Block Tag
+    ...wasmBody, // Body Content
+    0x0b, // End Instruction
+  ];
+};
 export const ifExpression = (
-  condition: number[],
-  body: number[],
-  alternative?: number[]
-): number[] => [
+  condition: UnresolvedBytes,
+  body: UnresolvedBytes,
+  alternative?: UnresolvedBytes
+): UnresolvedBytes => [
   ...condition, // Condition Content
   0x04, // Wasm If Instruction
   0x40, // Wasm Control Flow Block Tag
@@ -30,61 +80,68 @@ export const ifExpression = (
   ...(alternative != undefined ? [0x05, ...alternative] : []),
   0x0b, // End Instruction
 ];
-export const brExpression = (depth: number): number[] => [
+export const brExpression = (depth: number | string): UnresolvedBytes => [
   0x0c, // br Wasm Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(depth), // Encoded Depth
+  ...(typeof depth == 'string' ? [depth] : unsignedLEB128(depth)), // Encoded Depth
 ];
-export const br_IfExpression = (condition: number[], depth: number): number[] => [
+export const br_IfExpression = (
+  condition: UnresolvedBytes,
+  depth: number | string
+): UnresolvedBytes => [
   ...condition, // Condition Content
   0x0d, // br_if Wasm Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(depth), // Encoded Depth
+  ...(typeof depth == 'string' ? [depth] : unsignedLEB128(depth)), // Encoded Depth
 ];
 // TODO: br_table
-export const returnExpression = (body: number[]): number[] => [
+export const returnExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x0f, // Wasm Return Instruction
 ];
-export const callExpression = (func: number, params: number[][]): number[] => [
+export const callExpression = (
+  func: number | string,
+  params: UnresolvedBytes[]
+): UnresolvedBytes => [
   ...params.flat(), // TODO: Optimize This
   0x10, // Wasm Call Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(func), // Encoded Function Index
+  ...(typeof func == 'string' ? [func] : unsignedLEB128(func)), // Encoded Func Index
 ];
 // TODO: Call Indirect
-export const dropExpression = (body: number[]): number[] => [
+export const dropExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x1a, // Wasm Drop Instruction
 ];
 // TODO: Select
-export const local_GetExpression = (localIndex: number): number[] => [
+export const local_GetExpression = (local: number | string): UnresolvedBytes => [
   0x20, // Wasm Local.Get Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(localIndex), // Encoded Local Index
+  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Func Index
 ];
-export const local_SetExpression = (localIndex: number, body: number[]): number[] => [
+export const local_SetExpression = (
+  local: number | string,
+  body: UnresolvedBytes
+): UnresolvedBytes => [
   ...body, // Body Content
   0x21, // Wasm Local.Set Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(localIndex), // Encoded Local Index
+  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
 ];
-export const local_TeeExpression = (localIndex: number, body: number[]): number[] => [
+export const local_TeeExpression = (
+  local: number | string,
+  body: UnresolvedBytes
+): UnresolvedBytes => [
   ...body, // Body Content
   0x22, // Wasm Local.Set Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(localIndex), // Encoded Local Index
+  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
 ];
-export const global_GetExpression = (globalIndex: number): number[] => [
+export const global_GetExpression = (global: number | string): UnresolvedBytes => [
   0x23, // Wasm Global.Get Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(globalIndex),
+  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
 ];
-export const global_SetExpression = (globalIndex: number, body: number[]): number[] => [
+export const global_SetExpression = (
+  global: number | string,
+  body: UnresolvedBytes
+): UnresolvedBytes => [
   ...body, // Body Content
   0x24, // Wasm Local.Set Instruction
-  // TODO: Handle Label
-  ...unsignedLEB128(globalIndex), // Encoded Local Index
+  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
 ];
 // TODO: table_get
 // TODO: table_set
@@ -113,20 +170,20 @@ export const global_SetExpression = (globalIndex: number, body: number[]): numbe
 // TODO: i64_store32Expr,
 export const memory_SizeExpression = () => [0x3f]; // Wasm memory.size Instruction
 
-export const memory_GrowExpression = (body: number[]): number[] => [
+export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x40, // Wasm Memory.Size Instruction
 ];
-export const i32_ConstExpression = (value: number): number[] => [
+export const i32_ConstExpression = (value: number): UnresolvedBytes => [
   0x41, // Wasm i32.Const Instruction
   ...signedLEB128(value),
 ];
 // TODO: i64_Const
-export const f32_ConstExpression = (value: number): number[] => [
+export const f32_ConstExpression = (value: number): UnresolvedBytes => [
   0x43, // Wasm f32.Const Instruction
   ...ieee754(value),
 ];
-export const f64_ConstExpression = (value: number): number[] => [
+export const f64_ConstExpression = (value: number): UnresolvedBytes => [
   0x44, // Wasm f64.Const Instruction
   ...ieee754(value),
 ];
@@ -167,7 +224,10 @@ export const f64_ConstExpression = (value: number): number[] => [
 // TODO: i32_clzExpr,
 // TODO: i32_ctzExpr,
 // TODO: i32_popcntExpr,
-export const i32_AddExpression = (valueA: number[], valueB: number[]): number[] => [
+export const i32_AddExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
   ...valueA, // ValueA Content
   ...valueB, // ValueB Content
   0x6a, // Wasm i32.Add Instruction
