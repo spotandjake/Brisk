@@ -1,145 +1,66 @@
-import { UnresolvedBytes } from '../Types/Nodes';
-import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
-// Expressions
-export const unreachableExpression = (): UnresolvedBytes => [0x00]; // Wasm Unreachable Instruction
-export const nopExpression = (): UnresolvedBytes => [0x01]; // Wasm nop Instruction
-export const blockExpression = (
-  label: string | undefined,
-  body: UnresolvedBytes[]
-): UnresolvedBytes => {
-  // Resolve Any Labels
-  const wasmBody = [];
-  let depthCount = 0;
-  for (const byte of body.flat()) {
-    // Handle Depth
-    if (
-      byte == 0x02 || // Block Instruction
-      byte == 0x03 // Loop Instruction
-    )
-      depthCount++;
-    // Handle Resolution
-    // If label is a string and the last byte is a br or a br_if Instruction
-    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
-      if (byte == label) {
-        // Determine Depth
-        wasmBody.push(...unsignedLEB128(depthCount));
-      }
-    } else wasmBody.push(byte);
-  }
-  // Return Wasm
-  return [
-    0x02, // Wasm Block Instruction
-    0x40, // Wasm Control Flow Block Tag
-    ...wasmBody, // Body Content
-    0x0b, // End Instruction
-  ];
-};
-export const loopExpression = (
-  label: string | undefined,
-  body: UnresolvedBytes[]
-): UnresolvedBytes => {
-  // Resolve Any Labels
-  const wasmBody = [];
-  let depthCount = 0;
-  for (const byte of body.flat()) {
-    // Handle Depth
-    if (
-      byte == 0x02 || // Block Instruction
-      byte == 0x03 // Loop Instruction
-    )
-      depthCount++;
-    // Handle Resolution
-    // If label is a string and the last byte is a br or a br_if Instruction
-    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
-      if (byte == label) {
-        // Determine Depth
-        wasmBody.push(...unsignedLEB128(depthCount));
-      }
-    } else wasmBody.push(byte);
-  }
-  // Return Wasm
-  return [
-    0x03, // Wasm Loop Instruction
-    0x40, // Wasm Control Flow Block Tag
-    ...wasmBody, // Body Content
-    0x0b, // End Instruction
-  ];
-};
-export const ifExpression = (
-  condition: UnresolvedBytes,
-  body: UnresolvedBytes,
-  alternative?: UnresolvedBytes
-): UnresolvedBytes => [
-  ...condition, // Condition Content
-  0x04, // Wasm If Instruction
-  0x40, // Wasm Control Flow Block Tag
-  ...body, // Body Content
-  ...(alternative != undefined ? [0x05, ...alternative] : []),
-  0x0b, // End Instruction
-];
-export const brExpression = (depth: number | string): UnresolvedBytes => [
-  0x0c, // br Wasm Instruction
-  ...(typeof depth == 'string' ? [depth] : unsignedLEB128(depth)), // Encoded Depth
-];
-export const br_IfExpression = (
-  condition: UnresolvedBytes,
-  depth: number | string
-): UnresolvedBytes => [
-  ...condition, // Condition Content
-  0x0d, // br_if Wasm Instruction
-  ...(typeof depth == 'string' ? [depth] : unsignedLEB128(depth)), // Encoded Depth
-];
+// Test Utils
+import { expect, test } from '@jest/globals';
+// Test Components
+import * as Expressions from '../../../src/wasmBuilder/Build/Expression';
+import { ieee754, signedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
+// TODO: Test Utils
+// WasmBuilder Expressions Tests
+test('WasmBuilder-Expressions: unreachableExpression', () => {
+  expect(Expressions.unreachableExpression()).toEqual(expect.arrayContaining([0x00]));
+});
+test('WasmBuilder-Expressions: nopExpression', () => {
+  expect(Expressions.nopExpression()).toEqual(expect.arrayContaining([0x01]));
+});
+// TODO: BlockExpression
+// TODO: LoopExpression
+test('WasmBuilder-Expressions: ifExpression', () => {
+  expect(
+    Expressions.ifExpression(Expressions.nopExpression(), Expressions.nopExpression())
+  ).toEqual(
+    expect.arrayContaining([
+      ...Expressions.nopExpression(),
+      0x04,
+      0x40,
+      ...Expressions.nopExpression(),
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: ifExpression-elseExpression', () => {
+  expect(
+    Expressions.ifExpression(Expressions.nopExpression(), Expressions.nopExpression())
+  ).toEqual(
+    expect.arrayContaining([
+      ...Expressions.nopExpression(),
+      0x04,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...Expressions.nopExpression(),
+      0x0b,
+    ])
+  );
+});
+// TODO: brExpression
+// TODO: br_IfExpression
 // TODO: br_table
-export const returnExpression = (body: UnresolvedBytes): UnresolvedBytes => [
-  ...body, // Body Content
-  0x0f, // Wasm Return Instruction
-];
-export const callExpression = (
-  func: number | string,
-  params: UnresolvedBytes[]
-): UnresolvedBytes => [
-  ...params.flat(), // TODO: Optimize This
-  0x10, // Wasm Call Instruction
-  ...(typeof func == 'string' ? [func] : unsignedLEB128(func)), // Encoded Func Index
-];
+test('WasmBuilder-Expressions: returnExpression', () => {
+  expect(Expressions.returnExpression(Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x0f])
+  );
+});
+// TODO: callExpression
 // TODO: Call Indirect
-export const dropExpression = (body: UnresolvedBytes): UnresolvedBytes => [
-  ...body, // Body Content
-  0x1a, // Wasm Drop Instruction
-];
+test('WasmBuilder-Expressions: dropExpression', () => {
+  expect(Expressions.dropExpression(Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x1a])
+  );
+});
 // TODO: Select
-export const local_GetExpression = (local: number | string): UnresolvedBytes => [
-  0x20, // Wasm Local.Get Instruction
-  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Func Index
-];
-export const local_SetExpression = (
-  local: number | string,
-  body: UnresolvedBytes
-): UnresolvedBytes => [
-  ...body, // Body Content
-  0x21, // Wasm Local.Set Instruction
-  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
-];
-export const local_TeeExpression = (
-  local: number | string,
-  body: UnresolvedBytes
-): UnresolvedBytes => [
-  ...body, // Body Content
-  0x22, // Wasm Local.Set Instruction
-  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
-];
-export const global_GetExpression = (global: number | string): UnresolvedBytes => [
-  0x23, // Wasm Global.Get Instruction
-  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
-];
-export const global_SetExpression = (
-  global: number | string,
-  body: UnresolvedBytes
-): UnresolvedBytes => [
-  ...body, // Body Content
-  0x24, // Wasm Local.Set Instruction
-  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
-];
+// TODO: Local_GetExpression
+// TODO: Local_SetExpression
+// TODO: Local_TeeExpression
+// TODO: Global_GetExpression
+// TODO: Global_SetExpression
 // TODO: table_get
 // TODO: table_set
 // TODO: i32_loadExpr,
@@ -165,24 +86,26 @@ export const global_SetExpression = (
 // TODO: i64_store8Expr,
 // TODO: i64_store16Expr,
 // TODO: i64_store32Expr,
-export const memory_SizeExpression = (): UnresolvedBytes => [0x3f]; // Wasm memory.size Instruction
-export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
-  ...body, // Body Content
-  0x40, // Wasm Memory.Size Instruction
-];
-export const i32_ConstExpression = (value: number): UnresolvedBytes => [
-  0x41, // Wasm i32.Const Instruction
-  ...signedLEB128(value),
-];
+test('WasmBuilder-Expressions: memory_SizeExpression', () => {
+  expect(Expressions.memory_SizeExpression()).toEqual(expect.arrayContaining([0x3f]));
+});
+test('WasmBuilder-Expressions: memory_GrowExpression', () => {
+  expect(Expressions.memory_GrowExpression(Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x40])
+  );
+});
+test('WasmBuilder-Expressions: i32_ConstExpression', () => {
+  expect(Expressions.i32_ConstExpression(1)).toEqual(
+    expect.arrayContaining([0x41, ...signedLEB128(1)])
+  );
+});
 // TODO: i64_Const
-export const f32_ConstExpression = (value: number): UnresolvedBytes => [
-  0x43, // Wasm f32.Const Instruction
-  ...ieee754(value),
-];
-export const f64_ConstExpression = (value: number): UnresolvedBytes => [
-  0x44, // Wasm f64.Const Instruction
-  ...ieee754(value),
-];
+test('WasmBuilder-Expressions: f32_ConstExpression', () => {
+  expect(Expressions.f32_ConstExpression(1)).toEqual(expect.arrayContaining([0x43, ...ieee754(1)]));
+});
+test('WasmBuilder-Expressions: f64_ConstExpression', () => {
+  expect(Expressions.f64_ConstExpression(1)).toEqual(expect.arrayContaining([0x44, ...ieee754(1)]));
+});
 // TODO: i32_eqzExpr,
 // TODO: i32_eqExpr,
 // TODO: i32_neExpr,
@@ -220,14 +143,20 @@ export const f64_ConstExpression = (value: number): UnresolvedBytes => [
 // TODO: i32_clzExpr,
 // TODO: i32_ctzExpr,
 // TODO: i32_popcntExpr,
-export const i32_AddExpression = (
-  valueA: UnresolvedBytes,
-  valueB: UnresolvedBytes
-): UnresolvedBytes => [
-  ...valueA, // ValueA Content
-  ...valueB, // ValueB Content
-  0x6a, // Wasm i32.Add Instruction
-];
+test('WasmBuilder-Expressions: i32_AddExpression', () => {
+  expect(
+    Expressions.i32_AddExpression(
+      Expressions.i32_ConstExpression(1),
+      Expressions.i32_ConstExpression(1)
+    )
+  ).toEqual(
+    expect.arrayContaining([
+      ...Expressions.i32_ConstExpression(1),
+      ...Expressions.i32_ConstExpression(1),
+      0x6a,
+    ])
+  );
+});
 // TODO: i32_subExpr,
 // TODO: i32_mulExpr,
 // TODO: i32_div_sExpr,
@@ -567,3 +496,4 @@ export const i32_AddExpression = (
 // TODO: i32x4_trunc_sat_f64x2_u_zeroExpr
 // TODO: f64x2_convert_low_i32x4_sExpr
 // TODO: f64x2_convert_low_i32x4_uExpr
+// TODO: Testing For Labels

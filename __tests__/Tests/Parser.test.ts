@@ -1,6 +1,5 @@
 // Test Utils
-//@ts-ignore
-import { test, expect } from '@jest/globals';
+import { expect, test } from '@jest/globals';
 import { ILexingResult } from 'chevrotain';
 import fs from 'fs';
 // Test Components
