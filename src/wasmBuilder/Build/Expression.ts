@@ -3,7 +3,6 @@ import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Expressions
 export const unreachableExpression = () => [0x00]; // Wasm Unreachable Instruction
 export const nopExpression = () => [0x01]; // Wasm nop Instruction
-// TODO: Test This Logic
 export const blockExpression = (
   label: string | undefined,
   body: UnresolvedBytes[]
@@ -11,7 +10,6 @@ export const blockExpression = (
   // Resolve Any Labels
   const wasmBody = [];
   let depthCount = 0;
-  // TODO: Simplify The Flat
   for (const byte of body.flat()) {
     // Handle Depth
     if (
@@ -43,7 +41,6 @@ export const loopExpression = (
   // Resolve Any Labels
   const wasmBody = [];
   let depthCount = 0;
-  // TODO: Simplify The Flat
   for (const byte of body.flat()) {
     // Handle Depth
     if (

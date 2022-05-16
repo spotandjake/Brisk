@@ -118,7 +118,6 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
         return [1, ...local];
       })
       .flat(),
-    // TODO: Simplify The Flat
     ...wasmBody, // Add Function Body
     0x0b, // Wasm End Instruction
   ];
@@ -126,6 +125,28 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
   // Set Function Reference
   module.functionMap.set(func.name, module.codeSection.length - 1);
   // Return Module
+  return module;
+};
+// Wasm Module Element Mutations
+// TODO: Test This
+export const addElement = (module: WasmModule, values: number[]): WasmModule => {
+  // If Table does not exist generate it
+  if (module.tableSection.length == 0) {
+    module.tableSection.push([
+      0x70, // Table Type
+      0x00,
+      ...unsignedLEB128(0),
+    ]);
+  }
+  module.elementSection.push([
+    0x00, // TODO: Segment Flags, figure out what they mean
+    0x041, // Wasm i32.const Instruction
+    0x00, // Currently there can only be one table
+    0x0b,
+    ...unsignedLEB128(values.length),
+    // TODO: Determine HowTo Resolve Function Labels from here
+    ...values.flat(),
+  ]);
   return module;
 };
 // Wasm Module Memory Mutations

@@ -59,5 +59,4 @@ export const enum WasmTypes {
   WasmF32 = 0x7d,
   WasmF64 = 0x7c,
   // Reference Type
-  funcref = 0x70,
 }
