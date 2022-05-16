@@ -16,7 +16,7 @@ import {
   local_GetExpression,
   local_SetExpression,
 } from './Build/Expression';
-import { WasmExportKind, WasmNumberType } from './Types/Nodes';
+import { WasmExportKind, WasmTypes } from './Types/Nodes';
 import { _encodeString } from './Build/Utils';
 // Test
 export default async () => {
@@ -26,8 +26,8 @@ export default async () => {
   const testAddFunction = createFunction(
     'add',
     createFunctionType(
-      [createNumericType(WasmNumberType.WasmI32), createNumericType(WasmNumberType.WasmI32)],
-      [createNumericType(WasmNumberType.WasmI32)]
+      [createNumericType(WasmTypes.WasmI32), createNumericType(WasmTypes.WasmI32)],
+      [createNumericType(WasmTypes.WasmI32)]
     ),
     ['valueX', 'valueY'],
     [],
@@ -37,7 +37,7 @@ export default async () => {
     'main',
     createFunctionType([], []),
     [],
-    [[createNumericType(WasmNumberType.WasmI32), 'x']],
+    [[createNumericType(WasmTypes.WasmI32), 'x']],
     [local_SetExpression(0, i32_AddExpression(i32_ConstExpression(1), i32_ConstExpression(1)))]
   );
   // Add Function To Module

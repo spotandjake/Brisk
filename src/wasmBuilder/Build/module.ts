@@ -220,7 +220,6 @@ export const compileModule = (module: WasmModule, includeDataCount = true): Uint
     ...createSection(WasmSection.Export, module.exportSection),
     ..._createSection(WasmSection.Start, module.startSection.flat()),
     ...createSection(WasmSection.Element, module.elementSection),
-    // TODO: Ensure this is correct vvvvv
     ...(module.dataSection.length != 0 && includeDataCount
       ? _createSection(WasmSection.DataCount, unsignedLEB128(module.dataSection.length))
       : []),

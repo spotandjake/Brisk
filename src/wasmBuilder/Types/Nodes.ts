@@ -52,9 +52,12 @@ export interface WasmFunction {
   locals: [number[], string][];
   body: UnresolvedBytes[];
 }
-export const enum WasmNumberType {
+export const enum WasmTypes {
+  // Number Type
   WasmI32 = 0x7f,
   WasmI64 = 0x7e,
   WasmF32 = 0x7d,
   WasmF64 = 0x7c,
+  // Reference Type
+  funcref = 0x70,
 }
