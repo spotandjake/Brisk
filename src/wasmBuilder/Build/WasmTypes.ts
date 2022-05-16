@@ -9,3 +9,10 @@ export const createFunctionType = (params: number[][], results: number[][]): num
   ...unsignedLEB128(results.length), // Number Of Results
   ...results.flat(), // TODO: Make This Cleaner
 ];
+export const createMemoryType = (minPages: number, maxPages?: number): number[] => {
+  return [
+    maxPages === undefined ? 0x00 : 0x01,
+    ...unsignedLEB128(minPages),
+    ...(maxPages === undefined ? [] : [...unsignedLEB128(maxPages)]),
+  ];
+};

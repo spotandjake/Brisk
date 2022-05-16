@@ -1,9 +1,7 @@
 export const encodeVector = (data: number[]) => [...unsignedLEB128(data.length), ...data];
 // TODO: Deal With UTF-8 encoding like \n, \r, \t, etc
-export const encodeString = (str: string) => [
-  str.length,
-  ...str.split('').map((s) => s.charCodeAt(0)),
-];
+export const _encodeString = (str: string) => str.split('').map((s) => s.charCodeAt(0));
+export const encodeString = (str: string) => [str.length, ..._encodeString(str)];
 export const ieee754 = (n: number) => {
   const buf = Buffer.allocUnsafe(4);
   buf.writeFloatLE(n, 0);

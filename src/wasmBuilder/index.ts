@@ -1,7 +1,15 @@
 import { promises as fs } from 'fs';
-import { addExport, addFunction, compileModule, createModule, setStart } from './Build/Module';
+import {
+  addData,
+  addExport,
+  addFunction,
+  addMemory,
+  compileModule,
+  createModule,
+  setStart,
+} from './Build/Module';
 import { createFunction } from './Build/Function';
-import { createFunctionType, createNumericType } from './Build/WasmTypes';
+import { createFunctionType, createMemoryType, createNumericType } from './Build/WasmTypes';
 import {
   i32_AddExpression,
   i32_ConstExpression,
@@ -9,6 +17,7 @@ import {
   local_SetExpression,
 } from './Build/Expression';
 import { WasmExportKind, WasmNumberType } from './Types/Nodes';
+import { _encodeString } from './Build/Utils';
 // Test
 export default async () => {
   // Create Module
@@ -38,6 +47,10 @@ export default async () => {
   module = addExport(module, 'add', WasmExportKind.function, 'add');
   // Set Start Function
   module = setStart(module, 'main');
+  // Add Memory Section
+  module = addMemory(module, createMemoryType(1));
+  // Add Data Section
+  module = addData(module, 0, _encodeString('Hello World'));
   // Compile Module
   const compiled = compileModule(module);
   console.log(compiled);

@@ -1,11 +1,11 @@
 import { WasmExportKind, WasmFunction, WasmImport, WasmModule, WasmSection } from '../Types/Nodes';
 import { encodeString, encodeVector, unsignedLEB128 } from './Utils';
 // Helpers
-const _createSection = (sectionType: WasmSection, sectionData: number[]): number[] => [
+export const _createSection = (sectionType: WasmSection, sectionData: number[]): number[] => [
   sectionType,
   ...encodeVector(sectionData),
 ];
-const createSection = (sectionType: WasmSection, section: number[][]): number[] => {
+export const createSection = (sectionType: WasmSection, section: number[][]): number[] => {
   if (section.length === 0) return [];
   else
     return _createSection(sectionType, [
@@ -20,10 +20,11 @@ export const createImport = (
   importField: string,
   importType: number[]
 ): WasmImport => {
-  // TODO: Handle Different Import Types
+  // TODO: Handle Importing, table
   // Return Value
   return {
     kind: importKind,
+    name: importField,
     importData: [
       ...encodeString(importModule),
       ...encodeString(importField),
@@ -52,7 +53,6 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     elementSection: [],
     codeSection: [],
     dataSection: [],
-    dataCountSection: [],
   };
   // Handle Imports
   if (imports != undefined) {
@@ -62,12 +62,15 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
       else if (wasmImport.kind == WasmExportKind.table) moduleState.tableSection.push([]);
       else if (wasmImport.kind == WasmExportKind.memory) moduleState.memorySection.push([]);
       else if (wasmImport.kind == WasmExportKind.global) moduleState.globalSection.push([]);
+      // Set Import Label
+      if (wasmImport.kind == WasmExportKind.function)
+        moduleState.functionMap.set(wasmImport.name, moduleState.functionSection.length - 1);
+      else if (wasmImport.kind == WasmExportKind.global)
+        moduleState.globalMap.set(wasmImport.name, moduleState.globalSection.length - 1);
       // Add Import To Import Section
       moduleState.importSection.push(wasmImport.importData);
     }
   }
-  // Add Import Filler For indexes
-  // Add Import To Import Section
   // Return Module Contents
   return moduleState;
 };
@@ -126,12 +129,9 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
   return module;
 };
 // Wasm Module Memory Mutations
-export const addMemory = (module: WasmModule, minPages: number, maxPages?: number): WasmModule => {
-  module.memorySection.push([
-    maxPages === undefined ? 0x00 : 0x01,
-    ...unsignedLEB128(minPages),
-    ...(maxPages === undefined ? [] : [...unsignedLEB128(maxPages)]),
-  ]);
+// TODO: Consider Having this be passed in, in createModule
+export const addMemory = (module: WasmModule, memType: number[]): WasmModule => {
+  module.memorySection.push(memType);
   return module;
 };
 // Wasm Module Global Mutations
@@ -191,8 +191,21 @@ export const setStart = (module: WasmModule, startIdentifier: number | string): 
   // Return The Module
   return module;
 };
+// Wasm Module Data Mutations
+export const addData = (module: WasmModule, memoryOffset: number, data: number[]): WasmModule => {
+  // TODO: Look into how this supports multiple Memories with memoryIndex param
+  module.dataSection.push([
+    0x00, // Segment Flags
+    0x41, // Wasm i32.const Instruction
+    ...unsignedLEB128(memoryOffset), // Memory Offset
+    0x0b, // Wasm End Instruction
+    ...unsignedLEB128(data.length), // Data Length
+    ...data, // Data
+  ]);
+  return module;
+};
 // Compile Module
-export const compileModule = (module: WasmModule): Uint8Array => {
+export const compileModule = (module: WasmModule, includeDataCount = true): Uint8Array => {
   return Uint8Array.from([
     ...[0x00, 0x61, 0x73, 0x6d], // Magic Module Header
     ...[0x01, 0x00, 0x00, 0x00], // Wasm Module Version
@@ -207,8 +220,11 @@ export const compileModule = (module: WasmModule): Uint8Array => {
     ...createSection(WasmSection.Export, module.exportSection),
     ..._createSection(WasmSection.Start, module.startSection.flat()),
     ...createSection(WasmSection.Element, module.elementSection),
+    // TODO: Ensure this is correct vvvvv
+    ...(module.dataSection.length != 0 && includeDataCount
+      ? _createSection(WasmSection.DataCount, unsignedLEB128(module.dataSection.length))
+      : []),
     ...createSection(WasmSection.Code, module.codeSection),
     ...createSection(WasmSection.Data, module.dataSection),
-    ...createSection(WasmSection.DataCount, module.dataCountSection),
   ]);
 };
