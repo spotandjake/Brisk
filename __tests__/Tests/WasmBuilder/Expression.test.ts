@@ -2,7 +2,7 @@
 import { expect, test } from '@jest/globals';
 // Test Components
 import * as Expressions from '../../../src/wasmBuilder/Build/Expression';
-import { ieee754, signedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
+import { ieee754, signedLEB128, unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
 // TODO: Test Utils
 // WasmBuilder Expressions Tests
 test('WasmBuilder-Expressions: unreachableExpression', () => {
@@ -11,8 +11,38 @@ test('WasmBuilder-Expressions: unreachableExpression', () => {
 test('WasmBuilder-Expressions: nopExpression', () => {
   expect(Expressions.nopExpression()).toEqual(expect.arrayContaining([0x01]));
 });
-// TODO: BlockExpression
-// TODO: LoopExpression
+test('WasmBuilder-Expressions: blockExpression', () => {
+  expect(
+    Expressions.blockExpression(undefined, [
+      Expressions.nopExpression(),
+      Expressions.nopExpression(),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x02,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...Expressions.nopExpression(),
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: loopExpression', () => {
+  expect(
+    Expressions.loopExpression(undefined, [
+      Expressions.nopExpression(),
+      Expressions.nopExpression(),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x03,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...Expressions.nopExpression(),
+      0x0b,
+    ])
+  );
+});
 test('WasmBuilder-Expressions: ifExpression', () => {
   expect(
     Expressions.ifExpression(Expressions.nopExpression(), Expressions.nopExpression())
@@ -28,7 +58,11 @@ test('WasmBuilder-Expressions: ifExpression', () => {
 });
 test('WasmBuilder-Expressions: ifExpression-elseExpression', () => {
   expect(
-    Expressions.ifExpression(Expressions.nopExpression(), Expressions.nopExpression())
+    Expressions.ifExpression(
+      Expressions.nopExpression(),
+      Expressions.nopExpression(),
+      Expressions.nopExpression()
+    )
   ).toEqual(
     expect.arrayContaining([
       ...Expressions.nopExpression(),
@@ -40,15 +74,32 @@ test('WasmBuilder-Expressions: ifExpression-elseExpression', () => {
     ])
   );
 });
-// TODO: brExpression
-// TODO: br_IfExpression
+test('WasmBuilder-Expressions: brExpression', () => {
+  expect(Expressions.brExpression(0)).toEqual(expect.arrayContaining([0x0c, ...unsignedLEB128(0)]));
+});
+test('WasmBuilder-Expressions: br_IfExpression', () => {
+  expect(Expressions.br_IfExpression(Expressions.nopExpression(), 0)).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x0d, ...unsignedLEB128(0)])
+  );
+});
 // TODO: br_table
 test('WasmBuilder-Expressions: returnExpression', () => {
   expect(Expressions.returnExpression(Expressions.nopExpression())).toEqual(
     expect.arrayContaining([...Expressions.nopExpression(), 0x0f])
   );
 });
-// TODO: callExpression
+test('WasmBuilder-Expressions: callExpression', () => {
+  expect(
+    Expressions.callExpression(0, [Expressions.nopExpression(), Expressions.nopExpression()])
+  ).toEqual(
+    expect.arrayContaining([
+      ...Expressions.nopExpression(),
+      ...Expressions.nopExpression(),
+      0x10,
+      ...unsignedLEB128(0),
+    ])
+  );
+});
 // TODO: Call Indirect
 test('WasmBuilder-Expressions: dropExpression', () => {
   expect(Expressions.dropExpression(Expressions.nopExpression())).toEqual(
@@ -56,11 +107,31 @@ test('WasmBuilder-Expressions: dropExpression', () => {
   );
 });
 // TODO: Select
-// TODO: Local_GetExpression
-// TODO: Local_SetExpression
-// TODO: Local_TeeExpression
-// TODO: Global_GetExpression
-// TODO: Global_SetExpression
+test('WasmBuilder-Expressions: local_GetExpression', () => {
+  expect(Expressions.local_GetExpression(0)).toEqual(
+    expect.arrayContaining([0x20, ...unsignedLEB128(0)])
+  );
+});
+test('WasmBuilder-Expressions: local_setExpression', () => {
+  expect(Expressions.local_SetExpression(0, Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x21, ...unsignedLEB128(0)])
+  );
+});
+test('WasmBuilder-Expressions: local_TeeExpression', () => {
+  expect(Expressions.local_TeeExpression(0, Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x22, ...unsignedLEB128(0)])
+  );
+});
+test('WasmBuilder-Expressions: global_GetExpression', () => {
+  expect(Expressions.global_GetExpression(0)).toEqual(
+    expect.arrayContaining([0x23, ...unsignedLEB128(0)])
+  );
+});
+test('WasmBuilder-Expressions: global_SetExpression', () => {
+  expect(Expressions.global_SetExpression(0, Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x24, ...unsignedLEB128(0)])
+  );
+});
 // TODO: table_get
 // TODO: table_set
 // TODO: i32_loadExpr,
@@ -497,3 +568,146 @@ test('WasmBuilder-Expressions: i32_AddExpression', () => {
 // TODO: f64x2_convert_low_i32x4_sExpr
 // TODO: f64x2_convert_low_i32x4_uExpr
 // TODO: Testing For Labels
+test('WasmBuilder-Expressions: brExpression-label', () => {
+  expect(Expressions.brExpression('test')).toEqual(expect.arrayContaining([0x0c, 'test']));
+});
+test('WasmBuilder-Expressions: br_IfExpression-label', () => {
+  expect(Expressions.br_IfExpression(Expressions.nopExpression(), 'test')).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x0d, 'test'])
+  );
+});
+test('WasmBuilder-Expressions: callExpression-label', () => {
+  expect(
+    Expressions.callExpression('test', [Expressions.nopExpression(), Expressions.nopExpression()])
+  ).toEqual(
+    expect.arrayContaining([
+      ...Expressions.nopExpression(),
+      ...Expressions.nopExpression(),
+      0x10,
+      'test',
+    ])
+  );
+});
+test('WasmBuilder-Expressions: local_GetExpression-label', () => {
+  expect(Expressions.local_GetExpression('test')).toEqual(expect.arrayContaining([0x20, 'test']));
+});
+test('WasmBuilder-Expressions: local_setExpression-label', () => {
+  expect(Expressions.local_SetExpression('test', Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x21, 'test'])
+  );
+});
+test('WasmBuilder-Expressions: local_TeeExpression-label', () => {
+  expect(Expressions.local_TeeExpression('test', Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x22, 'test'])
+  );
+});
+test('WasmBuilder-Expressions: global_GetExpression-label', () => {
+  expect(Expressions.global_GetExpression('test')).toEqual(expect.arrayContaining([0x23, 'test']));
+});
+test('WasmBuilder-Expressions: global_SetExpression-label', () => {
+  expect(Expressions.global_SetExpression('test', Expressions.nopExpression())).toEqual(
+    expect.arrayContaining([...Expressions.nopExpression(), 0x24, 'test'])
+  );
+});
+test('WasmBuilder-Expressions: blockExpression-label', () => {
+  expect(
+    Expressions.blockExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.brExpression('test'),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x02,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[0x0c, ...unsignedLEB128(0)],
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: loopExpression-label', () => {
+  expect(
+    Expressions.loopExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.brExpression('test'),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x03,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[0x0c, ...unsignedLEB128(0)],
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: blockExpression-label-br_if', () => {
+  expect(
+    Expressions.blockExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.br_IfExpression(Expressions.nopExpression(), 'test'),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x02,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[...Expressions.nopExpression(), 0x0d, ...unsignedLEB128(0)],
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: loopExpression-label-br_if', () => {
+  expect(
+    Expressions.loopExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.br_IfExpression(Expressions.nopExpression(), 'test'),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x03,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[...Expressions.nopExpression(), 0x0d, ...unsignedLEB128(0)],
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: blockExpression-label-depth2', () => {
+  expect(
+    Expressions.blockExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.blockExpression('test2', [
+        Expressions.nopExpression(),
+        Expressions.brExpression('test'),
+      ]),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x02,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[0x02, 0x40, ...Expressions.nopExpression(), ...[0x0c, ...unsignedLEB128(1)], 0x0b],
+      0x0b,
+    ])
+  );
+});
+test('WasmBuilder-Expressions: loopExpression-label-depth2', () => {
+  expect(
+    Expressions.loopExpression('test', [
+      Expressions.nopExpression(),
+      Expressions.loopExpression('test2', [
+        Expressions.nopExpression(),
+        Expressions.brExpression('test'),
+      ]),
+    ])
+  ).toEqual(
+    expect.arrayContaining([
+      0x03,
+      0x40,
+      ...Expressions.nopExpression(),
+      ...[0x03, 0x40, ...Expressions.nopExpression(), ...[0x0c, ...unsignedLEB128(1)], 0x0b],
+      0x0b,
+    ])
+  );
+});

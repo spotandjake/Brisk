@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1652730918125" clover="3.2.0">
-  <project timestamp="1652730918126" name="All files">
-    <metrics statements="1993" coveredstatements="44" conditionals="902" coveredconditionals="4" methods="634" coveredmethods="13" elements="3529" coveredelements="61" complexity="0" loc="1993" ncloc="1993" packages="11" files="21" classes="21"/>
+<coverage generated="1652736190509" clover="3.2.0">
+  <project timestamp="1652736190509" name="All files">
+    <metrics statements="1995" coveredstatements="78" conditionals="902" coveredconditionals="39" methods="634" coveredmethods="24" elements="3531" coveredelements="141" complexity="0" loc="1995" ncloc="1995" packages="11" files="21" classes="21"/>
     <package name="Compiler">
       <metrics statements="13" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\index.ts">
         <metrics statements="13" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="9" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -23,7 +23,7 @@
     </package>
     <package name="Compiler.Analyzer">
       <metrics statements="257" coveredstatements="0" conditionals="147" coveredconditionals="0" methods="24" coveredmethods="0"/>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Analyzer/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Analyzer\index.ts">
         <metrics statements="257" coveredstatements="0" conditionals="147" coveredconditionals="0" methods="24" coveredmethods="0"/>
         <line num="31" count="0" type="stmt"/>
         <line num="39" count="0" type="cond" truecount="0" falsecount="1"/>
@@ -286,7 +286,7 @@
     </package>
     <package name="Compiler.Errors">
       <metrics statements="52" coveredstatements="0" conditionals="21" coveredconditionals="0" methods="14" coveredmethods="0"/>
-      <file name="Compiler.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/Compiler.ts">
+      <file name="Compiler.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\Compiler.ts">
         <metrics statements="12" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="6" count="0" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
@@ -301,7 +301,7 @@
         <line num="16" count="0" type="stmt"/>
         <line num="17" count="0" type="stmt"/>
       </file>
-      <file name="ErrorBuilder.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/ErrorBuilder.ts">
+      <file name="ErrorBuilder.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\ErrorBuilder.ts">
         <metrics statements="25" coveredstatements="0" conditionals="17" coveredconditionals="0" methods="5" coveredmethods="0"/>
         <line num="3" count="0" type="stmt"/>
         <line num="4" count="0" type="stmt"/>
@@ -329,11 +329,11 @@
         <line num="54" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="60" count="0" type="stmt"/>
       </file>
-      <file name="Errors.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/Errors.ts">
+      <file name="Errors.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\Errors.ts">
         <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="39" count="0" type="stmt"/>
       </file>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\index.ts">
         <metrics statements="14" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="6" count="0" type="stmt"/>
         <line num="8" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -353,7 +353,7 @@
     </package>
     <package name="Compiler.Helpers">
       <metrics statements="12" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Helpers/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Helpers\index.ts">
         <metrics statements="12" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="18" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
@@ -371,7 +371,7 @@
     </package>
     <package name="Compiler.Lexer">
       <metrics statements="132" coveredstatements="0" conditionals="87" coveredconditionals="0" methods="3" coveredmethods="0"/>
-      <file name="Tokens.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Lexer/Tokens.ts">
+      <file name="Tokens.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Lexer\Tokens.ts">
         <metrics statements="123" coveredstatements="0" conditionals="75" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="5" count="0" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
@@ -497,7 +497,7 @@
         <line num="563" count="0" type="stmt"/>
         <line num="569" count="0" type="stmt"/>
       </file>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Lexer/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Lexer\index.ts">
         <metrics statements="9" coveredstatements="0" conditionals="12" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="10" count="0" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
@@ -512,7 +512,7 @@
     </package>
     <package name="Compiler.Parser">
       <metrics statements="578" coveredstatements="0" conditionals="221" coveredconditionals="0" methods="245" coveredmethods="0"/>
-      <file name="ErrorProvider.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Parser/ErrorProvider.ts">
+      <file name="ErrorProvider.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Parser\ErrorProvider.ts">
         <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
         <line num="3" count="0" type="stmt"/>
@@ -524,7 +524,7 @@
         <line num="17" count="0" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
       </file>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Parser/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Parser\index.ts">
         <metrics statements="569" coveredstatements="0" conditionals="221" coveredconditionals="0" methods="237" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
@@ -1099,7 +1099,7 @@
     </package>
     <package name="Compiler.TypeChecker">
       <metrics statements="748" coveredstatements="0" conditionals="319" coveredconditionals="0" methods="290" coveredmethods="0"/>
-      <file name="WasmTypes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/TypeChecker/WasmTypes.ts">
+      <file name="WasmTypes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\TypeChecker\WasmTypes.ts">
         <metrics statements="246" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="245" coveredmethods="0"/>
         <line num="8" count="0" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
@@ -1348,7 +1348,7 @@
         <line num="1845" count="0" type="stmt"/>
         <line num="1854" count="0" type="stmt"/>
       </file>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/TypeChecker/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\TypeChecker\index.ts">
         <metrics statements="502" coveredstatements="0" conditionals="319" coveredconditionals="0" methods="45" coveredmethods="0"/>
         <line num="37" count="0" type="stmt"/>
         <line num="38" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -1856,14 +1856,14 @@
     </package>
     <package name="Compiler.Types">
       <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="ParseNodes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Types/ParseNodes.ts">
+      <file name="ParseNodes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Types\ParseNodes.ts">
         <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="465" count="0" type="stmt"/>
       </file>
     </package>
     <package name="cli">
       <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/cli/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\cli\index.ts">
         <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -1885,7 +1885,7 @@
     </package>
     <package name="wasmBuilder">
       <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/index.ts">
+      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\index.ts">
         <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="24" count="0" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
@@ -1906,64 +1906,66 @@
       </file>
     </package>
     <package name="wasmBuilder.Build">
-      <metrics statements="168" coveredstatements="44" conditionals="103" coveredconditionals="4" methods="46" coveredmethods="13"/>
-      <file name="Expression.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Expression.ts">
-        <metrics statements="48" coveredstatements="23" conditionals="36" coveredconditionals="1" methods="21" coveredmethods="11"/>
+      <metrics statements="170" coveredstatements="78" conditionals="103" coveredconditionals="39" methods="46" coveredmethods="24"/>
+      <file name="Expression.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Expression.ts">
+        <metrics statements="50" coveredstatements="50" conditionals="36" coveredconditionals="36" methods="21" coveredmethods="21"/>
         <line num="4" count="1" type="stmt"/>
-        <line num="5" count="16" type="stmt"/>
+        <line num="5" count="69" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="15" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="22" count="0" type="cond" truecount="0" falsecount="5"/>
-        <line num="23" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="37" count="1" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="46" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="50" count="0" type="stmt"/>
-        <line num="53" count="0" type="cond" truecount="0" falsecount="5"/>
-        <line num="54" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="68" count="1" type="stmt"/>
-        <line num="72" count="2" type="stmt"/>
-        <line num="80" count="1" type="stmt"/>
-        <line num="84" count="1" type="stmt"/>
-        <line num="87" count="0" type="stmt"/>
-        <line num="93" count="1" type="stmt"/>
-        <line num="97" count="1" type="stmt"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="106" count="1" type="stmt"/>
-        <line num="111" count="1" type="stmt"/>
-        <line num="115" count="1" type="stmt"/>
-        <line num="118" count="0" type="stmt"/>
-        <line num="123" count="1" type="stmt"/>
-        <line num="126" count="0" type="stmt"/>
-        <line num="131" count="1" type="stmt"/>
-        <line num="135" count="1" type="stmt"/>
-        <line num="138" count="0" type="stmt"/>
-        <line num="168" count="1" type="stmt"/>
-        <line num="169" count="1" type="stmt"/>
-        <line num="173" count="5" type="stmt"/>
-        <line num="178" count="1" type="stmt"/>
-        <line num="182" count="1" type="stmt"/>
-        <line num="223" count="1" type="stmt"/>
-        <line num="226" count="1" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="18" type="cond" truecount="1" falsecount="0"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="18" type="stmt"/>
+        <line num="23" count="18" type="cond" truecount="5" falsecount="0"/>
+        <line num="24" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="28" count="15" type="stmt"/>
+        <line num="31" count="5" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="43" count="5" type="stmt"/>
+        <line num="44" count="5" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="47" count="18" type="cond" truecount="1" falsecount="0"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="54" count="18" type="stmt"/>
+        <line num="55" count="18" type="cond" truecount="5" falsecount="0"/>
+        <line num="56" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="60" count="15" type="stmt"/>
+        <line num="63" count="5" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="82" count="6" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="89" count="4" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="102" count="2" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="113" count="2" type="stmt"/>
+        <line num="117" count="1" type="stmt"/>
+        <line num="120" count="2" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="128" count="2" type="stmt"/>
+        <line num="133" count="2" type="stmt"/>
+        <line num="137" count="1" type="stmt"/>
+        <line num="140" count="2" type="stmt"/>
+        <line num="170" count="1" type="stmt"/>
+        <line num="171" count="1" type="stmt"/>
+        <line num="175" count="5" type="stmt"/>
+        <line num="180" count="1" type="stmt"/>
+        <line num="184" count="1" type="stmt"/>
+        <line num="225" count="1" type="stmt"/>
+        <line num="228" count="1" type="stmt"/>
       </file>
-      <file name="Function.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Function.ts">
+      <file name="Function.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Function.ts">
         <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="4" count="0" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
       </file>
-      <file name="Module.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Module.ts">
+      <file name="Module.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Module.ts">
         <metrics statements="83" coveredstatements="0" conditionals="55" coveredconditionals="0" methods="14" coveredmethods="0"/>
         <line num="4" count="0" type="stmt"/>
         <line num="8" count="0" type="stmt"/>
@@ -2049,8 +2051,8 @@
         <line num="229" count="0" type="cond" truecount="0" falsecount="1"/>
         <line num="230" count="0" type="stmt"/>
       </file>
-      <file name="Utils.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Utils.ts">
-        <metrics statements="31" coveredstatements="21" conditionals="8" coveredconditionals="3" methods="7" coveredmethods="2"/>
+      <file name="Utils.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Utils.ts">
+        <metrics statements="31" coveredstatements="28" conditionals="8" coveredconditionals="3" methods="7" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -2074,16 +2076,16 @@
         <line num="26" count="6" type="stmt"/>
         <line num="28" count="6" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="35" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="31" count="26" type="stmt"/>
+        <line num="32" count="26" type="stmt"/>
+        <line num="33" count="26" type="stmt"/>
+        <line num="34" count="26" type="stmt"/>
+        <line num="35" count="26" type="cond" truecount="0" falsecount="1"/>
         <line num="36" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="40" count="0" type="stmt"/>
+        <line num="38" count="26" type="stmt"/>
+        <line num="40" count="26" type="stmt"/>
       </file>
-      <file name="WasmTypes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/WasmTypes.ts">
+      <file name="WasmTypes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\WasmTypes.ts">
         <metrics statements="4" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="4" count="0" type="stmt"/>
         <line num="5" count="0" type="stmt"/>

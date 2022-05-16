@@ -19,7 +19,8 @@ export const blockExpression = (
       depthCount++;
     // Handle Resolution
     // If label is a string and the last byte is a br or a br_if Instruction
-    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
+    const lastByte = wasmBody.at(-1);
+    if (typeof byte == 'string' && (lastByte == 0x0c || lastByte == 0x0d)) {
       if (byte == label) {
         // Determine Depth
         wasmBody.push(...unsignedLEB128(depthCount));
@@ -50,7 +51,8 @@ export const loopExpression = (
       depthCount++;
     // Handle Resolution
     // If label is a string and the last byte is a br or a br_if Instruction
-    if (typeof byte == 'string' && (wasmBody.at(-1) == 0x02 || wasmBody.at(-1) == 0x03)) {
+    const lastByte = wasmBody.at(-1);
+    if (typeof byte == 'string' && (lastByte == 0x0c || lastByte == 0x0d)) {
       if (byte == label) {
         // Determine Depth
         wasmBody.push(...unsignedLEB128(depthCount));
