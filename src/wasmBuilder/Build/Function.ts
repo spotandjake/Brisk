@@ -18,3 +18,9 @@ export const createFunction = (
   };
 };
 // Function Mutators
+export const addLocal = (func: WasmFunction, local: [number[], string]): WasmFunction => {
+  // Add local
+  func.locals.push(local);
+  // Return Wasm
+  return func;
+};

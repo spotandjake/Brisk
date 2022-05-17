@@ -20,7 +20,7 @@ export const createImport = (
   importField: string,
   importType: number[]
 ): WasmImport => {
-  // TODO: Handle Importing, table
+  // TODO: Handle Importing, table, global
   // Return Value
   return {
     kind: importKind,
@@ -163,6 +163,8 @@ export const addGlobal = (
   globalType: number[],
   value: number[]
 ): WasmModule => {
+  // Set Global Label
+  module.globalMap.set(globalName, module.globalSection.length);
   // Add The Module
   module.globalSection.push([
     ...globalType, // Global Type
@@ -170,8 +172,6 @@ export const addGlobal = (
     ...value, // Global Value
     0x0b, // Wasm End Instruction
   ]);
-  // Set Global Label
-  module.globalMap.set(globalName, module.globalSection.length - 1);
   // Return The Module
   return module;
 };

@@ -12,7 +12,8 @@
   },
   "scripts": {
     "start": "gulp build && node --enable-source-maps ./dist/brisk.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "testCoverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "build": "gulp build",
     "buildExtension": "gulp buildExtension",
     "injectExtension": " gulp injectExtension",

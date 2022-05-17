@@ -1,14 +1,14 @@
-import { UnresolvedBytes } from '../Types/Nodes';
+import { ResolvedBytes, UnresolvedBytes } from '../Types/Nodes';
 import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Expressions
-export const unreachableExpression = (): UnresolvedBytes => [0x00]; // Wasm Unreachable Instruction
-export const nopExpression = (): UnresolvedBytes => [0x01]; // Wasm nop Instruction
+export const unreachableExpression = (): ResolvedBytes => [0x00]; // Wasm Unreachable Instruction
+export const nopExpression = (): ResolvedBytes => [0x01]; // Wasm nop Instruction
 export const blockExpression = (
   label: string | undefined,
   body: UnresolvedBytes[]
 ): UnresolvedBytes => {
   // Resolve Any Labels
-  const wasmBody = [];
+  const wasmBody: UnresolvedBytes = [];
   let depthCount = 0;
   for (const byte of body.flat()) {
     // Handle Depth
@@ -24,7 +24,7 @@ export const blockExpression = (
       if (byte == label) {
         // Determine Depth
         wasmBody.push(...unsignedLEB128(depthCount));
-      }
+      } else wasmBody.push(byte);
     } else wasmBody.push(byte);
   }
   // Return Wasm
@@ -40,7 +40,7 @@ export const loopExpression = (
   body: UnresolvedBytes[]
 ): UnresolvedBytes => {
   // Resolve Any Labels
-  const wasmBody = [];
+  const wasmBody: UnresolvedBytes = [];
   let depthCount = 0;
   for (const byte of body.flat()) {
     // Handle Depth
@@ -56,7 +56,7 @@ export const loopExpression = (
       if (byte == label) {
         // Determine Depth
         wasmBody.push(...unsignedLEB128(depthCount));
-      }
+      } else wasmBody.push(byte);
     } else wasmBody.push(byte);
   }
   // Return Wasm
@@ -167,21 +167,21 @@ export const global_SetExpression = (
 // TODO: i64_store8Expr,
 // TODO: i64_store16Expr,
 // TODO: i64_store32Expr,
-export const memory_SizeExpression = (): UnresolvedBytes => [0x3f]; // Wasm memory.size Instruction
+export const memory_SizeExpression = (): ResolvedBytes => [0x3f]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x40, // Wasm Memory.Size Instruction
 ];
-export const i32_ConstExpression = (value: number): UnresolvedBytes => [
+export const i32_ConstExpression = (value: number): ResolvedBytes => [
   0x41, // Wasm i32.Const Instruction
   ...signedLEB128(value),
 ];
 // TODO: i64_Const
-export const f32_ConstExpression = (value: number): UnresolvedBytes => [
+export const f32_ConstExpression = (value: number): ResolvedBytes => [
   0x43, // Wasm f32.Const Instruction
   ...ieee754(value),
 ];
-export const f64_ConstExpression = (value: number): UnresolvedBytes => [
+export const f64_ConstExpression = (value: number): ResolvedBytes => [
   0x44, // Wasm f64.Const Instruction
   ...ieee754(value),
 ];
