@@ -75,7 +75,23 @@ test('WasmBuilder-Expressions: callExpression', () => {
     ...unsignedLEB128(0),
   ]);
 });
-// TODO: Call Indirect
+test('WasmBuilder-Expressions: call_indirect', () => {
+  // TODO: Handle Using An Actual Function Type
+  expect(
+    Expressions.call_indirect(
+      Expressions.i32_ConstExpression(0),
+      [Expressions.nopExpression(), Expressions.nopExpression()],
+      0
+    )
+  ).toEqual([
+    ...Expressions.nopExpression(),
+    ...Expressions.nopExpression(),
+    ...Expressions.i32_ConstExpression(0),
+    0x11,
+    ...unsignedLEB128(0),
+    0x00,
+  ]);
+});
 test('WasmBuilder-Expressions: dropExpression', () => {
   expect(Expressions.dropExpression(Expressions.nopExpression())).toEqual([
     ...Expressions.nopExpression(),

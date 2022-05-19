@@ -100,11 +100,23 @@ export const callExpression = (
   func: number | string,
   params: UnresolvedBytes[]
 ): UnresolvedBytes => [
-  ...params.flat(), // TODO: Optimize This
+  ...params.flat(),
   0x10, // Wasm Call Instruction
   ...(typeof func == 'string' ? [func] : unsignedLEB128(func)), // Encoded Func Index
 ];
-// TODO: Call Indirect
+export const call_indirect = (
+  funcIndex: UnresolvedBytes,
+  params: UnresolvedBytes[],
+  funcType: number
+): UnresolvedBytes => [
+  ...params.flat(), // Parameters
+  ...funcIndex, // Function Index
+  0x11, // Wasm Call_indirect Instruction
+  ...unsignedLEB128(funcType), // Function Type Reference
+  0x00, // Wasm Function Table
+  // TODO: Allow You To Set The Function Table
+  // TODO : Allow for the function signature to be labeled
+];
 export const dropExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x1a, // Wasm Drop Instruction

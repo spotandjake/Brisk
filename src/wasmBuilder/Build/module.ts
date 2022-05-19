@@ -127,6 +127,13 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
   // Return Module
   return module;
 };
+// Wasm Type Element Mutations
+export const addType = (module: WasmModule, type: number[]): WasmModule => {
+  module.typeSection.push(type); // Add Type
+  // TODO: Add Type Labels
+  // TODO: Return The Type Index
+  return module;
+};
 // Wasm Module Element Mutations
 // TODO: Test This
 export const addElement = (module: WasmModule, values: number[]): WasmModule => {

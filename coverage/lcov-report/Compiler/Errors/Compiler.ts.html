@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -94,17 +94,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,17 +120,17 @@ import { Position } from '../Types/Types';
 import { BriskErrorType } from './Errors';
 type ErrCode = BriskErrorType;
 type Pos = Position;
-const BriskCustomError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, type: string, msg: string, pos?: Pos) =&gt;
+const BriskCustomError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, type: string, msg: string, pos?: Pos) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskCustomError(code, `${type}: ${msg}`, pos);</span>
-const BriskError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;
+const BriskError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskError(code, 'Error', err, eParams, pos);</span>
-const BriskSyntaxError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;
+const BriskSyntaxError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskError(code, 'SyntaxError', err, eParams, pos);</span>
-const BriskReferenceError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, e: ErrCode, eParams: string[], pos: Pos) =&gt;
+const BriskReferenceError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, e: ErrCode, eParams: string[], pos: Pos) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskError(code, 'ReferenceError', e, eParams, pos);</span>
-const BriskTypeError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos): never =&gt;
+const BriskTypeError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos): never =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskError(code, 'TypeError', err, eParams, pos);</span>
-const BriskParseError = <span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;
+const BriskParseError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(c</span>ode: string, err: ErrCode, eParams: string[], pos: Pos) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >  _BriskError(code, 'ParseError', err, eParams, pos);</span>
 // Exports
 export {
@@ -148,7 +148,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed May 18 2022 11:31:02 GMT-0400 (Eastern Daylight Time)
+                at Thu May 19 2022 13:03:38 GMT-0400 (Eastern Daylight Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

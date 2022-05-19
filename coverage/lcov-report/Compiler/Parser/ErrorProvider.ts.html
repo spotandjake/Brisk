@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.77% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,11 +91,8 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">138x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -103,14 +100,17 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -118,10 +118,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { IParserErrorMessageProvider, TokenType } from 'chevrotain';
-const errorHandler = (): IParserErrorMessageProvider =&gt; {
-  return {
-    buildMismatchTokenMessage: ({ actual, expected }) =&gt; {
-      return `Failed to Parse Found: \`${actual.tokenType.LABEL}\`, Expected \`${expected.LABEL}\``;
+const errorHandler = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(): IParserErrorMessageProvider =</span>&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    buildMismatchTokenMessage: <span class="fstat-no" title="function not covered" >({</span> actual, expected }) =&gt; {
+<span class="cstat-no" title="statement not covered" >      return `Failed to Parse Found: \`${actual.tokenType.LABEL}\`, Expected \`${expected.LABEL}\``;</span>
     },
     buildNotAllInputParsedMessage: <span class="fstat-no" title="function not covered" >({</span> firstRedundant: { image } }) =&gt; {
 <span class="cstat-no" title="statement not covered" >      return `\x1b[31m\x1b[1merror[]\x1b[0m: Failed To Parse Input Invalid Token \`${image}\``;</span>
@@ -129,15 +129,15 @@ const errorHandler = (): IParserErrorMessageProvider =&gt; {
     buildNoViableAltMessage: <span class="fstat-no" title="function not covered" >({</span> actual, ruleName }) =&gt; {
 <span class="cstat-no" title="statement not covered" >      return `Failed to Parse Found: \`${actual[0].image}\`, Expected \`${ruleName}\``;</span>
     },
-    buildEarlyExitMessage: ({ actual, expectedIterationPaths }) =&gt; {
-      const mapExpected = (tokens: TokenType[][]): string =&gt; {
-        return tokens
-          .map((tokenPath, i) =&gt; {
-            return tokenPath.map((token) =&gt; `\`${token.name}\``).join(', ');
+    buildEarlyExitMessage: <span class="fstat-no" title="function not covered" >({</span> actual, expectedIterationPaths }) =&gt; {
+      const mapExpected = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>okens: TokenType[][]): string =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return tokens</span>
+          .map(<span class="fstat-no" title="function not covered" >(t</span>okenPath, i) =&gt; {
+<span class="cstat-no" title="statement not covered" >            return tokenPath.map(<span class="fstat-no" title="function not covered" >(t</span>oken) =&gt; <span class="cstat-no" title="statement not covered" >`\`${token.name}\``)</span>.join(', ');</span>
           })
           .join(', ');
       };
-      return `Failed To Parse Found: \`${actual[0].image}\`, Expected one of ${mapExpected(
+<span class="cstat-no" title="statement not covered" >      return `Failed To Parse Found: \`${actual[0].image}\`, Expected one of ${mapExpected(</span>
         expectedIterationPaths
       )}`;
     },
@@ -151,7 +151,7 @@ export default errorHandler;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed May 18 2022 11:31:02 GMT-0400 (Eastern Daylight Time)
+                at Thu May 19 2022 13:03:38 GMT-0400 (Eastern Daylight Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>
