@@ -15,14 +15,7 @@ import Node, {
   UnaryExpressionOperator,
   VariableUsageNode,
 } from '../Types/ParseNodes';
-import {
-  TypeData,
-  TypeMap,
-  TypeStack,
-  VariableData,
-  VariableMap,
-  VariableStack,
-} from '../Types/AnalyzerNodes';
+import { TypeData, TypeMap, TypeStack, VariableMap, VariableStack } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { wasmExpressions } from './WasmTypes';
 import {

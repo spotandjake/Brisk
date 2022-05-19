@@ -198,7 +198,14 @@ export const f64_ConstExpression = (value: number): ResolvedBytes => [
   ...ieee754(value),
 ];
 // TODO: i32_eqzExpr,
-// TODO: i32_eqExpr,
+export const i32_eqExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x46, // Wasm i32.Add Instruction
+];
 // TODO: i32_neExpr,
 // TODO: i32_lt_sExpr,
 // TODO: i32_lt_uExpr,

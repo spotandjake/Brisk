@@ -171,7 +171,11 @@ test('WasmBuilder-Expressions: f64_ConstExpression', () => {
   expect(Expressions.f64_ConstExpression(1)).toEqual([0x44, ...ieee754(1)]);
 });
 // TODO: i32_eqzExpr,
-// TODO: i32_eqExpr,
+test('WasmBuilder-Expressions: i32_eqExpression', () => {
+  expect(
+    Expressions.i32_eqExpression(Expressions.nopExpression(), Expressions.nopExpression())
+  ).toEqual([...Expressions.nopExpression(), ...Expressions.nopExpression(), 0x46]);
+});
 // TODO: i32_neExpr,
 // TODO: i32_lt_sExpr,
 // TODO: i32_lt_uExpr,
