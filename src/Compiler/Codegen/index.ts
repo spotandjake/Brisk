@@ -18,6 +18,20 @@ const generateCode = (
   parentNode: Node | undefined,
   node: Exclude<Node, ProgramNode>
 ): UnresolvedBytes => {
+  const {
+    // Our Global Variable And Type Pools
+    _imports,
+    _exports,
+    _variables,
+    _types,
+    // ParentStacks
+    _varStacks,
+    _typeStacks,
+    // Stacks
+    _closure,
+    _varStack,
+    _typeStack,
+  } = properties;
   const _generateCode = (
     childNode: Exclude<Node, ProgramNode>,
     props: Partial<AnalyzerProperties> = properties,
@@ -41,6 +55,24 @@ const generateCode = (
       // Return Expression
       return Expressions.ifExpression(condition, body, alternative);
     }
+    // TODO: Handle Flag Statement
+    case NodeType.BlockStatement: {
+      // Compile Body
+      const body = node.body.map((_node) => {
+        return _generateCode(_node, {
+          _varStacks: [..._varStacks, node.data._varStack],
+          _typeStacks: [..._typeStacks, node.data._typeStack],
+
+          _varStack: node.data._varStack,
+          _typeStack: node.data._typeStack,
+        });
+      });
+      // Return Expression
+      return Expressions.blockExpression(undefined, body);
+    }
+    // TODO: Handle Import Statement
+    // TODO: Handle WasmImportStatement
+    // TODO: Handle ExportStatement
   }
   // We should never get to here
   process.exit(1); // TODO: Remove this
