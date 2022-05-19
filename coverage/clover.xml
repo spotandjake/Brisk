@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1652745815960" clover="3.2.0">
-  <project timestamp="1652745815961" name="All files">
+<coverage generated="1652887862557" clover="3.2.0">
+  <project timestamp="1652887862557" name="All files">
     <metrics statements="2001" coveredstatements="807" conditionals="904" coveredconditionals="240" methods="635" coveredmethods="275" elements="3540" coveredelements="1322" complexity="0" loc="2001" ncloc="2001" packages="11" files="21" classes="21"/>
     <package name="Compiler">
       <metrics statements="13" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/index.ts">
         <metrics statements="13" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="9" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -23,7 +23,7 @@
     </package>
     <package name="Compiler.Analyzer">
       <metrics statements="257" coveredstatements="0" conditionals="147" coveredconditionals="0" methods="24" coveredmethods="0"/>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Analyzer\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Analyzer/index.ts">
         <metrics statements="257" coveredstatements="0" conditionals="147" coveredconditionals="0" methods="24" coveredmethods="0"/>
         <line num="31" count="0" type="stmt"/>
         <line num="39" count="0" type="cond" truecount="0" falsecount="1"/>
@@ -286,7 +286,7 @@
     </package>
     <package name="Compiler.Errors">
       <metrics statements="52" coveredstatements="11" conditionals="21" coveredconditionals="0" methods="14" coveredmethods="0"/>
-      <file name="Compiler.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\Compiler.ts">
+      <file name="Compiler.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/Compiler.ts">
         <metrics statements="12" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="6" count="2" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
@@ -301,7 +301,7 @@
         <line num="16" count="2" type="stmt"/>
         <line num="17" count="0" type="stmt"/>
       </file>
-      <file name="ErrorBuilder.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\ErrorBuilder.ts">
+      <file name="ErrorBuilder.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/ErrorBuilder.ts">
         <metrics statements="25" coveredstatements="2" conditionals="17" coveredconditionals="0" methods="5" coveredmethods="0"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="0" type="stmt"/>
@@ -329,11 +329,11 @@
         <line num="54" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="60" count="0" type="stmt"/>
       </file>
-      <file name="Errors.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\Errors.ts">
+      <file name="Errors.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/Errors.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="39" count="2" type="stmt"/>
       </file>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Errors\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Errors/index.ts">
         <metrics statements="14" coveredstatements="2" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="6" count="2" type="stmt"/>
         <line num="8" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -353,7 +353,7 @@
     </package>
     <package name="Compiler.Helpers">
       <metrics statements="12" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Helpers\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Helpers/index.ts">
         <metrics statements="12" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="18" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
@@ -371,7 +371,7 @@
     </package>
     <package name="Compiler.Lexer">
       <metrics statements="132" coveredstatements="128" conditionals="87" coveredconditionals="76" methods="3" coveredmethods="3"/>
-      <file name="Tokens.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Lexer\Tokens.ts">
+      <file name="Tokens.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Lexer/Tokens.ts">
         <metrics statements="123" coveredstatements="123" conditionals="75" coveredconditionals="74" methods="2" coveredmethods="2"/>
         <line num="5" count="2" type="stmt"/>
         <line num="7" count="14" type="stmt"/>
@@ -497,7 +497,7 @@
         <line num="563" count="2" type="stmt"/>
         <line num="569" count="2" type="stmt"/>
       </file>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Lexer\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Lexer/index.ts">
         <metrics statements="9" coveredstatements="5" conditionals="12" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="4" type="stmt"/>
@@ -512,7 +512,7 @@
     </package>
     <package name="Compiler.Parser">
       <metrics statements="578" coveredstatements="543" conditionals="221" coveredconditionals="108" methods="245" coveredmethods="231"/>
-      <file name="ErrorProvider.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Parser\ErrorProvider.ts">
+      <file name="ErrorProvider.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Parser/ErrorProvider.ts">
         <metrics statements="9" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="6"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
@@ -524,7 +524,7 @@
         <line num="17" count="4" type="stmt"/>
         <line num="21" count="4" type="stmt"/>
       </file>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Parser\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Parser/index.ts">
         <metrics statements="569" coveredstatements="536" conditionals="221" coveredconditionals="108" methods="237" coveredmethods="225"/>
         <line num="14" count="2" type="stmt"/>
         <line num="19" count="2" type="stmt"/>
@@ -1099,7 +1099,7 @@
     </package>
     <package name="Compiler.TypeChecker">
       <metrics statements="748" coveredstatements="0" conditionals="319" coveredconditionals="0" methods="290" coveredmethods="0"/>
-      <file name="WasmTypes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\TypeChecker\WasmTypes.ts">
+      <file name="WasmTypes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/TypeChecker/WasmTypes.ts">
         <metrics statements="246" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="245" coveredmethods="0"/>
         <line num="8" count="0" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
@@ -1348,7 +1348,7 @@
         <line num="1845" count="0" type="stmt"/>
         <line num="1854" count="0" type="stmt"/>
       </file>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\TypeChecker\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/TypeChecker/index.ts">
         <metrics statements="502" coveredstatements="0" conditionals="319" coveredconditionals="0" methods="45" coveredmethods="0"/>
         <line num="37" count="0" type="stmt"/>
         <line num="38" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -1856,14 +1856,14 @@
     </package>
     <package name="Compiler.Types">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="ParseNodes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\Compiler\Types\ParseNodes.ts">
+      <file name="ParseNodes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/Compiler/Types/ParseNodes.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="465" count="1" type="stmt"/>
       </file>
     </package>
     <package name="cli">
       <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\cli\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/cli/index.ts">
         <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -1885,7 +1885,7 @@
     </package>
     <package name="wasmBuilder">
       <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <file name="index.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\index.ts">
+      <file name="index.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/index.ts">
         <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="24" count="0" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
@@ -1907,7 +1907,7 @@
     </package>
     <package name="wasmBuilder.Build">
       <metrics statements="176" coveredstatements="124" conditionals="105" coveredconditionals="56" methods="47" coveredmethods="41"/>
-      <file name="Expression.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Expression.ts">
+      <file name="Expression.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Expression.ts">
         <metrics statements="52" coveredstatements="52" conditionals="38" coveredconditionals="38" methods="21" coveredmethods="21"/>
         <line num="4" count="2" type="stmt"/>
         <line num="5" count="69" type="stmt"/>
@@ -1962,7 +1962,7 @@
         <line num="225" count="2" type="stmt"/>
         <line num="228" count="1" type="stmt"/>
       </file>
-      <file name="Function.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Function.ts">
+      <file name="Function.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Function.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="1" type="stmt"/>
         <line num="12" count="2" type="stmt"/>
@@ -1970,7 +1970,7 @@
         <line num="23" count="1" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
       </file>
-      <file name="Module.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Module.ts">
+      <file name="Module.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Module.ts">
         <metrics statements="83" coveredstatements="31" conditionals="55" coveredconditionals="6" methods="14" coveredmethods="8"/>
         <line num="4" count="2" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -2056,7 +2056,7 @@
         <line num="229" count="1" type="cond" truecount="0" falsecount="1"/>
         <line num="230" count="0" type="stmt"/>
       </file>
-      <file name="Utils.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\Utils.ts">
+      <file name="Utils.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/Utils.ts">
         <metrics statements="32" coveredstatements="32" conditionals="8" coveredconditionals="8" methods="7" coveredmethods="7"/>
         <line num="1" count="5" type="stmt"/>
         <line num="3" count="58" type="stmt"/>
@@ -2091,7 +2091,7 @@
         <line num="42" count="98" type="stmt"/>
         <line num="44" count="89" type="stmt"/>
       </file>
-      <file name="WasmTypes.ts" path="C:\Users\Spota\OneDrive\Documents\GitHub\Brisk\Brisk\src\wasmBuilder\Build\WasmTypes.ts">
+      <file name="WasmTypes.ts" path="/Users/spotandjake/Documents/Github/Brisk/src/wasmBuilder/Build/WasmTypes.ts">
         <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
         <line num="4" count="18" type="stmt"/>
         <line num="5" count="9" type="stmt"/>

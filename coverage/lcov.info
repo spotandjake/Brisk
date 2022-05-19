@@ -1,5 +1,5 @@
 TN:
-SF:src\Compiler\index.ts
+SF:src/Compiler/index.ts
 FN:9,(anonymous_0)
 FNF:1
 FNH:0
@@ -25,7 +25,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Analyzer\index.ts
+SF:src/Compiler/Analyzer/index.ts
 FN:31,(anonymous_0)
 FN:48,(anonymous_1)
 FN:63,(anonymous_2)
@@ -486,7 +486,7 @@ BRF:147
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Errors\Compiler.ts
+SF:src/Compiler/Errors/Compiler.ts
 FN:6,(anonymous_0)
 FN:8,(anonymous_1)
 FN:10,(anonymous_2)
@@ -519,7 +519,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Errors\ErrorBuilder.ts
+SF:src/Compiler/Errors/ErrorBuilder.ts
 FN:3,(anonymous_0)
 FN:6,(anonymous_1)
 FN:10,(anonymous_2)
@@ -580,7 +580,7 @@ BRF:17
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Errors\Errors.ts
+SF:src/Compiler/Errors/Errors.ts
 FNF:0
 FNH:0
 DA:39,2
@@ -590,7 +590,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Errors\index.ts
+SF:src/Compiler/Errors/index.ts
 FN:6,(anonymous_0)
 FN:19,(anonymous_1)
 FN:29,(anonymous_2)
@@ -623,7 +623,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Helpers\index.ts
+SF:src/Compiler/Helpers/index.ts
 FN:18,(anonymous_0)
 FN:26,(anonymous_1)
 FN:39,(anonymous_2)
@@ -658,7 +658,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Lexer\Tokens.ts
+SF:src/Compiler/Lexer/Tokens.ts
 FN:5,(anonymous_0)
 FN:7,(anonymous_1)
 FNF:2
@@ -869,7 +869,7 @@ BRF:75
 BRH:74
 end_of_record
 TN:
-SF:src\Compiler\Lexer\index.ts
+SF:src/Compiler/Lexer/index.ts
 FN:10,(anonymous_0)
 FNF:1
 FNH:1
@@ -901,7 +901,7 @@ BRF:12
 BRH:2
 end_of_record
 TN:
-SF:src\Compiler\Parser\ErrorProvider.ts
+SF:src/Compiler/Parser/ErrorProvider.ts
 FN:2,(anonymous_0)
 FN:4,(anonymous_1)
 FN:7,(anonymous_2)
@@ -935,7 +935,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Parser\index.ts
+SF:src/Compiler/Parser/index.ts
 FN:13,(anonymous_0)
 FN:23,(anonymous_1)
 FN:48,(anonymous_2)
@@ -2208,7 +2208,7 @@ BRF:221
 BRH:108
 end_of_record
 TN:
-SF:src\Compiler\TypeChecker\WasmTypes.ts
+SF:src/Compiler/TypeChecker/WasmTypes.ts
 FN:8,(anonymous_0)
 FN:9,(anonymous_1)
 FN:10,(anonymous_2)
@@ -2953,7 +2953,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\TypeChecker\index.ts
+SF:src/Compiler/TypeChecker/index.ts
 FN:37,(anonymous_0)
 FN:59,(anonymous_1)
 FN:64,(anonymous_2)
@@ -3873,7 +3873,7 @@ BRF:319
 BRH:0
 end_of_record
 TN:
-SF:src\Compiler\Types\ParseNodes.ts
+SF:src/Compiler/Types/ParseNodes.ts
 FNF:0
 FNH:0
 DA:465,1
@@ -3883,7 +3883,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\cli\index.ts
+SF:src/cli/index.ts
 FN:18,(anonymous_0)
 FN:22,(anonymous_1)
 FN:33,(anonymous_2)
@@ -3916,7 +3916,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\wasmBuilder\index.ts
+SF:src/wasmBuilder/index.ts
 FN:22,(anonymous_0)
 FNF:1
 FNH:0
@@ -3943,7 +3943,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\wasmBuilder\Build\Expression.ts
+SF:src/wasmBuilder/Build/Expression.ts
 FN:4,(anonymous_0)
 FN:5,(anonymous_1)
 FN:6,(anonymous_2)
@@ -4084,7 +4084,7 @@ BRF:38
 BRH:38
 end_of_record
 TN:
-SF:src\wasmBuilder\Build\Function.ts
+SF:src/wasmBuilder/Build/Function.ts
 FN:4,(anonymous_0)
 FN:21,(anonymous_1)
 FNF:2
@@ -4102,7 +4102,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\wasmBuilder\Build\Module.ts
+SF:src/wasmBuilder/Build/Module.ts
 FN:4,(anonymous_0)
 FN:8,(anonymous_1)
 FN:13,(anonymous_2)
@@ -4277,7 +4277,7 @@ BRF:55
 BRH:6
 end_of_record
 TN:
-SF:src\wasmBuilder\Build\Utils.ts
+SF:src/wasmBuilder/Build/Utils.ts
 FN:1,(anonymous_0)
 FN:3,(anonymous_1)
 FN:3,(anonymous_2)
@@ -4340,7 +4340,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:src\wasmBuilder\Build\WasmTypes.ts
+SF:src/wasmBuilder/Build/WasmTypes.ts
 FN:4,(anonymous_0)
 FN:5,(anonymous_1)
 FN:12,(anonymous_2)
