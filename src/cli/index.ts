@@ -15,7 +15,9 @@ const program = new Command();
 // Config
 program.version(__VERSION__);
 // File Compiler
-const compileFile = async (filePath: string): Promise<{ output: string; exports: ExportList }> => {
+const compileFile = async (
+  filePath: string
+): Promise<{ output: Uint8Array; exports: ExportList }> => {
   // Normalize File Path
   const _filePath = path.resolve(process.cwd(), filePath);
   // Read File
@@ -26,6 +28,11 @@ const compileFile = async (filePath: string): Promise<{ output: string; exports:
   // Compile File
   const compiled = await compile(fileContent, filePath, compileFile);
   // Save File
+  console.log(path.basename(_filePath, path.extname(_filePath)));
+  await fs.writeFile(
+    path.join(path.dirname(_filePath), `${path.basename(_filePath, path.extname(_filePath))}.wasm`),
+    compiled.output
+  );
   // Return ExportList
   return compiled;
 };

@@ -47,10 +47,7 @@ const generateCode = (
     // Statements
     case NodeType.IfStatement: {
       // Compile Conditions
-      const condition = Expressions.i32_eqExpression(
-        Expressions.i32_ConstExpression(1),
-        _generateCode(node.condition)
-      );
+      const condition = _generateCode(node.condition);
       // Compile Paths
       const body = _generateCode(node.body);
       const alternative =

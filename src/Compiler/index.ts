@@ -10,8 +10,8 @@ import { BriskErrorType } from './Errors/Errors';
 const compile = async (
   rawProgram: string,
   filePath: string,
-  fileCompiler?: (filePath: string) => Promise<{ output: string; exports: ExportList }>
-): Promise<{ output: string; exports: ExportList }> => {
+  fileCompiler?: (filePath: string) => Promise<{ output: Uint8Array; exports: ExportList }>
+): Promise<{ output: Uint8Array; exports: ExportList }> => {
   // Compilation Steps
   // 1. Lex
   const lexed = lex(rawProgram, filePath);
@@ -41,7 +41,6 @@ const compile = async (
   return {
     // output: '',
     // TODO: remove This Ignore
-    //@ts-ignore
     output: generatedCode,
     exports: exports,
   };
