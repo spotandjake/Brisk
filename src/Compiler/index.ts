@@ -3,6 +3,7 @@ import lex from './Lexer/index';
 import parse from './Parser/index';
 import analyze from './Analyzer/index';
 import typeCheck from './TypeChecker/index';
+import generateCode from './Codegen/index';
 import { BriskError } from './Errors/Compiler';
 import { BriskErrorType } from './Errors/Errors';
 // The Compiler Entry
@@ -33,6 +34,7 @@ const compile = async (
   // 5. Type Check
   const typeChecked = typeCheck(rawProgram, analyzed, importData);
   // 6. Generate Code
+  const generatedCode = generateCode(rawProgram, typeChecked);
   // 7. Make Export List
   const exports: ExportList = new Map();
   // 7. Return Code
@@ -40,7 +42,7 @@ const compile = async (
     // output: '',
     // TODO: remove This Ignore
     //@ts-ignore
-    output: typeChecked,
+    output: generatedCode,
     exports: exports,
   };
 };

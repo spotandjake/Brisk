@@ -204,7 +204,7 @@ export const i32_eqExpression = (
 ): UnresolvedBytes => [
   ...valueA, // ValueA Content
   ...valueB, // ValueB Content
-  0x46, // Wasm i32.Add Instruction
+  0x46, // Wasm i32.eq Instruction
 ];
 // TODO: i32_neExpr,
 // TODO: i32_lt_sExpr,
@@ -216,7 +216,14 @@ export const i32_eqExpression = (
 // TODO: i32_ge_sExpr,
 // TODO: i32_ge_uExpr,
 // TODO: i64_eqzExpr,
-// TODO: i64_eqExpr,
+export const i64_eqExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x51, // Wasm i64.eq Instruction
+];
 // TODO: i64_neExpr,
 // TODO: i64_lt_sExpr,
 // TODO: i64_lt_uExpr,
@@ -227,12 +234,27 @@ export const i32_eqExpression = (
 // TODO: i64_ge_sExpr,
 // TODO: i64_ge_uExpr,
 // TODO: f32_eqExpr,
+export const f32_eqExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x5b, // Wasm f32.eq Instruction
+];
 // TODO: f32_neExpr,
 // TODO: f32_ltExpr,
 // TODO: f32_gtExpr,
 // TODO: f32_leExpr,
 // TODO: f32_geExpr,
-// TODO: f64_eqExpr,
+export const f64_eqExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x61, // Wasm f64.eq Instruction
+];
 // TODO: f64_neExpr,
 // TODO: f64_ltExpr,
 // TODO: f64_gtExpr,
@@ -267,6 +289,14 @@ export const i32_AddExpression = (
 // TODO: i64_ctzExpr,
 // TODO: i64_popcntExpr,
 // TODO: i64_addExpr,
+export const i64_AddExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x7c, // Wasm i64.Add Instruction
+];
 // TODO: i64_subExpr,
 // TODO: i64_mulExpr,
 // TODO: i64_div_sExpr,
