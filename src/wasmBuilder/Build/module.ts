@@ -1,4 +1,10 @@
-import { WasmExportKind, WasmFunction, WasmImport, WasmModule, WasmSection } from '../Types/Nodes';
+import {
+  WasmExternalKind,
+  WasmFunction,
+  WasmImport,
+  WasmModule,
+  WasmSection,
+} from '../Types/Nodes';
 import { encodeString, encodeVector, unsignedLEB128 } from './Utils';
 // Helpers
 export const _createSection = (sectionType: WasmSection, sectionData: number[]): number[] => [
@@ -9,16 +15,16 @@ export const createSection = (sectionType: WasmSection, section: number[][]): nu
   if (section.length === 0) return [];
   else
     return _createSection(sectionType, [
-      ...unsignedLEB128(section.length),
+      ...unsignedLEB128(section.filter((n) => n.length != 0).length),
       ...section.filter((n) => n.length != 0).flat(),
     ]);
 };
 // Wasm Import Builder
 export const createImport = (
-  importKind: WasmExportKind,
+  importKind: WasmExternalKind,
   importModule: string,
   importField: string,
-  importType: number[]
+  importType: number
 ): WasmImport => {
   // TODO: Handle Importing, table, global
   // Return Value
@@ -29,7 +35,7 @@ export const createImport = (
       ...encodeString(importModule),
       ...encodeString(importField),
       importKind,
-      ...importType,
+      importType,
     ],
   };
 };
@@ -58,14 +64,14 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
   if (imports != undefined) {
     for (const wasmImport of imports) {
       // Add a Empty Section Element So The Index's are correct
-      if (wasmImport.kind == WasmExportKind.function) moduleState.functionSection.push([]);
-      else if (wasmImport.kind == WasmExportKind.table) moduleState.tableSection.push([]);
-      else if (wasmImport.kind == WasmExportKind.memory) moduleState.memorySection.push([]);
-      else if (wasmImport.kind == WasmExportKind.global) moduleState.globalSection.push([]);
+      if (wasmImport.kind == WasmExternalKind.function) moduleState.functionSection.push([]);
+      else if (wasmImport.kind == WasmExternalKind.table) moduleState.tableSection.push([]);
+      else if (wasmImport.kind == WasmExternalKind.memory) moduleState.memorySection.push([]);
+      else if (wasmImport.kind == WasmExternalKind.global) moduleState.globalSection.push([]);
       // Set Import Label
-      if (wasmImport.kind == WasmExportKind.function)
+      if (wasmImport.kind == WasmExternalKind.function)
         moduleState.functionMap.set(wasmImport.name, moduleState.functionSection.length - 1);
-      else if (wasmImport.kind == WasmExportKind.global)
+      else if (wasmImport.kind == WasmExternalKind.global)
         moduleState.globalMap.set(wasmImport.name, moduleState.globalSection.length - 1);
       // Add Import To Import Section
       moduleState.importSection.push(wasmImport.importData);
@@ -73,6 +79,23 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
   }
   // Return Module Contents
   return moduleState;
+};
+// Wasm Module Import Mutations
+export const addImport = (module: WasmModule, wasmImport: WasmImport) => {
+  // Add a Empty Section Element So The Index's are correct
+  if (wasmImport.kind == WasmExternalKind.function) module.functionSection.push([]);
+  else if (wasmImport.kind == WasmExternalKind.table) module.tableSection.push([]);
+  else if (wasmImport.kind == WasmExternalKind.memory) module.memorySection.push([]);
+  else if (wasmImport.kind == WasmExternalKind.global) module.globalSection.push([]);
+  // Set Import Label
+  if (wasmImport.kind == WasmExternalKind.function)
+    module.functionMap.set(wasmImport.name, module.functionSection.length - 1);
+  else if (wasmImport.kind == WasmExternalKind.global)
+    module.globalMap.set(wasmImport.name, module.globalSection.length - 1);
+  // Add Import To Import Section
+  module.importSection.push(wasmImport.importData);
+  // Return Module
+  return module;
 };
 // Wasm Module Function Mutations
 export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule => {
@@ -123,7 +146,7 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
   ];
   module.codeSection.push([...unsignedLEB128(code.length), ...code]);
   // Set Function Reference
-  module.functionMap.set(func.name, module.codeSection.length - 1);
+  module.functionMap.set(func.name, module.functionSection.length - 1);
   // Return Module
   return module;
 };
@@ -145,6 +168,7 @@ export const addElement = (module: WasmModule, values: number[]): WasmModule => 
       ...unsignedLEB128(0),
     ]);
   }
+  // Add Element
   module.elementSection.push([
     0x00, // TODO: Segment Flags, figure out what they mean
     0x041, // Wasm i32.const Instruction
@@ -154,6 +178,8 @@ export const addElement = (module: WasmModule, values: number[]): WasmModule => 
     // TODO: Determine HowTo Resolve Function Labels from here
     ...values.flat(),
   ]);
+  // Set Table Length
+  // Return Module
   return module;
 };
 // Wasm Module Memory Mutations
@@ -186,12 +212,12 @@ export const addGlobal = (
 export const addExport = (
   module: WasmModule,
   exportName: string,
-  exportKind: WasmExportKind,
+  exportKind: WasmExternalKind,
   exportIdentifier: number | string
 ): WasmModule => {
   // Resolve Export Value
   if (typeof exportIdentifier == 'string') {
-    if (exportKind == WasmExportKind.function && module.functionMap.has(exportIdentifier))
+    if (exportKind == WasmExternalKind.function && module.functionMap.has(exportIdentifier))
       exportIdentifier = module.functionMap.get(exportIdentifier)!;
     else throw new Error(`Could Not Find Label: ${exportIdentifier}`);
   }

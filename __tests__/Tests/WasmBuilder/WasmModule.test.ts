@@ -1,7 +1,7 @@
 // Test Utils
 import { expect, test } from '@jest/globals';
 // Test Components
-import { WasmExportKind, WasmSection, WasmTypes } from '../../../src/wasmBuilder/Types/Nodes';
+import { WasmExternalKind, WasmSection, WasmTypes } from '../../../src/wasmBuilder/Types/Nodes';
 import {
   createFunctionType,
   createMemoryType,
@@ -39,14 +39,14 @@ test('WasmBuilder-WasmTypes: createSection-empty', () => {
 // Import Tests
 test('WasmBuilder-WasmTypes: createImport', () => {
   expect(
-    WasmModule.createImport(WasmExportKind.function, 'extern', 'add', createFunctionType([], []))
+    WasmModule.createImport(WasmExternalKind.function, 'extern', 'add', createFunctionType([], []))
   ).toEqual({
-    kind: WasmExportKind.function,
+    kind: WasmExternalKind.function,
     name: 'add',
     importData: [
       ...encodeString('extern'),
       ...encodeString('add'),
-      WasmExportKind.function,
+      WasmExternalKind.function,
       ...createFunctionType([], []),
     ],
   });
@@ -75,7 +75,12 @@ test('WasmBuilder-WasmTypes: createEmptyModule', () => {
 test('WasmBuilder-WasmTypes: createEmptyModule-withImports', () => {
   expect(
     WasmModule.createModule([
-      WasmModule.createImport(WasmExportKind.function, 'extern', 'add', createFunctionType([], [])),
+      WasmModule.createImport(
+        WasmExternalKind.function,
+        'extern',
+        'add',
+        createFunctionType([], [])
+      ),
     ])
   ).toEqual({
     // Label Maps
@@ -88,7 +93,7 @@ test('WasmBuilder-WasmTypes: createEmptyModule-withImports', () => {
       [
         ...encodeString('extern'),
         ...encodeString('add'),
-        WasmExportKind.function,
+        WasmExternalKind.function,
         ...createFunctionType([], []),
       ],
     ],

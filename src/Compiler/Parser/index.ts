@@ -410,8 +410,8 @@ class Parser extends EmbeddedActionsParser {
   });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
-      { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true] }) },
-      { ALT: () => this.SUBRULE(this.wasmCallExpression) },
+      { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true, true] }) },
+      { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) },
     ]);
   });
   // Enums
@@ -724,8 +724,8 @@ class Parser extends EmbeddedActionsParser {
       DEF: [
         { ALT: () => this.SUBRULE(this.typeCastExpression) },
         { ALT: () => this.SUBRULE(this.unaryExpression) },
-        { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false] }) },
-        { ALT: () => this.SUBRULE(this.wasmCallExpression) },
+        { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false, false] }) },
+        { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [false] }) },
         { ALT: () => this.SUBRULE(this._literal) },
       ],
     });
@@ -753,7 +753,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private callExpression = this.RULE(
     'callExpression',
-    (requireFunctionCall = false): Nodes.Expression => {
+    (requireFunctionCall = false, statement = false): Nodes.Expression => {
       const calls: (Nodes.ArgumentsNode | Nodes.Expression)[] = [];
       const callee = this.OR({
         MAX_LOOKAHEAD: 3,
@@ -765,12 +765,13 @@ class Parser extends EmbeddedActionsParser {
       const FunctionHead = () => {
         this.AT_LEAST_ONE(() => calls.push(this.SUBRULE(this.arguments)));
         return this.ACTION((): Nodes.CallExpressionNode => {
-          return calls.reduce((prevValue, currValue) => {
+          return calls.reduce((prevValue, currValue): Nodes.CallExpressionNode => {
             return {
               nodeType: Nodes.NodeType.CallExpression,
               category: Nodes.NodeCategory.Expression,
               callee: <Nodes.Expression>prevValue,
               args: (<Nodes.ArgumentsNode>currValue).args,
+              statement: statement,
               position: {
                 ...prevValue.position,
                 length:
@@ -850,25 +851,29 @@ class Parser extends EmbeddedActionsParser {
       });
     }
   );
-  private wasmCallExpression = this.RULE('wasmCallExpression', (): Nodes.WasmCallExpressionNode => {
-    const location = this.CONSUME(Tokens.TknWasmCall);
-    const args = this.SUBRULE(this.arguments);
-    return this.ACTION((): Nodes.WasmCallExpressionNode => {
-      return {
-        nodeType: Nodes.NodeType.WasmCallExpression,
-        category: Nodes.NodeCategory.Expression,
-        name: location.image,
-        args: args.args,
-        position: {
-          offset: location.startOffset,
-          length: args.position.offset + args.position.length - location.startOffset,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
-      };
-    });
-  });
+  private wasmCallExpression = this.RULE(
+    'wasmCallExpression',
+    (statement = false): Nodes.WasmCallExpressionNode => {
+      const location = this.CONSUME(Tokens.TknWasmCall);
+      const args = this.SUBRULE(this.arguments);
+      return this.ACTION((): Nodes.WasmCallExpressionNode => {
+        return {
+          nodeType: Nodes.NodeType.WasmCallExpression,
+          category: Nodes.NodeCategory.Expression,
+          name: location.image,
+          args: args.args,
+          statement: statement,
+          position: {
+            offset: location.startOffset,
+            length: args.position.offset + args.position.length - location.startOffset,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
   private arguments = this.RULE('Arguments', (): Nodes.ArgumentsNode => {
     const args: Nodes.Expression[] = [];
     const location = this.CONSUME(Tokens.TknLParen);
@@ -1225,7 +1230,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.variableUsageNode) },
       // { ALT: () => this.SUBRULE(this.parenthesisExpression) },
       // { ALT: () => this.SUBRULE(this.objectLiteral) },
-      // { ALT: () => this.SUBRULE(this.callExpression) },
+      // { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false, true]}) },
     ]);
     const property = this.SUBRULE(this.propertyUsageNode);
     return this.ACTION((): Nodes.MemberAccessNode => {

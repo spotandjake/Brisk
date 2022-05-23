@@ -289,6 +289,7 @@ export interface CallExpressionNode {
   category: NodeCategory.Expression;
   callee: Expression;
   args: Expression[];
+  statement: boolean;
   position: Position;
 }
 export interface WasmCallExpressionNode {
@@ -296,6 +297,7 @@ export interface WasmCallExpressionNode {
   category: NodeCategory.Expression;
   name: string;
   args: Expression[];
+  statement: boolean;
   position: Position;
 }
 // Literals
@@ -340,7 +342,7 @@ export interface U32LiteralNode {
 export interface U64LiteralNode {
   nodeType: NodeType.U64Literal;
   category: NodeCategory.Literal;
-  value: BigInt;
+  value: bigint;
   position: Position;
 }
 export interface F32LiteralNode {

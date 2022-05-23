@@ -112,7 +112,7 @@ export const call_indirect = (
   ...params.flat(), // Parameters
   ...funcIndex, // Function Index
   0x11, // Wasm Call_indirect Instruction
-  ...unsignedLEB128(funcType), // Function Type Reference
+  funcType, // Function Type Reference
   0x00, // Wasm Function Table
   // TODO: Allow You To Set The Function Table
   // TODO : Allow for the function signature to be labeled
@@ -188,7 +188,17 @@ export const i32_ConstExpression = (value: number): ResolvedBytes => [
   0x41, // Wasm i32.Const Instruction
   ...signedLEB128(value),
 ];
-// TODO: i64_Const
+export const i64_ConstExpression = (value: number | bigint): ResolvedBytes => {
+  if (typeof value == 'bigint') {
+    // TODO: Handle BigInt
+    throw new Error('Handle BigInt');
+  } else {
+    return [
+      0x41, // Wasm i32.Const Instruction
+      ...signedLEB128(value),
+    ];
+  }
+};
 export const f32_ConstExpression = (value: number): ResolvedBytes => [
   0x43, // Wasm f32.Const Instruction
   ...ieee754(value),

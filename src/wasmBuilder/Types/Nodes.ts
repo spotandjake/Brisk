@@ -1,7 +1,7 @@
 // Wasm Info
 export type ResolvedBytes = number[];
 export type UnresolvedBytes = (number | string)[];
-export const enum WasmExportKind {
+export const enum WasmExternalKind {
   function = 0x00,
   table = 0x01,
   memory = 0x02,
@@ -24,7 +24,7 @@ export const enum WasmSection {
 }
 // Wasm Module State
 export interface WasmImport {
-  kind: WasmExportKind;
+  kind: WasmExternalKind;
   name: string;
   importData: number[];
 }
