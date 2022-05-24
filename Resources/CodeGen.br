@@ -1,8 +1,9 @@
 import wasm print: (i32) => i32 from 'env';
 // print(3n);
-const loop: ((i32) => i32, i32) => i32 = (t: (i32) => i32, index: i32): i32 => {
+const loop: ((i32) => i32, i32) => i32 = (t: (i32) => i32, let index: i32): i32 => {
   const test: i32 = t(index);
-  if (test == 1n) loop(t, index + 1n);
+  index++;
+  if (test == 1n) loop(t, index);
   return(1n);
 };
 loop((index: i32): i32 => {

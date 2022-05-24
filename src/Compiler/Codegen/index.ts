@@ -5,6 +5,7 @@ import Node, {
   FunctionSignatureLiteralNode,
   NodeType,
   ParameterNode,
+  PostFixOperator,
   ProgramNode,
   TypeLiteral,
 } from '../Types/ParseNodes';
@@ -223,7 +224,7 @@ const generateCode = (
         // Return A Function Reference
         // TODO: This is a terrible way to determine the function index
         return Expressions.global_SetExpression(
-          `${node.variable.name}${_varStack.get(node.variable.name)!}`,
+          `${node.variable.name}${node.variable.reference!}`,
           Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1)
         );
       }
@@ -235,35 +236,122 @@ const generateCode = (
     // TODO: Handle DeclarationStatement
     case NodeType.DeclarationStatement: {
       // TODO: Handle Variable Destructuring
-      // TODO: Add Locals To The List
       // Get The Variable Information
-      const stackReference = _varStack.get(node.name.name)!;
+      const stackReference = node.name.reference!;
       const varData = _variables.get(stackReference)!;
       if (varData.global) {
         // Assign To A Wasm Global
         return Expressions.global_SetExpression(
-          `${varData.name}${_varStack.get(varData.name)!}`,
+          `${varData.name}${stackReference}`,
           _generateCode(node.value, { selfReference: stackReference })
         );
       } else {
         addLocal(wasmFunction, [
           encodeBriskType(rawProgram, varData.type, false, false),
-          `${varData.name}${_varStack.get(varData.name)!}`,
+          `${varData.name}${stackReference}`,
         ]);
         // Return The Set Expression
         return Expressions.local_SetExpression(
-          `${varData.name}${_varStack.get(varData.name)!}`,
+          `${varData.name}${stackReference}`,
           _generateCode(node.value, { selfReference: stackReference })
         );
       }
     }
-    // TODO: Handle AssignmentStatement
+    case NodeType.AssignmentStatement: {
+      // Get The Variable Information
+      if (node.name.nodeType != NodeType.MemberAccess) {
+        const stackReference = node.name.reference!;
+        const varData = _variables.get(stackReference)!;
+        if (varData.global) {
+          // Assign To A Wasm Global
+          return Expressions.global_SetExpression(
+            `${varData.name}${stackReference}`,
+            _generateCode(node.value, { selfReference: stackReference })
+          );
+        } else {
+          // Return The Set Expression
+          return Expressions.local_SetExpression(
+            `${varData.name}${stackReference}`,
+            _generateCode(node.value, { selfReference: stackReference })
+          );
+        }
+      } else {
+        // TODO: Handle Member Access
+        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      }
+    }
     case NodeType.ReturnStatement:
       if (node.returnValue != undefined)
         return Expressions.returnExpression(_generateCode(node.returnValue));
       // Otherwise Return Void
       else return Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value));
-    // TODO: Handle PostFixStatement
+    case NodeType.PostFixStatement: {
+      // Get The Variable Information
+      if (node.name.nodeType != NodeType.MemberAccess) {
+        const varData = _variables.get(node.name.reference!)!;
+        // Build Get Expression
+        const val: UnresolvedBytes = varData.global
+          ? Expressions.global_GetExpression(`${varData.name}${varData.reference}`)
+          : Expressions.local_GetExpression(`${varData.name}${varData.reference}`);
+        // Build Add Expression
+        let add: UnresolvedBytes;
+        // Handle Stack Types
+        const exprAType = varData.type;
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (node.operator == PostFixOperator.Increment) {
+            if (exprAType.name == 'i32' || exprAType.name == 'u32')
+              add = Expressions.i32_AddExpression(val, Expressions.i32_ConstExpression(1));
+            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+              add = Expressions.i64_AddExpression(val, Expressions.i64_ConstExpression(1));
+            else if (exprAType.name == 'f32')
+              add = Expressions.f32_AddExpression(val, Expressions.f32_ConstExpression(1));
+            else if (exprAType.name == 'f64')
+              add = Expressions.f64_AddExpression(val, Expressions.f64_ConstExpression(1));
+            else {
+              // TODO: Handle Heap Types
+              return BriskError(
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          } else {
+            if (exprAType.name == 'i32' || exprAType.name == 'u32')
+              add = Expressions.i32_SubExpression(val, Expressions.i32_ConstExpression(1));
+            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+              add = Expressions.i64_SubExpression(val, Expressions.i64_ConstExpression(1));
+            else if (exprAType.name == 'f32')
+              add = Expressions.f32_SubExpression(val, Expressions.f32_ConstExpression(1));
+            else if (exprAType.name == 'f64')
+              add = Expressions.f64_SubExpression(val, Expressions.f64_ConstExpression(1));
+            else {
+              // TODO: Handle Heap Types
+              return BriskError(
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          }
+        } else {
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
+        // Build Set Expression
+        if (varData.global) {
+          // Assign To A Wasm Global
+          return Expressions.global_SetExpression(`${varData.name}${varData.reference}`, add);
+        } else {
+          // Return The Set Expression
+          return Expressions.local_SetExpression(`${varData.name}${varData.reference}`, add);
+        }
+      } else {
+        // TODO: Handle Member Access
+        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      }
+    }
     // TODO: Handle EnumDefinitionStatement
     // TODO: Handle EnumVariant
     case NodeType.ArithmeticExpression: {
