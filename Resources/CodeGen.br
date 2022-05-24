@@ -1,14 +1,25 @@
 import wasm print: (i32) => i32 from 'env';
-print(1n);
-// const test: Function = (): i32 => {
-  // return(1n);
+// print(3n);
+const loop: Function = (): i32 => {
+  print(1n);
+  return(1n);
+};
+loop();
+// const test2: Function = (): i32 => {
+//   return(1n);
 // };
+// test();
+// test2();
+// let testReturn: i32 = test(1n);
+// let t: i32 = test();
+// print(t);
+// print(test());
 // let closureTest: i32 = 1n;
 // const test: Function = (t: i32): Boolean => 1n == t;
 // test();
 // test(1n);
 // const test2: Function = (): i32 => test(closureTest);
 // test2();
-const t1: i32 = 1n;
+// const t1: i32 = 1n;
 // const t2: i32 = 2n;
 // const t3: i32 = 3n;

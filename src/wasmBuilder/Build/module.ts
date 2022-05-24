@@ -160,19 +160,12 @@ export const addType = (module: WasmModule, type: number[]): WasmModule => {
 // Wasm Module Element Mutations
 // TODO: Test This
 export const addElement = (module: WasmModule, values: number[]): WasmModule => {
-  // If Table does not exist generate it
-  if (module.tableSection.length == 0) {
-    module.tableSection.push([
-      0x70, // Table Type
-      0x00,
-      ...unsignedLEB128(0),
-    ]);
-  }
   // Add Element
   module.elementSection.push([
     0x00, // TODO: Segment Flags, figure out what they mean
     0x041, // Wasm i32.const Instruction
-    0x00, // Currently there can only be one table
+    // TODO: Determine a better way to get this offset
+    ...unsignedLEB128(module.elementSection.length),
     0x0b,
     ...unsignedLEB128(values.length),
     // TODO: Determine HowTo Resolve Function Labels from here
@@ -260,6 +253,15 @@ export const addData = (module: WasmModule, memoryOffset: number, data: number[]
 };
 // Compile Module
 export const compileModule = (module: WasmModule, includeDataCount = true): Uint8Array => {
+  // Add A Table
+  if (module.elementSection.length > 0) {
+    module.tableSection.push([
+      0x70, // Table Type
+      0x00, // Limit Flag That We Only Want A Min Value
+      ...unsignedLEB128(module.elementSection.length), // Min Value
+    ]);
+  }
+  // Return Compiled Module
   return Uint8Array.from([
     ...[0x00, 0x61, 0x73, 0x6d], // Magic Module Header
     ...[0x01, 0x00, 0x00, 0x00], // Wasm Module Version

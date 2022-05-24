@@ -190,7 +190,7 @@ const generateCode = (
         });
       });
       // Return Expression
-      return Expressions.blockExpression(undefined, body);
+      return body.flat();
     }
     // TODO: Handle Import Statement
     case NodeType.WasmImportStatement: {
@@ -214,12 +214,12 @@ const generateCode = (
       // Add The Function To The Table
       if (isFunctionImport) {
         // Function index can be determined by the length of the functionSection
-        wasmModule = addElement(wasmModule, [wasmModule.functionSection.length]);
+        wasmModule = addElement(wasmModule, [wasmModule.functionSection.length - 1]);
         // Return A Function Reference
         // TODO: This is a terrible way to determine the function index
         return Expressions.global_SetExpression(
           `${node.variable.name}${_varStack.get(node.variable.name)!}`,
-          Expressions.i32_ConstExpression(wasmModule.functionSection.length)
+          Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1)
         );
       }
       // Return Blank Statement
@@ -383,7 +383,8 @@ const generateCode = (
         body.push(compiledBody);
         body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));
       } else {
-        body.push(Expressions.returnExpression(compiledBody));
+        if (node.body.nodeType == NodeType.BlockStatement) body.push(compiledBody);
+        else body.push(Expressions.returnExpression(compiledBody));
       }
       // Handle Parameters
       // TODO: Handle Destructuring Parameters
@@ -414,10 +415,10 @@ const generateCode = (
       wasmModule = addFunction(wasmModule, func);
       // Add The Function To The Function Table
       // Function index can be determined by the length of the functionSection
-      wasmModule = addElement(wasmModule, [wasmModule.functionSection.length]);
+      wasmModule = addElement(wasmModule, [wasmModule.functionSection.length - 1]);
       // Return A Function Reference
       // TODO: This is a terrible way to determine the function index
-      return Expressions.i32_ConstExpression(wasmModule.functionSection.length);
+      return Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1);
     }
     // TODO: Handle ArrayLiteral
     // TODO: Handle ObjectLiteral
