@@ -37,20 +37,6 @@ test('WasmBuilder-WasmTypes: createSection-empty', () => {
   expect(WasmModule.createSection(WasmSection.Custom, [])).toEqual([]);
 });
 // Import Tests
-test('WasmBuilder-WasmTypes: createImport', () => {
-  expect(
-    WasmModule.createImport(WasmExternalKind.function, 'extern', 'add', createFunctionType([], []))
-  ).toEqual({
-    kind: WasmExternalKind.function,
-    name: 'add',
-    importData: [
-      ...encodeString('extern'),
-      ...encodeString('add'),
-      WasmExternalKind.function,
-      ...createFunctionType([], []),
-    ],
-  });
-});
 // Modules
 test('WasmBuilder-WasmTypes: createEmptyModule', () => {
   expect(WasmModule.createModule()).toEqual({
@@ -62,42 +48,6 @@ test('WasmBuilder-WasmTypes: createEmptyModule', () => {
     typeSection: [],
     importSection: [],
     functionSection: [],
-    tableSection: [],
-    memorySection: [],
-    globalSection: [],
-    exportSection: [],
-    startSection: [],
-    elementSection: [],
-    codeSection: [],
-    dataSection: [],
-  });
-});
-test('WasmBuilder-WasmTypes: createEmptyModule-withImports', () => {
-  expect(
-    WasmModule.createModule([
-      WasmModule.createImport(
-        WasmExternalKind.function,
-        'extern',
-        'add',
-        createFunctionType([], [])
-      ),
-    ])
-  ).toEqual({
-    // Label Maps
-    functionMap: new Map([['add', 0]]),
-    globalMap: new Map(),
-    // Sections
-    customSection: [],
-    typeSection: [],
-    importSection: [
-      [
-        ...encodeString('extern'),
-        ...encodeString('add'),
-        WasmExternalKind.function,
-        ...createFunctionType([], []),
-      ],
-    ],
-    functionSection: [[]],
     tableSection: [],
     memorySection: [],
     globalSection: [],

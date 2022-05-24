@@ -37,6 +37,7 @@ export type TypeMap = Map<number, TypeData>;
 export type TypeStack = Map<string, number>;
 export interface VariableData {
   name: string;
+  reference: number;
   global: boolean;
   constant: boolean;
   parameter: boolean;

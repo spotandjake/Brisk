@@ -1,10 +1,16 @@
 import wasm print: (i32) => i32 from 'env';
 // print(3n);
-const loop: Function = (): i32 => {
-  print(1n);
+const loop: Function = (t: () => i32): i32 => {
+  print(2n);
+  loop();
+  t();
   return(1n);
 };
-loop();
+loop((): i32 => {
+  print(4n);
+  return(1n);
+});
+// loop();
 // const test2: Function = (): i32 => {
 //   return(1n);
 // };

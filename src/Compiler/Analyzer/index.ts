@@ -32,18 +32,24 @@ const createVariable = (
   code: string,
   varPool: VariableMap,
   varStack: VariableStack,
-  varData: VariableData,
+  _varData: Omit<VariableData, 'reference'>,
   position: Position
-) => {
+): number => {
   // Check If Variable Already Exists On Stack
-  if (varStack.has(varData.name))
-    BriskParseError(code, BriskErrorType.VariableHasAlreadyBeenDeclared, [varData.name], position);
+  if (varStack.has(_varData.name))
+    BriskParseError(code, BriskErrorType.VariableHasAlreadyBeenDeclared, [_varData.name], position);
   // Create Reference To Map
-  const variableReference = varPool.size;
+  const reference = varPool.size;
+  // Attach Reference
+  const varData: VariableData = {
+    ..._varData,
+    reference: reference,
+  };
   // Add Variable To Pool
-  varPool.set(variableReference, varData);
+  varPool.set(reference, varData);
   // Add Variable To Stack
-  varStack.set(varData.name, variableReference);
+  varStack.set(varData.name, reference);
+  return reference;
 };
 const getVariable = (
   rawProgram: string,
@@ -329,13 +335,13 @@ const analyzeNode = <T extends Node>(
       // Return Our Node
       return node;
     }
-    case NodeType.ImportStatement:
+    case NodeType.ImportStatement: {
       _imports.set(node.variable.name, {
         name: node.variable.name,
         path: node.source.value,
         position: node.position,
       });
-      createVariable(
+      const reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -352,12 +358,15 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
+      // Set Reference
+      node.variable.reference = reference;
       return node;
-    case NodeType.WasmImportStatement:
+    }
+    case NodeType.WasmImportStatement: {
       // Analyze Type
       node.typeSignature = _analyzeNode(node.typeSignature);
       // Add Variable
-      createVariable(
+      const reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -374,8 +383,11 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
+      // Set Reference
+      node.variable.reference = reference;
       // Return Node
       return node;
+    }
     case NodeType.ExportStatement: {
       // Analysis
       node.value = _analyzeNode(node.value);
@@ -477,21 +489,26 @@ const analyzeNode = <T extends Node>(
             nodeType: NodeType.VariableUsage,
             category: NodeCategory.Variable,
             name: exportData.name,
+            reference: exportData.reference,
             position: node.position,
           },
           typeExport: false,
           valueExport: true,
         });
+        // set reference
+        if (node.value.nodeType == NodeType.VariableUsage)
+          node.value.reference = exportData.reference;
+        else node.value.name.reference = exportData.reference;
       }
       // Return Value
       return node;
     }
-    case NodeType.DeclarationStatement:
+    case NodeType.DeclarationStatement: {
       // TODO: Handle Destructuring
       // Analyze Type Variable
       node.varType = _analyzeNode(node.varType);
       // Add Variable To Stack
-      createVariable(
+      const reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -508,9 +525,12 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
+      // Analyze Variable Definition
+      node.name.reference = reference;
       // Analyze The Value
       node.value = _analyzeNode(node.value);
       return node;
+    }
     case NodeType.AssignmentStatement:
       // Analyze Value
       node.value = _analyzeNode(node.value);
@@ -900,9 +920,20 @@ const analyzeNode = <T extends Node>(
       );
       return node;
     // Variables
-    case NodeType.VariableUsage:
-      getVariable(rawProgram, _variables, _varStack, _closure, _varStacks, node, node.position, {});
+    case NodeType.VariableUsage: {
+      const varData = getVariable(
+        rawProgram,
+        _variables,
+        _varStack,
+        _closure,
+        _varStacks,
+        node,
+        node.position,
+        {}
+      );
+      node.reference = varData.reference;
       return node;
+    }
     case NodeType.MemberAccess:
       // Analyze Parent
       node.parent = _analyzeNode(node.parent);
@@ -925,7 +956,7 @@ const analyzeNode = <T extends Node>(
       node.paramType = _analyzeNode(node.paramType);
       // Add Variable To Stack
       // TODO: Support Rest Syntax
-      createVariable(
+      const reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -942,6 +973,8 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
+      // Set Reference
+      node.name.reference = reference;
       return node;
     }
   }

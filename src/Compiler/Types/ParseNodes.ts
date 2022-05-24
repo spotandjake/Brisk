@@ -558,12 +558,14 @@ export interface VariableDefinitionNode {
   nodeType: NodeType.VariableDefinition;
   category: NodeCategory.Variable;
   name: string;
+  reference?: number;
   position: Position;
 }
 export interface VariableUsageNode {
   nodeType: NodeType.VariableUsage;
   category: NodeCategory.Variable;
   name: string;
+  reference?: number;
   position: Position;
 }
 export interface PropertyUsageNode {

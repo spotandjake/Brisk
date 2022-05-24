@@ -11,6 +11,7 @@ import {
   TypeLiteral,
   TypeUsageNode,
   UnaryExpressionOperator,
+  VariableDefinitionNode,
   VariableUsageNode,
 } from '../Types/ParseNodes';
 import { TypeData, TypeMap, TypeStack, VariableMap, VariableStack } from '../Types/AnalyzerNodes';
@@ -128,27 +129,30 @@ export const getVarReference = (
   rawProgram: string,
   varStack: VariableStack,
   varStacks: VariableStack[],
-  varReference: VariableUsageNode | string,
+  varReference: VariableUsageNode | VariableDefinitionNode,
   position: Position
 ): number => {
   // Get Variable Reference
-  let varName: string;
-  if (typeof varReference == 'string') varName = varReference;
-  else varName = varReference.name;
-  // Search The Stacks
-  const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
-  // Check If It Exists
-  if (_varStack == undefined)
-    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
-  // Get Node
-  return _varStack.get(varName)!;
+  if (typeof varReference == 'string') {
+    // Search The Stacks
+    const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varReference));
+    // Check If It Exists
+    if (_varStack == undefined)
+      return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varReference], position);
+    // Get Node
+    return _varStack.get(varReference)!;
+  } else {
+    if (varReference.reference == undefined)
+      return BriskTypeError(rawProgram, BriskErrorType.CompilerError, [], position);
+    return varReference.reference;
+  }
 };
 export const getVarType = (
   rawProgram: string,
   varPool: VariableMap,
   varStack: VariableStack,
   varStacks: VariableStack[],
-  varReference: VariableUsageNode | string,
+  varReference: VariableUsageNode,
   position: Position
 ): TypeLiteral => {
   const _variableReference = getVarReference(
@@ -169,7 +173,7 @@ export const setVarType = (
   varPool: VariableMap,
   varStack: VariableStack,
   varStacks: VariableStack[],
-  varReference: VariableUsageNode | string,
+  varReference: VariableUsageNode | VariableDefinitionNode,
   type: TypeLiteral,
   position: Position
 ): void => {
@@ -1010,7 +1014,7 @@ export const getExpressionType = (
       return createFunctionSignatureType(
         expression.position,
         // Resolve Generic Types
-        expression.genericTypes ?? [],
+        expression.genericTypes ?? undefined,
         // Analyze Params
         expression.params.map((p) =>
           getExpressionType(
@@ -1157,14 +1161,7 @@ export const getExpressionType = (
       };
     }
     case NodeType.VariableUsage:
-      return getVarType(
-        rawProgram,
-        varPool,
-        varStack,
-        varStacks,
-        expression.name,
-        expression.position
-      );
+      return getVarType(rawProgram, varPool, varStack, varStacks, expression, expression.position);
     case NodeType.MemberAccess: {
       // Get Member Type
       const objectType = resolveType(

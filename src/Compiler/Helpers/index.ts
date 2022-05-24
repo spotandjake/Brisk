@@ -38,7 +38,7 @@ export const createArrayType = (
 };
 export const createFunctionSignatureType = (
   position: Position,
-  genericTypes: GenericTypeNode[],
+  genericTypes: GenericTypeNode[] | undefined,
   paramTypes: TypeLiteral[],
   returnType: TypeLiteral,
   _typeStack: TypeStack

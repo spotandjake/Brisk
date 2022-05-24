@@ -8,7 +8,7 @@ import Node, {
   TypeLiteral,
 } from '../Types/ParseNodes';
 import { AnalyzerProperties } from '../Types/AnalyzerNodes';
-import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
+import { getExpressionType, getVarReference, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/index';
 import {
   ResolvedBytes,
@@ -328,7 +328,7 @@ const generateCode = (
       const funcCall = Expressions.call_indirect(
         _generateCode(node.callee),
         node.args.map((arg) => _generateCode(arg)),
-        functionSignature - 1
+        functionSignature
       );
       if (node.statement) return Expressions.dropExpression(funcCall);
       else return funcCall;
@@ -438,11 +438,12 @@ const generateCode = (
     // TODO: Handle TypeIdentifier
     // TODO: Handle VariableDefinition
     case NodeType.VariableUsage: {
-      const varRef = _varStack.get(node.name)!;
-      const varData = _variables.get(varRef)!;
+      const varData = _variables.get(
+        getVarReference(rawProgram, _varStack, _varStacks, node, node.position)
+      )!;
       if (varData.global) {
-        return Expressions.global_GetExpression(`${node.name}${_varStack.get(node.name)!}`);
-      } else return Expressions.local_GetExpression(`${node.name}${_varStack.get(node.name)!}`);
+        return Expressions.global_GetExpression(`${node.name}${varData.reference}`);
+      } else return Expressions.local_GetExpression(`${node.name}${varData.reference}`);
     }
     // TODO: Handle MemberAccess
     // TODO: Handle PropertyUsage

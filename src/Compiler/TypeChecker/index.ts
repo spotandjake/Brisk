@@ -194,7 +194,7 @@ const typeCheckNode = <T extends Node>(
         _variables,
         _varStack,
         _varStacks,
-        node.variable.name,
+        node.variable,
         node.typeSignature,
         node.position
       );
@@ -327,7 +327,7 @@ const typeCheckNode = <T extends Node>(
         _variables,
         _varStack,
         _varStacks,
-        node.name.name,
+        node.name,
         node.varType,
         node.position
       );
@@ -1046,7 +1046,7 @@ const typeCheckNode = <T extends Node>(
         _variables,
         _varStack,
         _varStacks,
-        node.name.name,
+        node.name,
         node.paramType,
         node.position
       );
