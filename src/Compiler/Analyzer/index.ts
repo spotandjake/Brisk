@@ -830,6 +830,7 @@ const analyzeNode = <T extends Node>(
         exported: false,
         type: node.typeLiteral,
       });
+      _typeStack.set(node.name, typeReference);
       // Set Data Payload
       node.data = {
         _typeStack: typeStack,

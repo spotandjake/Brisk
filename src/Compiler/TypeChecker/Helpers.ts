@@ -124,6 +124,7 @@ export const setTypeVar = (
     ...typeData,
     type: type,
   });
+  typeStack.set(typeData.name, _typeReference);
 };
 export const getVarReference = (
   rawProgram: string,

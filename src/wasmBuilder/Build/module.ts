@@ -124,7 +124,7 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
         wasmBody.push(...unsignedLEB128(module.globalMap.get(byte)!)); // Wasm Global Set
       } else if (lastByte == 0x10 && module.functionMap.has(byte)) {
         wasmBody.push(...unsignedLEB128(module.functionMap.get(byte)!)); // Wasm Func Call
-      } else throw new Error(`Unknown Label Value ${byte}`);
+      } else throw new Error(`Unknown Label Value: ${lastByte} ${byte}`);
     } else wasmBody.push(byte);
   }
   // Add Function To TypeSection

@@ -1683,7 +1683,6 @@ const parse = (lexingResult: ILexingResult, code: string, file: string) => {
     BriskCustomError(code, 'ParseError', message, position);
   }
   if (parsed == undefined) {
-    // console.log(lexed);
     throw new Error('Parsed was undefined');
   }
   // =================================================================

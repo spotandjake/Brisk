@@ -1,5 +1,6 @@
 // Imports
 import Node, {
+  ArgumentsNode,
   ArithmeticExpressionOperator,
   ComparisonExpressionOperator,
   FunctionSignatureLiteralNode,
@@ -10,7 +11,7 @@ import Node, {
   TypeLiteral,
 } from '../Types/ParseNodes';
 import { AnalyzerProperties } from '../Types/AnalyzerNodes';
-import { getExpressionType, getVarReference, typeEqual } from '../TypeChecker/Helpers';
+import { getExpressionType, getTypeVar, getVarReference, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/index';
 import {
   ResolvedBytes,
@@ -45,9 +46,10 @@ interface CodeGenProperties extends AnalyzerProperties {
 // Values
 const brisk_Void_Value = 0x03; // TODO: Consider Changing This
 // Helpers
-const encodeBriskType = (
+const _encodeBriskType = (
   rawProgram: string,
   briskType: TypeLiteral,
+  properties: AnalyzerProperties,
   returnFunctionSignature: boolean,
   returnEmpty = false
 ): ResolvedBytes => {
@@ -75,16 +77,34 @@ const encodeBriskType = (
       // TODO: TypeUnionLiteral
       // TODO: ArrayTypeLiteral
       case NodeType.ParenthesisTypeLiteral:
-        return encodeBriskType(rawProgram, briskType.value, returnFunctionSignature);
+        return _encodeBriskType(rawProgram, briskType.value, properties, returnFunctionSignature);
       case NodeType.FunctionSignatureLiteral:
         if (returnFunctionSignature) {
           return Types.createFunctionType(
-            briskType.params.map((p) => encodeBriskType(rawProgram, p, false)),
-            [encodeBriskType(rawProgram, briskType.returnType, false)]
+            briskType.params.map((p) => _encodeBriskType(rawProgram, p, properties, false)),
+            [_encodeBriskType(rawProgram, briskType.returnType, properties, false)]
           );
         } else return Types.createNumericType(WasmTypes.WasmI32);
       // TODO: InterfaceLiteral
-      // TODO: TypeUsage
+      case NodeType.TypeUsage: {
+        // Get Var Type
+        const typeData = getTypeVar(
+          rawProgram,
+          properties._types,
+          properties._typeStack,
+          properties._typeStacks,
+          briskType,
+          briskType.position
+        );
+        // Encode Var Type
+        return _encodeBriskType(
+          rawProgram,
+          typeData,
+          properties,
+          returnFunctionSignature,
+          returnEmpty
+        );
+      }
       // TODO: GenericType
       default:
         return BriskError(
@@ -118,11 +138,35 @@ const encodeBriskType = (
       // TODO: TypeUnionLiteral
       // TODO: ArrayTypeLiteral
       case NodeType.ParenthesisTypeLiteral:
-        return encodeBriskType(rawProgram, briskType.value, returnFunctionSignature, true);
+        return _encodeBriskType(
+          rawProgram,
+          briskType.value,
+          properties,
+          returnFunctionSignature,
+          true
+        );
       case NodeType.FunctionSignatureLiteral:
         return Expressions.i32_ConstExpression(0);
       // TODO: InterfaceLiteral
-      // TODO: TypeUsage
+      case NodeType.TypeUsage: {
+        // Get Var Type
+        const typeData = getTypeVar(
+          rawProgram,
+          properties._types,
+          properties._typeStack,
+          properties._typeStacks,
+          briskType,
+          briskType.position
+        );
+        // Encode Var Type
+        return _encodeBriskType(
+          rawProgram,
+          typeData,
+          properties,
+          returnFunctionSignature,
+          returnEmpty
+        );
+      }
       // TODO: GenericType
       default:
         return BriskError(
@@ -135,7 +179,7 @@ const encodeBriskType = (
   }
 };
 // CodeGen
-type generableNode = Exclude<Node, ProgramNode | ParameterNode>;
+type generableNode = Exclude<Node, ProgramNode | ParameterNode | ArgumentsNode>;
 const generateCode = (
   // Code
   rawProgram: string,
@@ -163,6 +207,19 @@ const generateCode = (
 
     wasmFunction,
   } = properties;
+  const encodeBriskType = (
+    briskType: TypeLiteral,
+    returnFunctionSignature: boolean,
+    returnEmpty = false
+  ) => {
+    return _encodeBriskType(
+      rawProgram,
+      briskType,
+      properties,
+      returnFunctionSignature,
+      returnEmpty
+    );
+  };
   const _generateCode = (
     childNode: generableNode,
     props: Partial<CodeGenProperties> = properties,
@@ -188,8 +245,8 @@ const generateCode = (
       // Compile Body
       const body = node.body.map((_node) => {
         return _generateCode(_node, {
-          _varStacks: [..._varStacks, node.data._varStack],
-          _typeStacks: [..._typeStacks, node.data._typeStack],
+          _varStacks: [..._varStacks, _varStack],
+          _typeStacks: [..._typeStacks, _typeStack],
 
           _varStack: node.data._varStack,
           _typeStack: node.data._typeStack,
@@ -202,7 +259,7 @@ const generateCode = (
     case NodeType.WasmImportStatement: {
       // TODO: Handle Destructuring
       // Compile Type
-      wasmModule = addType(wasmModule, encodeBriskType(rawProgram, node.typeSignature, true));
+      wasmModule = addType(wasmModule, encodeBriskType(node.typeSignature, true));
       const importType = wasmModule.typeSection.length - 1;
       // Compile Import Statement
       // Build Import
@@ -221,6 +278,14 @@ const generateCode = (
       if (isFunctionImport) {
         // Function index can be determined by the length of the functionSection
         wasmModule = addElement(wasmModule, [wasmModule.functionSection.length - 1]);
+        // Add The Global
+        wasmModule = addGlobal(
+          wasmModule,
+          `${node.variable.name}${node.variable.reference!}`,
+          true,
+          encodeBriskType(node.typeSignature, false),
+          encodeBriskType(node.typeSignature, false, true)
+        );
         // Return A Function Reference
         // TODO: This is a terrible way to determine the function index
         return Expressions.global_SetExpression(
@@ -240,6 +305,13 @@ const generateCode = (
       const stackReference = node.name.reference!;
       const varData = _variables.get(stackReference)!;
       if (varData.global) {
+        wasmModule = addGlobal(
+          wasmModule,
+          `${varData.name}${stackReference}`,
+          true,
+          encodeBriskType(varData.type, false),
+          encodeBriskType(varData.type, false, true)
+        );
         // Assign To A Wasm Global
         return Expressions.global_SetExpression(
           `${varData.name}${stackReference}`,
@@ -247,7 +319,7 @@ const generateCode = (
         );
       } else {
         addLocal(wasmFunction, [
-          encodeBriskType(rawProgram, varData.type, false, false),
+          encodeBriskType(varData.type, false, false),
           `${varData.name}${stackReference}`,
         ]);
         // Return The Set Expression
@@ -446,7 +518,6 @@ const generateCode = (
     case NodeType.ParenthesisExpression:
       return _generateCode(node.value);
     // TODO: Handle TypeCastExpression
-    // TODO: Handle CallExpression
     case NodeType.CallExpression: {
       // Compile Build The Function Signature
       const funcType = <FunctionSignatureLiteralNode>(
@@ -462,7 +533,7 @@ const generateCode = (
         )
       );
       // TODO: Reuse The Original Type
-      wasmModule = addType(wasmModule, encodeBriskType(rawProgram, funcType, true));
+      wasmModule = addType(wasmModule, encodeBriskType(funcType, true));
       // Get The TypeRef
       const functionSignature = wasmModule.typeSection.length - 1; // The Type is the last type
       // Return The Call
@@ -508,7 +579,6 @@ const generateCode = (
           ? _variables.get(properties.selfReference)!.name
           : `AmbiguousFunction${wasmModule.functionSection.length}`,
         encodeBriskType(
-          rawProgram,
           getExpressionType(
             rawProgram,
             _variables,
@@ -529,8 +599,8 @@ const generateCode = (
       const body: UnresolvedBytes[] = [];
       const compiledBody = _generateCode(node.body, {
         _closure: node.data._closure,
-        _varStacks: [..._varStacks, node.data._varStack],
-        _typeStacks: [..._typeStacks, node.data._typeStack],
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
 
         _varStack: node.data._varStack,
         _typeStack: node.data._typeStack,
@@ -568,8 +638,9 @@ const generateCode = (
     // TODO: Handle ObjectLiteral
     // TODO: Handle ObjectField
     // TODO: Handle ValueSpread
-    // TODO: Handle TypeAliasDefinition
-    // TODO: Handle InterfaceDefinition
+    case NodeType.TypeAliasDefinition:
+    case NodeType.InterfaceDefinition:
+      return []; // Return A Blank Op
     // TODO: Handle TypePrimLiteral
     // TODO: Handle TypeUnionLiteral
     // TODO: Handle ArrayTypeLiteral
@@ -579,8 +650,6 @@ const generateCode = (
     // TODO: Handle InterfaceField
     // TODO: Handle TypeUsage
     // TODO: Handle GenericType
-    // TODO: Handle TypeIdentifier
-    // TODO: Handle VariableDefinition
     case NodeType.VariableUsage: {
       const varData = _variables.get(
         getVarReference(rawProgram, _varStack, _varStacks, node, node.position)
@@ -591,7 +660,6 @@ const generateCode = (
     }
     // TODO: Handle MemberAccess
     // TODO: Handle PropertyUsage
-    // TODO: Handle Arguments
   }
   // We should never get to here
   console.log('Unknown Node');
@@ -604,19 +672,6 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   let module = createModule();
   // Add The Memory
   module = addMemory(module, Types.createMemoryType(1));
-  // Add Globals
-  for (const [key, value] of program.data._variables.entries()) {
-    if (value.global) {
-      // TODO: Allow for immutable globals
-      module = addGlobal(
-        module,
-        `${value.name}${key}`,
-        true,
-        encodeBriskType(rawProgram, value.type, false),
-        encodeBriskType(rawProgram, value.type, false, true)
-      );
-    }
-  }
   // Create Function
   let func = createFunction('main', Types.createFunctionType([], []), [], [], []);
   // Build The Body

@@ -11,12 +11,13 @@
     "url": "https://github.com/spotandjake/Brisk.git"
   },
   "scripts": {
-    "start": "gulp build && node --enable-source-maps ./dist/brisk.js",
+    "start": "gulp build && yarn run run",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "testCoverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "WasmToText": "wasm2wat --output=test.wat --fold-exprs --enable-code-metadata",
     "build": "gulp build",
     "buildExtension": "gulp buildExtension",
+    "run": "node --enable-source-maps ./dist/brisk.js",
     "injectExtension": " gulp injectExtension",
     "clean": "gulp clean",
     "typecheck": "tsc --project tsconfig.json",
