@@ -170,15 +170,78 @@ export const global_SetExpression = (
 // TODO: i64_load16_uExpr,
 // TODO: i64_load32_sExpr,
 // TODO: i64_load32_uExpr,
-// TODO: i32_storeExpr,
-// TODO: i64_storeExpr,
-// TODO: f32_storeExpr,
-// TODO: f64_storeExpr,
-// TODO: i32_store8Expr,
-// TODO: i32_store16Expr,
-// TODO: i64_store8Expr,
-// TODO: i64_store16Expr,
-// TODO: i64_store32Expr,
+export const i32_StoreExpression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x36, // Wasm i32.store Instruction
+];
+export const i64_StoreExpression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x37, // Wasm i64.store Instruction
+];
+export const f32_StoreExpression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x38, // Wasm f32.store Instruction
+];
+export const f64_StoreExpression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x39, // Wasm f64.store Instruction
+];
+export const i32_Store8Expression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x3a, // Wasm i32.store8 Instruction
+];
+export const i32_Store16Expression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x3b, // Wasm i32.store16 Instruction
+];
+export const i64_Store8Expression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x3c, // Wasm i64.store8 Instruction
+];
+export const i64_Store16Expression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x3d, // Wasm i64.store16 Instruction
+];
+export const i64_Store32Expression = (
+  position: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...position, // ValueA Content
+  ...valueB, // ValueB Content
+  0x3e, // Wasm i64.store32 Instruction
+];
 export const memory_SizeExpression = (): ResolvedBytes => [0x3f]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
@@ -207,7 +270,10 @@ export const f64_ConstExpression = (value: number): ResolvedBytes => [
   0x44, // Wasm f64.Const Instruction
   ...ieee754(value),
 ];
-// TODO: i32_eqzExpr,
+export const i32_eqzExpression = (value: UnresolvedBytes): UnresolvedBytes => [
+  ...value, // Value Content
+  0x45, // Wasm i32.eqz Instruction
+];
 export const i32_eqExpression = (
   valueA: UnresolvedBytes,
   valueB: UnresolvedBytes
@@ -216,7 +282,14 @@ export const i32_eqExpression = (
   ...valueB, // ValueB Content
   0x46, // Wasm i32.eq Instruction
 ];
-// TODO: i32_neExpr,
+export const i32_neExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x47, // Wasm i32.ne Instruction
+];
 // TODO: i32_lt_sExpr,
 // TODO: i32_lt_uExpr,
 // TODO: i32_gt_sExpr,
@@ -270,9 +343,18 @@ export const f64_eqExpression = (
 // TODO: f64_gtExpr,
 // TODO: f64_leExpr,
 // TODO: f64_geExpr,
-// TODO: i32_clzExpr,
-// TODO: i32_ctzExpr,
-// TODO: i32_popcntExpr,
+export const i32_clzExpression = (value: UnresolvedBytes): UnresolvedBytes => [
+  ...value, // Value Content
+  0x67, // Wasm i32.clz Instruction
+];
+export const i32_ctzExpression = (value: UnresolvedBytes): UnresolvedBytes => [
+  ...value, // Value Content
+  0x68, // Wasm i32.ctz Instruction
+];
+export const i32_popcntExpression = (value: UnresolvedBytes): UnresolvedBytes => [
+  ...value, // Value Content
+  0x69, // Wasm i32.popcnt Instruction
+];
 export const i32_AddExpression = (
   valueA: UnresolvedBytes,
   valueB: UnresolvedBytes
@@ -287,16 +369,58 @@ export const i32_SubExpression = (
 ): UnresolvedBytes => [
   ...valueA, // ValueA Content
   ...valueB, // ValueB Content
-  0x6b, // Wasm i32.Add Instruction
+  0x6b, // Wasm i32.Sub Instruction
 ];
-// TODO: i32_mulExpr,
-// TODO: i32_div_sExpr,
-// TODO: i32_div_uExpr,
+export const i32_MulExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x6c, // Wasm i32.Mul Instruction
+];
+export const i32_Div_sExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x6d, // Wasm i32.div_s Instruction
+];
+export const i32_Div_uExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x6e, // Wasm i32.div_u Instruction
+];
 // TODO: i32_rem_sExpr,
 // TODO: i32_rem_uExpr,
-// TODO: i32_andExpr,
-// TODO: i32_orExpr,
-// TODO: i32_xorExpr,
+export const i32_AndExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x6a, // Wasm i32.and Instruction
+];
+export const i32_orExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x72, // Wasm i32.or Instruction
+];
+export const i32_xorExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x73, // Wasm i32.or Instruction
+];
 // TODO: i32_shlExpr,
 // TODO: i32_shr_sExpr,
 // TODO: i32_shr_uExpr,

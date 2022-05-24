@@ -33,6 +33,7 @@ import {
   createModule,
   setStart,
 } from '../../wasmBuilder/Build/Module';
+import { mapExpression } from './WasmInstructionMap';
 import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
 import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
@@ -44,7 +45,7 @@ interface CodeGenProperties extends AnalyzerProperties {
   selfReference?: number;
 }
 // Values
-const brisk_Void_Value = 0x03; // TODO: Consider Changing This
+const brisk_Void_Value = 0x03;
 // Helpers
 const _encodeBriskType = (
   rawProgram: string,
@@ -71,8 +72,6 @@ const _encodeBriskType = (
           briskType.name == 'Function'
         )
           return Types.createNumericType(WasmTypes.WasmI32);
-        // TODO: Remove Any
-        // TODO: We should never get an Any or an Unknown at CodeGen
         else return BriskError(rawProgram, BriskErrorType.CompilerError, [], briskType.position);
       // TODO: TypeUnionLiteral
       // TODO: ArrayTypeLiteral
@@ -132,8 +131,6 @@ const _encodeBriskType = (
           briskType.name == 'Function'
         )
           return Expressions.i32_ConstExpression(0);
-        // TODO: Remove Any
-        // TODO: We should never get an Any or an Unknown at CodeGen
         else return BriskError(rawProgram, BriskErrorType.CompilerError, [], briskType.position);
       // TODO: TypeUnionLiteral
       // TODO: ArrayTypeLiteral
@@ -298,7 +295,6 @@ const generateCode = (
     }
     // TODO: Handle WasmImportStatement
     // TODO: Handle ExportStatement
-    // TODO: Handle DeclarationStatement
     case NodeType.DeclarationStatement: {
       // TODO: Handle Variable Destructuring
       // Get The Variable Information
@@ -545,7 +541,9 @@ const generateCode = (
       if (node.statement) return Expressions.dropExpression(funcCall);
       else return funcCall;
     }
-    // TODO: Handle WasmCallExpression
+    case NodeType.WasmCallExpression: {
+      return mapExpression(rawProgram, node, _generateCode);
+    }
     // TODO: Handle StringLiteral
     case NodeType.I32Literal:
       return Expressions.i32_ConstExpression(node.value);

@@ -1,7 +1,6 @@
 import wasm print: (i32) => i32 from 'env';
 // print(3n);
-type LoopSignature = ((i32) => i32, i32) => i32;
-const loop: LoopSignature = (t: (i32) => i32, let index: i32): i32 => {
+const loop: Function = (t: (i32) => i32, let index: i32): i32 => {
   const test: i32 = t(index);
   index++;
   if (test == 1n) loop(t, index);

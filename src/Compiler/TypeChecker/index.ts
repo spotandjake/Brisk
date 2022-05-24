@@ -260,9 +260,7 @@ const typeCheckNode = <T extends Node>(
     }
     case NodeType.DeclarationStatement:
       // TODO: Handle TypeValidation Of Destructured Declarations
-      // Analyze Value
-      node.value = _typeCheckNode(node.value);
-      // Infer Type
+      // Set Type
       if (node.varType.nodeType == NodeType.TypePrimLiteral) {
         // Infer Function Type
         if (node.varType.name == 'Function') {
@@ -331,6 +329,8 @@ const typeCheckNode = <T extends Node>(
         node.varType,
         node.position
       );
+      // Analyze Value
+      node.value = _typeCheckNode(node.value);
       // Return Node
       return node;
     case NodeType.AssignmentStatement: {
