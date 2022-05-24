@@ -156,14 +156,38 @@ export const global_SetExpression = (
 ];
 // TODO: table_get
 // TODO: table_set
-// TODO: i32_loadExpr,
-// TODO: i64_loadExpr,
-// TODO: f32_loadExpr,
-// TODO: f64_loadExpr,
-// TODO: i32_load8_sExpr,
-// TODO: i32_load8_uExpr,
-// TODO: i32_load16_sExpr,
-// TODO: i32_load16_uExpr,
+export const i32_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x28, // Wasm i32.load Instruction
+];
+export const i64_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x29, // Wasm i64.load Instruction
+];
+export const f32_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2a, // Wasm f32.load Instruction
+];
+export const f64_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2b, // Wasm f64.load Instruction
+];
+export const i32_Load8_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2c, // Wasm i32.load8_s Instruction
+];
+export const i32_Load8_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2d, // Wasm i32.load8_u Instruction
+];
+export const i32_Load16_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2e, // Wasm i32.load16_s Instruction
+];
+export const i32_Load16_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+  ...position, // ValueA Content
+  0x2f, // Wasm i32.load16_u Instruction
+];
 // TODO: i64_load8_sExpr,
 // TODO: i64_load8_uExpr,
 // TODO: i64_load16_sExpr,

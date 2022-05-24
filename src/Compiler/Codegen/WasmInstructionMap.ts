@@ -56,11 +56,16 @@ export const mapExpression = (
     case 'data.drop':
       return Expressions.dropExpression(_generateCode(args[0]));
     // i32
-    // TODO: i32.load
-    // TODO: i32.load8_s
-    // TODO: i32.load8_u
-    // TODO: i32.load16_s
-    // TODO: i32.load16_u
+    case 'i32.load':
+      return Expressions.i32_LoadExpression(_generateCode(args[0]));
+    case 'i32.load8_s':
+      return Expressions.i32_Load8_sExpression(_generateCode(args[0]));
+    case 'i32.load8_u':
+      return Expressions.i32_Load8_uExpression(_generateCode(args[0]));
+    case 'i32.load16_s':
+      return Expressions.i32_Load16_sExpression(_generateCode(args[0]));
+    case 'i32.load16_u':
+      return Expressions.i32_Load16_uExpression(_generateCode(args[0]));
     case 'i32.store':
       return Expressions.i32_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
     case 'i32.store8':
@@ -151,7 +156,8 @@ export const mapExpression = (
     // TODO: i32.atomic.rmw16_u.xor
     // TODO: i32.atomic.rmw16_u.xchg
     // TODO: i32.atomic.rmw16_u.cmpxchg
-    // TODO: i64.load
+    case 'i64.load':
+      return Expressions.i32_LoadExpression(_generateCode(args[0]));
     // TODO: i64.load8_s
     // TODO: i64.load8_u
     // TODO: i64.load16_s
@@ -250,7 +256,8 @@ export const mapExpression = (
     // TODO: i64.atomic.rmw32_u.xor
     // TODO: i64.atomic.rmw32_u.xchg
     // TODO: i64.atomic.rmw32_u.cmpxchg
-    // TODO: f32.load
+    case 'f32.load':
+      return Expressions.f32_LoadExpression(_generateCode(args[0]));
     case 'f32.store':
       return Expressions.f32_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
     case 'f32.const':
@@ -284,7 +291,8 @@ export const mapExpression = (
     // TODO: f32.le
     // TODO: f32.gt
     // TODO: f32.ge
-    // TODO: f64.load
+    case 'f64.load':
+      return Expressions.f64_LoadExpression(_generateCode(args[0]));
     case 'f64.store':
       return Expressions.f64_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
     case 'f64.const':
