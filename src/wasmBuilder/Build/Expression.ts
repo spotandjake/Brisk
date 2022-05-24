@@ -328,7 +328,14 @@ export const i64_AddExpression = (
 // TODO: f32_truncExpr,
 // TODO: f32_nearestExpr,
 // TODO: f32_sqrtExpr,
-// TODO: f32_addExpr,
+export const f32_AddExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0x92, // Wasm i32.Add Instruction
+];
 // TODO: f32_subExpr,
 // TODO: f32_mulExpr,
 // TODO: f32_divExpr,
@@ -342,7 +349,14 @@ export const i64_AddExpression = (
 // TODO: f64_truncExpr,
 // TODO: f64_nearestExpr,
 // TODO: f64_sqrtExpr,
-// TODO: f64_addExpr,
+export const f64_AddExpression = (
+  valueA: UnresolvedBytes,
+  valueB: UnresolvedBytes
+): UnresolvedBytes => [
+  ...valueA, // ValueA Content
+  ...valueB, // ValueB Content
+  0xa0, // Wasm i32.Add Instruction
+];
 // TODO: f64_subExpr,
 // TODO: f64_mulExpr,
 // TODO: f64_divExpr,

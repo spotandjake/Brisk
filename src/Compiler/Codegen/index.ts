@@ -1,5 +1,6 @@
 // Imports
 import Node, {
+  ArithmeticExpressionOperator,
   ComparisonExpressionOperator,
   FunctionSignatureLiteralNode,
   NodeType,
@@ -14,6 +15,7 @@ import {
   ResolvedBytes,
   UnresolvedBytes,
   WasmExternalKind,
+  WasmFunction,
   WasmModule,
   WasmTypes,
 } from '../../wasmBuilder/Types/Nodes';
@@ -29,13 +31,14 @@ import {
   createModule,
   setStart,
 } from '../../wasmBuilder/Build/Module';
-import { createFunction } from '../../wasmBuilder/Build/Function';
+import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
 import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { BriskErrorType } from '../Errors/Errors';
 import { BriskError } from '../Errors/Compiler';
 // Types
 interface CodeGenProperties extends AnalyzerProperties {
+  wasmFunction: WasmFunction;
   selfReference?: number;
 }
 // Values
@@ -156,6 +159,8 @@ const generateCode = (
     // _closure,
     _varStack,
     _typeStack,
+
+    wasmFunction,
   } = properties;
   const _generateCode = (
     childNode: generableNode,
@@ -241,10 +246,16 @@ const generateCode = (
           _generateCode(node.value, { selfReference: stackReference })
         );
       } else {
-        // TODO: Assign To A Wasm Local
+        addLocal(wasmFunction, [
+          encodeBriskType(rawProgram, varData.type, false, false),
+          `${varData.name}${_varStack.get(varData.name)!}`,
+        ]);
+        // Return The Set Expression
+        return Expressions.local_SetExpression(
+          `${varData.name}${_varStack.get(varData.name)!}`,
+          _generateCode(node.value, { selfReference: stackReference })
+        );
       }
-      console.log(varData);
-      break;
     }
     // TODO: Handle AssignmentStatement
     case NodeType.ReturnStatement:
@@ -255,7 +266,50 @@ const generateCode = (
     // TODO: Handle PostFixStatement
     // TODO: Handle EnumDefinitionStatement
     // TODO: Handle EnumVariant
-    // TODO: Handle ComparisonExpression
+    case NodeType.ArithmeticExpression: {
+      // TODO: Move this into The Language
+      // Get The Expression Type For More Performant Equality
+      // The Left and Right Side are the same type so we only need one
+      const exprAType = getExpressionType(
+        rawProgram,
+        _variables,
+        _varStack,
+        _varStacks,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.lhs
+      );
+      // Compile Both Sides
+      const lhs = _generateCode(node.lhs);
+      const rhs = _generateCode(node.rhs);
+      // Equal Comparison
+      if (node.operator == ArithmeticExpressionOperator.ArithmeticAdd) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'i32' || exprAType.name == 'u32')
+            return Expressions.i32_AddExpression(lhs, rhs);
+          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+            return Expressions.i64_AddExpression(lhs, rhs);
+          else if (exprAType.name == 'f32') return Expressions.f32_AddExpression(lhs, rhs);
+          else if (exprAType.name == 'f64') return Expressions.f64_AddExpression(lhs, rhs);
+          else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else {
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
+      } else {
+        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      }
+    }
     case NodeType.ComparisonExpression: {
       // TODO: Move this into The Language
       // Get The Expression Type For More Performant Equality
@@ -300,7 +354,6 @@ const generateCode = (
         return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       }
     }
-    // TODO: Handle ArithmeticExpression
     // TODO: Handle UnaryExpression
     case NodeType.ParenthesisExpression:
       return _generateCode(node.value);
@@ -359,37 +412,10 @@ const generateCode = (
     case NodeType.FunctionLiteral: {
       // TODO: Handle Building Closure
       // TODO: Handle Polymorphic Functions
-      // Compile Body
-      const body: UnresolvedBytes[] = [];
-      const compiledBody = _generateCode(node.body, {
-        _closure: node.data._closure,
-        _varStacks: [..._varStacks, node.data._varStack],
-        _typeStacks: [..._typeStacks, node.data._typeStack],
-
-        _varStack: node.data._varStack,
-        _typeStack: node.data._typeStack,
-      });
-      if (
-        typeEqual(
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.returnType,
-          createPrimType(node.returnType.position, 'Void'),
-          false
-        )
-      ) {
-        body.push(compiledBody);
-        body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));
-      } else {
-        if (node.body.nodeType == NodeType.BlockStatement) body.push(compiledBody);
-        else body.push(Expressions.returnExpression(compiledBody));
-      }
       // Handle Parameters
       // TODO: Handle Destructuring Parameters
       // Build The Function
-      const func = createFunction(
+      let func = createFunction(
         properties.selfReference != undefined
           ? _variables.get(properties.selfReference)!.name
           : `AmbiguousFunction${wasmModule.functionSection.length}`,
@@ -409,8 +435,38 @@ const generateCode = (
         ),
         node.params.map((p) => `${p.name.name}${node.data._varStack.get(p.name.name)}`),
         [],
-        body
+        []
       );
+      // Compile Body
+      const body: UnresolvedBytes[] = [];
+      const compiledBody = _generateCode(node.body, {
+        _closure: node.data._closure,
+        _varStacks: [..._varStacks, node.data._varStack],
+        _typeStacks: [..._typeStacks, node.data._typeStack],
+
+        _varStack: node.data._varStack,
+        _typeStack: node.data._typeStack,
+
+        wasmFunction: func,
+      });
+      if (
+        typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.returnType,
+          createPrimType(node.returnType.position, 'Void'),
+          false
+        )
+      ) {
+        body.push(compiledBody);
+        body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));
+      } else {
+        if (node.body.nodeType == NodeType.BlockStatement) body.push(compiledBody);
+        else body.push(Expressions.returnExpression(compiledBody));
+      }
+      func = setBody(func, body);
       // Add The Function To The Module
       wasmModule = addFunction(wasmModule, func);
       // Add The Function To The Function Table
@@ -473,6 +529,8 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
       );
     }
   }
+  // Create Function
+  let func = createFunction('main', Types.createFunctionType([], []), [], [], []);
   // Build The Body
   const body: UnresolvedBytes[] = [];
   body.push(
@@ -490,17 +548,18 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
           _closure: new Set(),
           _varStack: program.data._varStack,
           _typeStack: program.data._typeStack,
+
+          wasmFunction: func,
         },
         undefined,
         node
       );
     })
   );
+  // Set Body Function
+  func = setBody(func, body);
   // Add The Main Function
-  module = addFunction(
-    module,
-    createFunction('main', Types.createFunctionType([], []), [], [], body)
-  );
+  module = addFunction(module, func);
   module = setStart(module, 'main');
   // Return The Compiled Module
   return compileModule(module);

@@ -24,3 +24,9 @@ export const addLocal = (func: WasmFunction, local: [number[], string]): WasmFun
   // Return Wasm
   return func;
 };
+export const setBody = (func: WasmFunction, body: UnresolvedBytes[]): WasmFunction => {
+  // Set Body
+  func.body = body;
+  // Return Wasm
+  return func;
+};
