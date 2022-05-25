@@ -1,5 +1,6 @@
 .rollup.cache/
 node_modules/
+coverage/
 dist/
 brisk.exe
 stats.html
