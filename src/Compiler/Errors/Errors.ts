@@ -45,7 +45,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot use reserved keyword `%1`',
   [BriskErrorType.ReturnStatementsOnlyValidInsideFunction]:
     'Return statements must be inside a function',
-  [BriskErrorType.InvalidNumber]: 'Number `%1` Is Invalid',
+  [BriskErrorType.InvalidNumber]: 'Number `%1` is invalid',
   // Reference Error
   // Type Error
   [BriskErrorType.InvalidFlag]: 'Decorator `%1` does not exist', // TODO: rename
@@ -71,7 +71,8 @@ export const BriskErrorMessage = {
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable `%1` has already been declared',
   [BriskErrorType.VariableNotFound]: 'Variable `%1` does not exist',
   [BriskErrorType.ImportStatementExpectedAtTop]: 'Import statements must appear at top of file',
-  [BriskErrorType.ExportStatementExpectedAtBottom]: 'Export statement must appear at bottom of file',
+  [BriskErrorType.ExportStatementExpectedAtBottom]:
+    'Export statement must appear at bottom of file',
   [BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement]:
     'Declaration must appear in a scope',
 };
