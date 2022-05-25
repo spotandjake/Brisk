@@ -1,17 +1,15 @@
-import { CustomPatternMatcherReturn, IToken, Lexer, createToken } from 'chevrotain';
+import {
+  CustomPatternMatcherFunc,
+  CustomPatternMatcherReturn,
+  Lexer,
+  createToken,
+} from 'chevrotain';
 import { LexerTokenType } from '../Types/LexerNodes';
 import { NumberStyle, NumberType } from '../Types/Types';
 // =================================================================
-const matchNumber = (numberType: NumberType) => {
+const matchNumber = (numberType: NumberType): CustomPatternMatcherFunc => {
   // Matching
-  return (
-    str: string,
-    startOffset: number,
-    tokens: IToken[],
-    groups: {
-      [groupName: string]: IToken[];
-    }
-  ): CustomPatternMatcherReturn | null => {
+  return (str: string, startOffset: number): CustomPatternMatcherReturn | null => {
     // Matching
     let currentChar = str.charAt(startOffset);
     if (

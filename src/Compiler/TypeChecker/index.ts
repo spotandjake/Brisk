@@ -12,18 +12,12 @@ import Node, {
 } from '../Types/ParseNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { wasmExpressions } from './WasmTypes';
-import { createPrimType, createUnionType } from '../Helpers/index';
+import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
 import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
-import {
-  getExpressionType,
-  nameType,
-  resolveType,
-  setTypeVar,
-  setVarType,
-  typeCompatible,
-  typeEqual,
-} from './Helpers';
+import { getExpressionType, nameType, resolveType, typeCompatible, typeEqual } from './Helpers';
+
+import { setType, setVariable } from '../Helpers/Helpers';
 // TODO: Implement Type Narrowing
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
@@ -36,7 +30,6 @@ const typeCheckNode = <T extends Node>(
   // Stacks
   properties: TypeCheckProperties,
   // Nodes
-  parentNode: Node | undefined,
   node: T
 ): T => {
   const {
@@ -56,16 +49,9 @@ const typeCheckNode = <T extends Node>(
   } = properties;
   const _typeCheckNode = <_T extends Node>(
     childNode: _T,
-    props: Partial<TypeCheckProperties> = properties,
-    parentNode: Node = node
+    props: Partial<TypeCheckProperties> = properties
   ): _T => {
-    return typeCheckNode(
-      rawProgram,
-      importData,
-      { ...properties, ...props },
-      parentNode,
-      childNode
-    );
+    return typeCheckNode(rawProgram, importData, { ...properties, ...props }, childNode);
   };
   // Match The Node For Analysis
   switch (node.nodeType) {
@@ -99,16 +85,7 @@ const typeCheckNode = <T extends Node>(
         _types,
         _typeStack,
         _typeStacks,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.condition
-        ),
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
         createPrimType(node.condition.position, 'Boolean')
       );
       // Analyze Body
@@ -127,8 +104,6 @@ const typeCheckNode = <T extends Node>(
           getExpressionType(
             rawProgram,
             _variables,
-            _varStack,
-            _varStacks,
             _types,
             _typeStack,
             _typeStacks,
@@ -144,8 +119,6 @@ const typeCheckNode = <T extends Node>(
           getExpressionType(
             rawProgram,
             _variables,
-            _varStack,
-            _varStacks,
             _types,
             _typeStack,
             _typeStacks,
@@ -189,15 +162,7 @@ const typeCheckNode = <T extends Node>(
       // Analyze Type
       node.typeSignature = _typeCheckNode(node.typeSignature);
       // Set Variable
-      setVarType(
-        rawProgram,
-        _variables,
-        _varStack,
-        _varStacks,
-        node.variable,
-        node.typeSignature,
-        node.position
-      );
+      setVariable(_variables, node.variable, { type: node.typeSignature });
       return node;
     case NodeType.ExportStatement: {
       // TypeCheck Value
@@ -275,8 +240,6 @@ const typeCheckNode = <T extends Node>(
           node.varType = getExpressionType(
             rawProgram,
             _variables,
-            _varStack,
-            _varStacks,
             _types,
             _typeStack,
             _typeStacks,
@@ -308,27 +271,10 @@ const typeCheckNode = <T extends Node>(
         _typeStack,
         _typeStacks,
         node.varType,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.value
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
       );
       // Set Variable Type To Be More Accurate
-      setVarType(
-        rawProgram,
-        _variables,
-        _varStack,
-        _varStacks,
-        node.name,
-        node.varType,
-        node.position
-      );
+      setVariable(_variables, node.name, { type: node.varType });
       // Analyze Value
       node.value = _typeCheckNode(node.value);
       // Return Node
@@ -341,8 +287,6 @@ const typeCheckNode = <T extends Node>(
       const varType = getExpressionType(
         rawProgram,
         _variables,
-        _varStack,
-        _varStacks,
         _types,
         _typeStack,
         _typeStacks,
@@ -356,16 +300,7 @@ const typeCheckNode = <T extends Node>(
         _typeStack,
         _typeStacks,
         varType,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.value
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
       );
       // Return Node
       return node;
@@ -377,8 +312,6 @@ const typeCheckNode = <T extends Node>(
       const varType = getExpressionType(
         rawProgram,
         _variables,
-        _varStack,
-        _varStacks,
         _types,
         _typeStack,
         _typeStacks,
@@ -426,8 +359,6 @@ const typeCheckNode = <T extends Node>(
         returnValueType = getExpressionType(
           rawProgram,
           _variables,
-          _varStack,
-          _varStacks,
           _types,
           _typeStack,
           _typeStacks,
@@ -460,7 +391,7 @@ const typeCheckNode = <T extends Node>(
         });
       });
       // Set Type Variable
-      setTypeVar(rawProgram, _types, _typeStack, _typeStacks, node.name, node, node.position);
+      setType(_types, node, { type: node });
       // Return Node
       return node;
     case NodeType.EnumVariant:
@@ -481,16 +412,7 @@ const typeCheckNode = <T extends Node>(
         _types,
         _typeStack,
         _typeStacks,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.lhs
-        ),
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
         createUnionType(
           node.lhs.position,
           createPrimType(node.lhs.position, 'f32'),
@@ -509,26 +431,8 @@ const typeCheckNode = <T extends Node>(
         _types,
         _typeStack,
         _typeStacks,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.lhs
-        ),
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.rhs
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
       );
       // Return Node
       return node;
@@ -543,16 +447,7 @@ const typeCheckNode = <T extends Node>(
         _typeStack,
         _typeStacks,
         node.typeLiteral,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.value
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
       );
       // Return Node
       return node;
@@ -580,16 +475,7 @@ const typeCheckNode = <T extends Node>(
         _typeStack,
         _typeStacks,
         expectedType,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.value
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
       );
       return node;
     }
@@ -603,16 +489,7 @@ const typeCheckNode = <T extends Node>(
         _types,
         _typeStack,
         _typeStacks,
-        getExpressionType(
-          rawProgram,
-          _variables,
-          _varStack,
-          _varStacks,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.callee
-        )
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.callee)
       );
       // Compare Types
       if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
@@ -677,8 +554,6 @@ const typeCheckNode = <T extends Node>(
         let argType: TypeLiteral = getExpressionType(
           rawProgram,
           _variables,
-          _varStack,
-          _varStacks,
           _types,
           _typeStack,
           _typeStacks,
@@ -776,8 +651,6 @@ const typeCheckNode = <T extends Node>(
         let argType: TypeLiteral = getExpressionType(
           rawProgram,
           _variables,
-          _varStack,
-          _varStacks,
           _types,
           _typeStack,
           _typeStacks,
@@ -880,16 +753,7 @@ const typeCheckNode = <T extends Node>(
             _typeStack,
             _typeStacks,
             node.returnType,
-            getExpressionType(
-              rawProgram,
-              _variables,
-              _varStack,
-              _varStacks,
-              _types,
-              _typeStack,
-              _typeStacks,
-              node.body
-            )
+            getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.body)
           );
         }
       }
@@ -949,15 +813,7 @@ const typeCheckNode = <T extends Node>(
         _typeStacks: [..._typeStacks, _typeStack],
       });
       // Set Type Variable
-      setTypeVar(
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.name,
-        node.typeLiteral,
-        node.position
-      );
+      setType(_types, node, { type: node.typeLiteral });
       // Return Node
       return node;
     case NodeType.TypePrimLiteral:
@@ -1023,7 +879,7 @@ const typeCheckNode = <T extends Node>(
       return node;
     case NodeType.GenericType:
       // Set Type To Be More Accurate
-      setTypeVar(rawProgram, _types, _typeStack, _typeStacks, node.name, node, node.position);
+      setType(_types, node, node);
       // ReturnType
       return node;
     // Variables
@@ -1041,15 +897,7 @@ const typeCheckNode = <T extends Node>(
       node.paramType = _typeCheckNode(node.paramType);
       // TODO: Handle Rest Syntax
       // Set Variable Type To Be More Accurate
-      setVarType(
-        rawProgram,
-        _variables,
-        _varStack,
-        _varStacks,
-        node.name,
-        node.paramType,
-        node.position
-      );
+      setVariable(_variables, node.name, { type: node.paramType });
       // Return Value
       return node;
   }
@@ -1076,7 +924,6 @@ const typeCheckProgram = (
       // TypeChecking Information
       _returnType: undefined,
     },
-    undefined,
     program
   );
 };

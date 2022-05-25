@@ -1,13 +1,13 @@
-import Node, * as Nodes from '../Types/ParseNodes';
+import * as Nodes from '../Types/ParseNodes';
+import { CodeGenNode } from '../Types/CodeGenNodes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { UnresolvedBytes } from '../../wasmBuilder/Types/Nodes';
 import { BriskErrorType } from '../Errors/Errors';
 import { BriskError } from '../Errors/Compiler';
-type generableNode = Exclude<Node, Nodes.ProgramNode | Nodes.ParameterNode | Nodes.ArgumentsNode>;
 export const mapExpression = (
   rawProgram: string,
   node: Nodes.WasmCallExpressionNode,
-  _generateCode: (childNode: generableNode) => UnresolvedBytes
+  _generateCode: (childNode: CodeGenNode) => UnresolvedBytes
 ): UnresolvedBytes => {
   const path = node.name.slice('@wasm.'.length);
   const args = node.args;

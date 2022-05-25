@@ -81,21 +81,21 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
   return moduleState;
 };
 // Wasm Module Import Mutations
-export const addImport = (module: WasmModule, wasmImport: WasmImport) => {
-  // Add a Empty Section Element So The Index's are correct
-  if (wasmImport.kind == WasmExternalKind.function) module.functionSection.push([]);
-  else if (wasmImport.kind == WasmExternalKind.table) module.tableSection.push([]);
-  else if (wasmImport.kind == WasmExternalKind.memory) module.memorySection.push([]);
-  else if (wasmImport.kind == WasmExternalKind.global) module.globalSection.push([]);
+export const addImport = (module: WasmModule, wasmImport: WasmImport): number => {
   // Set Import Label
   if (wasmImport.kind == WasmExternalKind.function)
-    module.functionMap.set(wasmImport.name, module.functionSection.length - 1);
+    module.functionMap.set(wasmImport.name, module.functionSection.length);
   else if (wasmImport.kind == WasmExternalKind.global)
-    module.globalMap.set(wasmImport.name, module.globalSection.length - 1);
+    module.globalMap.set(wasmImport.name, module.globalSection.length);
   // Add Import To Import Section
   module.importSection.push(wasmImport.importData);
-  // Return Module
-  return module;
+  // Add a Empty Section Element So The Index's are correct
+  if (wasmImport.kind == WasmExternalKind.function) return module.functionSection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.table) return module.tableSection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.memory) return module.memorySection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.global) return module.globalSection.push([]) - 1;
+  // Help Typescript
+  return 0;
 };
 // Wasm Module Function Mutations
 export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule => {
@@ -128,9 +128,9 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
     } else wasmBody.push(byte);
   }
   // Add Function To TypeSection
-  module.typeSection.push(func.functionType);
+  const typeReference = addType(module, func.functionType);
   // Add Function To FunctionSection
-  module.functionSection.push([module.typeSection.length - 1]);
+  module.functionSection.push([typeReference]);
   // Add Function To CodeSection
   const code: number[] = [
     ...unsignedLEB128(func.locals.length),
@@ -151,11 +151,14 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
   return module;
 };
 // Wasm Type Element Mutations
-export const addType = (module: WasmModule, type: number[]): WasmModule => {
-  module.typeSection.push(type); // Add Type
-  // TODO: Add Type Labels
-  // TODO: Return The Type Index
-  return module;
+export const addType = (module: WasmModule, type: number[]): number => {
+  // Check If The Type Exists Already
+  const typeIndex = module.typeSection.findIndex((t) => {
+    return t.every((b, i) => b == type[i]);
+  });
+  if (typeIndex != -1) return typeIndex;
+  // Otherwise Add The Type
+  return module.typeSection.push(type) - 1; // Add Type
 };
 // Wasm Module Element Mutations
 // TODO: Test This

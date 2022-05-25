@@ -1,5 +1,4 @@
 import wasm print: (i32) => i32 from 'env';
-// print(3n);
 const loop: Function = (t: (i32) => i32, let index: i32): i32 => {
   const test: i32 = t(index);
   index++;
@@ -11,22 +10,4 @@ loop((index: i32): i32 => {
   if (index == 100n) return(0n);
   return(1n);
 }, 0n);
-// loop();
-// const test2: Function = (): i32 => {
-//   return(1n);
-// };
-// test();
-// test2();
-// let testReturn: i32 = test(1n);
-// let t: i32 = test();
-// print(t);
-// print(test());
-// let closureTest: i32 = 1n;
-// const test: Function = (t: i32): Boolean => 1n == t;
-// test();
-// test(1n);
-// const test2: Function = (): i32 => test(closureTest);
-// test2();
-// const t1: i32 = 1n;
-// const t2: i32 = 2n;
-// const t3: i32 = 3n;
+const test: i32 = 1n;

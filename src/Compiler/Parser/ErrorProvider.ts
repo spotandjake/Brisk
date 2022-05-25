@@ -13,7 +13,7 @@ const errorHandler = (): IParserErrorMessageProvider => {
     buildEarlyExitMessage: ({ actual, expectedIterationPaths }) => {
       const mapExpected = (tokens: TokenType[][]): string => {
         return tokens
-          .map((tokenPath, i) => {
+          .map((tokenPath) => {
             return tokenPath.map((token) => `\`${token.name}\``).join(', ');
           })
           .join(', ');

@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/221</span>
+                <span class='fraction'>0/223</span>
             </div>
         
             
@@ -1750,7 +1750,11 @@
 <a name='L1685'></a><a href='#L1685'>1685</a>
 <a name='L1686'></a><a href='#L1686'>1686</a>
 <a name='L1687'></a><a href='#L1687'>1687</a>
-<a name='L1688'></a><a href='#L1688'>1688</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1688'></a><a href='#L1688'>1688</a>
+<a name='L1689'></a><a href='#L1689'>1689</a>
+<a name='L1690'></a><a href='#L1690'>1690</a>
+<a name='L1691'></a><a href='#L1691'>1691</a>
+<a name='L1692'></a><a href='#L1692'>1692</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2532,6 +2536,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2603,6 +2608,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2621,6 +2628,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -3430,7 +3439,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -3849,8 +3857,8 @@ class Parser extends EmbeddedActionsParser {
   });
   private <span class="cstat-no" title="statement not covered" >expressionStatement = this.RULE('expressionStatement', <span class="fstat-no" title="function not covered" >(): Nodes.Expression =</span>&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    return this.OR([</span>
-      { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.callExpression, { ARGS: [true] }) </span>},
-      { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.wasmCallExpression) </span>},
+      { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.callExpression, { ARGS: [true, true] }) </span>},
+      { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) </span>},
     ]);
   });
   // Enums
@@ -4163,8 +4171,8 @@ class Parser extends EmbeddedActionsParser {
       DEF: [
         { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.typeCastExpression) </span>},
         { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.unaryExpression) </span>},
-        { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.callExpression, { ARGS: [false] }) </span>},
-        { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.wasmCallExpression) </span>},
+        { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.callExpression, { ARGS: [false, false] }) </span>},
+        { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.wasmCallExpression, { ARGS: [false] }) </span>},
         { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this._literal) </span>},
       ],
     });
@@ -4192,7 +4200,7 @@ class Parser extends EmbeddedActionsParser {
   });
   private <span class="cstat-no" title="statement not covered" >callExpression = this.RULE(</span>
     'callExpression',
-<span class="fstat-no" title="function not covered" >    (r</span>equireFunctionCall = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span>: Nodes.Expression =&gt; {
+<span class="fstat-no" title="function not covered" >    (r</span>equireFunctionCall = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span> statement = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span>: Nodes.Expression =&gt; {
       const calls: (Nodes.ArgumentsNode | Nodes.Expression)[] = <span class="cstat-no" title="statement not covered" >[];</span>
       const callee = <span class="cstat-no" title="statement not covered" >this.OR({</span>
         MAX_LOOKAHEAD: 3,
@@ -4204,12 +4212,13 @@ class Parser extends EmbeddedActionsParser {
       const FunctionHead = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        this.AT_LEAST_ONE(<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >calls.push(this.SUBRULE(this.arguments)))</span>;</span>
 <span class="cstat-no" title="statement not covered" >        return this.ACTION(<span class="fstat-no" title="function not covered" >(): Nodes.CallExpressionNode =</span>&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return calls.reduce(<span class="fstat-no" title="function not covered" >(p</span>revValue, currValue) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >          return calls.reduce(<span class="fstat-no" title="function not covered" >(p</span>revValue, currValue): Nodes.CallExpressionNode =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            return {</span>
               nodeType: Nodes.NodeType.CallExpression,
               category: Nodes.NodeCategory.Expression,
               callee: &lt;Nodes.Expression&gt;prevValue,
               args: (&lt;Nodes.ArgumentsNode&gt;currValue).args,
+              statement: statement,
               position: {
                 ...prevValue.position,
                 length:
@@ -4289,25 +4298,29 @@ class Parser extends EmbeddedActionsParser {
       });
     }
   );
-  private <span class="cstat-no" title="statement not covered" >wasmCallExpression = this.RULE('wasmCallExpression', <span class="fstat-no" title="function not covered" >(): Nodes.WasmCallExpressionNode =</span>&gt; {</span>
-    const location = <span class="cstat-no" title="statement not covered" >this.CONSUME(Tokens.TknWasmCall);</span>
-    const args = <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.arguments);</span>
-<span class="cstat-no" title="statement not covered" >    return this.ACTION(<span class="fstat-no" title="function not covered" >(): Nodes.WasmCallExpressionNode =</span>&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      return {</span>
-        nodeType: Nodes.NodeType.WasmCallExpression,
-        category: Nodes.NodeCategory.Expression,
-        name: location.image,
-        args: args.args,
-        position: {
-          offset: location.startOffset,
-          length: args.position.offset + args.position.length - location.startOffset,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          file: this.file,
-        },
-      };
-    });
-  });
+  private <span class="cstat-no" title="statement not covered" >wasmCallExpression = this.RULE(</span>
+    'wasmCallExpression',
+<span class="fstat-no" title="function not covered" >    (s</span>tatement = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span>: Nodes.WasmCallExpressionNode =&gt; {
+      const location = <span class="cstat-no" title="statement not covered" >this.CONSUME(Tokens.TknWasmCall);</span>
+      const args = <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.arguments);</span>
+<span class="cstat-no" title="statement not covered" >      return this.ACTION(<span class="fstat-no" title="function not covered" >(): Nodes.WasmCallExpressionNode =</span>&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          nodeType: Nodes.NodeType.WasmCallExpression,
+          category: Nodes.NodeCategory.Expression,
+          name: location.image,
+          args: args.args,
+          statement: statement,
+          position: {
+            offset: location.startOffset,
+            length: args.position.offset + args.position.length - location.startOffset,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
   private <span class="cstat-no" title="statement not covered" >arguments = this.RULE('Arguments', <span class="fstat-no" title="function not covered" >(): Nodes.ArgumentsNode =</span>&gt; {</span>
     const args: Nodes.Expression[] = <span class="cstat-no" title="statement not covered" >[];</span>
     const location = <span class="cstat-no" title="statement not covered" >this.CONSUME(Tokens.TknLParen);</span>
@@ -4664,7 +4677,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.variableUsageNode) </span>},
       // { ALT: () =&gt; this.SUBRULE(this.parenthesisExpression) },
       // { ALT: () =&gt; this.SUBRULE(this.objectLiteral) },
-      // { ALT: () =&gt; this.SUBRULE(this.callExpression) },
+      // { ALT: () =&gt; this.SUBRULE(this.callExpression, { ARGS: [false, true]}) },
     ]);
     const property = <span class="cstat-no" title="statement not covered" >this.SUBRULE(this.propertyUsageNode);</span>
 <span class="cstat-no" title="statement not covered" >    return this.ACTION(<span class="fstat-no" title="function not covered" >(): Nodes.MemberAccessNode =</span>&gt; {</span>
@@ -5117,7 +5130,6 @@ const parse = <span class="cstat-no" title="statement not covered" ><span class=
 <span class="cstat-no" title="statement not covered" >    BriskCustomError(code, 'ParseError', message, position);</span>
   }
 <span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (parsed == undefined) {</span>
-    // console.log(lexed);
 <span class="cstat-no" title="statement not covered" >    throw new Error('Parsed was undefined');</span>
   }
   // =================================================================
@@ -5131,7 +5143,7 @@ export default parse;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu May 19 2022 13:25:12 GMT-0400 (Eastern Daylight Time)
+                at Tue May 24 2022 23:39:32 GMT-0400 (Eastern Daylight Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

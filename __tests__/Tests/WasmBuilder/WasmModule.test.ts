@@ -7,7 +7,7 @@ import {
   createMemoryType,
   createNumericType,
 } from '../../../src/wasmBuilder/Build/WasmTypes';
-import * as WasmModule from '../../../src/wasmBuilder/Build/Module';
+import * as WasmModule from '../../../src/wasmBuilder/Build/WasmModule';
 import * as WasmExpressions from '../../../src/wasmBuilder/Build/Expression';
 import { encodeString, unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
 // WasmBuilder WasmModule Tests

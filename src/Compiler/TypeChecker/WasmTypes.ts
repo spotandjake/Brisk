@@ -3,7 +3,11 @@ import {
   TypeLiteral,
   // NodeType
 } from '../Types/ParseNodes';
-import { createFunctionSignatureType, createPrimType, createUnionType } from '../Helpers/index';
+import {
+  createFunctionSignatureType,
+  createPrimType,
+  createUnionType,
+} from '../Helpers/typeBuilders';
 // Type Functions
 const u32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'u32');
 const u64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'u64');

@@ -1,4 +1,3 @@
-import { Position } from '../Types/Types';
 import Node, {
   DeclarationTypes,
   Expression,
@@ -10,13 +9,11 @@ import Node, {
   TypeUsageNode,
   ValueSpreadNode,
   VariableUsageNode,
-  primTypes,
 } from '../Types/ParseNodes';
 import {
   AnalyzerProperties,
   ExportMap,
   ImportMap,
-  TypeData,
   TypeMap,
   TypeStack,
   VariableClosure,
@@ -24,125 +21,26 @@ import {
   VariableMap,
   VariableStack,
 } from '../Types/AnalyzerNodes';
-import { createParenthesisType, createPrimType, createUnionType } from '../Helpers/index';
+import { createParenthesisType, createPrimType, createUnionType } from '../Helpers/typeBuilders';
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
+import {
+  VariableNode,
+  createType,
+  createVariable,
+  getType,
+  getTypeReference,
+  getVariable,
+  getVariableReference,
+  setType,
+  setVariable,
+} from '../Helpers/Helpers';
 // Variable Interactions
-const createVariable = (
-  code: string,
-  varPool: VariableMap,
-  varStack: VariableStack,
-  _varData: Omit<VariableData, 'reference'>,
-  position: Position
-): number => {
-  // Check If Variable Already Exists On Stack
-  if (varStack.has(_varData.name))
-    BriskParseError(code, BriskErrorType.VariableHasAlreadyBeenDeclared, [_varData.name], position);
-  // Create Reference To Map
-  const reference = varPool.size;
-  // Attach Reference
-  const varData: VariableData = {
-    ..._varData,
-    reference: reference,
-  };
-  // Add Variable To Pool
-  varPool.set(reference, varData);
-  // Add Variable To Stack
-  varStack.set(varData.name, reference);
-  return reference;
-};
-const getVariable = (
-  rawProgram: string,
-  varPool: VariableMap,
-  varStack: VariableStack,
-  _closure: VariableClosure,
-  varStacks: VariableStack[],
-  varReference: VariableUsageNode | string,
-  position: Position,
-  { used = true, exported = false }: { used?: boolean; exported?: boolean }
-): VariableData => {
-  // Get Variable Reference
-  let varName: string;
-  if (typeof varReference == 'string') varName = varReference;
-  else varName = varReference.name;
-  // Search The Stacks
-  const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varName));
-  // Check If It Exists
-  if (_varStack == undefined)
-    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varName], position);
-  // Get Node
-  const variableReference = _varStack.get(varName)!;
-  // Check If We need To Add To Closure
-  if (!varStack.has(varName)) _closure.add(variableReference);
-  if (!varPool.has(variableReference))
-    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  const value = varPool.get(variableReference)!;
-  // Set Variable To used
-  varPool.set(variableReference, {
-    ...value,
-    used: value.used || used,
-    exported: value.exported || exported,
-  });
-  // Return Value
-  return value;
-};
-const createType = (
-  rawProgram: string,
-  typePool: TypeMap,
-  typeStack: TypeStack,
-  typeData: TypeData,
-  position: Position
-) => {
-  // Do Not Allow You To Write Over Primitive Types
-  if ((<Set<string>>primTypes).has(typeData.name))
-    BriskTypeError(rawProgram, BriskErrorType.InvalidTypeName, [typeData.name], position);
-  // Check If Variable Already Exists On Stack
-  if (typeStack.has(typeData.name))
-    BriskTypeError(
-      rawProgram,
-      BriskErrorType.TypeHasAlreadyBeenDeclared,
-      [typeData.name],
-      position
-    );
-  // Create Reference To Map
-  const variableReference = typePool.size;
-  // Add Variable To Pool
-  typePool.set(variableReference, typeData);
-  // Add Variable To Stack
-  typeStack.set(typeData.name, variableReference);
-  // Return Type Reference
-  return variableReference;
-};
-const getType = (
-  rawProgram: string,
-  typePool: TypeMap,
-  typeStack: TypeStack,
-  typeStacks: TypeStack[],
-  typeReference: TypeUsageNode | string,
-  position: Position,
-  { exported = false }: { exported?: boolean }
-): TypeData => {
-  // Get Variable Reference
-  let varName: string;
-  if (typeof typeReference == 'string') varName = typeReference;
-  else varName = typeReference.name;
-  // Search The Stacks
-  const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(varName));
-  // Check If It Exists
-  if (_varStack == undefined)
-    return BriskTypeError(rawProgram, BriskErrorType.TypeNotFound, [varName], position);
-  // Get Node
-  const variableReference = _varStack.get(varName)!;
-  if (!typePool.has(variableReference))
-    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  const value = typePool.get(variableReference)!;
-  // Set Variable To used
-  typePool.set(variableReference, {
-    ...value,
-    exported: value.exported || exported,
-  });
-  // Return Value
-  return value;
+const useVariable = (pool: VariableMap, variable: VariableNode): VariableData => {
+  // Set The Variable Data
+  setVariable(pool, variable, { used: true });
+  // Return The Variable Data
+  return getVariable(pool, variable);
 };
 // Analyze Node
 const analyzeNode = <T extends Node>(
@@ -347,6 +245,7 @@ const analyzeNode = <T extends Node>(
         _varStack,
         {
           name: node.variable.name,
+          mainScope: false,
           global: true,
           constant: true,
           parameter: false,
@@ -372,6 +271,7 @@ const analyzeNode = <T extends Node>(
         _varStack,
         {
           name: node.variable.name,
+          mainScope: false,
           global: true,
           constant: true,
           parameter: false,
@@ -419,20 +319,9 @@ const analyzeNode = <T extends Node>(
         node.value.nodeType == NodeType.EnumDefinitionStatement ||
         node.value.nodeType == NodeType.TypeAliasDefinition
       ) {
-        // Analyze Type Export
-        const exportName = node.value.name;
         // Get Type Data
-        const typeData = getType(
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          exportName,
-          node.position,
-          {
-            exported: true,
-          }
-        );
+        const typeData = getType(_types, node.value);
+        setType(_types, node.value, { exported: true });
         // Check Export Valid
         if (_exports.has(typeData.name))
           BriskTypeError(
@@ -448,6 +337,7 @@ const analyzeNode = <T extends Node>(
             nodeType: NodeType.TypeUsage,
             category: NodeCategory.Type,
             name: typeData.name,
+            reference: typeData.reference,
             position: node.position,
           },
           typeExport: true,
@@ -455,25 +345,11 @@ const analyzeNode = <T extends Node>(
         });
       } else {
         // Regular Export
-        const exportName: string =
-          node.value.nodeType == NodeType.DeclarationStatement
-            ? node.value.name.name
-            : node.value.name;
+        const exportName =
+          node.value.nodeType == NodeType.DeclarationStatement ? node.value.name : node.value;
         // Set Variable To Exported
-        const exportData = getVariable(
-          rawProgram,
-          _variables,
-          _varStack,
-          _closure,
-          _varStacks,
-          exportName,
-          node.value.position,
-          { used: true, exported: true }
-        );
-        if (exportData == undefined) {
-          BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
-          return node;
-        }
+        const exportData = useVariable(_variables, exportName);
+        setVariable(_variables, exportName, { exported: true });
         // Check Export Valid
         if (_exports.has(exportData.name))
           BriskTypeError(
@@ -514,7 +390,8 @@ const analyzeNode = <T extends Node>(
         _varStack,
         {
           name: node.name.name,
-          global: parentNode?.nodeType == NodeType.Program,
+          mainScope: parentNode?.nodeType == NodeType.Program,
+          global: false,
           constant: node.declarationType == DeclarationTypes.Constant,
           parameter: false,
           exported: false,
@@ -539,16 +416,7 @@ const analyzeNode = <T extends Node>(
       node.name = _analyzeNode(node.name);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
       // Verify That Var Exists And Is mutable
-      const variableData = getVariable(
-        rawProgram,
-        _variables,
-        _varStack,
-        _closure,
-        _varStacks,
-        node.name,
-        node.position,
-        { used: false }
-      );
+      const variableData = getVariable(_variables, node.name);
       if (variableData.constant)
         BriskTypeError(
           rawProgram,
@@ -597,8 +465,9 @@ const analyzeNode = <T extends Node>(
           _typeStacks: [..._typeStacks, _typeStack],
         });
       });
+      // TODO: Should this have a type Reference or a variable reference?
       // Add To Type Stack
-      createType(
+      node.reference = createType(
         rawProgram,
         _types,
         _typeStack,
@@ -610,13 +479,14 @@ const analyzeNode = <T extends Node>(
         node.position
       );
       // Add To Variable Stack
-      createVariable(
+      node.reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
         {
           name: node.name,
-          global: parentNode?.nodeType == NodeType.Program,
+          mainScope: parentNode?.nodeType == NodeType.Program,
+          global: false,
           constant: true,
           parameter: false,
           exported: false,
@@ -627,6 +497,7 @@ const analyzeNode = <T extends Node>(
             nodeType: NodeType.TypeUsage,
             category: NodeCategory.Type,
             name: node.name,
+            reference: node.reference,
             position: node.position,
           },
         },
@@ -795,7 +666,7 @@ const analyzeNode = <T extends Node>(
       // Create New Type Stack
       const typeStack: TypeStack = new Map();
       // Set Type
-      const typeReference = createType(
+      node.reference = createType(
         rawProgram,
         _types,
         _typeStack,
@@ -825,12 +696,7 @@ const analyzeNode = <T extends Node>(
         _typeStacks: [..._typeStacks, _typeStack],
       });
       // Complete Type
-      _types.set(typeReference, {
-        name: node.name,
-        exported: false,
-        type: node.typeLiteral,
-      });
-      _typeStack.set(node.name, typeReference);
+      setType(_types, node, { type: node.typeLiteral });
       // Set Data Payload
       node.data = {
         _typeStack: typeStack,
@@ -902,13 +768,17 @@ const analyzeNode = <T extends Node>(
       return node;
     }
     case NodeType.TypeUsage:
-      getType(rawProgram, _types, _typeStack, _typeStacks, node.name, node.position, {});
+      node.reference = getTypeReference(rawProgram, node, {
+        pool: _types,
+        stack: _typeStack,
+        stacks: _typeStacks,
+      });
       return node;
     case NodeType.GenericType:
       // Analyze Constraints
       if (node.constraints) node.constraints = _analyzeNode(node.constraints);
       // Create Type
-      createType(
+      node.reference = createType(
         rawProgram,
         _types,
         _typeStack,
@@ -922,17 +792,19 @@ const analyzeNode = <T extends Node>(
       return node;
     // Variables
     case NodeType.VariableUsage: {
-      const varData = getVariable(
-        rawProgram,
-        _variables,
-        _varStack,
-        _closure,
-        _varStacks,
-        node,
-        node.position,
-        {}
-      );
-      node.reference = varData.reference;
+      // Resolve Variable Reference
+      node.reference = getVariableReference(rawProgram, node, {
+        pool: _variables,
+        stack: _varStack,
+        stacks: _varStacks,
+      });
+      // Add To Closure
+      if (!_varStack.has(node.name)) {
+        if (getVariable(_variables, node).mainScope)
+          setVariable(_variables, node, { global: true });
+        _closure.add(node.reference);
+      }
+      // Return Node
       return node;
     }
     case NodeType.MemberAccess:
@@ -963,6 +835,7 @@ const analyzeNode = <T extends Node>(
         _varStack,
         {
           name: node.name.name,
+          mainScope: false,
           global: false,
           constant: !node.mutable,
           parameter: true,

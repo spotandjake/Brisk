@@ -9,20 +9,20 @@ import {
   ParameterNode,
   PropertyUsageNode,
   TypeLiteral,
-  TypeUsageNode,
   UnaryExpressionOperator,
   VariableDefinitionNode,
   VariableUsageNode,
 } from '../Types/ParseNodes';
-import { TypeData, TypeMap, TypeStack, VariableMap, VariableStack } from '../Types/AnalyzerNodes';
+import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { wasmExpressions } from './WasmTypes';
 import {
   createArrayType,
   createFunctionSignatureType,
   createPrimType,
   createUnionType,
-} from '../Helpers/index';
-import { BriskError, BriskTypeError } from '../Errors/Compiler';
+} from '../Helpers/typeBuilders';
+import { getType, getVariable } from '../Helpers/Helpers';
+import { BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Type Helpers
 export const buildObjectType = (
@@ -58,142 +58,6 @@ export const getObjectPropertyField = (
   if (memberAccess.property != undefined && field?.fieldType.nodeType == NodeType.InterfaceLiteral)
     return getObjectPropertyField(memberAccess.property, field.fieldType);
   else return field;
-};
-export const getTypeReference = (
-  rawProgram: string,
-  typeStack: TypeStack,
-  typeStacks: TypeStack[],
-  typeReference: TypeUsageNode | string,
-  position: Position
-): number => {
-  // Get Variable Reference
-  let typeName: string;
-  if (typeof typeReference == 'string') typeName = typeReference;
-  else typeName = typeReference.name;
-  // Search The Stacks
-  const _varStack = [...typeStacks, typeStack].reverse().find((s) => s.has(typeName));
-  // Check If It Exists
-  if (_varStack == undefined)
-    return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [typeName], position);
-  // Get Node
-  return _varStack.get(typeName)!;
-};
-export const getTypeVar = (
-  rawProgram: string,
-  typePool: TypeMap,
-  typeStack: TypeStack,
-  typeStacks: TypeStack[],
-  typeReference: TypeUsageNode | string,
-  position: Position
-): TypeLiteral => {
-  const _typeReference = getTypeReference(
-    rawProgram,
-    typeStack,
-    typeStacks,
-    typeReference,
-    position
-  );
-  // Ensure Var Is In Pool
-  if (!typePool.has(_typeReference))
-    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  // Return Value
-  return typePool.get(_typeReference)!.type;
-};
-export const setTypeVar = (
-  rawProgram: string,
-  typePool: TypeMap,
-  typeStack: TypeStack,
-  typeStacks: TypeStack[],
-  typeReference: TypeUsageNode | string,
-  type: TypeLiteral,
-  position: Position
-): void => {
-  const _typeReference = getTypeReference(
-    rawProgram,
-    typeStack,
-    typeStacks,
-    typeReference,
-    position
-  );
-  // Ensure Var Is In Pool
-  if (!typePool.has(_typeReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  // Value
-  const typeData = <TypeData>typePool.get(_typeReference);
-  typePool.set(_typeReference, {
-    ...typeData,
-    type: type,
-  });
-  typeStack.set(typeData.name, _typeReference);
-};
-export const getVarReference = (
-  rawProgram: string,
-  varStack: VariableStack,
-  varStacks: VariableStack[],
-  varReference: VariableUsageNode | VariableDefinitionNode,
-  position: Position
-): number => {
-  // Get Variable Reference
-  if (typeof varReference == 'string') {
-    // Search The Stacks
-    const _varStack = [...varStacks, varStack].reverse().find((s) => s.has(varReference));
-    // Check If It Exists
-    if (_varStack == undefined)
-      return BriskTypeError(rawProgram, BriskErrorType.VariableNotFound, [varReference], position);
-    // Get Node
-    return _varStack.get(varReference)!;
-  } else {
-    if (varReference.reference == undefined)
-      return BriskTypeError(rawProgram, BriskErrorType.CompilerError, [], position);
-    return varReference.reference;
-  }
-};
-export const getVarType = (
-  rawProgram: string,
-  varPool: VariableMap,
-  varStack: VariableStack,
-  varStacks: VariableStack[],
-  varReference: VariableUsageNode,
-  position: Position
-): TypeLiteral => {
-  const _variableReference = getVarReference(
-    rawProgram,
-    varStack,
-    varStacks,
-    varReference,
-    position
-  );
-  // Ensure Var Is In Pool
-  if (!varPool.has(_variableReference))
-    return BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  // Return Value
-  return varPool.get(_variableReference)!.type;
-};
-export const setVarType = (
-  rawProgram: string,
-  varPool: VariableMap,
-  varStack: VariableStack,
-  varStacks: VariableStack[],
-  varReference: VariableUsageNode | VariableDefinitionNode,
-  type: TypeLiteral,
-  position: Position
-): void => {
-  const _variableReference = getVarReference(
-    rawProgram,
-    varStack,
-    varStacks,
-    varReference,
-    position
-  );
-  // Ensure Var Is In Pool
-  if (!varPool.has(_variableReference))
-    BriskError(rawProgram, BriskErrorType.CompilerError, [], position);
-  // Value
-  const varData = varPool.get(_variableReference)!;
-  varPool.set(_variableReference, {
-    ...varData,
-    type: type,
-  });
 };
 // Checking Helpers
 export const nameType = (
@@ -746,13 +610,7 @@ export const resolveType = (
       };
     }
     case NodeType.TypeUsage:
-      return resolveType(
-        rawProgram,
-        typePool,
-        typeStack,
-        typeStacks,
-        getTypeVar(rawProgram, typePool, typeStack, typeStacks, type.name, type.position)
-      );
+      return resolveType(rawProgram, typePool, typeStack, typeStacks, getType(typePool, type).type);
     case NodeType.GenericType:
       return type;
   }
@@ -760,8 +618,6 @@ export const resolveType = (
 export const getExpressionType = (
   rawProgram: string,
   varPool: VariableMap,
-  varStack: VariableStack,
-  varStacks: VariableStack[],
   typePool: TypeMap,
   typeStack: TypeStack,
   typeStacks: TypeStack[],
@@ -775,8 +631,6 @@ export const getExpressionType = (
       return getExpressionType(
         rawProgram,
         varPool,
-        varStack,
-        varStacks,
         typePool,
         typeStack,
         typeStacks,
@@ -792,8 +646,6 @@ export const getExpressionType = (
         return getExpressionType(
           rawProgram,
           varPool,
-          varStack,
-          varStacks,
           typePool,
           typeStack,
           typeStacks,
@@ -804,8 +656,6 @@ export const getExpressionType = (
       return getExpressionType(
         rawProgram,
         varPool,
-        varStack,
-        varStacks,
         typePool,
         typeStack,
         typeStacks,
@@ -820,16 +670,7 @@ export const getExpressionType = (
         typePool,
         typeStack,
         typeStacks,
-        getExpressionType(
-          rawProgram,
-          varPool,
-          varStack,
-          varStacks,
-          typePool,
-          typeStack,
-          typeStacks,
-          expression.callee
-        )
+        getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, expression.callee)
       );
       // Ensure Callee is A Function
       if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
@@ -855,31 +696,11 @@ export const getExpressionType = (
         if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
           genericValues.set(
             param.name,
-            getExpressionType(
-              rawProgram,
-              varPool,
-              varStack,
-              varStacks,
-              typePool,
-              typeStack,
-              typeStacks,
-              arg
-            )
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg)
           );
         }
         // Return Type
-        args.push(
-          getExpressionType(
-            rawProgram,
-            varPool,
-            varStack,
-            varStacks,
-            typePool,
-            typeStack,
-            typeStacks,
-            arg
-          )
-        );
+        args.push(getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg));
       }
       // Analyze ReturnType
       if (calleeType.returnType.nodeType == NodeType.GenericType) {
@@ -940,31 +761,11 @@ export const getExpressionType = (
         if (param && param.nodeType == NodeType.GenericType && param.valueType == undefined) {
           genericValues.set(
             param.name,
-            getExpressionType(
-              rawProgram,
-              varPool,
-              varStack,
-              varStacks,
-              typePool,
-              typeStack,
-              typeStacks,
-              arg
-            )
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg)
           );
         }
         // Return Type
-        args.push(
-          getExpressionType(
-            rawProgram,
-            varPool,
-            varStack,
-            varStacks,
-            typePool,
-            typeStack,
-            typeStacks,
-            arg
-          )
-        );
+        args.push(getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg));
       }
       // Analyze ReturnType
       if (exprType.returnType.nodeType == NodeType.GenericType) {
@@ -1021,8 +822,6 @@ export const getExpressionType = (
           getExpressionType(
             rawProgram,
             varPool,
-            expression.data._varStack,
-            varStacks,
             typePool,
             expression.data._typeStack,
             [...typeStacks, typeStack],
@@ -1050,8 +849,6 @@ export const getExpressionType = (
           const valueType = getExpressionType(
             rawProgram,
             varPool,
-            varStack,
-            varStacks,
             typePool,
             typeStack,
             typeStacks,
@@ -1071,16 +868,7 @@ export const getExpressionType = (
           elementTypes.push(resolvedType.value);
         } else {
           elementTypes.push(
-            getExpressionType(
-              rawProgram,
-              varPool,
-              varStack,
-              varStacks,
-              typePool,
-              typeStack,
-              typeStacks,
-              element
-            )
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, element)
           );
         }
       }
@@ -1109,8 +897,6 @@ export const getExpressionType = (
             fieldType: getExpressionType(
               rawProgram,
               varPool,
-              varStack,
-              varStacks,
               typePool,
               typeStack,
               typeStacks,
@@ -1123,16 +909,7 @@ export const getExpressionType = (
         } else {
           // Get Value Type
           const fieldSpreadType = <InterfaceLiteralNode>(
-            getExpressionType(
-              rawProgram,
-              varPool,
-              varStack,
-              varStacks,
-              typePool,
-              typeStack,
-              typeStacks,
-              field.value
-            )
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, field.value)
           );
           for (const spreadField of fieldSpreadType.fields) {
             fields.push({
@@ -1162,7 +939,7 @@ export const getExpressionType = (
       };
     }
     case NodeType.VariableUsage:
-      return getVarType(rawProgram, varPool, varStack, varStacks, expression, expression.position);
+      return getVariable(varPool, expression).type;
     case NodeType.MemberAccess: {
       // Get Member Type
       const objectType = resolveType(
@@ -1170,16 +947,7 @@ export const getExpressionType = (
         typePool,
         typeStack,
         typeStacks,
-        getExpressionType(
-          rawProgram,
-          varPool,
-          varStack,
-          varStacks,
-          typePool,
-          typeStack,
-          typeStacks,
-          expression.parent
-        )
+        getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, expression.parent)
       );
       // Build Type
       const expectedObjectType: InterfaceLiteralNode = {

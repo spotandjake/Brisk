@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Compiler/Types/ParseNodes.ts</title>
+    <title>Code coverage report for Compiler/Codegen/index.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">Compiler/Types</a> ParseNodes.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">Compiler/Codegen</a> index.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/158</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/118</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/148</span>
             </div>
         
             
@@ -568,565 +568,7 @@
 <a name='L503'></a><a href='#L503'>503</a>
 <a name='L504'></a><a href='#L504'>504</a>
 <a name='L505'></a><a href='#L505'>505</a>
-<a name='L506'></a><a href='#L506'>506</a>
-<a name='L507'></a><a href='#L507'>507</a>
-<a name='L508'></a><a href='#L508'>508</a>
-<a name='L509'></a><a href='#L509'>509</a>
-<a name='L510'></a><a href='#L510'>510</a>
-<a name='L511'></a><a href='#L511'>511</a>
-<a name='L512'></a><a href='#L512'>512</a>
-<a name='L513'></a><a href='#L513'>513</a>
-<a name='L514'></a><a href='#L514'>514</a>
-<a name='L515'></a><a href='#L515'>515</a>
-<a name='L516'></a><a href='#L516'>516</a>
-<a name='L517'></a><a href='#L517'>517</a>
-<a name='L518'></a><a href='#L518'>518</a>
-<a name='L519'></a><a href='#L519'>519</a>
-<a name='L520'></a><a href='#L520'>520</a>
-<a name='L521'></a><a href='#L521'>521</a>
-<a name='L522'></a><a href='#L522'>522</a>
-<a name='L523'></a><a href='#L523'>523</a>
-<a name='L524'></a><a href='#L524'>524</a>
-<a name='L525'></a><a href='#L525'>525</a>
-<a name='L526'></a><a href='#L526'>526</a>
-<a name='L527'></a><a href='#L527'>527</a>
-<a name='L528'></a><a href='#L528'>528</a>
-<a name='L529'></a><a href='#L529'>529</a>
-<a name='L530'></a><a href='#L530'>530</a>
-<a name='L531'></a><a href='#L531'>531</a>
-<a name='L532'></a><a href='#L532'>532</a>
-<a name='L533'></a><a href='#L533'>533</a>
-<a name='L534'></a><a href='#L534'>534</a>
-<a name='L535'></a><a href='#L535'>535</a>
-<a name='L536'></a><a href='#L536'>536</a>
-<a name='L537'></a><a href='#L537'>537</a>
-<a name='L538'></a><a href='#L538'>538</a>
-<a name='L539'></a><a href='#L539'>539</a>
-<a name='L540'></a><a href='#L540'>540</a>
-<a name='L541'></a><a href='#L541'>541</a>
-<a name='L542'></a><a href='#L542'>542</a>
-<a name='L543'></a><a href='#L543'>543</a>
-<a name='L544'></a><a href='#L544'>544</a>
-<a name='L545'></a><a href='#L545'>545</a>
-<a name='L546'></a><a href='#L546'>546</a>
-<a name='L547'></a><a href='#L547'>547</a>
-<a name='L548'></a><a href='#L548'>548</a>
-<a name='L549'></a><a href='#L549'>549</a>
-<a name='L550'></a><a href='#L550'>550</a>
-<a name='L551'></a><a href='#L551'>551</a>
-<a name='L552'></a><a href='#L552'>552</a>
-<a name='L553'></a><a href='#L553'>553</a>
-<a name='L554'></a><a href='#L554'>554</a>
-<a name='L555'></a><a href='#L555'>555</a>
-<a name='L556'></a><a href='#L556'>556</a>
-<a name='L557'></a><a href='#L557'>557</a>
-<a name='L558'></a><a href='#L558'>558</a>
-<a name='L559'></a><a href='#L559'>559</a>
-<a name='L560'></a><a href='#L560'>560</a>
-<a name='L561'></a><a href='#L561'>561</a>
-<a name='L562'></a><a href='#L562'>562</a>
-<a name='L563'></a><a href='#L563'>563</a>
-<a name='L564'></a><a href='#L564'>564</a>
-<a name='L565'></a><a href='#L565'>565</a>
-<a name='L566'></a><a href='#L566'>566</a>
-<a name='L567'></a><a href='#L567'>567</a>
-<a name='L568'></a><a href='#L568'>568</a>
-<a name='L569'></a><a href='#L569'>569</a>
-<a name='L570'></a><a href='#L570'>570</a>
-<a name='L571'></a><a href='#L571'>571</a>
-<a name='L572'></a><a href='#L572'>572</a>
-<a name='L573'></a><a href='#L573'>573</a>
-<a name='L574'></a><a href='#L574'>574</a>
-<a name='L575'></a><a href='#L575'>575</a>
-<a name='L576'></a><a href='#L576'>576</a>
-<a name='L577'></a><a href='#L577'>577</a>
-<a name='L578'></a><a href='#L578'>578</a>
-<a name='L579'></a><a href='#L579'>579</a>
-<a name='L580'></a><a href='#L580'>580</a>
-<a name='L581'></a><a href='#L581'>581</a>
-<a name='L582'></a><a href='#L582'>582</a>
-<a name='L583'></a><a href='#L583'>583</a>
-<a name='L584'></a><a href='#L584'>584</a>
-<a name='L585'></a><a href='#L585'>585</a>
-<a name='L586'></a><a href='#L586'>586</a>
-<a name='L587'></a><a href='#L587'>587</a>
-<a name='L588'></a><a href='#L588'>588</a>
-<a name='L589'></a><a href='#L589'>589</a>
-<a name='L590'></a><a href='#L590'>590</a>
-<a name='L591'></a><a href='#L591'>591</a>
-<a name='L592'></a><a href='#L592'>592</a>
-<a name='L593'></a><a href='#L593'>593</a>
-<a name='L594'></a><a href='#L594'>594</a>
-<a name='L595'></a><a href='#L595'>595</a>
-<a name='L596'></a><a href='#L596'>596</a>
-<a name='L597'></a><a href='#L597'>597</a>
-<a name='L598'></a><a href='#L598'>598</a>
-<a name='L599'></a><a href='#L599'>599</a>
-<a name='L600'></a><a href='#L600'>600</a>
-<a name='L601'></a><a href='#L601'>601</a>
-<a name='L602'></a><a href='#L602'>602</a>
-<a name='L603'></a><a href='#L603'>603</a>
-<a name='L604'></a><a href='#L604'>604</a>
-<a name='L605'></a><a href='#L605'>605</a>
-<a name='L606'></a><a href='#L606'>606</a>
-<a name='L607'></a><a href='#L607'>607</a>
-<a name='L608'></a><a href='#L608'>608</a>
-<a name='L609'></a><a href='#L609'>609</a>
-<a name='L610'></a><a href='#L610'>610</a>
-<a name='L611'></a><a href='#L611'>611</a>
-<a name='L612'></a><a href='#L612'>612</a>
-<a name='L613'></a><a href='#L613'>613</a>
-<a name='L614'></a><a href='#L614'>614</a>
-<a name='L615'></a><a href='#L615'>615</a>
-<a name='L616'></a><a href='#L616'>616</a>
-<a name='L617'></a><a href='#L617'>617</a>
-<a name='L618'></a><a href='#L618'>618</a>
-<a name='L619'></a><a href='#L619'>619</a>
-<a name='L620'></a><a href='#L620'>620</a>
-<a name='L621'></a><a href='#L621'>621</a>
-<a name='L622'></a><a href='#L622'>622</a>
-<a name='L623'></a><a href='#L623'>623</a>
-<a name='L624'></a><a href='#L624'>624</a>
-<a name='L625'></a><a href='#L625'>625</a>
-<a name='L626'></a><a href='#L626'>626</a>
-<a name='L627'></a><a href='#L627'>627</a>
-<a name='L628'></a><a href='#L628'>628</a>
-<a name='L629'></a><a href='#L629'>629</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L506'></a><a href='#L506'>506</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1174,6 +616,433 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1195,758 +1064,520 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// General Imports
-import { Position } from './Types';
-import { AnalyzerProperties, TypeStack, VariableClosure, VariableStack } from './AnalyzerNodes';
-// Node Types
-export const enum NodeType {
-  // Program
-  Program,
-  // Statements
-  IfStatement,
-  FlagStatement,
-  BlockStatement,
-  ImportStatement,
-  WasmImportStatement,
-  ExportStatement,
-  DeclarationStatement,
-  AssignmentStatement,
-  ReturnStatement,
-  PostFixStatement,
-  EnumDefinitionStatement,
-  // Enums
-  EnumVariant,
-  // Expressions
-  ComparisonExpression,
-  ArithmeticExpression,
-  UnaryExpression,
-  ParenthesisExpression,
-  TypeCastExpression,
-  CallExpression,
-  WasmCallExpression,
-  // Literals
-  StringLiteral,
-  I32Literal,
-  I64Literal,
-  U32Literal,
-  U64Literal,
-  F32Literal,
-  F64Literal,
-  NumberLiteral,
-  ConstantLiteral,
-  FunctionLiteral,
-  ArrayLiteral,
-  ObjectLiteral,
-  ObjectField,
-  ValueSpread,
-  // Types
-  TypeAliasDefinition,
-  InterfaceDefinition,
-  TypePrimLiteral,
-  TypeUnionLiteral,
-  ArrayTypeLiteral,
-  ParenthesisTypeLiteral,
-  FunctionSignatureLiteral,
-  InterfaceLiteral,
-  InterfaceField,
-  TypeUsage,
-  GenericType,
-  TypeIdentifier,
-  // Vars
-  VariableDefinition,
-  VariableUsage,
-  MemberAccess,
-  PropertyUsage,
-  Parameter,
-  Arguments,
-}
-export const enum NodeCategory {
-  General,
-  Statement,
-  Enum,
-  Expression,
-  Literal,
-  Type,
-  Variable,
-}
-// Program
-export interface ProgramNode {
-  nodeType: NodeType.Program;
-  category: NodeCategory.General;
-  body: Statement[];
-  data: Omit&lt;AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'&gt;;
-  position: Position;
-}
-// Statements
-export type Statement =
-  | FlagNode
-  | IfStatementNode
-  | BlockStatementNode
-  | ImportStatementNode
-  | WasmImportStatementNode
-  | ExportStatementNode
-  | DeclarationStatementNode
-  | AssignmentStatementNode
-  | TypeDefinition
-  | ReturnStatementNode
-  | EnumDefinitionStatementNode
-  | EnumVariantNode
-  | PostFixStatementNode;
-export interface IfStatementNode {
-  nodeType: NodeType.IfStatement;
-  category: NodeCategory.Statement;
-  condition: Expression;
-  body: Statement;
-  alternative?: Statement;
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Imports
+import { brisk_Void_Value, encodeBriskType, initializeBriskType } from './Helpers';
+import {
+  ArithmeticExpressionOperator,
+  ComparisonExpressionOperator,
+  FunctionSignatureLiteralNode,
+  NodeType,
+  PostFixOperator,
+  ProgramNode,
+} from '../Types/ParseNodes';
+import { UnresolvedBytes, WasmExternalKind, WasmModule } from '../../wasmBuilder/Types/Nodes';
+import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
+import { createPrimType } from '../Helpers/typeBuilders';
+import {
+  addElement,
+  addFunction,
+  addGlobal,
+  addImport,
+  addMemory,
+  addType,
+  compileModule,
+  createImport,
+  createModule,
+  setStart,
+} from '../../wasmBuilder/Build/WasmModule';
+import { CodeGenNode, CodeGenProperties } from '../Types/CodeGenNodes';
+import { mapExpression } from './WasmInstructionMap';
+import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
+import { getVariable } from '../Helpers/Helpers';
+import * as Types from '../../wasmBuilder/Build/WasmTypes';
+import * as Expressions from '../../wasmBuilder/Build/Expression';
+import { BriskErrorType } from '../Errors/Errors';
+import { BriskError } from '../Errors/Compiler';
+// CodeGen
+const generateCode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  // Code
+  rawProgram: string,
+  // wasmModule
+  wasmModule: WasmModule,
+  // Stacks
+  properties: CodeGenProperties,
+  node: CodeGenNode
+): UnresolvedBytes =&gt; {
+  const {
+    // Our Global Variable And Type Pools
+    // _imports,
+    // _exports,
+    _variables,
+    _types,
+    // ParentStacks
+    _varStacks,
+    _typeStacks,
+    // Stacks
+    // _closure,
+    _varStack,
+    _typeStack,
 &nbsp;
-  data: {
-    pathReturns: boolean;
+    wasmFunction,
+  } = <span class="cstat-no" title="statement not covered" >properties;</span>
+  const _generateCode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+    childNode: CodeGenNode,
+    props: Partial&lt;CodeGenProperties&gt; = <span class="branch-0 cbranch-no" title="branch not covered" >properties</span>
+  ): UnresolvedBytes =&gt; {
+<span class="cstat-no" title="statement not covered" >    return generateCode(rawProgram, wasmModule, { ...properties, ...props }, childNode);</span>
   };
-  position: Position;
-}
-export interface FlagNode {
-  nodeType: NodeType.FlagStatement;
-  category: NodeCategory.Statement;
-  value: string;
-  args: ArgumentsNode;
-  position: Position;
-}
-export interface BlockStatementNode {
-  nodeType: NodeType.BlockStatement;
-  category: NodeCategory.Statement;
-  body: Statement[];
-  data: {
-    // Properties
-    _varStack: VariableStack;
-    _typeStack: TypeStack;
+  // Compile The Code
+<span class="cstat-no" title="statement not covered" >  switch (node.nodeType) {</span>
+    // Statements
+    case NodeType.IfStatement: {
+      // Compile Conditions
+      const condition = <span class="cstat-no" title="statement not covered" >_generateCode(node.condition);</span>
+      // Compile Paths
+      const body = <span class="cstat-no" title="statement not covered" >_generateCode(node.body);</span>
+      const alternative =
+<span class="cstat-no" title="statement not covered" >        node.alternative != undefined ? _generateCode(node.alternative) : undefined;</span>
+      // Return Expression
+<span class="cstat-no" title="statement not covered" >      return Expressions.ifExpression(condition, body, alternative);</span>
+    }
+    // TODO: Handle Flag Statement
+    case NodeType.BlockStatement: {
+      // Compile Body
+      const body = <span class="cstat-no" title="statement not covered" >node.body.map(<span class="fstat-no" title="function not covered" >(_</span>node) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return _generateCode(_node, {</span>
+          _varStacks: [..._varStacks, _varStack],
+          _typeStacks: [..._typeStacks, _typeStack],
 &nbsp;
-    pathReturns: boolean;
-  };
-  position: Position;
-}
-export interface ImportStatementNode {
-  nodeType: NodeType.ImportStatement;
-  category: NodeCategory.Statement;
-  variable: VariableDefinition;
-  source: StringLiteralNode;
-  position: Position;
-}
-export interface WasmImportStatementNode {
-  nodeType: NodeType.WasmImportStatement;
-  category: NodeCategory.Statement;
-  typeSignature: TypeLiteral;
-  variable: VariableDefinitionNode;
-  source: StringLiteralNode;
-  position: Position;
-}
-export interface ExportStatementNode {
-  nodeType: NodeType.ExportStatement;
-  category: NodeCategory.Statement;
-  value: ExportStatementValue;
-  position: Position;
-}
-export type ExportStatementValue =
-  | VariableUsageNode
-  | DeclarationStatementNode
-  | ObjectLiteralNode
-  | InterfaceDefinitionNode
-  | EnumDefinitionStatementNode
-  | TypeAliasDefinitionNode;
-export const enum DeclarationTypes {
-  Constant,
-  Lexical,
-}
-export interface DeclarationStatementNode {
-  nodeType: NodeType.DeclarationStatement;
-  category: NodeCategory.Statement;
-  declarationType: DeclarationTypes;
-  name: VariableDefinition;
-  varType: TypeLiteral;
-  value: Expression;
-  position: Position;
-}
-export interface AssignmentStatementNode {
-  nodeType: NodeType.AssignmentStatement;
-  category: NodeCategory.Statement;
-  name: VariableUsage;
-  value: Expression;
-  position: Position;
-}
-export interface ReturnStatementNode {
-  nodeType: NodeType.ReturnStatement;
-  category: NodeCategory.Statement;
-  returnValue: Expression | undefined;
-  data: {
-    pathReturns: boolean;
-  };
-  position: Position;
-}
-export const enum PostFixOperator {
-  Increment,
-  Decrement,
-}
-export interface PostFixStatementNode {
-  nodeType: NodeType.PostFixStatement;
-  category: NodeCategory.Statement;
-  operator: PostFixOperator;
-  name: VariableUsage;
-  position: Position;
-}
-// Enums
-export interface EnumDefinitionStatementNode {
-  nodeType: NodeType.EnumDefinitionStatement;
-  category: NodeCategory.Statement;
-  name: string;
-  variants: EnumVariantNode[];
-  genericTypes: GenericTypeNode[] | undefined;
-  reference?: number;
-  data: {
-    _typeStack: TypeStack;
-  };
-  position: Position;
-}
-export interface EnumVariantNode {
-  nodeType: NodeType.EnumVariant;
-  category: NodeCategory.Enum;
-  identifier: string;
-  value: undefined | Expression | TypeLiteral[];
-  position: Position;
-}
-// Expression Symbols
-export const enum ComparisonExpressionOperator {
-  ComparisonEqual,
-  ComparisonNotEqual,
-  ComparisonLessThan,
-  ComparisonGreaterThan,
-  ComparisonLessThanOrEqual,
-  ComparisonGreaterThanOrEqual,
-  ComparisonAnd,
-  ComparisonOr,
-}
-export const enum ArithmeticExpressionOperator {
-  ArithmeticAdd,
-  ArithmeticSub,
-  ArithmeticMul,
-  ArithmeticDiv,
-  ArithmeticPow,
-}
-export const enum UnaryExpressionOperator {
-  UnaryNot,
-  UnaryPositive,
-  UnaryNegative,
-}
-// Expressions
-export type Expression =
-  | ComparisonExpressionNode
-  | ArithmeticExpressionNode
-  | UnaryExpressionNode
-  | ParenthesisExpressionNode
-  | TypeCastExpression
-  | CallExpressionNode
-  | WasmCallExpressionNode
-  | Atom;
+          _varStack: node.data._varStack,
+          _typeStack: node.data._typeStack,
+        });
+      });
+      // Return Expression
+<span class="cstat-no" title="statement not covered" >      return body.flat();</span>
+    }
+    // TODO: Handle Import Statement
+    case NodeType.WasmImportStatement: {
+      // TODO: Handle Destructuring
+      // Compile Type
+      const importType = <span class="cstat-no" title="statement not covered" >addType(</span>
+        wasmModule,
+        encodeBriskType(rawProgram, properties, node.typeSignature, true)
+      );
+      // Compile Import Statement
+      // Build Import
+      // Add Import
+      // TODO: Allow Importing Tables And Memory
+      // Function Types Start With 0x60
+      const isFunctionImport = <span class="cstat-no" title="statement not covered" >wasmModule.typeSection[importType][0] == 0x60;</span>
+      let importKind: WasmExternalKind;
+<span class="cstat-no" title="statement not covered" >      if (isFunctionImport) <span class="cstat-no" title="statement not covered" >importKind = WasmExternalKind.function;</span></span>
+      else <span class="cstat-no" title="statement not covered" >importKind = WasmExternalKind.global;</span>
+      const reference = <span class="cstat-no" title="statement not covered" >addImport(</span>
+        wasmModule,
+        createImport(importKind, node.source.value, node.variable.name, importType)
+      );
+      // Add The Function To The Table
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (isFunctionImport) {</span>
+        // Add To The Function Table
+<span class="cstat-no" title="statement not covered" >        wasmModule = addElement(wasmModule, [reference]);</span>
+        // Add The Global
+<span class="cstat-no" title="statement not covered" >        wasmModule = addGlobal(</span>
+          wasmModule,
+          `${node.variable.name}${node.variable.reference!}`,
+          false,
+          encodeBriskType(rawProgram, properties, node.typeSignature, false),
+          Expressions.i32_ConstExpression(reference)
+        );
+        // Return A Function Reference
+<span class="cstat-no" title="statement not covered" >        return [];</span>
+      }
+      // Return Blank Statement
+<span class="cstat-no" title="statement not covered" >      return [];</span>
+    }
+    // TODO: Handle ExportStatement
+    case NodeType.DeclarationStatement: {
+      // TODO: Handle Variable Destructuring
+      // Get The Variable Information
+      const selfReference = <span class="cstat-no" title="statement not covered" >node.name.reference!;</span>
+      const varData = <span class="cstat-no" title="statement not covered" >_variables.get(selfReference)!;</span>
+      const name = <span class="cstat-no" title="statement not covered" >`${varData.name}${selfReference}`;</span>
+<span class="cstat-no" title="statement not covered" >      if (varData.global) {</span>
+        // Add Global
+<span class="cstat-no" title="statement not covered" >        wasmModule = addGlobal(</span>
+          wasmModule,
+          name,
+          true,
+          encodeBriskType(rawProgram, properties, varData.type),
+          initializeBriskType(rawProgram, properties, varData.type)
+        );
+        // Assign To A Wasm Global
+<span class="cstat-no" title="statement not covered" >        return Expressions.global_SetExpression(name, _generateCode(node.value, { selfReference }));</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        addLocal(wasmFunction, [encodeBriskType(rawProgram, properties, varData.type), name]);</span>
+        // Return The Set Expression
+<span class="cstat-no" title="statement not covered" >        return Expressions.local_SetExpression(name, _generateCode(node.value, { selfReference }));</span>
+      }
+    }
+    case NodeType.AssignmentStatement: {
+      // Get The Variable Information
+<span class="cstat-no" title="statement not covered" >      if (node.name.nodeType != NodeType.MemberAccess) {</span>
+        const selfReference = <span class="cstat-no" title="statement not covered" >node.name.reference!;</span>
+        const varData = <span class="cstat-no" title="statement not covered" >_variables.get(selfReference)!;</span>
+        const name = <span class="cstat-no" title="statement not covered" >`${varData.name}${selfReference}`;</span>
+        const body = <span class="cstat-no" title="statement not covered" >_generateCode(node.value, { selfReference: selfReference });</span>
+<span class="cstat-no" title="statement not covered" >        if (varData.global) {</span>
+          // Assign To A Wasm Global
+<span class="cstat-no" title="statement not covered" >          return Expressions.global_SetExpression(name, body);</span>
+        } else {
+          // Return The Set Expression
+<span class="cstat-no" title="statement not covered" >          return Expressions.local_SetExpression(name, body);</span>
+        }
+      } else {
+        // TODO: Handle Member Access
+<span class="cstat-no" title="statement not covered" >        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+      }
+    }
+    case NodeType.ReturnStatement:
+<span class="cstat-no" title="statement not covered" >      if (node.returnValue != undefined)</span>
+<span class="cstat-no" title="statement not covered" >        return Expressions.returnExpression(_generateCode(node.returnValue));</span>
+      // Otherwise Return Void
+      else <span class="cstat-no" title="statement not covered" >return Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value));</span>
+    case NodeType.PostFixStatement: {
+      // Get The Variable Information
+<span class="cstat-no" title="statement not covered" >      if (node.name.nodeType != NodeType.MemberAccess) {</span>
+        const varData = <span class="cstat-no" title="statement not covered" >_variables.get(node.name.reference!)!;</span>
+        // Build Get Expression
+        const val: UnresolvedBytes = <span class="cstat-no" title="statement not covered" >varData.global</span>
+          ? Expressions.global_GetExpression(`${varData.name}${varData.reference}`)
+          : Expressions.local_GetExpression(`${varData.name}${varData.reference}`);
+        // Build Add Expression
+        let add: UnresolvedBytes;
+        // Handle Stack Types
+        const exprAType = <span class="cstat-no" title="statement not covered" >varData.type;</span>
+<span class="cstat-no" title="statement not covered" >        if (exprAType.nodeType == NodeType.TypePrimLiteral) {</span>
+          // Handle Stack Types
+<span class="cstat-no" title="statement not covered" >          if (node.operator == PostFixOperator.Increment) {</span>
+<span class="cstat-no" title="statement not covered" >            if (exprAType.name == 'i32' || exprAType.name == 'u32')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.i32_AddExpression(val, Expressions.i32_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'i64' || exprAType.name == 'u64')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.i64_AddExpression(val, Expressions.i64_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f32')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.f32_AddExpression(val, Expressions.f32_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f64')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.f64_AddExpression(val, Expressions.f64_ConstExpression(1));</span>
+            else {
+              // TODO: Handle Heap Types
+<span class="cstat-no" title="statement not covered" >              return BriskError(</span>
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          } else {
+<span class="cstat-no" title="statement not covered" >            if (exprAType.name == 'i32' || exprAType.name == 'u32')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.i32_SubExpression(val, Expressions.i32_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'i64' || exprAType.name == 'u64')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.i64_SubExpression(val, Expressions.i64_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f32')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.f32_SubExpression(val, Expressions.f32_ConstExpression(1));</span>
+            else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f64')</span>
+<span class="cstat-no" title="statement not covered" >              add = Expressions.f64_SubExpression(val, Expressions.f64_ConstExpression(1));</span>
+            else {
+              // TODO: Handle Heap Types
+<span class="cstat-no" title="statement not covered" >              return BriskError(</span>
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          }
+        } else {
+<span class="cstat-no" title="statement not covered" >          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+        }
+        // Build Set Expression
+<span class="cstat-no" title="statement not covered" >        if (varData.global) {</span>
+          // Assign To A Wasm Global
+<span class="cstat-no" title="statement not covered" >          return Expressions.global_SetExpression(`${varData.name}${varData.reference}`, add);</span>
+        } else {
+          // Return The Set Expression
+<span class="cstat-no" title="statement not covered" >          return Expressions.local_SetExpression(`${varData.name}${varData.reference}`, add);</span>
+        }
+      } else {
+        // TODO: Handle Member Access
+<span class="cstat-no" title="statement not covered" >        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+      }
+    }
+    // TODO: Handle EnumDefinitionStatement
+    // TODO: Handle EnumVariant
+    case NodeType.ArithmeticExpression: {
+      // TODO: Move this into The Language
+      // Get The Expression Type For More Performant Equality
+      // The Left and Right Side are the same type so we only need one
+      const exprAType = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
+        rawProgram,
+        _variables,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.lhs
+      );
+      // Compile Both Sides
+      const lhs = <span class="cstat-no" title="statement not covered" >_generateCode(node.lhs);</span>
+      const rhs = <span class="cstat-no" title="statement not covered" >_generateCode(node.rhs);</span>
+      // Equal Comparison
+<span class="cstat-no" title="statement not covered" >      if (node.operator == ArithmeticExpressionOperator.ArithmeticAdd) {</span>
+        // Comparison
+<span class="cstat-no" title="statement not covered" >        if (exprAType.nodeType == NodeType.TypePrimLiteral) {</span>
+          // Handle Stack Types
+<span class="cstat-no" title="statement not covered" >          if (exprAType.name == 'i32' || exprAType.name == 'u32')</span>
+<span class="cstat-no" title="statement not covered" >            return Expressions.i32_AddExpression(lhs, rhs);</span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'i64' || exprAType.name == 'u64')</span>
+<span class="cstat-no" title="statement not covered" >            return Expressions.i64_AddExpression(lhs, rhs);</span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f32') <span class="cstat-no" title="statement not covered" >return Expressions.f32_AddExpression(lhs, rhs);</span></span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f64') <span class="cstat-no" title="statement not covered" >return Expressions.f64_AddExpression(lhs, rhs);</span></span>
+          else {
+            // TODO: Handle Heap Types
+<span class="cstat-no" title="statement not covered" >            return BriskError(</span>
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else {
+<span class="cstat-no" title="statement not covered" >          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+        }
+      } else {
+<span class="cstat-no" title="statement not covered" >        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+      }
+    }
+    case NodeType.ComparisonExpression: {
+      // TODO: Move this into The Language
+      // Get The Expression Type For More Performant Equality
+      // The Left and Right Side are the same type so we only need one
+      const exprAType = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
+        rawProgram,
+        _variables,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.lhs
+      );
+      // Compile Both Sides
+      const lhs = <span class="cstat-no" title="statement not covered" >_generateCode(node.lhs);</span>
+      const rhs = <span class="cstat-no" title="statement not covered" >_generateCode(node.rhs);</span>
+      // Equal Comparison
+<span class="cstat-no" title="statement not covered" >      if (node.operator == ComparisonExpressionOperator.ComparisonEqual) {</span>
+        // Comparison
+<span class="cstat-no" title="statement not covered" >        if (exprAType.nodeType == NodeType.TypePrimLiteral) {</span>
+          // Handle Stack Types
+<span class="cstat-no" title="statement not covered" >          if (exprAType.name == 'i32' || exprAType.name == 'u32')</span>
+<span class="cstat-no" title="statement not covered" >            return Expressions.i32_eqExpression(lhs, rhs);</span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'i64' || exprAType.name == 'u64')</span>
+<span class="cstat-no" title="statement not covered" >            return Expressions.i64_eqExpression(lhs, rhs);</span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f32') <span class="cstat-no" title="statement not covered" >return Expressions.f32_eqExpression(lhs, rhs);</span></span>
+          else <span class="cstat-no" title="statement not covered" >if (exprAType.name == 'f64') <span class="cstat-no" title="statement not covered" >return Expressions.f64_eqExpression(lhs, rhs);</span></span>
+          else {
+            // TODO: Handle Heap Types
+<span class="cstat-no" title="statement not covered" >            return BriskError(</span>
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else {
+<span class="cstat-no" title="statement not covered" >          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+        }
+      } else {
+<span class="cstat-no" title="statement not covered" >        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
+      }
+    }
+    // TODO: Handle UnaryExpression
+    case NodeType.ParenthesisExpression:
+<span class="cstat-no" title="statement not covered" >      return _generateCode(node.value);</span>
+    // TODO: Handle TypeCastExpression
+    case NodeType.CallExpression: {
+      // Compile Build The Function Signature
+      const funcType = &lt;FunctionSignatureLiteralNode&gt;(
+<span class="cstat-no" title="statement not covered" >        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.callee)</span>
+      );
+      // Return The Call
+      const funcCall = <span class="cstat-no" title="statement not covered" >Expressions.call_indirect(</span>
+        _generateCode(node.callee),
+        node.args.map(<span class="fstat-no" title="function not covered" >(a</span>rg) =&gt; <span class="cstat-no" title="statement not covered" >_generateCode(arg))</span>,
+        addType(wasmModule, encodeBriskType(rawProgram, properties, funcType, true))
+      );
+<span class="cstat-no" title="statement not covered" >      if (node.statement) <span class="cstat-no" title="statement not covered" >return Expressions.dropExpression(funcCall);</span></span>
+      else <span class="cstat-no" title="statement not covered" >return funcCall;</span>
+    }
+    case NodeType.WasmCallExpression: {
+<span class="cstat-no" title="statement not covered" >      return mapExpression(rawProgram, node, _generateCode);</span>
+    }
+    // TODO: Handle StringLiteral
+    case NodeType.I32Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.i32_ConstExpression(node.value);</span>
+    case NodeType.I64Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.i64_ConstExpression(node.value);</span>
+    case NodeType.U32Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.i32_ConstExpression(node.value);</span>
+    case NodeType.U64Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.i64_ConstExpression(node.value);</span>
+    case NodeType.F32Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.f32_ConstExpression(node.value);</span>
+    case NodeType.F64Literal:
+<span class="cstat-no" title="statement not covered" >      return Expressions.i32_ConstExpression(node.value);</span>
+    // TODO: Handle NumberLiteral
+    case NodeType.ConstantLiteral:
+      // 1 represents true
+<span class="cstat-no" title="statement not covered" >      if (node.value == 'true') <span class="cstat-no" title="statement not covered" >return Expressions.i32_ConstExpression(1);</span></span>
+      // 0 represents false
+      else <span class="cstat-no" title="statement not covered" >if (node.value == 'false') <span class="cstat-no" title="statement not covered" >return Expressions.i32_ConstExpression(0);</span></span>
+      // 3 represents void
+      else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (node.value == 'void') <span class="cstat-no" title="statement not covered" >return Expressions.i32_ConstExpression(brisk_Void_Value);</span></span>
+<span class="cstat-no" title="statement not covered" >      break;</span>
+    case NodeType.FunctionLiteral: {
+      // TODO: Handle Building Closure
+      // TODO: Handle Polymorphic Functions
+      // Handle Parameters
+      // TODO: Handle Destructuring Parameters
+      // Build The Function
+      let func = <span class="cstat-no" title="statement not covered" >createFunction(</span>
+        properties.selfReference != undefined
+          ? _variables.get(properties.selfReference)!.name
+          : `AmbiguousFunction${wasmModule.functionSection.length}`,
+        encodeBriskType(
+          rawProgram,
+          properties,
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node),
+          true
+        ),
+        node.params.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt; <span class="cstat-no" title="statement not covered" >`${p.name.name}${node.data._varStack.get(p.name.name)}`)</span>,
+        [],
+        []
+      );
+      // Compile Body
+      const body: UnresolvedBytes[] = <span class="cstat-no" title="statement not covered" >[];</span>
+      const compiledBody = <span class="cstat-no" title="statement not covered" >_generateCode(node.body, {</span>
+        _closure: node.data._closure,
+        _varStacks: [..._varStacks, _varStack],
+        _typeStacks: [..._typeStacks, _typeStack],
 &nbsp;
-export interface ComparisonExpressionNode {
-  nodeType: NodeType.ComparisonExpression;
-  category: NodeCategory.Expression;
-  lhs: Expression;
-  operator: ComparisonExpressionOperator;
-  rhs: Expression;
-  position: Position;
-}
-export interface ArithmeticExpressionNode {
-  nodeType: NodeType.ArithmeticExpression;
-  category: NodeCategory.Expression;
-  lhs: Expression;
-  operator: ArithmeticExpressionOperator;
-  rhs: Expression;
-  position: Position;
-}
-export interface UnaryExpressionNode {
-  nodeType: NodeType.UnaryExpression;
-  category: NodeCategory.Expression;
-  operator: UnaryExpressionOperator;
-  value: Expression;
-  position: Position;
-}
-export interface ParenthesisExpressionNode {
-  nodeType: NodeType.ParenthesisExpression;
-  category: NodeCategory.Expression;
-  value: Expression;
-  position: Position;
-}
-export interface TypeCastExpression {
-  nodeType: NodeType.TypeCastExpression;
-  category: NodeCategory.Expression;
-  value: Expression;
-  typeLiteral: TypeLiteral;
-  position: Position;
-}
-export interface CallExpressionNode {
-  nodeType: NodeType.CallExpression;
-  category: NodeCategory.Expression;
-  callee: Expression;
-  args: Expression[];
-  statement: boolean;
-  position: Position;
-}
-export interface WasmCallExpressionNode {
-  nodeType: NodeType.WasmCallExpression;
-  category: NodeCategory.Expression;
-  name: string;
-  args: Expression[];
-  statement: boolean;
-  position: Position;
-}
-// Literals
-export type Atom = Literal | VariableUsageNode | MemberAccessNode;
-export type Literal =
-  | StringLiteralNode
-  | I32LiteralNode
-  | I64LiteralNode
-  | U32LiteralNode
-  | U64LiteralNode
-  | F32LiteralNode
-  | F64LiteralNode
-  | NumberLiteralNode
-  | ConstantLiteralNode
-  | FunctionLiteralNode
-  | ArrayLiteralNode
-  | ObjectLiteralNode;
-export interface StringLiteralNode {
-  nodeType: NodeType.StringLiteral;
-  category: NodeCategory.Literal;
-  value: string;
-  position: Position;
-}
-export interface I32LiteralNode {
-  nodeType: NodeType.I32Literal;
-  category: NodeCategory.Literal;
-  value: number;
-  position: Position;
-}
-export interface I64LiteralNode {
-  nodeType: NodeType.I64Literal;
-  category: NodeCategory.Literal;
-  value: bigint;
-  position: Position;
-}
-export interface U32LiteralNode {
-  nodeType: NodeType.U32Literal;
-  category: NodeCategory.Literal;
-  value: number;
-  position: Position;
-}
-export interface U64LiteralNode {
-  nodeType: NodeType.U64Literal;
-  category: NodeCategory.Literal;
-  value: bigint;
-  position: Position;
-}
-export interface F32LiteralNode {
-  nodeType: NodeType.F32Literal;
-  category: NodeCategory.Literal;
-  value: number;
-  position: Position;
-}
-export interface F64LiteralNode {
-  nodeType: NodeType.F64Literal;
-  category: NodeCategory.Literal;
-  value: number;
-  position: Position;
-}
-export interface NumberLiteralNode {
-  nodeType: NodeType.NumberLiteral;
-  category: NodeCategory.Literal;
-  value: number;
-  position: Position;
-}
-export interface ConstantLiteralNode {
-  nodeType: NodeType.ConstantLiteral;
-  category: NodeCategory.Literal;
-  value: 'true' | 'false' | 'void';
-  position: Position;
-}
-export interface FunctionLiteralNode {
-  nodeType: NodeType.FunctionLiteral;
-  category: NodeCategory.Literal;
-  params: ParameterNode[];
-  returnType: TypeLiteral;
-  body: BlockStatementNode | Expression;
-  genericTypes: undefined | GenericTypeNode[];
-  data: {
-    _closure: VariableClosure;
-    _varStack: VariableStack;
-    _typeStack: TypeStack;
+        _varStack: node.data._varStack,
+        _typeStack: node.data._typeStack,
 &nbsp;
-    pathReturns: boolean;
-  };
-  position: Position;
-}
-export interface ArrayLiteralNode {
-  nodeType: NodeType.ArrayLiteral;
-  length: number;
-  category: NodeCategory.Literal;
-  elements: (Expression | ValueSpreadNode)[];
-  position: Position;
-}
-export interface ObjectLiteralNode {
-  nodeType: NodeType.ObjectLiteral;
-  category: NodeCategory.Literal;
-  fields: (ObjectFieldNode | ValueSpreadNode)[];
-  position: Position;
-}
-export interface ObjectFieldNode {
-  nodeType: NodeType.ObjectField;
-  category: NodeCategory.Literal;
-  name: string;
-  fieldValue: Expression;
-  fieldMutable: boolean;
-  position: Position;
-}
-export interface ValueSpreadNode {
-  nodeType: NodeType.ValueSpread;
-  category: NodeCategory.Literal;
-  value: Expression;
-  position: Position;
-}
+        wasmFunction: func,
+      });
+<span class="cstat-no" title="statement not covered" >      if (</span>
+        typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          node.returnType,
+          createPrimType(node.returnType.position, 'Void'),
+          false
+        )
+      ) {
+<span class="cstat-no" title="statement not covered" >        body.push(compiledBody);</span>
+<span class="cstat-no" title="statement not covered" >        body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        if (node.body.nodeType == NodeType.BlockStatement) <span class="cstat-no" title="statement not covered" >body.push(compiledBody);</span></span>
+        else <span class="cstat-no" title="statement not covered" >body.push(Expressions.returnExpression(compiledBody));</span>
+      }
+<span class="cstat-no" title="statement not covered" >      func = setBody(func, body);</span>
+      // Add The Function To The Module
+<span class="cstat-no" title="statement not covered" >      wasmModule = addFunction(wasmModule, func);</span>
+      // Add The Function To The Function Table
+      // Function index can be determined by the length of the functionSection
+<span class="cstat-no" title="statement not covered" >      wasmModule = addElement(wasmModule, [wasmModule.functionSection.length - 1]);</span>
+      // Return A Function Reference
+      // TODO: This is a terrible way to determine the function index
+<span class="cstat-no" title="statement not covered" >      return Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1);</span>
+    }
+    // TODO: Handle ArrayLiteral
+    // TODO: Handle ObjectLiteral
+    // TODO: Handle ObjectField
+    // TODO: Handle ValueSpread
+    case NodeType.TypeAliasDefinition:
+    case NodeType.InterfaceDefinition:
+<span class="cstat-no" title="statement not covered" >      return []; </span>// Return A Blank Op
+    // TODO: Handle TypePrimLiteral
+    // TODO: Handle TypeUnionLiteral
+    // TODO: Handle ArrayTypeLiteral
+    // TODO: Handle ParenthesisTypeLiteral
+    // TODO: Handle FunctionSignatureLiteral
+    // TODO: Handle TypeUsage
+    // TODO: Handle GenericType
+    case NodeType.VariableUsage: {
+      const varData = <span class="cstat-no" title="statement not covered" >getVariable(_variables, node);</span>
+<span class="cstat-no" title="statement not covered" >      if (varData.global) {</span>
+<span class="cstat-no" title="statement not covered" >        return Expressions.global_GetExpression(`${node.name}${varData.reference}`);</span>
+      } else <span class="cstat-no" title="statement not covered" >return Expressions.local_GetExpression(`${node.name}${varData.reference}`);</span>
+    }
+    // TODO: Handle MemberAccess
+    // TODO: Handle PropertyUsage
+  }
+  // We should never get to here
+<span class="cstat-no" title="statement not covered" >  console.log('Unknown Node');</span>
+<span class="cstat-no" title="statement not covered" >  console.log(node);</span>
+<span class="cstat-no" title="statement not covered" >  process.exit(1); </span>// TODO: Remove this
+};
+// Main Entry
+const generateCodeProgram = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(r</span>awProgram: string, program: ProgramNode): Uint8Array =&gt; {</span>
+  // Create A New Module
+  let module = <span class="cstat-no" title="statement not covered" >createModule();</span>
+  // Add The Memory
+<span class="cstat-no" title="statement not covered" >  module = addMemory(module, Types.createMemoryType(1));</span>
+  // Create Function
+  let func = <span class="cstat-no" title="statement not covered" >createFunction('main', Types.createFunctionType([], []), [], [], []);</span>
+  // Build The Body
+  const body: UnresolvedBytes[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >  body.push(</span>
+    ...program.body.map(<span class="fstat-no" title="function not covered" >(n</span>ode) =&gt; {
+<span class="cstat-no" title="statement not covered" >      return generateCode(</span>
+        rawProgram,
+        module,
+        {
+          _imports: program.data._imports,
+          _exports: program.data._exports,
+          _variables: program.data._variables,
+          _types: program.data._types,
+          _varStacks: [],
+          _typeStacks: [],
+          _closure: new Set(),
+          _varStack: program.data._varStack,
+          _typeStack: program.data._typeStack,
 &nbsp;
-// Types
-export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
-export type TypeLiteral =
-  | TypePrimLiteralNode
-  | TypeUnionLiteralNode
-  | ArrayTypeLiteralNode
-  | ParenthesisTypeLiteralNode
-  | FunctionSignatureLiteralNode
-  | InterfaceLiteralNode
-  | EnumDefinitionStatementNode
-  | TypeUsageNode
-  | GenericTypeNode;
-// Type Definition
-export interface TypeAliasDefinitionNode {
-  nodeType: NodeType.TypeAliasDefinition;
-  category: NodeCategory.Type;
-  name: string;
-  typeLiteral: TypeLiteral;
-  genericTypes: GenericTypeNode[] | undefined;
-  reference?: number;
-  data: {
-    _typeStack: TypeStack;
-  };
-  position: Position;
-}
-export interface InterfaceDefinitionNode {
-  nodeType: NodeType.InterfaceDefinition;
-  category: NodeCategory.Type;
-  name: string;
-  typeLiteral: InterfaceLiteralNode;
-  genericTypes: undefined | GenericTypeNode[];
-  reference?: number;
-  data: {
-    _typeStack: TypeStack;
-  };
-  position: Position;
-}
-// TypeLiteral
-// TODO: Port Number, String, Boolean into brisk
-export type PrimTypes =
-  | 'u32'
-  | 'u64'
-  | 'i32'
-  | 'i64'
-  | 'f32'
-  | 'f64'
-  | 'Boolean'
-  | 'Void'
-  | 'String'
-  | 'Number'
-  | 'Function'
-  | 'Unknown' // This type is internal only so we do not have it in our types array
-  | 'Any';
-export const primTypes: Set&lt;PrimTypes&gt; = <span class="cstat-no" title="statement not covered" >new Set([</span>
-  'u32',
-  'u64',
-  'i32',
-  'i64',
-  'f32',
-  'f64',
-  'Boolean',
-  'Void',
-  'String',
-  'Number',
-  'Function',
-  'Any',
-]);
-export const stackTypes: Set&lt;PrimTypes&gt; = <span class="cstat-no" title="statement not covered" >new Set([</span>
-  'u32',
-  'u64',
-  'i32',
-  'i64',
-  'f32',
-  'f64',
-  'Boolean',
-  'Void',
-]);
-export interface TypePrimLiteralNode {
-  nodeType: NodeType.TypePrimLiteral;
-  category: NodeCategory.Type;
-  name: PrimTypes;
-  position: Position;
-}
-export interface TypeUnionLiteralNode {
-  nodeType: NodeType.TypeUnionLiteral;
-  category: NodeCategory.Type;
-  types: TypeLiteral[];
-  position: Position;
-}
-export interface ArrayTypeLiteralNode {
-  nodeType: NodeType.ArrayTypeLiteral;
-  category: NodeCategory.Type;
-  length?: NumberLiteralNode;
-  value: TypeLiteral;
-  position: Position;
-}
-export interface ParenthesisTypeLiteralNode {
-  nodeType: NodeType.ParenthesisTypeLiteral;
-  category: NodeCategory.Type;
-  value: TypeLiteral;
-  position: Position;
-}
-export interface FunctionSignatureLiteralNode {
-  nodeType: NodeType.FunctionSignatureLiteral;
-  category: NodeCategory.Type;
-  params: TypeLiteral[];
-  returnType: TypeLiteral;
-  genericTypes: undefined | GenericTypeNode[];
-  data: {
-    _typeStack: TypeStack;
-  };
-  position: Position;
-}
-export interface InterfaceLiteralNode {
-  nodeType: NodeType.InterfaceLiteral;
-  category: NodeCategory.Type;
-  fields: InterfaceFieldNode[];
-  position: Position;
-}
-// TypeUsage
-export interface TypeUsageNode {
-  nodeType: NodeType.TypeUsage;
-  category: NodeCategory.Type;
-  name: string;
-  reference?: number;
-  position: Position;
-}
-// General Type Stuff
-export interface InterfaceFieldNode {
-  nodeType: NodeType.InterfaceField;
-  category: NodeCategory.Type;
-  name: string;
-  fieldType: TypeLiteral;
-  optional: boolean;
-  mutable: boolean;
-  position: Position;
-}
-export interface GenericTypeNode {
-  nodeType: NodeType.GenericType;
-  category: NodeCategory.Type;
-  name: string;
-  constraints: undefined | TypeLiteral;
-  valueType: undefined | TypeLiteral;
-  reference?: number;
-  position: Position;
-}
-export interface TypeIdentifierNode {
-  nodeType: NodeType.TypeIdentifier;
-  category: NodeCategory.Type;
-  name: string;
-  position: Position;
-}
-// Variables
-export type VariableUsage = VariableUsageNode | MemberAccessNode;
-export type VariableDefinition = VariableDefinitionNode;
-export interface VariableDefinitionNode {
-  nodeType: NodeType.VariableDefinition;
-  category: NodeCategory.Variable;
-  name: string;
-  reference?: number;
-  position: Position;
-}
-export interface VariableUsageNode {
-  nodeType: NodeType.VariableUsage;
-  category: NodeCategory.Variable;
-  name: string;
-  reference?: number;
-  position: Position;
-}
-export interface PropertyUsageNode {
-  nodeType: NodeType.PropertyUsage;
-  category: NodeCategory.Variable;
-  name: string;
-  property?: PropertyUsageNode;
-  position: Position;
-}
-export interface MemberAccessNode {
-  nodeType: NodeType.MemberAccess;
-  category: NodeCategory.Variable;
-  parent: Expression;
-  property: PropertyUsageNode;
-  position: Position;
-}
-// General
-export interface ParameterNode {
-  nodeType: NodeType.Parameter;
-  category: NodeCategory.Variable;
-  name: VariableDefinition;
-  optional: boolean;
-  mutable: boolean;
-  paramType: TypeLiteral;
-  position: Position;
-}
-export interface ArgumentsNode {
-  nodeType: NodeType.Arguments;
-  category: NodeCategory.General;
-  length: number;
-  args: Expression[];
-  position: Position;
-}
+          wasmFunction: func,
+        },
+        node
+      );
+    })
+  );
+  // Set Body Function
+<span class="cstat-no" title="statement not covered" >  func = setBody(func, body);</span>
+  // Add The Main Function
+<span class="cstat-no" title="statement not covered" >  module = addFunction(module, func);</span>
+<span class="cstat-no" title="statement not covered" >  module = setStart(module, 'main');</span>
+  // Return The Compiled Module
+<span class="cstat-no" title="statement not covered" >  return compileModule(module);</span>
+};
 &nbsp;
-// Export Every Node
-type Node =
-  | ProgramNode
-  | Statement
-  | Expression
-  | ParameterNode
-  | TypeDefinition
-  | TypeLiteral
-  | PropertyUsageNode;
-&nbsp;
-export default Node;
+export default generateCodeProgram;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

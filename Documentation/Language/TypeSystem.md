@@ -108,9 +108,9 @@ const integers: Numbers = {
 };
 ```
 
-You Can Type Cast Any Structurly Compatible Type In Brisk.
+You Can Type Cast Any Structurally Compatible Type In Brisk.
 
-### What Is A Structurly Compatible Type?
+### What Is A Structurally Compatible Type?
 A Type Is Compatible With Another Type In A Few Cases Example Number 1, The Primitive Type Is The Same (`Int32` Resolves to `i32` which is the same as `i32`). Example 2 The Interface Is Compatible ( It Has The Same Properties Of The Same Type). Example 3 The Type Matches One Of The Types Defined In A Type Union.
 
 ## The Function Type

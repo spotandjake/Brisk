@@ -31,6 +31,7 @@ export interface AnalyzerProperties {
 export interface TypeData {
   name: string;
   exported: boolean;
+  reference: number;
   type: TypeLiteral;
 }
 export type TypeMap = Map<number, TypeData>;
@@ -38,6 +39,7 @@ export type TypeStack = Map<string, number>;
 export interface VariableData {
   name: string;
   reference: number;
+  mainScope: boolean;
   global: boolean;
   constant: boolean;
   parameter: boolean;

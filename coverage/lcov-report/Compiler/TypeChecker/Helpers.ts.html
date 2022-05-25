@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Compiler/TypeChecker/index.ts</title>
+    <title>Code coverage report for Compiler/TypeChecker/Helpers.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">Compiler/TypeChecker</a> index.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">Compiler/TypeChecker</a> Helpers.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/218</span>
+                <span class='fraction'>0/258</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/114</span>
+                <span class='fraction'>0/194</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/215</span>
+                <span class='fraction'>0/251</span>
             </div>
         
             
@@ -994,7 +994,64 @@
 <a name='L929'></a><a href='#L929'>929</a>
 <a name='L930'></a><a href='#L930'>930</a>
 <a name='L931'></a><a href='#L931'>931</a>
-<a name='L932'></a><a href='#L932'>932</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L932'></a><a href='#L932'>932</a>
+<a name='L933'></a><a href='#L933'>933</a>
+<a name='L934'></a><a href='#L934'>934</a>
+<a name='L935'></a><a href='#L935'>935</a>
+<a name='L936'></a><a href='#L936'>936</a>
+<a name='L937'></a><a href='#L937'>937</a>
+<a name='L938'></a><a href='#L938'>938</a>
+<a name='L939'></a><a href='#L939'>939</a>
+<a name='L940'></a><a href='#L940'>940</a>
+<a name='L941'></a><a href='#L941'>941</a>
+<a name='L942'></a><a href='#L942'>942</a>
+<a name='L943'></a><a href='#L943'>943</a>
+<a name='L944'></a><a href='#L944'>944</a>
+<a name='L945'></a><a href='#L945'>945</a>
+<a name='L946'></a><a href='#L946'>946</a>
+<a name='L947'></a><a href='#L947'>947</a>
+<a name='L948'></a><a href='#L948'>948</a>
+<a name='L949'></a><a href='#L949'>949</a>
+<a name='L950'></a><a href='#L950'>950</a>
+<a name='L951'></a><a href='#L951'>951</a>
+<a name='L952'></a><a href='#L952'>952</a>
+<a name='L953'></a><a href='#L953'>953</a>
+<a name='L954'></a><a href='#L954'>954</a>
+<a name='L955'></a><a href='#L955'>955</a>
+<a name='L956'></a><a href='#L956'>956</a>
+<a name='L957'></a><a href='#L957'>957</a>
+<a name='L958'></a><a href='#L958'>958</a>
+<a name='L959'></a><a href='#L959'>959</a>
+<a name='L960'></a><a href='#L960'>960</a>
+<a name='L961'></a><a href='#L961'>961</a>
+<a name='L962'></a><a href='#L962'>962</a>
+<a name='L963'></a><a href='#L963'>963</a>
+<a name='L964'></a><a href='#L964'>964</a>
+<a name='L965'></a><a href='#L965'>965</a>
+<a name='L966'></a><a href='#L966'>966</a>
+<a name='L967'></a><a href='#L967'>967</a>
+<a name='L968'></a><a href='#L968'>968</a>
+<a name='L969'></a><a href='#L969'>969</a>
+<a name='L970'></a><a href='#L970'>970</a>
+<a name='L971'></a><a href='#L971'>971</a>
+<a name='L972'></a><a href='#L972'>972</a>
+<a name='L973'></a><a href='#L973'>973</a>
+<a name='L974'></a><a href='#L974'>974</a>
+<a name='L975'></a><a href='#L975'>975</a>
+<a name='L976'></a><a href='#L976'>976</a>
+<a name='L977'></a><a href='#L977'>977</a>
+<a name='L978'></a><a href='#L978'>978</a>
+<a name='L979'></a><a href='#L979'>979</a>
+<a name='L980'></a><a href='#L980'>980</a>
+<a name='L981'></a><a href='#L981'>981</a>
+<a name='L982'></a><a href='#L982'>982</a>
+<a name='L983'></a><a href='#L983'>983</a>
+<a name='L984'></a><a href='#L984'>984</a>
+<a name='L985'></a><a href='#L985'>985</a>
+<a name='L986'></a><a href='#L986'>986</a>
+<a name='L987'></a><a href='#L987'>987</a>
+<a name='L988'></a><a href='#L988'>988</a>
+<a name='L989'></a><a href='#L989'>989</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1018,14 +1075,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1043,21 +1100,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1065,8 +1121,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1077,8 +1137,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1086,20 +1147,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1110,10 +1168,14 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1124,8 +1186,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1136,10 +1198,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1149,39 +1211,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1190,8 +1243,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1202,15 +1257,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1219,20 +1277,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1242,14 +1303,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1259,10 +1324,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1270,17 +1334,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1291,31 +1352,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1324,8 +1398,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1333,12 +1409,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1346,12 +1420,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1362,15 +1442,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1378,27 +1456,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1408,11 +1483,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1425,19 +1501,21 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1448,7 +1526,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1466,6 +1546,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1473,10 +1554,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1491,20 +1570,24 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1513,6 +1596,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1520,13 +1604,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1536,33 +1620,35 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1571,39 +1657,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1614,14 +1692,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1632,6 +1717,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1640,36 +1726,49 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1678,33 +1777,53 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1717,27 +1836,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1754,9 +1883,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1768,23 +1894,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1792,17 +1916,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1811,46 +1938,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1858,26 +1976,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1886,25 +1998,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1912,9 +2018,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1922,503 +2035,685 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ExportList } from '../Types/Types';
-import Node, {
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Position } from '../Types/Types';
+import {
   EnumVariantNode,
-  GenericTypeNode,
+  Expression,
+  InterfaceFieldNode,
+  InterfaceLiteralNode,
   NodeCategory,
   NodeType,
-  ProgramNode,
+  ParameterNode,
+  PropertyUsageNode,
   TypeLiteral,
-  TypeUsageNode,
   UnaryExpressionOperator,
+  VariableDefinitionNode,
   VariableUsageNode,
 } from '../Types/ParseNodes';
-import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
+import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { wasmExpressions } from './WasmTypes';
-import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
-import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler';
+import {
+  createArrayType,
+  createFunctionSignatureType,
+  createPrimType,
+  createUnionType,
+} from '../Helpers/typeBuilders';
+import { getType, getVariable } from '../Helpers/Helpers';
+import { BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
-import { getExpressionType, nameType, resolveType, typeCompatible, typeEqual } from './Helpers';
-&nbsp;
-import { setType, setVariable } from '../Helpers/Helpers';
-// TODO: Implement Type Narrowing
-// TODO: Implement Values As Types
-// TODO: Support Wasm Interface Types
-// TypeCheck Node
-const typeCheckNode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >&lt;T extends Node&gt;(</span></span>
-  // Code
+// Type Helpers
+export const buildObjectType = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  memberAccess: PropertyUsageNode
+): InterfaceLiteralNode | TypeLiteral =&gt; {
+<span class="cstat-no" title="statement not covered" >  if (memberAccess.property != undefined) {</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      nodeType: NodeType.InterfaceLiteral,
+      category: NodeCategory.Type,
+      fields: [
+        {
+          nodeType: NodeType.InterfaceField,
+          category: NodeCategory.Type,
+          name: memberAccess.name,
+          fieldType: buildObjectType(memberAccess.property),
+          optional: false,
+          mutable: false,
+          position: memberAccess.position,
+        },
+      ],
+      position: memberAccess.position,
+    };
+  } else {
+<span class="cstat-no" title="statement not covered" >    return createPrimType(memberAccess.position, 'Any');</span>
+  }
+};
+export const getObjectPropertyField = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  memberAccess: PropertyUsageNode,
+  type: InterfaceLiteralNode
+): InterfaceFieldNode | undefined =&gt; {
+  // Find Type
+  const field = <span class="cstat-no" title="statement not covered" >type.fields.find(<span class="fstat-no" title="function not covered" >(f</span>) =&gt; <span class="cstat-no" title="statement not covered" >f.name == memberAccess.name)</span>;</span>
+<span class="cstat-no" title="statement not covered" >  if (memberAccess.property != undefined &amp;&amp; field?.fieldType.nodeType == NodeType.InterfaceLiteral)</span>
+<span class="cstat-no" title="statement not covered" >    return getObjectPropertyField(memberAccess.property, field.fieldType);</span>
+  else <span class="cstat-no" title="statement not covered" >return field;</span>
+};
+// Checking Helpers
+export const nameType = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
   rawProgram: string,
-  // ImportData
-  importData: Map&lt;string, ExportList&gt;,
-  // Stacks
-  properties: TypeCheckProperties,
-  // Nodes
-  node: T
-): T =&gt; {
-  const {
-    // Our Global Variable And Type Pools
-    // _imports,
-    _exports,
-    _variables,
-    _types,
-    // ParentStacks
-    _varStacks,
-    _typeStacks,
-    // Stacks
-    _varStack,
-    _typeStack,
-    // TypeChecking Information
-    _returnType,
-  } = <span class="cstat-no" title="statement not covered" >properties;</span>
-  const _typeCheckNode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >&lt;_T extends Node&gt;(</span></span>
-    childNode: _T,
-    props: Partial&lt;TypeCheckProperties&gt; = <span class="branch-0 cbranch-no" title="branch not covered" >properties</span>
-  ): _T =&gt; {
-<span class="cstat-no" title="statement not covered" >    return typeCheckNode(rawProgram, importData, { ...properties, ...props }, childNode);</span>
-  };
-  // Match The Node For Analysis
-<span class="cstat-no" title="statement not covered" >  switch (node.nodeType) {</span>
-    // General
-    case NodeType.Program:
-      // Analyze Program Node
-<span class="cstat-no" title="statement not covered" >      node.body = node.body.map(<span class="fstat-no" title="function not covered" >(c</span>hildNode) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(childNode, {</span>
-          _imports: node.data._imports,
-          _exports: node.data._exports,
-          // Our Global Variable And Type Pools
-          _variables: node.data._variables,
-          _types: node.data._types,
-          // Stacks
-          _varStack: node.data._varStack,
-          _typeStack: node.data._typeStack,
-          // Stack Pool
-          _varStacks: [],
-          _typeStacks: [],
-        });
-      });
-      // Return The Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    // Statements
-    case NodeType.IfStatement:
-      // Analyze Condition
-<span class="cstat-no" title="statement not covered" >      node.condition = _typeCheckNode(node.condition);</span>
-      // TypeCheck Condition
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
-        createPrimType(node.condition.position, 'Boolean')
-      );
-      // Analyze Body
-<span class="cstat-no" title="statement not covered" >      node.body = _typeCheckNode(node.body);</span>
-      // Analyze Alternative
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.alternative) <span class="cstat-no" title="statement not covered" >node.alternative = _typeCheckNode(node.alternative);</span></span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.FlagStatement:
-      // We only allow arguments on the operator flag, we dont need to analyze these because they are only used in the compiler
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.value == 'operator') {</span>
-<span class="cstat-no" title="statement not covered" >        typeEqual(</span>
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[0]
-          ),
-          createPrimType(node.args.args[0].position, 'String')
-        );
-<span class="cstat-no" title="statement not covered" >        typeEqual(</span>
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[0]
-          ),
-          createPrimType(node.args.args[0].position, 'Number')
-        );
-      }
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.BlockStatement:
-<span class="cstat-no" title="statement not covered" >      node.body = node.body.map(<span class="fstat-no" title="function not covered" >(c</span>hildNode) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(childNode, {</span>
-          // Stacks
-          _varStack: node.data._varStack,
-          _typeStack: node.data._typeStack,
-          // Stack Pool
-          _varStacks: [..._varStacks, _varStack],
-          _typeStacks: [..._typeStacks, _typeStack],
-        });
-      });
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ImportStatement: {
-      // // Get Import
-      // const importModule = importData.get(node.source.value);
-      // if (importModule == undefined) {
-      //   BriskTypeError(
-      //     rawProgram,
-      //     BriskErrorType.ModuleDoesNotExist,
-      //     [node.source.value],
-      //     node.source.position
-      //   );
-      //   process.exit(1); // Let TypeScript Know This Exists
-      // }
-      // TODO: Handle TypeValidation Of Destructured Declarations
-      // Set Variable Type
-      // TODO: Figure Out Type Checking For This
-<span class="cstat-no" title="statement not covered" >      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);</span>
-<span class="cstat-no" title="statement not covered" >      process.exit(1);</span>
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  type: TypeLiteral
+): string =&gt; {
+  // TODO: Handle Recursive Types
+<span class="cstat-no" title="statement not covered" >  switch (type.nodeType) {</span>
+    case NodeType.TypePrimLiteral:
+<span class="cstat-no" title="statement not covered" >      return type.name;</span>
+    case NodeType.TypeUnionLiteral: {
+<span class="cstat-no" title="statement not covered" >      return type.types</span>
+        .map(<span class="fstat-no" title="function not covered" >(t</span>) =&gt; <span class="cstat-no" title="statement not covered" >nameType(rawProgram, typePool, typeStack, typeStacks, t))</span>
+        .join(' | ');
     }
-    case NodeType.WasmImportStatement:
-      // Analyze Type
-<span class="cstat-no" title="statement not covered" >      node.typeSignature = _typeCheckNode(node.typeSignature);</span>
-      // Set Variable
-<span class="cstat-no" title="statement not covered" >      setVariable(_variables, node.variable, { type: node.typeSignature });</span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ExportStatement: {
-      // TypeCheck Value
-<span class="cstat-no" title="statement not covered" >      node.value == _typeCheckNode(node.value);</span>
-      // TypeCheck Object Literal
-<span class="cstat-no" title="statement not covered" >      if (node.value.nodeType == NodeType.ObjectLiteral) {</span>
-        // Add Fields To Export
-<span class="cstat-no" title="statement not covered" >        for (const field of node.value.fields) {</span>
-<span class="cstat-no" title="statement not covered" >          if (field.nodeType == NodeType.ValueSpread) {</span>
-            // A Value Spread Will Be Caught At Analysis And Should Never Make It Here
-<span class="cstat-no" title="statement not covered" >            BriskError(rawProgram, BriskErrorType.CompilerError, [], field.position);</span>
-          } else {
-            // Update The Export Info
-<span class="cstat-no" title="statement not covered" >            _exports.set(field.name, {</span>
-              name: field.name,
-              value: field.fieldValue,
-              typeExport: false,
-              valueExport: true,
-            });
-          }
-        }
-<span class="cstat-no" title="statement not covered" >        return node;</span>
-      } else <span class="cstat-no" title="statement not covered" >if (</span>
-        node.value.nodeType == NodeType.InterfaceDefinition ||
-        node.value.nodeType == NodeType.EnumDefinitionStatement ||
-        node.value.nodeType == NodeType.TypeAliasDefinition
-      ) {
-        // Set Exported
-<span class="cstat-no" title="statement not covered" >        _exports.set(node.value.name, {</span>
-          name: node.value.name,
-          value: &lt;TypeUsageNode&gt;{
-            nodeType: NodeType.TypeUsage,
-            category: NodeCategory.Type,
-            name: node.value.name,
-            position: node.position,
-          },
-          typeExport: true,
-          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement,
-        });
+    case NodeType.ArrayTypeLiteral:
+<span class="cstat-no" title="statement not covered" >      return `${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)}[${</span>
+        type.length?.value ?? ''
+      }]`;
+    case NodeType.ParenthesisTypeLiteral:
+<span class="cstat-no" title="statement not covered" >      return `(${nameType(rawProgram, typePool, typeStack, typeStacks, type.value)})`;</span>
+    case NodeType.FunctionSignatureLiteral: {
+      const params = <span class="cstat-no" title="statement not covered" >type.params.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt;</span>
+<span class="cstat-no" title="statement not covered" >        nameType(rawProgram, typePool, type.data._typeStack, [...typeStacks, typeStack], p)</span>
+      );
+      const returnType = <span class="cstat-no" title="statement not covered" >nameType(</span>
+        rawProgram,
+        typePool,
+        type.data._typeStack,
+        [...typeStacks, typeStack],
+        type.returnType
+      );
+<span class="cstat-no" title="statement not covered" >      if (type.genericTypes) {</span>
+        const generics = <span class="cstat-no" title="statement not covered" >type.genericTypes.map(<span class="fstat-no" title="function not covered" >(g</span>) =&gt;</span>
+<span class="cstat-no" title="statement not covered" >          nameType(rawProgram, typePool, typeStack, typeStacks, g)</span>
+        );
+<span class="cstat-no" title="statement not covered" >        return `&lt;${generics.join(', ')}&gt;(${params.join(', ')}) =&gt; ${returnType}`;</span>
       } else {
-        // Regular Export
-        const exportName: string =
-<span class="cstat-no" title="statement not covered" >          node.value.nodeType == NodeType.DeclarationStatement</span>
-            ? node.value.name.name
-            : node.value.name;
-        // Set Exported
-<span class="cstat-no" title="statement not covered" >        _exports.set(exportName, {</span>
-          name: exportName,
-          value: &lt;VariableUsageNode&gt;{
-            nodeType: NodeType.VariableUsage,
-            category: NodeCategory.Variable,
-            name: exportName,
-            position: node.position,
-          },
-          typeExport: false,
-          valueExport: true,
-        });
+<span class="cstat-no" title="statement not covered" >        return `(${params.join(', ')}) =&gt; ${returnType}`;</span>
       }
-<span class="cstat-no" title="statement not covered" >      return node;</span>
     }
-    case NodeType.DeclarationStatement:
-      // TODO: Handle TypeValidation Of Destructured Declarations
-      // Set Type
-<span class="cstat-no" title="statement not covered" >      if (node.varType.nodeType == NodeType.TypePrimLiteral) {</span>
-        // Infer Function Type
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (node.varType.name == 'Function') {</span>
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (node.value.nodeType != NodeType.FunctionLiteral) {</span>
-<span class="cstat-no" title="statement not covered" >            BriskTypeError(</span>
-              rawProgram,
-              BriskErrorType.TypeCouldNotBeInferred,
-              ['Function'],
-              node.position
-            );
-          }
-<span class="cstat-no" title="statement not covered" >          node.varType = getExpressionType(</span>
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.value
-          );
-        }
-      } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (node.varType.nodeType == NodeType.ArrayTypeLiteral) {</span>
-        // Infer Array Type
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (node.varType.length == undefined) {</span>
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
-            node.value.nodeType == NodeType.ArrayLiteral &amp;&amp;
-            !node.value.elements.some(<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >e.nodeType == NodeType.ValueSpread)</span>
-          ) {
-<span class="cstat-no" title="statement not covered" >            node.varType.length = {</span>
-              nodeType: NodeType.NumberLiteral,
-              category: NodeCategory.Literal,
-              value: node.value.length,
-              position: node.varType.position,
-            };
-          }
-        }
-      }
-      // Analyze Type
-<span class="cstat-no" title="statement not covered" >      node.varType = _typeCheckNode(node.varType);</span>
-      // Type Check
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.varType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
-      );
-      // Set Variable Type To Be More Accurate
-<span class="cstat-no" title="statement not covered" >      setVariable(_variables, node.name, { type: node.varType });</span>
-      // Analyze Value
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.AssignmentStatement: {
-      // Analyze Node
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-<span class="cstat-no" title="statement not covered" >      node.name = _typeCheckNode(node.name);</span>
-      // Get The Type Of The Variable
-      const varType = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.name,
-        { mutable: true }
-      );
-      // Type Check Node
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        varType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
-      );
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    }
-    case NodeType.PostFixStatement: {
-      // Analyze Node
-<span class="cstat-no" title="statement not covered" >      node.name = _typeCheckNode(node.name);</span>
-      // Get The Type Of The Variable
-      const varType = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.name,
-        { mutable: true }
-      );
-      // Type Check Node
-<span class="cstat-no" title="statement not covered" >      typeCompatible(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        varType,
-        createUnionType(
-          node.position,
-          createPrimType(node.position, 'u32'),
-          createPrimType(node.position, 'u64'),
-          createPrimType(node.position, 'i32'),
-          createPrimType(node.position, 'i64'),
-          createPrimType(node.position, 'f32'),
-          createPrimType(node.position, 'f64'),
-          createPrimType(node.position, 'Number')
-        )
-      );
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    }
-    case NodeType.ReturnStatement: {
-      // Deal With Invalid Returns
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (_returnType == undefined) {</span>
-<span class="cstat-no" title="statement not covered" >        BriskSyntaxError(</span>
+    case NodeType.InterfaceLiteral: {
+      const fields = <span class="cstat-no" title="statement not covered" >type.fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return `${field.mutable ? 'let' : ''} ${field.name}${field.optional ? '?' : ''}: ${nameType(</span>
           rawProgram,
-          BriskErrorType.ReturnStatementsOnlyValidInsideFunction,
-          [],
-          node.position
-        );
-<span class="cstat-no" title="statement not covered" >        process.exit(1); </span>// Let TypeScript Know That Program Exits
-      }
-      // Analyze Value
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.returnValue) <span class="cstat-no" title="statement not covered" >node.returnValue = _typeCheckNode(node.returnValue);</span></span>
-      // Perform TypeChecking
-      // Check If Return Type Is Void
-      let returnValueType: TypeLiteral = <span class="cstat-no" title="statement not covered" >createPrimType(node.position, 'Void');</span>
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.returnValue != undefined) {</span>
-<span class="cstat-no" title="statement not covered" >        returnValueType = getExpressionType(</span>
-          rawProgram,
-          _variables,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.returnValue
-        );
-      }
-      // Type Check Return
-<span class="cstat-no" title="statement not covered" >      typeEqual(rawProgram, _types, _typeStack, _typeStacks, _returnType, returnValueType);</span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
+          typePool,
+          typeStack,
+          typeStacks,
+          field.fieldType
+        )}`;
+      });
+<span class="cstat-no" title="statement not covered" >      return `{ ${fields.join(', ')} }`;</span>
     }
     case NodeType.EnumDefinitionStatement:
-      // Analyze Generic Types
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.genericTypes) {</span>
-<span class="cstat-no" title="statement not covered" >        node.genericTypes = node.genericTypes.map(<span class="fstat-no" title="function not covered" >(t</span>ype): GenericTypeNode =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return _typeCheckNode(type, {</span>
-            // Stacks
-            _typeStack: node.data._typeStack,
-            // Stack Pool
-            _typeStacks: [..._typeStacks, _typeStack],
-          });
-        });
-      }
-      // Analyze Variants
-<span class="cstat-no" title="statement not covered" >      node.variants = node.variants.map(<span class="fstat-no" title="function not covered" >(v</span>ariant): EnumVariantNode =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(variant, {</span>
-          // Stacks
-          _typeStack: node.data._typeStack,
-          // Stack Pool
-          _typeStacks: [..._typeStacks, _typeStack],
-        });
-      });
-      // Set Type Variable
-<span class="cstat-no" title="statement not covered" >      setType(_types, node, { type: node });</span>
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.EnumVariant:
-<span class="cstat-no" title="statement not covered" >      if (Array.isArray(node.value)) {</span>
-        // ADT Enum
-<span class="cstat-no" title="statement not covered" >        node.value = node.value.map(<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >          resolveType(rawProgram, _types, _typeStack, _typeStacks, _typeCheckNode(value))</span>
-        );
-      } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (node.value != undefined) {</span>
-<span class="cstat-no" title="statement not covered" >        node.value = _typeCheckNode(node.value);</span>
-      }
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    // Expressions
-    case NodeType.ArithmeticExpression:
-      // Check That Types Are Numeric
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
+<span class="cstat-no" title="statement not covered" >      return `Enum ${type.name}`;</span>
+    case NodeType.TypeUsage:
+<span class="cstat-no" title="statement not covered" >      return type.name;</span>
+    case NodeType.GenericType:
+<span class="cstat-no" title="statement not covered" >      return type.name;</span>
+  }
+};
+export const typeCompatible = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral,
+  throwError = <span class="branch-0 cbranch-no" title="branch not covered" >false</span>
+): boolean =&gt; {
+  // Resolve Both Types
+  const resolvedA = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);</span>
+  const resolvedB = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);</span>
+  // Check If Types Are Already Equal
+  const typesEqual = <span class="cstat-no" title="statement not covered" >typeEqual(</span>
+    rawProgram,
+    typePool,
+    typeStack,
+    typeStacks,
+    resolvedA,
+    resolvedB,
+    false
+  );
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (typesEqual) <span class="cstat-no" title="statement not covered" >return true;</span></span>
+  // TODO: Ensure Types Are Compatible
+  // Throw Error Or Return False
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >    BriskTypeError(</span>
+      rawProgram,
+      BriskErrorType.IncompatibleTypes,
+      [
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+      ],
+      resolvedB.position
+    );
+  }
+<span class="cstat-no" title="statement not covered" >  return false;</span>
+};
+// Strict Equal
+export const strictTypeEqual = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral,
+  throwError = <span class="branch-0 cbranch-no" title="branch not covered" >true</span>
+) =&gt; {
+  // Resolve Both Types
+  const resolvedA = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);</span>
+  const resolvedB = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);</span>
+  // Handle PrimLiteral Types
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    resolvedA.nodeType == NodeType.TypePrimLiteral &amp;&amp;
+    resolvedB.nodeType == NodeType.TypePrimLiteral
+  ) {
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.name != resolvedB.name &amp;&amp; throwError) {</span>
+<span class="cstat-no" title="statement not covered" >      BriskTypeError(</span>
         rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-        createUnionType(
-          node.lhs.position,
-          createPrimType(node.lhs.position, 'f32'),
-          createPrimType(node.lhs.position, 'f64'),
-          createPrimType(node.lhs.position, 'i32'),
-          createPrimType(node.lhs.position, 'i64'),
-          createPrimType(node.lhs.position, 'u32'),
-          createPrimType(node.lhs.position, 'u64'),
-          createPrimType(node.lhs.position, 'Number')
-        )
+        BriskErrorType.TypeMisMatch,
+        [resolvedA.name, resolvedB.name],
+        resolvedA.position
       );
-    case NodeType.ComparisonExpression:
-      // Check Both Type A And B Are The Same
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
-      );
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.TypeCastExpression:
-      // Analyze Properties
-<span class="cstat-no" title="statement not covered" >      node.typeLiteral = _typeCheckNode(node.typeLiteral);</span>
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-      // Check if type is compatible
-<span class="cstat-no" title="statement not covered" >      typeCompatible(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.typeLiteral,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
-      );
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.UnaryExpression: {
-      // Check What Operator Is Being Used
-      let expectedType: TypeLiteral;
-<span class="cstat-no" title="statement not covered" >      if (node.operator == UnaryExpressionOperator.UnaryNot) {</span>
-<span class="cstat-no" title="statement not covered" >        expectedType = createPrimType(node.position, 'Boolean');</span>
-      } else {
-        // -, +
-<span class="cstat-no" title="statement not covered" >        expectedType = createUnionType(</span>
-          node.position,
-          createPrimType(node.position, 'f32'),
-          createPrimType(node.position, 'f64'),
-          createPrimType(node.position, 'i32'),
-          createPrimType(node.position, 'i64'),
-          createPrimType(node.position, 'u32'),
-          createPrimType(node.position, 'u64'),
-          createPrimType(node.position, 'Number')
-        );
-      }
-<span class="cstat-no" title="statement not covered" >      typeEqual(</span>
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        expectedType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
-      );
-<span class="cstat-no" title="statement not covered" >      return node;</span>
     }
+<span class="cstat-no" title="statement not covered" >    return resolvedA.name == resolvedB.name;</span>
+  }
+  // Return False Normally
+<span class="cstat-no" title="statement not covered" >  return false;</span>
+};
+// General Equal
+export const typeEqual = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  typeA: TypeLiteral,
+  typeB: TypeLiteral,
+  throwError = <span class="branch-0 cbranch-no" title="branch not covered" >true</span>
+): boolean =&gt; {
+  // Resolve Both Types
+  const resolvedA = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);</span>
+  const resolvedB = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, typeB);</span>
+  // If Either Type Is Any Then We Can Leave
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.nodeType == NodeType.TypePrimLiteral &amp;&amp; resolvedA.name == 'Any') <span class="cstat-no" title="statement not covered" >return true;</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedB.nodeType == NodeType.TypePrimLiteral &amp;&amp; resolvedB.name == 'Any') <span class="cstat-no" title="statement not covered" >return true;</span></span>
+  // Handle PrimLiteral Types
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    resolvedA.nodeType == NodeType.TypePrimLiteral &amp;&amp;
+    resolvedB.nodeType == NodeType.TypePrimLiteral
+  ) {
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.name != resolvedB.name &amp;&amp; throwError) {</span>
+<span class="cstat-no" title="statement not covered" >      BriskTypeError(</span>
+        rawProgram,
+        BriskErrorType.TypeMisMatch,
+        [resolvedA.name, resolvedB.name],
+        typeA.position
+      );
+    }
+<span class="cstat-no" title="statement not covered" >    return resolvedA.name == resolvedB.name;</span>
+  }
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    strictTypeEqual(rawProgram, typePool, typeStack, typeStacks, resolvedA, resolvedB, throwError)
+  ) {
+    // Check If They Are Strict Equal
+<span class="cstat-no" title="statement not covered" >    return true;</span>
+  }
+  // Compare Generics
+<span class="cstat-no" title="statement not covered" >  if (</span>
+    resolvedA.nodeType == NodeType.GenericType &amp;&amp;
+    resolvedB.nodeType == NodeType.GenericType &amp;&amp;
+    resolvedA.valueType == undefined &amp;&amp;
+    resolvedB.valueType == undefined
+  ) {
+    // Compare Generic Names
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.name == resolvedB.name) {</span>
+      // Compare generic Constraints
+<span class="cstat-no" title="statement not covered" >      if (resolvedA.constraints != undefined &amp;&amp; resolvedB.constraints != undefined) {</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+          typeEqual(
+            rawProgram,
+            typePool,
+            typeStack,
+            typeStacks,
+            resolvedA.constraints,
+            resolvedB.constraints,
+            throwError
+          )
+        )
+<span class="cstat-no" title="statement not covered" >          return true;</span>
+      } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.constraints == undefined &amp;&amp; resolvedB.constraints == undefined) {</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+      }
+    }
+  } else <span class="cstat-no" title="statement not covered" >if (resolvedA.nodeType == NodeType.GenericType) {</span>
+    // If Type A Is Generic
+    // Compare Type Value
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.valueType) {</span>
+<span class="cstat-no" title="statement not covered" >      return typeEqual(</span>
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA.valueType,
+        resolvedB,
+        throwError
+      );
+    }
+    // If there are restraints ensure they work
+<span class="cstat-no" title="statement not covered" >    if (resolvedA.constraints != undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      return typeEqual(</span>
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA.constraints,
+        resolvedB,
+        throwError
+      );
+    } else <span class="cstat-no" title="statement not covered" >return true;</span>
+  } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedB.nodeType == NodeType.GenericType) {</span>
+    // If Type B Is Generic
+    // Compare Type Value
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedB.valueType) {</span>
+<span class="cstat-no" title="statement not covered" >      return typeEqual(</span>
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA,
+        resolvedB.valueType,
+        throwError
+      );
+    }
+    // If there are restraints ensure they work
+<span class="cstat-no" title="statement not covered" >    if (resolvedB.constraints != undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      return typeEqual(</span>
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        resolvedA,
+        resolvedB.constraints,
+        throwError
+      );
+    } else <span class="cstat-no" title="statement not covered" >return true;</span>
+  }
+  // Handle Array Types
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    resolvedA.nodeType == NodeType.ArrayTypeLiteral &amp;&amp;
+    resolvedB.nodeType == NodeType.ArrayTypeLiteral
+  ) {
+    // Handle Lengths
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.length != undefined &amp;&amp; resolvedB.length != undefined) {</span>
+      // Check That If A Length Is Specified B Length Should Be Specified
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          typeA.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+    }
+    // If A Length Is Specified Then B Length Should Be Same
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.length != undefined &amp;&amp; resolvedA.length.value != resolvedB.length?.value) {</span>
+      // Check That If A Length Is Specified B Length Should Be Specified
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          typeA.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+    }
+    // Throw An Error If The Types Are Not The Same And ThrowError Is True
+<span class="cstat-no" title="statement not covered" >    return typeEqual(</span>
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.value,
+      resolvedB.value,
+      throwError
+    );
+  }
+  // Handle Interface Type
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    resolvedA.nodeType == NodeType.InterfaceLiteral &amp;&amp;
+    resolvedB.nodeType == NodeType.InterfaceLiteral
+  ) {
+    // Ensure That The Desired Interface Does Not Have Less Fields Then The Given Interface
+    // It May Have More If Some Fields Are Optional
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.fields.length &gt;= resolvedB.fields.length) {</span>
+      // Check Fields Are All Equal
+      let valid = <span class="cstat-no" title="statement not covered" >true;</span>
+<span class="cstat-no" title="statement not covered" >      for (const field of resolvedA.fields) {</span>
+        // Get Field B From Interface B
+        const fieldB = <span class="cstat-no" title="statement not covered" >resolvedB.fields.find(<span class="fstat-no" title="function not covered" >(f</span>) =&gt; <span class="cstat-no" title="statement not covered" >f.name == field.name)</span>;</span>
+        // If Field B Does Not Exist It Could Be Optional
+<span class="cstat-no" title="statement not covered" >        if (fieldB == undefined) {</span>
+          // Check If Field Is Optional
+<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (field.optional) <span class="cstat-no" title="statement not covered" >continue;</span></span>
+        } else {
+          // Ensure Both Fields Are Mutable
+<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (field.mutable != fieldB.mutable) <span class="cstat-no" title="statement not covered" >valid = false;</span></span>
+          // Check If They Are Equal
+<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+            !typeEqual(
+              rawProgram,
+              typePool,
+              typeStack,
+              typeStacks,
+              field.fieldType,
+              fieldB.fieldType,
+              throwError
+            )
+          )
+<span class="cstat-no" title="statement not covered" >            valid = false;</span>
+        }
+      }
+      // Return Valid
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!valid &amp;&amp; throwError) {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          resolvedB.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return valid;</span>
+    }
+  }
+  // Handle Union Types
+<span class="cstat-no" title="statement not covered" >  if (resolvedA.nodeType == NodeType.TypeUnionLiteral) {</span>
+    // If Type A Is Union
+    // Check Each Type Value
+<span class="cstat-no" title="statement not covered" >    for (const type of resolvedA.types) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedB, false))</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+  } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedB.nodeType == NodeType.TypeUnionLiteral) {</span>
+    // If Type B Is Union
+    // Check Each Type Value
+<span class="cstat-no" title="statement not covered" >    for (const type of resolvedB.types) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedA, false))</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+  }
+  // Handle Function Types
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+    resolvedA.nodeType == NodeType.FunctionSignatureLiteral &amp;&amp;
+    resolvedB.nodeType == NodeType.FunctionSignatureLiteral
+  ) {
+    // Check That Generic States is The Same
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+      (resolvedA.genericTypes == undefined &amp;&amp; resolvedB.genericTypes != undefined) ||
+      (resolvedA.genericTypes != undefined &amp;&amp; resolvedB.genericTypes == undefined)
+    ) {
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          resolvedB.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+    }
+    // Check That Generic Types Are Same
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.genericTypes &amp;&amp; resolvedB.genericTypes) {</span>
+      // Check Generics Are Same
+<span class="cstat-no" title="statement not covered" >      for (const [index, generic] of resolvedA.genericTypes.entries()) {</span>
+        // Get genericB
+        const genericB = <span class="cstat-no" title="statement not covered" >resolvedB.genericTypes[index];</span>
+        // Compare Generics
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, generic, genericB, throwError))</span>
+<span class="cstat-no" title="statement not covered" >          return false;</span>
+      }
+    }
+    // Check That Params Are Same
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedA.params.length != resolvedB.params.length) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+          ],
+          resolvedB.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    for (const [index, param] of resolvedA.params.entries()) {</span>
+      // Get TypeB Param
+      const paramB = <span class="cstat-no" title="statement not covered" >resolvedB.params[index];</span>
+      // Compare Params
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!typeEqual(rawProgram, typePool, typeStack, typeStacks, param, paramB, throwError))</span>
+<span class="cstat-no" title="statement not covered" >        return false;</span>
+    }
+    // Check That ReturnType is Same
+<span class="cstat-no" title="statement not covered" >    return typeEqual(</span>
+      rawProgram,
+      typePool,
+      typeStack,
+      typeStacks,
+      resolvedA.returnType,
+      resolvedB.returnType,
+      throwError
+    );
+  }
+  // Throw Error Or Return False
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (throwError) {</span>
+<span class="cstat-no" title="statement not covered" >    BriskTypeError(</span>
+      rawProgram,
+      BriskErrorType.TypeMisMatch,
+      [
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+        nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+      ],
+      resolvedB.position
+    );
+  }
+<span class="cstat-no" title="statement not covered" >  return false;</span>
+};
+// Helpers
+export const resolveType = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  rawProgram: string,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  type: TypeLiteral
+): TypeLiteral =&gt; {
+  // TODO: Handle Recursive Types
+<span class="cstat-no" title="statement not covered" >  switch (type.nodeType) {</span>
+    case NodeType.TypePrimLiteral:
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (type.name == 'Function') {</span>
+<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
+          rawProgram,
+          BriskErrorType.TypeCouldNotBeInferred,
+          [type.name],
+          type.position
+        );
+      }
+<span class="cstat-no" title="statement not covered" >      return type;</span>
+    case NodeType.TypeUnionLiteral: {
+      const types: TypeLiteral[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >      for (const t of type.types) {</span>
+        const resolvedType = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, t);</span>
+        // TODO: Improve Type Simplification
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+          !types.some(<span class="fstat-no" title="function not covered" >(c</span>heckType) =&gt; {
+<span class="cstat-no" title="statement not covered" >            return strictTypeEqual(</span>
+              rawProgram,
+              typePool,
+              typeStack,
+              typeStacks,
+              resolvedType,
+              checkType,
+              false
+            );
+          })
+        ) {
+<span class="cstat-no" title="statement not covered" >          types.push(resolvedType);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (types.length == 1) {</span>
+<span class="cstat-no" title="statement not covered" >        return types[0];</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          ...type,
+          // Resolve Types
+          types: types,
+        };
+      }
+    }
+    case NodeType.ArrayTypeLiteral:
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        ...type,
+        // Resolve Base Type
+        value: resolveType(rawProgram, typePool, typeStack, typeStacks, type.value),
+      };
+    case NodeType.ParenthesisTypeLiteral:
+      // Resolve Wrapped Type
+<span class="cstat-no" title="statement not covered" >      return resolveType(rawProgram, typePool, typeStack, typeStacks, type.value);</span>
+    case NodeType.FunctionSignatureLiteral:
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        ...type,
+        // Resolve Param Types
+        params: type.params.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt;
+<span class="cstat-no" title="statement not covered" >          resolveType(rawProgram, typePool, type.data._typeStack, [...typeStacks, typeStack], p)</span>
+        ),
+        // Resolve Return Type
+        returnType: resolveType(
+          rawProgram,
+          typePool,
+          type.data._typeStack,
+          [...typeStacks, typeStack],
+          type.returnType
+        ),
+      };
+    case NodeType.InterfaceLiteral:
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        ...type,
+        fields: type.fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; {
+<span class="cstat-no" title="statement not covered" >          return {</span>
+            ...field,
+            fieldType: resolveType(rawProgram, typePool, typeStack, typeStacks, field.fieldType),
+          };
+        }),
+      };
+    case NodeType.EnumDefinitionStatement: {
+      // Analyze Variants
+      const variants: EnumVariantNode[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >      for (const variant of type.variants) {</span>
+<span class="cstat-no" title="statement not covered" >        if (Array.isArray(variant.value)) {</span>
+<span class="cstat-no" title="statement not covered" >          variants.push({</span>
+            ...variant,
+            value: variant.value.map(<span class="fstat-no" title="function not covered" >(v</span>) =&gt;
+<span class="cstat-no" title="statement not covered" >              resolveType(rawProgram, typePool, typeStack, typeStacks, v)</span>
+            ),
+          });
+        } else <span class="cstat-no" title="statement not covered" >variants.push(variant);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        ...type,
+        variants: variants,
+      };
+    }
+    case NodeType.TypeUsage:
+<span class="cstat-no" title="statement not covered" >      return resolveType(rawProgram, typePool, typeStack, typeStacks, getType(typePool, type).type);</span>
+    case NodeType.GenericType:
+<span class="cstat-no" title="statement not covered" >      return type;</span>
+  }
+};
+export const getExpressionType = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+  rawProgram: string,
+  varPool: VariableMap,
+  typePool: TypeMap,
+  typeStack: TypeStack,
+  typeStacks: TypeStack[],
+  expression: Expression | ParameterNode,
+  props?: { mutable?: boolean }
+): TypeLiteral =&gt; {
+<span class="cstat-no" title="statement not covered" >  switch (expression.nodeType) {</span>
+    case NodeType.ComparisonExpression:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'Boolean');</span>
+    case NodeType.ArithmeticExpression:
+<span class="cstat-no" title="statement not covered" >      return getExpressionType(</span>
+        rawProgram,
+        varPool,
+        typePool,
+        typeStack,
+        typeStacks,
+        expression.lhs
+      );
+    case NodeType.UnaryExpression:
+<span class="cstat-no" title="statement not covered" >      if (expression.operator == UnaryExpressionOperator.UnaryNot) {</span>
+<span class="cstat-no" title="statement not covered" >        return createPrimType(expression.position, 'Boolean');</span>
+      } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
+        expression.operator == UnaryExpressionOperator.UnaryNegative ||
+        expression.operator == UnaryExpressionOperator.UnaryPositive
+      ) {
+<span class="cstat-no" title="statement not covered" >        return getExpressionType(</span>
+          rawProgram,
+          varPool,
+          typePool,
+          typeStack,
+          typeStacks,
+          expression.value
+        );
+      }
     case NodeType.ParenthesisExpression:
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
+<span class="cstat-no" title="statement not covered" >      return getExpressionType(</span>
+        rawProgram,
+        varPool,
+        typePool,
+        typeStack,
+        typeStacks,
+        expression.value
+      );
+    case NodeType.TypeCastExpression:
+<span class="cstat-no" title="statement not covered" >      return expression.typeLiteral;</span>
     case NodeType.CallExpression: {
       // Get Callee Type
       const calleeType = <span class="cstat-no" title="statement not covered" >resolveType(</span>
         rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.callee)
+        typePool,
+        typeStack,
+        typeStacks,
+        getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, expression.callee)
       );
-      // Compare Types
+      // Ensure Callee is A Function
 <span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {</span>
         // Ensure Callee Is A Function
 <span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
@@ -2426,88 +2721,55 @@ const typeCheckNode = <span class="cstat-no" title="statement not covered" ><spa
           BriskErrorType.TypeMisMatch,
           [
             'Function', // Get Callee Type
-            nameType(rawProgram, _types, _typeStack, _typeStacks, calleeType),
+            nameType(rawProgram, typePool, typeStack, typeStacks, calleeType),
           ],
-          node.position
+          expression.position
         );
 <span class="cstat-no" title="statement not covered" >        process.exit(1); </span>// Let TypeScript Know That The Program Ends after This
       }
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.args.length &gt; calleeType.params.length) {</span>
-        // Ensure We Do Not Have Too Many Arguments Types
-        // Ensure Callee Is A Function
+      // Check Each Parameter
+      const args: TypeLiteral[] = <span class="cstat-no" title="statement not covered" >[];</span>
+      const genericValues: Map&lt;string, TypeLiteral&gt; = <span class="cstat-no" title="statement not covered" >new Map();</span>
+<span class="cstat-no" title="statement not covered" >      for (const [index, arg] of expression.args.entries()) {</span>
+        // Get Argument
+        const param = <span class="cstat-no" title="statement not covered" >calleeType.params[index];</span>
+        // Set The Type
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (param &amp;&amp; param.nodeType == NodeType.GenericType &amp;&amp; param.valueType == undefined) {</span>
+<span class="cstat-no" title="statement not covered" >          genericValues.set(</span>
+            param.name,
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg)
+          );
+        }
+        // Return Type
+<span class="cstat-no" title="statement not covered" >        args.push(getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg));</span>
+      }
+      // Analyze ReturnType
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (calleeType.returnType.nodeType == NodeType.GenericType) {</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (genericValues.has(calleeType.returnType.name)) {</span>
+<span class="cstat-no" title="statement not covered" >          return genericValues.get(calleeType.returnType.name)!;</span>
+        }
+        // Handle Unresolved Generic
 <span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
           rawProgram,
-          BriskErrorType.InvalidArgumentLength,
+          BriskErrorType.TypeCouldNotBeInferred,
           [
-            `${calleeType.params.length}`, // Get Callee Type
-            `${node.args.length}`,
+            `ReturnType: ${nameType(
+              rawProgram,
+              typePool,
+              calleeType.data._typeStack,
+              [...typeStacks, typeStack],
+              calleeType.returnType
+            )}`,
           ],
-          node.position
+          expression.position
         );
       }
-      // Check Each Parameter
-      const genericValues: Map&lt;string, TypeLiteral&gt; = <span class="cstat-no" title="statement not covered" >new Map();</span>
-<span class="cstat-no" title="statement not covered" >      for (const [index, param] of calleeType.params.entries()) {</span>
-        // Get Argument
-        const arg = <span class="cstat-no" title="statement not covered" >node.args[index];</span>
-        // Check If We Have Argument
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (arg == undefined) {</span>
-          // Check If The Param Was Optional
-<span class="cstat-no" title="statement not covered" >          if (</span>
-            typeEqual(
-              rawProgram,
-              _types,
-              _typeStack,
-              _typeStacks,
-              createPrimType(param.position, 'Void'),
-              param,
-              false
-            )
-          ) {
-<span class="cstat-no" title="statement not covered" >            break;</span>
-          } else {
-<span class="cstat-no" title="statement not covered" >            BriskTypeError(</span>
-              rawProgram,
-              BriskErrorType.InvalidArgumentLength,
-              [
-                `${calleeType.params.length}`, // Get Callee Type
-                `${index}`,
-              ],
-              node.position
-            );
-<span class="cstat-no" title="statement not covered" >            process.exit(1); </span>// Let TypeScript Know That The Program Ends after This
-          }
-        }
-        let argType: TypeLiteral = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
-          rawProgram,
-          _variables,
-          _types,
-          _typeStack,
-          _typeStacks,
-          arg
-        );
-        // Deal With Generics
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (param.nodeType == NodeType.GenericType) {</span>
-          // Set Generic
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (!genericValues.has(param.name)) {</span>
-            // Ensure Generic Type Works
-<span class="cstat-no" title="statement not covered" >            <span class="missing-if-branch" title="if path not taken" >I</span>if (param.constraints != undefined)</span>
-<span class="cstat-no" title="statement not covered" >              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);</span>
-            // Set Generic Value
-<span class="cstat-no" title="statement not covered" >            genericValues.set(param.name, argType);</span>
-          }
-          // get Generic Value
-<span class="cstat-no" title="statement not covered" >          argType = genericValues.get(param.name)!;</span>
-        }
-        // Check That Types Are Same
-<span class="cstat-no" title="statement not covered" >        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);</span>
-      }
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
+      // Build Node
+<span class="cstat-no" title="statement not covered" >      return calleeType.returnType;</span>
     }
     case NodeType.WasmCallExpression: {
       // Split Path
-      const wasmPath = <span class="cstat-no" title="statement not covered" >node.name.split('.').slice(1);</span>
+      const wasmPath = <span class="cstat-no" title="statement not covered" >expression.name.split('.').slice(1);</span>
       // Get Type
       let wasmInstructions = <span class="cstat-no" title="statement not covered" >wasmExpressions;</span>
       let exprType: TypeLiteral | undefined = <span class="cstat-no" title="statement not covered" >undefined;</span>
@@ -2517,345 +2779,254 @@ const typeCheckNode = <span class="cstat-no" title="statement not covered" ><spa
 <span class="cstat-no" title="statement not covered" >        if (currentSegment != undefined &amp;&amp; typeof currentSegment != 'function') {</span>
 <span class="cstat-no" title="statement not covered" >          wasmInstructions = currentSegment;</span>
         } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (typeof currentSegment == 'function' &amp;&amp; wasmPath.length == 0) {</span>
-<span class="cstat-no" title="statement not covered" >          exprType = currentSegment(node.position);</span>
+<span class="cstat-no" title="statement not covered" >          exprType = currentSegment(expression.position);</span>
         }
       }
+      // The Node Does Not Exist
 <span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (exprType == undefined || exprType.nodeType != NodeType.FunctionSignatureLiteral) {</span>
 <span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
           rawProgram,
           BriskErrorType.WasmExpressionUnknown,
-          [node.name],
-          node.position
+          [expression.name],
+          expression.position
         );
-<span class="cstat-no" title="statement not covered" >        process.exit(1); </span>// Let TypeScript Know That The Program Exits
-      }
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.args.length &gt; exprType.params.length) {</span>
-        // Ensure We Do Not Have Too Many Arguments Types
-        // Ensure Callee Is A Function
-<span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
-          rawProgram,
-          BriskErrorType.InvalidArgumentLength,
-          [
-            `${exprType.params.length}`, // Get Callee Type
-            `${node.args.length}`,
-          ],
-          node.position
-        );
+<span class="cstat-no" title="statement not covered" >        process.exit(1); </span>// Let TypeScript Know The Program Exits
       }
       // Check Each Parameter
+      const args: TypeLiteral[] = <span class="cstat-no" title="statement not covered" >[];</span>
       const genericValues: Map&lt;string, TypeLiteral&gt; = <span class="cstat-no" title="statement not covered" >new Map();</span>
-<span class="cstat-no" title="statement not covered" >      for (const [index, param] of exprType.params.entries()) {</span>
+<span class="cstat-no" title="statement not covered" >      for (const [index, arg] of expression.args.entries()) {</span>
         // Get Argument
-        const arg = <span class="cstat-no" title="statement not covered" >node.args[index];</span>
-        // Check If We Have Argument
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (arg == undefined) {</span>
-          // Check If The Param Was Optional
-<span class="cstat-no" title="statement not covered" >          if (</span>
-            typeEqual(
-              rawProgram,
-              _types,
-              _typeStack,
-              _typeStacks,
-              createPrimType(param.position, 'Void'),
-              param,
-              false
-            )
-          ) {
-<span class="cstat-no" title="statement not covered" >            break;</span>
-          } else {
-<span class="cstat-no" title="statement not covered" >            BriskTypeError(</span>
-              rawProgram,
-              BriskErrorType.InvalidArgumentLength,
-              [
-                `${exprType.params.length}`, // Get Callee Type
-                `${index}`,
-              ],
-              node.position
-            );
-<span class="cstat-no" title="statement not covered" >            process.exit(1); </span>// Let TypeScript Know That The Program Ends after This
-          }
-        }
-        let argType: TypeLiteral = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
-          rawProgram,
-          _variables,
-          _types,
-          _typeStack,
-          _typeStacks,
-          arg
-        );
-        // Deal With Generics
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (param.nodeType == NodeType.GenericType) {</span>
-          // Set Generic
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (!genericValues.has(param.name)) {</span>
-            // Ensure Generic Type Works
-<span class="cstat-no" title="statement not covered" >            <span class="missing-if-branch" title="if path not taken" >I</span>if (param.constraints != undefined)</span>
-<span class="cstat-no" title="statement not covered" >              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);</span>
-            // Set Generic Value
-<span class="cstat-no" title="statement not covered" >            genericValues.set(param.name, argType);</span>
-          }
-          // get Generic Value
-<span class="cstat-no" title="statement not covered" >          argType = genericValues.get(param.name)!;</span>
-        }
-        // Check That Types Are Same
-<span class="cstat-no" title="statement not covered" >        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);</span>
-      }
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    }
-    // Literals
-    case NodeType.StringLiteral:
-    case NodeType.I32Literal:
-    case NodeType.I64Literal:
-    case NodeType.U32Literal:
-    case NodeType.U64Literal:
-    case NodeType.F32Literal:
-    case NodeType.F64Literal:
-    case NodeType.NumberLiteral:
-    case NodeType.ConstantLiteral:
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.FunctionLiteral:
-      // Analyze Generic Types
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.genericTypes) {</span>
-<span class="cstat-no" title="statement not covered" >        node.genericTypes = node.genericTypes.map(<span class="fstat-no" title="function not covered" >(t</span>ype): GenericTypeNode =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return _typeCheckNode(type, {</span>
-            // Stacks
-            _typeStack: node.data._typeStack,
-            // Stack Pool
-            _typeStacks: [..._typeStacks, _typeStack],
-          });
-        });
-      }
-      // Analyze Parameters
-<span class="cstat-no" title="statement not covered" >      node.params = node.params.map(<span class="fstat-no" title="function not covered" >(p</span>aram) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(param, {</span>
-          // Stacks
-          _closure: node.data._closure,
-          _varStack: node.data._varStack,
-          _typeStack: node.data._typeStack,
-          // Parent Stacks
-          _varStacks: [..._varStacks, _varStack],
-          _typeStacks: [..._typeStacks, _typeStack],
-        });
-      });
-      // Analyze ReturnType
-<span class="cstat-no" title="statement not covered" >      node.returnType = _typeCheckNode(node.returnType, {</span>
-        // Stacks
-        _closure: node.data._closure,
-        _varStack: node.data._varStack,
-        _typeStack: node.data._typeStack,
-        // Parent Stacks
-        _varStacks: [..._varStacks, _varStack],
-        _typeStacks: [..._typeStacks, _typeStack],
-      });
-      // Analyze Body
-<span class="cstat-no" title="statement not covered" >      node.body = _typeCheckNode(node.body, {</span>
-        // Stacks
-        _closure: node.data._closure,
-        _varStack: node.data._varStack,
-        _typeStack: node.data._typeStack,
-        // Parent Stacks
-        _varStacks: [..._varStacks, _varStack],
-        _typeStacks: [..._typeStacks, _typeStack],
-        // Type Information
-        _returnType: node.returnType,
-      });
-      // Handle Validation Of Single Line Return
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.body.nodeType != NodeType.BlockStatement) {</span>
-        /// Check If Type Is Not Void
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (</span>
-          !typeEqual(
-            rawProgram,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.returnType,
-            createPrimType(node.position, 'Void'),
-            false
-          )
-        ) {
-          // Type Check Return
-<span class="cstat-no" title="statement not covered" >          typeEqual(</span>
-            rawProgram,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.returnType,
-            getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.body)
+        const param = <span class="cstat-no" title="statement not covered" >exprType.params[index];</span>
+        // Set The Type
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (param &amp;&amp; param.nodeType == NodeType.GenericType &amp;&amp; param.valueType == undefined) {</span>
+<span class="cstat-no" title="statement not covered" >          genericValues.set(</span>
+            param.name,
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg)
           );
         }
+        // Return Type
+<span class="cstat-no" title="statement not covered" >        args.push(getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, arg));</span>
       }
-      // Verify We Return
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!node.data.pathReturns) {</span>
-        // Ensure That If We Don't Return Our ReturnType Is Void
-<span class="cstat-no" title="statement not covered" >        typeEqual(</span>
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          node.returnType,
-          createPrimType(node.position, 'Void')
-        );
-      }
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ArrayLiteral:
-<span class="cstat-no" title="statement not covered" >      node.elements = node.elements.map(<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (e.nodeType == NodeType.ValueSpread) {</span>
-          // Analyze Value
-<span class="cstat-no" title="statement not covered" >          e.value = _typeCheckNode(e.value);</span>
-<span class="cstat-no" title="statement not covered" >          return e;</span>
+      // Analyze ReturnType
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (exprType.returnType.nodeType == NodeType.GenericType) {</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (genericValues.has(exprType.returnType.name)) {</span>
+<span class="cstat-no" title="statement not covered" >          return genericValues.get(exprType.returnType.name)!;</span>
         }
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(e);</span>
-      });
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ObjectLiteral:
-      // Analyze Fields
-<span class="cstat-no" title="statement not covered" >      node.fields = node.fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if (field.nodeType == NodeType.ValueSpread) {</span>
-<span class="cstat-no" title="statement not covered" >          field.value = _typeCheckNode(field.value);</span>
-        } else <span class="cstat-no" title="statement not covered" >field.fieldValue = _typeCheckNode(field.fieldValue);</span>
-<span class="cstat-no" title="statement not covered" >        return field;</span>
-      });
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    // Types
-    // TODO: Prevent Infinite Recursive Type Such As `type A = A` or `interface A { test: A }`
-    case NodeType.InterfaceDefinition:
-    case NodeType.TypeAliasDefinition:
-      // Analyze Generic Types
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.genericTypes) {</span>
-<span class="cstat-no" title="statement not covered" >        node.genericTypes = node.genericTypes.map(<span class="fstat-no" title="function not covered" >(t</span>ype): GenericTypeNode =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return _typeCheckNode(type, {</span>
-            // Stacks
-            _typeStack: node.data._typeStack,
-            // Stack Pool
-            _typeStacks: [..._typeStacks, _typeStack],
-          });
-        });
-      }
-      // Analyze Type
-<span class="cstat-no" title="statement not covered" >      node.typeLiteral = _typeCheckNode(node.typeLiteral, {</span>
-        // Stacks
-        _typeStack: node.data._typeStack,
-        // Stack Pool
-        _typeStacks: [..._typeStacks, _typeStack],
-      });
-      // Set Type Variable
-<span class="cstat-no" title="statement not covered" >      setType(_types, node, { type: node.typeLiteral });</span>
-      // Return Node
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.TypePrimLiteral:
-      // We Infer Function Types Before Reaching This So If One Appears Here We Have An Issue
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.name == 'Function') {</span>
+        // Handle Unresolved Generic
 <span class="cstat-no" title="statement not covered" >        BriskTypeError(</span>
           rawProgram,
           BriskErrorType.TypeCouldNotBeInferred,
-          [node.name],
-          node.position
+          [
+            `ReturnType: ${nameType(
+              rawProgram,
+              typePool,
+              exprType.data._typeStack,
+              [...typeStacks, typeStack],
+              exprType.returnType
+            )}`,
+          ],
+          expression.position
         );
       }
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.TypeUnionLiteral:
-<span class="cstat-no" title="statement not covered" >      node.types = node.types.map(<span class="fstat-no" title="function not covered" >(t</span>ype) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(type);</span>
-      });
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ArrayTypeLiteral:
-      // Analyze Value
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-      // Ensure Length
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.ParenthesisTypeLiteral:
-<span class="cstat-no" title="statement not covered" >      node.value = _typeCheckNode(node.value);</span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.FunctionSignatureLiteral:
-      // Analyze Generic Types
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.genericTypes) {</span>
-<span class="cstat-no" title="statement not covered" >        node.genericTypes = node.genericTypes.map(<span class="fstat-no" title="function not covered" >(t</span>ype): GenericTypeNode =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return _typeCheckNode(type, {</span>
-            // Stacks
-            _typeStack: node.data._typeStack,
-            // Stack Pool
-            _typeStacks: [..._typeStacks, _typeStack],
-          });
-        });
-      }
-      // Analyze Parameters
-<span class="cstat-no" title="statement not covered" >      node.params = node.params.map(<span class="fstat-no" title="function not covered" >(p</span>aram) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return _typeCheckNode(param, {</span>
-          // Stacks
-          _typeStack: node.data._typeStack,
-          // Parent Stacks
-          _typeStacks: [..._typeStacks, _typeStack],
-        });
-      });
-      // Analyze Return Type
-<span class="cstat-no" title="statement not covered" >      node.returnType = _typeCheckNode(node.returnType, {</span>
-        // Stacks
-        _typeStack: node.data._typeStack,
-        // Parent Stacks
-        _typeStacks: [..._typeStacks, _typeStack],
-      });
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.InterfaceLiteral:
-      // Analyze Field Nodes
-<span class="cstat-no" title="statement not covered" >      node.fields = node.fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        field.fieldType = _typeCheckNode(field.fieldType);</span>
-<span class="cstat-no" title="statement not covered" >        return field;</span>
-      });
-    case NodeType.TypeUsage:
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.GenericType:
-      // Set Type To Be More Accurate
-<span class="cstat-no" title="statement not covered" >      setType(_types, node, node);</span>
-      // ReturnType
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    // Variables
-    case NodeType.VariableUsage:
-<span class="cstat-no" title="statement not covered" >      return node;</span>
-    case NodeType.MemberAccess:
-      // Analyze Parent
-<span class="cstat-no" title="statement not covered" >      node.parent = _typeCheckNode(node.parent);</span>
-    case NodeType.PropertyUsage:
-      // Analyze Property
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (node.property) <span class="cstat-no" title="statement not covered" >node.property = _typeCheckNode(node.property);</span></span>
-<span class="cstat-no" title="statement not covered" >      return node;</span>
+      // Return Type
+<span class="cstat-no" title="statement not covered" >      return exprType.returnType;</span>
+    }
+    case NodeType.StringLiteral:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'String');</span>
+    case NodeType.I32Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'i32');</span>
+    case NodeType.I64Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'i64');</span>
+    case NodeType.U32Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'u32');</span>
+    case NodeType.U64Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'u64');</span>
+    case NodeType.F32Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'f32');</span>
+    case NodeType.F64Literal:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'f64');</span>
+    case NodeType.NumberLiteral:
+<span class="cstat-no" title="statement not covered" >      return createPrimType(expression.position, 'Number');</span>
+    case NodeType.ConstantLiteral:
+<span class="cstat-no" title="statement not covered" >      if (expression.value == 'true' || expression.value == 'false')</span>
+<span class="cstat-no" title="statement not covered" >        return createPrimType(expression.position, 'Boolean');</span>
+      else <span class="cstat-no" title="statement not covered" >return createPrimType(expression.position, 'Void'); </span>// Void Type
+    case NodeType.FunctionLiteral:
+      // Build Type
+<span class="cstat-no" title="statement not covered" >      return createFunctionSignatureType(</span>
+        expression.position,
+        // Resolve Generic Types
+        expression.genericTypes ?? undefined,
+        // Analyze Params
+        expression.params.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt;
+<span class="cstat-no" title="statement not covered" >          getExpressionType(</span>
+            rawProgram,
+            varPool,
+            typePool,
+            expression.data._typeStack,
+            [...typeStacks, typeStack],
+            p
+          )
+        ),
+        // Resolve Return Type
+        resolveType(
+          rawProgram,
+          typePool,
+          expression.data._typeStack,
+          [...typeStacks, typeStack],
+          expression.returnType
+        ),
+        expression.data._typeStack
+      );
     case NodeType.Parameter:
-      // Analyze NodeType
-<span class="cstat-no" title="statement not covered" >      node.paramType = _typeCheckNode(node.paramType);</span>
-      // TODO: Handle Rest Syntax
-      // Set Variable Type To Be More Accurate
-<span class="cstat-no" title="statement not covered" >      setVariable(_variables, node.name, { type: node.paramType });</span>
+<span class="cstat-no" title="statement not covered" >      return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);</span>
+    case NodeType.ArrayLiteral: {
+      // Get All Field Types
+      const elementTypes: TypeLiteral[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >      for (const element of expression.elements) {</span>
+<span class="cstat-no" title="statement not covered" >        if (element.nodeType == NodeType.ValueSpread) {</span>
+          // Check That Spread Value Is an ArrayLiteral
+          const valueType = <span class="cstat-no" title="statement not covered" >getExpressionType(</span>
+            rawProgram,
+            varPool,
+            typePool,
+            typeStack,
+            typeStacks,
+            element.value
+          );
+          const resolvedType = <span class="cstat-no" title="statement not covered" >resolveType(rawProgram, typePool, typeStack, typeStacks, valueType);</span>
+<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (resolvedType.nodeType != NodeType.ArrayTypeLiteral) {</span>
+<span class="cstat-no" title="statement not covered" >            BriskTypeError(</span>
+              rawProgram,
+              BriskErrorType.TypeMisMatch,
+              ['Array&lt;Any&gt;', nameType(rawProgram, typePool, typeStack, typeStacks, valueType)],
+              element.value.position
+            );
+<span class="cstat-no" title="statement not covered" >            process.exit(1); </span>// Let TypeScript Know The Program Exits
+          }
+          // Build Onto The Type
+<span class="cstat-no" title="statement not covered" >          elementTypes.push(resolvedType.value);</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >          elementTypes.push(</span>
+            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, element)
+          );
+        }
+      }
+      const arrayType = <span class="cstat-no" title="statement not covered" >createArrayType(</span>
+        expression.position,
+        resolveType(
+          rawProgram,
+          typePool,
+          typeStack,
+          typeStacks,
+          createUnionType(expression.position, ...elementTypes)
+        ),
+        elementTypes.length
+      );
+<span class="cstat-no" title="statement not covered" >      return arrayType;</span>
+    }
+    case NodeType.ObjectLiteral: {
+      // Handle Fields
+      const fields: InterfaceFieldNode[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >      for (const field of expression.fields) {</span>
+<span class="cstat-no" title="statement not covered" >        if (field.nodeType == NodeType.ObjectField) {</span>
+<span class="cstat-no" title="statement not covered" >          fields.push({</span>
+            nodeType: NodeType.InterfaceField,
+            category: NodeCategory.Type,
+            name: field.name,
+            fieldType: getExpressionType(
+              rawProgram,
+              varPool,
+              typePool,
+              typeStack,
+              typeStacks,
+              field.fieldValue
+            ),
+            optional: false,
+            mutable: field.fieldMutable,
+            position: field.position,
+          });
+        } else {
+          // Get Value Type
+          const fieldSpreadType = &lt;InterfaceLiteralNode&gt;(
+<span class="cstat-no" title="statement not covered" >            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, field.value)</span>
+          );
+<span class="cstat-no" title="statement not covered" >          for (const spreadField of fieldSpreadType.fields) {</span>
+<span class="cstat-no" title="statement not covered" >            fields.push({</span>
+              nodeType: NodeType.InterfaceField,
+              category: NodeCategory.Type,
+              name: spreadField.name,
+              fieldType: resolveType(
+                rawProgram,
+                typePool,
+                typeStack,
+                typeStacks,
+                spreadField.fieldType
+              ),
+              optional: false,
+              mutable: spreadField.mutable,
+              position: spreadField.position,
+            });
+          }
+        }
+      }
       // Return Value
-<span class="cstat-no" title="statement not covered" >      return node;</span>
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        nodeType: NodeType.InterfaceLiteral,
+        category: NodeCategory.Type,
+        fields: fields,
+        position: expression.position,
+      };
+    }
+    case NodeType.VariableUsage:
+<span class="cstat-no" title="statement not covered" >      return getVariable(varPool, expression).type;</span>
+    case NodeType.MemberAccess: {
+      // Get Member Type
+      const objectType = <span class="cstat-no" title="statement not covered" >resolveType(</span>
+        rawProgram,
+        typePool,
+        typeStack,
+        typeStacks,
+        getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, expression.parent)
+      );
+      // Build Type
+      const expectedObjectType: InterfaceLiteralNode = <span class="cstat-no" title="statement not covered" >{</span>
+        nodeType: NodeType.InterfaceLiteral,
+        category: NodeCategory.Type,
+        fields: [
+          {
+            nodeType: NodeType.InterfaceField,
+            category: NodeCategory.Type,
+            name: expression.property.name,
+            fieldType: buildObjectType(expression.property),
+            optional: false,
+            mutable: false,
+            position: expression.property.position,
+          },
+        ],
+        position: expression.position,
+      };
+      // Check Type Compatibility
+<span class="cstat-no" title="statement not covered" >      typeCompatible(rawProgram, typePool, typeStack, typeStacks, expectedObjectType, objectType);</span>
+      // Get Member Type
+      const elementType = &lt;InterfaceFieldNode&gt;(
+<span class="cstat-no" title="statement not covered" >        getObjectPropertyField(expression.property, &lt;InterfaceLiteralNode&gt;objectType)</span>
+      );
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (props?.mutable != undefined) {</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (elementType.mutable != props.mutable) {</span>
+<span class="cstat-no" title="statement not covered" >          BriskTypeError(</span>
+            rawProgram,
+            BriskErrorType.ConstantAssignment,
+            [expression.property.name],
+            expression.position
+          );
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      return elementType.fieldType;</span>
+    }
   }
 };
-// Analyze Program
-const typeCheckProgram = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
-  rawProgram: string,
-  program: ProgramNode,
-  importData: Map&lt;string, ExportList&gt;
-): ProgramNode =&gt; {
-<span class="cstat-no" title="statement not covered" >  return typeCheckNode(</span>
-    rawProgram,
-    importData,
-    {
-      _imports: new Map(),
-      _exports: new Map(),
-      _variables: new Map(),
-      _types: new Map(),
-      _varStacks: [],
-      _typeStacks: [],
-      _closure: new Set(),
-      _varStack: new Map(),
-      _typeStack: new Map(),
-      // TypeChecking Information
-      _returnType: undefined,
-    },
-    program
-  );
-};
-&nbsp;
-export default typeCheckProgram;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

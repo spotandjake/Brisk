@@ -202,6 +202,7 @@ export interface EnumDefinitionStatementNode {
   name: string;
   variants: EnumVariantNode[];
   genericTypes: GenericTypeNode[] | undefined;
+  reference?: number;
   data: {
     _typeStack: TypeStack;
   };
@@ -432,6 +433,7 @@ export interface TypeAliasDefinitionNode {
   name: string;
   typeLiteral: TypeLiteral;
   genericTypes: GenericTypeNode[] | undefined;
+  reference?: number;
   data: {
     _typeStack: TypeStack;
   };
@@ -443,6 +445,7 @@ export interface InterfaceDefinitionNode {
   name: string;
   typeLiteral: InterfaceLiteralNode;
   genericTypes: undefined | GenericTypeNode[];
+  reference?: number;
   data: {
     _typeStack: TypeStack;
   };
@@ -477,6 +480,16 @@ export const primTypes: Set<PrimTypes> = new Set([
   'Number',
   'Function',
   'Any',
+]);
+export const stackTypes: Set<PrimTypes> = new Set([
+  'u32',
+  'u64',
+  'i32',
+  'i64',
+  'f32',
+  'f64',
+  'Boolean',
+  'Void',
 ]);
 export interface TypePrimLiteralNode {
   nodeType: NodeType.TypePrimLiteral;
@@ -525,6 +538,7 @@ export interface TypeUsageNode {
   nodeType: NodeType.TypeUsage;
   category: NodeCategory.Type;
   name: string;
+  reference?: number;
   position: Position;
 }
 // General Type Stuff
@@ -543,6 +557,7 @@ export interface GenericTypeNode {
   name: string;
   constraints: undefined | TypeLiteral;
   valueType: undefined | TypeLiteral;
+  reference?: number;
   position: Position;
 }
 export interface TypeIdentifierNode {

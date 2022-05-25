@@ -20,7 +20,7 @@ const compileFile = async (
   // Normalize File Path
   const _filePath = path.resolve(process.cwd(), filePath);
   // Read File
-  const fileContent = await fs.readFile(_filePath, 'utf8').catch((err) => {
+  const fileContent = await fs.readFile(_filePath, 'utf8').catch(() => {
     BriskCustomError('', 'Error', `No Such File ${filePath} Could Be Found At ${_filePath}`);
     process.exit(1);
   });
