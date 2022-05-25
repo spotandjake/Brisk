@@ -39,7 +39,7 @@ export const enum BriskErrorType {
 export const BriskErrorMessage = {
   // Brisk Error
   [BriskErrorType.CompilerError]: 'A compiler bug has occurred',
-  [BriskErrorType.FeatureNotYetImplemented]: 'Not implemented',
+  [BriskErrorType.FeatureNotYetImplemented]: 'Feature not yet implemented',
   [BriskErrorType.ImportNotSupported]: 'Your environment does not support imports',
   // Syntax Error
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot use reserved keyword `%1`',
