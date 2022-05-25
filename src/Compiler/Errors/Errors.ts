@@ -48,7 +48,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.InvalidNumber]: 'Number `%1` is invalid',
   // Reference Error
   // Type Error
-  [BriskErrorType.InvalidFlag]: 'Decorator `%1` does not exist', // TODO: rename
+  [BriskErrorType.InvalidFlag]: 'Flag `%1` does not exist', // TODO: rename
   [BriskErrorType.FlagExpectedArguments]: 'Decorator `%1` expected `%2` arguments, found `%3`',
   [BriskErrorType.ConstantAssignment]: 'Cannot assign to constant variable `%1`',
   [BriskErrorType.DuplicateField]: 'Duplicate field `%1`',
