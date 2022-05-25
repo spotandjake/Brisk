@@ -65,7 +65,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.TypeCouldNotBeInferred]: 'Type `%1` cannot be inferred',
   [BriskErrorType.ArrayTypeLengthCouldNotBeInferred]: 'Array type length cannot be inferred',
   [BriskErrorType.InvalidArgumentLength]: 'Function expects a maximum of %1 arguments, found %2',
-  [BriskErrorType.WasmExpressionUnknown]: 'Wasm instruction `%1` does not exist', // TODO: rename
+  [BriskErrorType.WasmExpressionUnknown]: 'Wasm instruction `%1` does not exist',
   [BriskErrorType.DeadCode]: 'Dead code found',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable `%1` has already been declared',
