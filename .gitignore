@@ -3,3 +3,6 @@ node_modules/
 dist/
 brisk.exe
 stats.html
+.DS_Store
+.wasm
+.wat

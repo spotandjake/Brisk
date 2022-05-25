@@ -1,0 +1,127 @@
+// Import Testing
+import a from 'test';
+import wasm print: (String) => Void from 'print';
+import wasm f: () => Void from 'print';
+import wasm b: i32 from 'test';
+// This is a comment
+// Type Testing
+type A = i32;
+type B = i32 | i64 | u32 | u64 | f32 | f64;
+type C = i32 | (i32, i32 | i64) => u32 | i64;
+type D = i32 | (i32, i32 | i64) => (u32 | i64) | f32;
+interface E {
+  field1: i32;
+  let field2: i32;
+  field3?: i32;
+  field4: {
+    field1: i32;
+  };
+};
+// Member Access Testing
+let objectTest: E = {
+  field1: 1n,
+  let field2: 1n,
+  field3: 1n,
+  field4: {
+    field1: 1n
+  }
+};
+let objectTest2: E = {
+  field1: 1n,
+  let field2: 1n,
+  field4: {
+    field1: 1n
+  }
+};
+let objectTest3: E = {
+  ...objectTest2,
+  field3: 1n
+};
+objectTest.field2 = 2n;
+// if statement testing
+if (1 == 1) {
+  print('If Test');
+} else if ('test' == 'test') {
+  print('Else If Test');
+} else {
+  print('Else Test');
+};
+if (1 == 1) print('test');
+else print('test');
+
+if (true) {
+  print('true');
+};
+
+if (true) print('test');
+
+if (true) print('test');
+else print('test');
+
+if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else if (true) {
+  print('test');
+} else {
+  print('test');
+};
+
+if (true) {
+  print('test');
+} else print('test');
+
+if (true) {
+  print('test');
+};
+// Function Call Tests
+print('test');
+f();
+@wasm.i32.add(1n, 1n);
+// Variable Declaration tests
+let c: Number = 1 + (1 + 1) + 1 + 1 + 1;
+c = 1;
+let d: Number = a;
+let e: i32 = objectTest3.field3;
+let z: Function = (g: i32): i32 => {
+  return(g);
+};
+const h: Number = 1;
+((): i32 => {
+  print('test');
+  return(1n);
+})();
+// SemiColon Test
+interface OptionalSemi_Has_TestInterface<GenericTest> {
+  test: GenericTest;
+};
+enum OptionalSemi_Has_EnumTest<GenericTest> {
+  Test(GenericTest)
+};
+interface OptionalSemi_TestInterface<GenericTest> {
+  test: GenericTest;
+}
+enum OptionalSemi_EnumTest<GenericTest> {
+  Test(GenericTest)
+}
+// Generics Tests
+type Generic_TypeTest<GenericTest, GenericTest1> = String;
+interface Generic_TestInterface<GenericTest> {
+  test: GenericTest;
+}
+enum Generic_EnumTest<GenericTest> {
+  Test(GenericTest)
+}
+// Export Tests
+// export const y: Number = 1;
+export h;
+// export {
+//   c,
+//   d,
+//   z
+// };

@@ -1,0 +1,13 @@
+import wasm print: (i32) => i32 from 'env';
+const loop: Function = (t: (i32) => i32, let index: i32): i32 => {
+  const test: i32 = t(index);
+  index++;
+  if (test == 1n) loop(t, index);
+  return(1n);
+};
+loop((index: i32): i32 => {
+  print(index);
+  if (index == 100n) return(0n);
+  return(1n);
+}, 0n);
+const test: i32 = 1n;

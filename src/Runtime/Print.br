@@ -1,5 +1,0 @@
-import wasm fd_write: (i32, i32, i32, i32) -> i32 from 'wasi_unstable';
-let print: Function = (value: string): Void => {
-  fd_write(1, value, memLoad(value, 4), 200);
-};
-export print;

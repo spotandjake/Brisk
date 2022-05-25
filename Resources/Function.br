@@ -1,0 +1,61 @@
+// import wasm print: (Any) => Void from 'test1';
+// import Test from 'test';
+// enum Option {
+//  None,
+//  None2 = 1,
+//  Some(i32),
+// }
+// enum Option {
+//   None,
+//   Some(i32)
+// };
+// enum Color {
+//   Red,
+//   Green,
+//   Blue,
+//   RGB(i32, i32, i32)
+// };
+// enum Day {
+//   Sun = 0,
+//   Mon = 1,
+//   Tue = 2,
+//   Wed = 3,
+//   Thu = 4,
+//   Fri = 5,
+//   Sat = 6
+// };
+// type Test = Void;
+// type Te = Void;
+interface Test {
+  test: i32 | (i64 | f32) | (i64, f64) => f32;
+  let test2: i32;
+  let test3: i32;
+  test4: Test;
+  // test4: Te;
+  // test5: Test;
+}
+const test: Test = {
+  test: 1n,
+  let test2: 2n,
+  let test3: 3n,
+};
+export {
+  test: 1n
+};
+// const test2: i32 = test.test;
+// test = 2n;
+// const test2: i32 = 1n;
+// test2 = 2n;
+// export test;
+// export let test: i32 = 1n;
+// let test1: i32 = 1n;
+// const test3: i32 = 1n;
+// const testFunction: Function = (let a: i32, b: i32, c?: i32): i32 => {
+//   let test: i32 = 1n;
+//   let t: i32 = testFunction;
+//   // test = 2n;
+//   // test1 = 1n;
+//   // test2 = 2n;
+//   // return(i32);
+// };
+// testFunction(1n, 2n);
