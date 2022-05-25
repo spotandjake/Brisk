@@ -51,7 +51,7 @@ When making a new issue name it using the following spec:
 
 1. Install node using the version you downloaded from [nodejs.org](https://nodejs.org).
 2. Open a terminal.
-3. Make a fork&mdash;your own copy&mdash;of Brisk on your GitHub account, then make a clone&mdash;a local copy&mdash;on your computer. ([Here are some step-by-step instructions](https://github.com/anitab-org/mentorship-android/wiki/Fork%2C-Clone-%26-Remote)). Add `--depth=1` to the end of the `git clone` command to save time.
+3. Make a fork&mdash;your own copy&mdash;of Brisk on your GitHub account, then make a clone&mdash;a local copy&mdash;on your computer. ([Here are some step-by-step instructions](https://github.com/anitab-org/mentorship-android/wiki/Fork%2C-Clone-%26-Remote)).
 4. Install the gulp command line tool: `yarn global add gulp-cli`
 5. Change to the TypeScript folder you made: `cd Brisk`
 6. Install dependencies: `yarn`
@@ -87,7 +87,7 @@ Your pull request should:
 
 ## Running the Tests
 
-To run all tests, invoke the `yarn start-tests`:
+To run all tests, invoke the `yarn test`:
 
 ```Shell
 yarn start-tests
