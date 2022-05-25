@@ -214,7 +214,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos)],
+        [ptrType(pos), i32Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -223,7 +223,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos)],
+        [ptrType(pos), i32Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -232,7 +232,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i32Type(pos)],
+        [ptrType(pos), i32Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -553,7 +553,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i32Type(pos)],
+          [ptrType(pos), i32Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -562,7 +562,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i32Type(pos)],
+          [ptrType(pos), i32Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -571,7 +571,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i32Type(pos)],
+          [ptrType(pos), i32Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -841,7 +841,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i64Type(pos)],
+        [ptrType(pos), i64Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -850,7 +850,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i64Type(pos)],
+        [ptrType(pos), i64Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -859,7 +859,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i64Type(pos)],
+        [ptrType(pos), i64Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -868,7 +868,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), i64Type(pos)],
+        [ptrType(pos), i64Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -1204,7 +1204,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i64Type(pos)],
+          [ptrType(pos), i64Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -1213,7 +1213,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i64Type(pos)],
+          [ptrType(pos), i64Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -1222,7 +1222,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i64Type(pos)],
+          [ptrType(pos), i64Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -1231,7 +1231,7 @@ export const wasmExpressions: wasmType = {
         return createFunctionSignatureType(
           pos,
           [],
-          [i32Type(pos), ptrType(pos), i64Type(pos)],
+          [ptrType(pos), i64Type(pos)],
           voidType(pos),
           new Map()
         );
@@ -1512,7 +1512,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), f32Type(pos)],
+        [ptrType(pos), f32Type(pos)],
         voidType(pos),
         new Map()
       );
@@ -1695,7 +1695,7 @@ export const wasmExpressions: wasmType = {
       return createFunctionSignatureType(
         pos,
         [],
-        [i32Type(pos), i32Type(pos), ptrType(pos), f64Type(pos)],
+        [ptrType(pos), f64Type(pos)],
         voidType(pos),
         new Map()
       );
