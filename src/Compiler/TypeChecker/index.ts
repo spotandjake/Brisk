@@ -11,7 +11,7 @@ import Node, {
   VariableUsageNode,
 } from '../Types/ParseNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
-import { wasmExpressions } from './WasmTypes';
+import { mapExpression } from './WasmTypes';
 import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
 import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
@@ -144,19 +144,17 @@ const typeCheckNode = <T extends Node>(
       // // Get Import
       // const importModule = importData.get(node.source.value);
       // if (importModule == undefined) {
-      //   BriskTypeError(
+      //   return BriskTypeError(
       //     rawProgram,
       //     BriskErrorType.ModuleDoesNotExist,
       //     [node.source.value],
       //     node.source.position
       //   );
-      //   process.exit(1); // Let TypeScript Know This Exists
       // }
       // TODO: Handle TypeValidation Of Destructured Declarations
       // Set Variable Type
       // TODO: Figure Out Type Checking For This
-      BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      process.exit(1);
+      return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
     }
     case NodeType.WasmImportStatement:
       // Analyze Type
@@ -342,13 +340,12 @@ const typeCheckNode = <T extends Node>(
     case NodeType.ReturnStatement: {
       // Deal With Invalid Returns
       if (_returnType == undefined) {
-        BriskSyntaxError(
+        return BriskSyntaxError(
           rawProgram,
           BriskErrorType.ReturnStatementsOnlyValidInsideFunction,
           [],
           node.position
         );
-        process.exit(1); // Let TypeScript Know That Program Exits
       }
       // Analyze Value
       if (node.returnValue) node.returnValue = _typeCheckNode(node.returnValue);
@@ -491,10 +488,14 @@ const typeCheckNode = <T extends Node>(
         _typeStacks,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.callee)
       );
+      // Type Check Params
+      node.args = node.args.map((arg) => {
+        return _typeCheckNode(arg);
+      });
       // Compare Types
       if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
         // Ensure Callee Is A Function
-        BriskTypeError(
+        return BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
           [
@@ -503,7 +504,6 @@ const typeCheckNode = <T extends Node>(
           ],
           node.position
         );
-        process.exit(1); // Let TypeScript Know That The Program Ends after This
       }
       if (node.args.length > calleeType.params.length) {
         // Ensure We Do Not Have Too Many Arguments Types
@@ -539,7 +539,7 @@ const typeCheckNode = <T extends Node>(
           ) {
             break;
           } else {
-            BriskTypeError(
+            return BriskTypeError(
               rawProgram,
               BriskErrorType.InvalidArgumentLength,
               [
@@ -548,7 +548,6 @@ const typeCheckNode = <T extends Node>(
               ],
               node.position
             );
-            process.exit(1); // Let TypeScript Know That The Program Ends after This
           }
         }
         let argType: TypeLiteral = getExpressionType(
@@ -580,28 +579,7 @@ const typeCheckNode = <T extends Node>(
     }
     case NodeType.WasmCallExpression: {
       // Split Path
-      const wasmPath = node.name.split('.').slice(1);
-      // Get Type
-      let wasmInstructions = wasmExpressions;
-      let exprType: TypeLiteral | undefined = undefined;
-      while (wasmPath.length != 0) {
-        const currentSegment = wasmInstructions[<string>wasmPath.shift()];
-        // Check if parent Has Type
-        if (currentSegment != undefined && typeof currentSegment != 'function') {
-          wasmInstructions = currentSegment;
-        } else if (typeof currentSegment == 'function' && wasmPath.length == 0) {
-          exprType = currentSegment(node.position);
-        }
-      }
-      if (exprType == undefined || exprType.nodeType != NodeType.FunctionSignatureLiteral) {
-        BriskTypeError(
-          rawProgram,
-          BriskErrorType.WasmExpressionUnknown,
-          [node.name],
-          node.position
-        );
-        process.exit(1); // Let TypeScript Know That The Program Exits
-      }
+      const exprType = mapExpression(rawProgram, node);
       if (node.args.length > exprType.params.length) {
         // Ensure We Do Not Have Too Many Arguments Types
         // Ensure Callee Is A Function
@@ -636,7 +614,7 @@ const typeCheckNode = <T extends Node>(
           ) {
             break;
           } else {
-            BriskTypeError(
+            return BriskTypeError(
               rawProgram,
               BriskErrorType.InvalidArgumentLength,
               [
@@ -645,7 +623,6 @@ const typeCheckNode = <T extends Node>(
               ],
               node.position
             );
-            process.exit(1); // Let TypeScript Know That The Program Ends after This
           }
         }
         let argType: TypeLiteral = getExpressionType(

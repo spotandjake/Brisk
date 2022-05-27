@@ -14,7 +14,7 @@ import {
   VariableUsageNode,
 } from '../Types/ParseNodes';
 import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
-import { wasmExpressions } from './WasmTypes';
+import { mapExpression } from './WasmTypes';
 import {
   createArrayType,
   createFunctionSignatureType,
@@ -675,7 +675,7 @@ export const getExpressionType = (
       // Ensure Callee is A Function
       if (calleeType.nodeType != NodeType.FunctionSignatureLiteral) {
         // Ensure Callee Is A Function
-        BriskTypeError(
+        return BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
           [
@@ -684,7 +684,6 @@ export const getExpressionType = (
           ],
           expression.position
         );
-        process.exit(1); // Let TypeScript Know That The Program Ends after This
       }
       // Check Each Parameter
       const args: TypeLiteral[] = [];
@@ -727,30 +726,8 @@ export const getExpressionType = (
       return calleeType.returnType;
     }
     case NodeType.WasmCallExpression: {
-      // Split Path
-      const wasmPath = expression.name.split('.').slice(1);
       // Get Type
-      let wasmInstructions = wasmExpressions;
-      let exprType: TypeLiteral | undefined = undefined;
-      while (wasmPath.length != 0) {
-        const currentSegment = wasmInstructions[<string>wasmPath.shift()];
-        // Check if parent Has Type
-        if (currentSegment != undefined && typeof currentSegment != 'function') {
-          wasmInstructions = currentSegment;
-        } else if (typeof currentSegment == 'function' && wasmPath.length == 0) {
-          exprType = currentSegment(expression.position);
-        }
-      }
-      // The Node Does Not Exist
-      if (exprType == undefined || exprType.nodeType != NodeType.FunctionSignatureLiteral) {
-        BriskTypeError(
-          rawProgram,
-          BriskErrorType.WasmExpressionUnknown,
-          [expression.name],
-          expression.position
-        );
-        process.exit(1); // Let TypeScript Know The Program Exits
-      }
+      const exprType = mapExpression(rawProgram, expression);
       // Check Each Parameter
       const args: TypeLiteral[] = [];
       const genericValues: Map<string, TypeLiteral> = new Map();
@@ -856,13 +833,12 @@ export const getExpressionType = (
           );
           const resolvedType = resolveType(rawProgram, typePool, typeStack, typeStacks, valueType);
           if (resolvedType.nodeType != NodeType.ArrayTypeLiteral) {
-            BriskTypeError(
+            return BriskTypeError(
               rawProgram,
               BriskErrorType.TypeMisMatch,
               ['Array<Any>', nameType(rawProgram, typePool, typeStack, typeStacks, valueType)],
               element.value.position
             );
-            process.exit(1); // Let TypeScript Know The Program Exits
           }
           // Build Onto The Type
           elementTypes.push(resolvedType.value);
