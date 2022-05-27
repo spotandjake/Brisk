@@ -1,4 +1,3 @@
-import { Position } from '../Types/Types';
 import {
   EnumVariantNode,
   Expression,
@@ -10,8 +9,6 @@ import {
   PropertyUsageNode,
   TypeLiteral,
   UnaryExpressionOperator,
-  VariableDefinitionNode,
-  VariableUsageNode,
 } from '../Types/ParseNodes';
 import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { mapExpression } from './WasmTypes';
