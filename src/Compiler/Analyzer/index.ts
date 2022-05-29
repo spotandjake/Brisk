@@ -17,7 +17,6 @@ import {
   TypeMap,
   TypeStack,
   VariableClosure,
-  VariableData,
   VariableMap,
   VariableStack,
 } from '../Types/AnalyzerNodes';
@@ -25,7 +24,6 @@ import { createParenthesisType, createPrimType, createUnionType } from '../Helpe
 import { BriskError, BriskParseError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 import {
-  VariableNode,
   createType,
   createVariable,
   getType,
@@ -35,21 +33,14 @@ import {
   setType,
   setVariable,
 } from '../Helpers/Helpers';
-// Variable Interactions
-const useVariable = (pool: VariableMap, variable: VariableNode): VariableData => {
-  // Set The Variable Data
-  setVariable(pool, variable, { used: true });
-  // Return The Variable Data
-  return getVariable(pool, variable);
-};
 // Analyze Node
-const analyzeNode = <T extends Node>(
+const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
   // Code
   rawProgram: string,
   // Stacks
   properties: AnalyzerProperties,
   // Nodes
-  parentNode: Node | undefined,
+  parentNode: Node,
   node: T
 ): T => {
   const {
@@ -66,89 +57,20 @@ const analyzeNode = <T extends Node>(
     _varStack,
     _typeStack,
   } = properties;
-  const _analyzeNode = <_T extends Node>(
+  const _analyzeNode = <_T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
     props: Partial<AnalyzerProperties> = properties,
     parentNode: Node = node
-  ): _T => {
-    return analyzeNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
-  };
+  ): _T => analyzeNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
   // Match The Node For Analysis
   switch (node.nodeType) {
-    // General
-    case NodeType.Program: {
-      // Create Our New Stacks
-      const imports: ImportMap = new Map();
-      const exports: ExportMap = new Map();
-      const variables: VariableMap = new Map();
-      const types: TypeMap = new Map();
-      const varStack: VariableStack = new Map();
-      const typeStack: TypeStack = new Map();
-      // Ensure That Import Statements Exist At The Top Of File
-      // Ensure That Export Statements Exist At Bottom Of File
-      let prevNode,
-        hitExportNode = false;
-      for (const statementNode of node.body) {
-        if (
-          (statementNode.nodeType == NodeType.ImportStatement ||
-            statementNode.nodeType == NodeType.WasmImportStatement) &&
-          prevNode != undefined &&
-          prevNode.category != NodeCategory.Type &&
-          prevNode.nodeType != NodeType.ImportStatement &&
-          prevNode.nodeType != NodeType.WasmImportStatement
-        )
-          BriskParseError(
-            rawProgram,
-            BriskErrorType.ImportStatementExpectedAtTop,
-            [],
-            statementNode.position
-          );
-        if (statementNode.nodeType == NodeType.ExportStatement) hitExportNode = true;
-        if (statementNode.nodeType != NodeType.ExportStatement && hitExportNode)
-          BriskParseError(
-            rawProgram,
-            BriskErrorType.ExportStatementExpectedAtBottom,
-            [],
-            statementNode.position
-          );
-        prevNode = statementNode;
-      }
-      // Analyze Body
-      node.body = node.body.map((child: Statement) => {
-        return _analyzeNode(child, {
-          _imports: imports,
-          _exports: exports,
-          // Our Global Variable And Type Pools
-          _variables: variables,
-          _types: types,
-          // Parent Stacks
-          _varStacks: [],
-          _typeStacks: [],
-          // Stacks
-          _closure: new Set(),
-          _varStack: varStack,
-          _typeStack: typeStack,
-        });
-      });
-      // Set Data Payload
-      node.data = {
-        _imports: imports,
-        _exports: exports,
-        _variables: variables,
-        _types: types,
-        _varStack: varStack,
-        _typeStack: typeStack,
-      };
-      // Return Our Node
-      return node;
-    }
     // Statements
     case NodeType.IfStatement:
       // Don't Allow Definition Statements Here
       if (node.alternative?.nodeType == NodeType.DeclarationStatement)
         BriskParseError(
           rawProgram,
-          BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement,
+          BriskErrorType.NoDeclarationInSingleLineStatement,
           [],
           node.position
         );
@@ -164,7 +86,6 @@ const analyzeNode = <T extends Node>(
           'pathReturns' in node.body.data &&
           node.body.data.pathReturns &&
           'data' in node.alternative &&
-          node.alternative.data &&
           'pathReturns' in node.alternative.data &&
           node.alternative.data.pathReturns
         )
@@ -196,42 +117,39 @@ const analyzeNode = <T extends Node>(
       const varStack: VariableStack = new Map();
       const typeStack: TypeStack = new Map();
       let pathReturns = false;
-      // Remove Dead Code After ReturnStatement
-      const body: Statement[] = [];
-      for (const [index, child] of node.body.entries()) {
-        // Analyze Body
-        const analyzedChild = _analyzeNode(child, {
-          // Stacks
-          _closure: _closure,
+      // Return Our Node
+      return {
+        ...node,
+        body: node.body.map((child, i) => {
+          // Analyze Body
+          const analyzedChild = _analyzeNode(child, {
+            // Stacks
+            _closure: _closure,
+            _varStack: varStack,
+            _typeStack: typeStack,
+            // Stack Pool
+            _varStacks: [..._varStacks, _varStack],
+            _typeStacks: [..._typeStacks, _typeStack],
+          });
+          // No Point In Analyzing After A Return Statement
+          if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
+            // Disallow Dead Code
+            if (i != node.body.length - 1) {
+              BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[i + 1].position);
+            }
+            // Set Block Data To Include Info That This Block Returns
+            pathReturns = true;
+          }
+          // Push Child To Body
+          return analyzedChild;
+        }),
+        data: {
           _varStack: varStack,
           _typeStack: typeStack,
-          // Stack Pool
-          _varStacks: [..._varStacks, _varStack],
-          _typeStacks: [..._typeStacks, _typeStack],
-        });
-        // Push Child To Body
-        body.push(analyzedChild);
-        // No Point In Analyzing After A Return Statement
-        if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
-          // Disallow Dead Code
-          if (index != node.body.length - 1) {
-            BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[index + 1].position);
-          }
-          // Set Block Data To Include Info That This Block Returns
-          pathReturns = true;
-        }
-      }
-      // Set Body
-      node.body = body;
-      // Set Data Payload
-      node.data = {
-        _varStack: varStack,
-        _typeStack: typeStack,
 
-        pathReturns: pathReturns,
+          pathReturns: pathReturns,
+        },
       };
-      // Return Our Node
-      return node;
     }
     case NodeType.ImportStatement: {
       _imports.set(node.variable.name, {
@@ -239,7 +157,7 @@ const analyzeNode = <T extends Node>(
         path: node.source.value,
         position: node.position,
       });
-      const reference = createVariable(
+      node.variable.reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -257,15 +175,13 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
-      // Set Reference
-      node.variable.reference = reference;
       return node;
     }
     case NodeType.WasmImportStatement: {
       // Analyze Type
       node.typeSignature = _analyzeNode(node.typeSignature);
       // Add Variable
-      const reference = createVariable(
+      node.variable.reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -283,8 +199,6 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
-      // Set Reference
-      node.variable.reference = reference;
       // Return Node
       return node;
     }
@@ -348,8 +262,8 @@ const analyzeNode = <T extends Node>(
         const exportName =
           node.value.nodeType == NodeType.DeclarationStatement ? node.value.name : node.value;
         // Set Variable To Exported
-        const exportData = useVariable(_variables, exportName);
-        setVariable(_variables, exportName, { exported: true });
+        setVariable(_variables, exportName, { exported: true, used: true });
+        const exportData = getVariable(_variables, exportName);
         // Check Export Valid
         if (_exports.has(exportData.name))
           BriskTypeError(
@@ -384,13 +298,13 @@ const analyzeNode = <T extends Node>(
       // Analyze Type Variable
       node.varType = _analyzeNode(node.varType);
       // Add Variable To Stack
-      const reference = createVariable(
+      node.name.reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
         {
           name: node.name.name,
-          mainScope: parentNode?.nodeType == NodeType.Program,
+          mainScope: parentNode.nodeType == NodeType.Program,
           global: false,
           constant: node.declarationType == DeclarationTypes.Constant,
           parameter: false,
@@ -402,8 +316,6 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
-      // Analyze Variable Definition
-      node.name.reference = reference;
       // Analyze The Value
       node.value = _analyzeNode(node.value);
       return node;
@@ -485,7 +397,7 @@ const analyzeNode = <T extends Node>(
         _varStack,
         {
           name: node.name,
-          mainScope: parentNode?.nodeType == NodeType.Program,
+          mainScope: parentNode.nodeType == NodeType.Program,
           global: false,
           constant: true,
           parameter: false,
@@ -556,17 +468,15 @@ const analyzeNode = <T extends Node>(
       const varStack: VariableStack = new Map();
       const typeStack: TypeStack = new Map();
       // Make Sure Optional Parameters Are Last
-      let foundOptional = false;
-      for (const param of node.params) {
-        if (param.optional) foundOptional = true;
-        else if (foundOptional)
+      node.params.forEach((param, i) => {
+        if (param.optional && i != node.params.length - 1 && !node.params[i + 1].optional)
           BriskTypeError(
             rawProgram,
             BriskErrorType.OptionalParametersMustAppearLast,
             [],
             param.position
           );
-      }
+      });
       // Analyze Generic Types
       if (node.genericTypes) {
         node.genericTypes = node.genericTypes.map((genericType) => {
@@ -804,6 +714,8 @@ const analyzeNode = <T extends Node>(
           setVariable(_variables, node, { global: true });
         _closure.add(node.reference);
       }
+      // Set Variable To Used
+      setVariable(_variables, node, { used: true });
       // Return Node
       return node;
     }
@@ -829,7 +741,7 @@ const analyzeNode = <T extends Node>(
       node.paramType = _analyzeNode(node.paramType);
       // Add Variable To Stack
       // TODO: Support Rest Syntax
-      const reference = createVariable(
+      node.name.reference = createVariable(
         rawProgram,
         _variables,
         _varStack,
@@ -847,30 +759,69 @@ const analyzeNode = <T extends Node>(
         },
         node.position
       );
-      // Set Reference
-      node.name.reference = reference;
       return node;
     }
   }
 };
 // Analyze Program
 const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode => {
-  return analyzeNode(
-    rawProgram,
-    {
-      _imports: new Map(),
-      _exports: new Map(),
-      _variables: new Map(),
-      _types: new Map(),
-      _varStacks: [],
-      _typeStacks: [],
-      _closure: new Set(),
-      _varStack: new Map(),
-      _typeStack: new Map(),
+  // Compile Program Node
+  const imports: ImportMap = new Map();
+  const exports: ExportMap = new Map();
+  const variables: VariableMap = new Map();
+  const types: TypeMap = new Map();
+  const varStack: VariableStack = new Map();
+  const typeStack: TypeStack = new Map();
+  // Return Our Node
+  return {
+    ...program,
+    // Analyze Body
+    body: program.body.map((child: Statement, i: number) => {
+      // Ensure Import and Export Statements is at the top and bottom of the file.
+      const { nodeType, position } = child;
+      const prevNode = program.body[i - 1];
+      if (prevNode != undefined) {
+        if (
+          (nodeType == NodeType.ImportStatement || nodeType == NodeType.WasmImportStatement) &&
+          prevNode.category != NodeCategory.Type &&
+          prevNode.nodeType != NodeType.ImportStatement &&
+          prevNode.nodeType != NodeType.WasmImportStatement
+        )
+          BriskParseError(rawProgram, BriskErrorType.ImportStatementExpectedAtTop, [], position);
+        if (prevNode.nodeType == NodeType.ExportStatement && nodeType != NodeType.ExportStatement)
+          BriskParseError(rawProgram, BriskErrorType.ExportStatementExpectedAtBottom, [], position);
+      }
+      // Compile The Node
+      return analyzeNode(
+        rawProgram,
+        {
+          _imports: imports,
+          _exports: exports,
+          // Our Global Variable And Type Pools
+          _variables: variables,
+          _types: types,
+          // Parent Stacks
+          _varStacks: [],
+          _typeStacks: [],
+          // Stacks
+          _closure: new Set(),
+          _varStack: varStack,
+          _typeStack: typeStack,
+        },
+        program,
+        child
+      );
+    }),
+    // Append Data
+    data: {
+      _imports: imports,
+      _exports: exports,
+      _variables: variables,
+      _types: types,
+      _varStack: varStack,
+      _typeStack: typeStack,
     },
-    undefined,
-    program
-  );
+  };
 };
 
 export default analyzeProgram;

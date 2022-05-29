@@ -60,9 +60,8 @@ const generateCode = (
   const _generateCode = (
     childNode: CodeGenNode,
     props: Partial<CodeGenProperties> = properties
-  ): UnresolvedBytes => {
-    return generateCode(rawProgram, wasmModule, { ...properties, ...props }, childNode);
-  };
+  ): UnresolvedBytes =>
+    generateCode(rawProgram, wasmModule, { ...properties, ...props }, childNode);
   // Compile The Code
   switch (node.nodeType) {
     // Statements

@@ -22,7 +22,7 @@ import { setType, setVariable } from '../Helpers/Helpers';
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
 // TypeCheck Node
-const typeCheckNode = <T extends Node>(
+const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
   // Code
   rawProgram: string,
   // ImportData
@@ -47,34 +47,12 @@ const typeCheckNode = <T extends Node>(
     // TypeChecking Information
     _returnType,
   } = properties;
-  const _typeCheckNode = <_T extends Node>(
+  const _typeCheckNode = <_T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
     props: Partial<TypeCheckProperties> = properties
-  ): _T => {
-    return typeCheckNode(rawProgram, importData, { ...properties, ...props }, childNode);
-  };
+  ): _T => typeCheckNode(rawProgram, importData, { ...properties, ...props }, childNode);
   // Match The Node For Analysis
   switch (node.nodeType) {
-    // General
-    case NodeType.Program:
-      // Analyze Program Node
-      node.body = node.body.map((childNode) => {
-        return _typeCheckNode(childNode, {
-          _imports: node.data._imports,
-          _exports: node.data._exports,
-          // Our Global Variable And Type Pools
-          _variables: node.data._variables,
-          _types: node.data._types,
-          // Stacks
-          _varStack: node.data._varStack,
-          _typeStack: node.data._typeStack,
-          // Stack Pool
-          _varStacks: [],
-          _typeStacks: [],
-        });
-      });
-      // Return The Node
-      return node;
     // Statements
     case NodeType.IfStatement:
       // Analyze Condition
@@ -122,9 +100,9 @@ const typeCheckNode = <T extends Node>(
             _types,
             _typeStack,
             _typeStacks,
-            node.args.args[0]
+            node.args.args[1]
           ),
-          createPrimType(node.args.args[0].position, 'Number')
+          createPrimType(node.args.args[1].position, 'Number')
         );
       }
       return node;
@@ -885,24 +863,31 @@ const typeCheckProgram = (
   program: ProgramNode,
   importData: Map<string, ExportList>
 ): ProgramNode => {
-  return typeCheckNode(
-    rawProgram,
-    importData,
-    {
-      _imports: new Map(),
-      _exports: new Map(),
-      _variables: new Map(),
-      _types: new Map(),
-      _varStacks: [],
-      _typeStacks: [],
-      _closure: new Set(),
-      _varStack: new Map(),
-      _typeStack: new Map(),
-      // TypeChecking Information
-      _returnType: undefined,
-    },
-    program
-  );
+  // Return The Node
+  return {
+    ...program,
+    // Compile Body
+    body: program.body.map((childNode) => {
+      return typeCheckNode(
+        rawProgram,
+        importData,
+        {
+          _imports: program.data._imports,
+          _exports: program.data._exports,
+          _variables: program.data._variables,
+          _types: program.data._types,
+          _varStacks: [],
+          _typeStacks: [],
+          _closure: new Set(),
+          _varStack: program.data._varStack,
+          _typeStack: program.data._typeStack,
+          // TypeChecking Information
+          _returnType: undefined,
+        },
+        childNode
+      );
+    }),
+  };
 };
 
 export default typeCheckProgram;

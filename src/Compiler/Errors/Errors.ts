@@ -33,7 +33,7 @@ export const enum BriskErrorType {
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
   ExportStatementExpectedAtBottom,
-  DeclarationCannotOccurInsideSingleLineStatement,
+  NoDeclarationInSingleLineStatement,
 }
 // Error Strings
 export const BriskErrorMessage = {
@@ -73,6 +73,5 @@ export const BriskErrorMessage = {
   [BriskErrorType.ImportStatementExpectedAtTop]: 'Import statements must appear at top of file',
   [BriskErrorType.ExportStatementExpectedAtBottom]:
     'Export statement must appear at bottom of file',
-  [BriskErrorType.DeclarationCannotOccurInsideSingleLineStatement]:
-    'Declaration must appear in a scope',
+  [BriskErrorType.NoDeclarationInSingleLineStatement]: 'Declaration must appear in a scope',
 };
