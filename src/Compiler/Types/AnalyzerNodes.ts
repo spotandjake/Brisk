@@ -38,17 +38,17 @@ export type TypeMap = Map<number, TypeData>;
 export type TypeStack = Map<string, number>;
 export interface VariableData {
   name: string;
-  reference: number;
-  mainScope: boolean;
-  global: boolean;
+  reference?: number;
+  mainScope?: boolean;
+  global?: boolean;
   constant: boolean;
-  parameter: boolean;
-  exported: boolean;
-  import: boolean;
-  wasmImport: boolean;
-  used: boolean;
+  parameter?: boolean;
+  exported?: boolean;
+  import?: boolean;
+  wasmImport?: boolean;
+  used?: boolean;
   type: TypeLiteral;
 }
-export type VariableMap = Map<number, VariableData>;
+export type VariableMap = Map<number, Required<VariableData>>;
 export type VariableStack = Map<string, number>;
 export type VariableClosure = Set<number>;

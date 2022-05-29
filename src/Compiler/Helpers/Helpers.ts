@@ -72,8 +72,18 @@ export const createVariable = (
   const reference = pool.size;
   // Add Variable To Stack
   stack.set(data.name, reference);
+  // Default Variable Data
+  const defaultValue = {
+    mainScope: false,
+    global: false,
+    parameter: false,
+    exported: false,
+    import: false,
+    wasmImport: false,
+    used: false,
+  };
   // Add Variable To Pool
-  pool.set(reference, { ...data, reference: reference });
+  pool.set(reference, { ...defaultValue, ...data, reference: reference });
   return reference;
 };
 /**
@@ -115,7 +125,7 @@ export const getVariableReference = (
  *
  * @returns The Data Of The Given Variable
  */
-export const getVariable = (pool: VariableMap, variable: VariableNode): VariableData => {
+export const getVariable = (pool: VariableMap, variable: VariableNode): Required<VariableData> => {
   // Get Reference
   const reference = _getVariableReference(variable);
   // Get Variable Data

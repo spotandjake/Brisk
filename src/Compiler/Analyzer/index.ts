@@ -163,14 +163,10 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         _varStack,
         {
           name: node.variable.name,
-          mainScope: false,
+          mainScope: true,
           global: true,
           constant: true,
-          parameter: false,
-          exported: false,
           import: true,
-          wasmImport: false,
-          used: false,
           type: createPrimType(node.variable.position, 'Unknown'),
         },
         node.position
@@ -187,14 +183,10 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         _varStack,
         {
           name: node.variable.name,
-          mainScope: false,
+          mainScope: true,
           global: true,
           constant: true,
-          parameter: false,
-          exported: false,
-          import: false,
           wasmImport: true,
-          used: false,
           type: node.typeSignature,
         },
         node.position
@@ -305,13 +297,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         {
           name: node.name.name,
           mainScope: parentNode.nodeType == NodeType.Program,
-          global: false,
           constant: node.declarationType == DeclarationTypes.Constant,
-          parameter: false,
-          exported: false,
-          import: false,
-          wasmImport: false,
-          used: false,
           type: node.varType,
         },
         node.position
@@ -398,13 +384,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         {
           name: node.name,
           mainScope: parentNode.nodeType == NodeType.Program,
-          global: false,
           constant: true,
-          parameter: false,
-          exported: false,
-          import: false,
-          wasmImport: false,
-          used: false,
           type: <TypeUsageNode>{
             nodeType: NodeType.TypeUsage,
             category: NodeCategory.Type,
@@ -747,14 +727,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         _varStack,
         {
           name: node.name.name,
-          mainScope: false,
-          global: false,
           constant: !node.mutable,
           parameter: true,
-          exported: false,
-          import: false,
-          wasmImport: false,
-          used: false,
           type: node.paramType,
         },
         node.position
