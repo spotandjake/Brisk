@@ -49,7 +49,7 @@ interface TypeContainer {
  * @param  {VariableMap} pool Variable Pool
  * @param  {VariableStack} stack Variable Stack
  * @param  {VariableInfo} data Variable Info
- * @param  {Position} position The Current Node Position
+ * @param  {Position} pos The Current Node Position
  *
  * @returns A Reference To The Variable In The Pool
  */
@@ -92,7 +92,6 @@ export const createVariable = (
  * @param  {VariableNode} variable The Variable You Want A Reference To
  * @returns A Reference To The Variable In The Pool
  */
-// TODO: We Want Every Variable TO Have A Reference On It When This Is Called
 export const _getVariableReference = (variable: VariableNode): number => variable.reference!;
 /**
  * Gives You A Reference To The Pool For The Current Variable
@@ -164,7 +163,7 @@ export const setVariable = (
  * @param  {TypeMap} pool Type Pool
  * @param  {TypeStack} stack Type Stack
  * @param  {TypeInfo} data Type Info
- * @param  {Position} position The Current Node Position
+ * @param  {Position} pos The Current Node Position
  *
  * @returns A Reference To The Type In The Pool
  */
@@ -195,7 +194,6 @@ export const createType = (
  * @param  {TypeNode} type The Type You Want A Reference To
  * @returns A Reference To The Type In The Pool
  */
-// TODO: We Want Every Type TO Have A Reference On It When This Is Called
 export const _getTypeReference = (type: TypeNode): number => type.reference!;
 /**
  * Gives You A Reference To The Pool For The Current Type
@@ -224,7 +222,7 @@ export const getTypeReference = (
  * Gets A type From The Pool
  *
  * @param  {TypeMap} pool type Pool
- * @param  {TypeNode} variable The type You Want A Reference To
+ * @param  {TypeNode} type The type You Want A Reference To
  *
  * @returns The Data Of The Given type
  */
