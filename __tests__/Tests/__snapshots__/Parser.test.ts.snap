@@ -3925,6 +3925,7 @@ Object {
     "_varStack": Map {},
     "_variables": Map {},
   },
+  "name": "file",
   "nodeType": 0,
   "position": Object {
     "col": 0,
@@ -7861,6 +7862,7 @@ Object {
     "_varStack": Map {},
     "_variables": Map {},
   },
+  "name": "file",
   "nodeType": 0,
   "position": Object {
     "col": 0,

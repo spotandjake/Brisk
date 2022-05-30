@@ -39,8 +39,9 @@ test('WasmBuilder-WasmTypes: createEmptyModule', () => {
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),
+    localData: new Map(),
     // Sections
-    customSection: [],
+    customSections: [],
     typeSection: [],
     importSection: [],
     functionSection: [],
@@ -63,8 +64,9 @@ test('WasmBuilder-WasmTypes: addMemory', () => {
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),
+    localData: new Map(),
     // Sections
-    customSection: [],
+    customSections: [],
     typeSection: [],
     importSection: [],
     functionSection: [],
@@ -93,8 +95,9 @@ test('WasmBuilder-WasmTypes: addGlobal', () => {
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map([['test', 0]]),
+    localData: new Map(),
     // Sections
-    customSection: [],
+    customSections: [],
     typeSection: [],
     importSection: [],
     functionSection: [],
@@ -124,8 +127,9 @@ test('WasmBuilder-WasmTypes: addData', () => {
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),
+    localData: new Map(),
     // Sections
-    customSection: [],
+    customSections: [],
     typeSection: [],
     importSection: [],
     functionSection: [],
