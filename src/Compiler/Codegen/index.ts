@@ -531,6 +531,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   wasmModule = addFunction(wasmModule, func);
   wasmModule = setStart(wasmModule, '_start');
   wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
+  wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
   // Return The Compiled Module
   return compileModule(wasmModule, program.name);
 };

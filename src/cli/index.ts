@@ -13,6 +13,8 @@ import { __VERSION__ } from '@brisk/config';
 const program = new Command();
 // Config
 program.version(__VERSION__);
+// Options
+program.option('-v, --version', 'output CLI, Compiler and LSP versions');
 // File Compiler
 const compileFile = async (
   filePath: string
@@ -35,7 +37,18 @@ const compileFile = async (
   return compiled;
 };
 // Tasks
-program.argument('<file>', 'File to compile').action(async (filePath) => {
+program
+  .command('compile <file>')
+  .description('Compile A Given Brisk File')
+  .action(async (filePath: string) => {
+    // Compile
+    const { output } = await compileFile(filePath);
+    // Log Output
+    console.log('================================================================');
+    console.dir(output, { depth: null });
+    // Link
+  });
+program.argument('<file>', 'File to compile').action(async (filePath: string) => {
   // Compile
   const { output } = await compileFile(filePath);
   // Log Output
