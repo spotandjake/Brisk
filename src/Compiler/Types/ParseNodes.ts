@@ -76,6 +76,7 @@ export const enum NodeCategory {
 export interface ProgramNode {
   nodeType: NodeType.Program;
   category: NodeCategory.General;
+  name: string;
   body: Statement[];
   data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
   position: Position;

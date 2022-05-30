@@ -476,6 +476,7 @@ const generateCode = (
 const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Array => {
   // Create A New Module
   let wasmModule = createModule();
+  // TODO: Handle Compiling Type Information For Exports
   // Module SetUp
   wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
   wasmModule = addGlobal(
@@ -529,7 +530,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   wasmModule = addFunction(wasmModule, func);
   wasmModule = setStart(wasmModule, 'main');
   // Return The Compiled Module
-  return compileModule(wasmModule);
+  return compileModule(wasmModule, program.name);
 };
 
 export default generateCodeProgram;

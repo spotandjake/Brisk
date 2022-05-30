@@ -57,31 +57,6 @@ export const createGlobalImport = (
 };
 // TODO: createTableImport
 // TODO: createMemoryImport
-// export const createImport = (
-//   wasmModule: WasmModule,
-//   importKind: WasmExternalKind,
-//   importModule: string,
-//   importField: string,
-//   importType: ResolvedBytes
-// ): WasmImport => {
-//   // TODO: Handle Importing, table, global
-//   // Deal With The Type
-//   if (importType[0] == 0x60) {
-//     // If The Wasm Type Is A Function Type Then Create A Type Reference
-//     importType = [addType(wasmModule, importType)];
-//   }
-//   // Return Value
-//   return {
-//     kind: importKind,
-//     name: importField,
-//     importData: [
-//       ...encodeString(importModule),
-//       ...encodeString(importField),
-//       importKind,
-//       ...importType,
-//     ],
-//   };
-// };
 // Main Wasm Module Creator
 export const createModule = (imports?: WasmImport[]): WasmModule => {
   // Module State
@@ -89,8 +64,9 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),
+    localData: new Map(),
     // Sections
-    customSection: [],
+    customSections: [],
     typeSection: [],
     importSection: [],
     functionSection: [],
@@ -190,6 +166,8 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
   wasmModule.codeSection.push([...unsignedLEB128(code.length), ...code]);
   // Set Function Reference
   wasmModule.functionMap.set(func.name, wasmModule.functionSection.length - 1);
+  // Add The Local Map
+  wasmModule.localData.set(wasmModule.functionSection.length - 1, localNames);
   // Return Module
   return wasmModule;
 };
@@ -301,7 +279,11 @@ export const addData = (
   return wasmModule;
 };
 // Compile Module
-export const compileModule = (wasmModule: WasmModule, includeDataCount = true): Uint8Array => {
+export const compileModule = (
+  wasmModule: WasmModule,
+  programName: string,
+  includeDataCount = true
+): Uint8Array => {
   // Add A Table
   if (wasmModule.elementSection.length > 0) {
     wasmModule.tableSection.push([
@@ -310,12 +292,37 @@ export const compileModule = (wasmModule: WasmModule, includeDataCount = true): 
       ...unsignedLEB128(wasmModule.elementSection.length), // Min Value
     ]);
   }
+  // Compile Name Section
+  const funcNameSection: number[] = [wasmModule.functionMap.size];
+  for (const [name, index] of wasmModule.functionMap.entries()) {
+    funcNameSection.push(...unsignedLEB128(index));
+    funcNameSection.push(...encodeString(name));
+  }
+  const localNameSection: number[] = [wasmModule.localData.size];
+  for (const [func, locals] of wasmModule.localData.entries()) {
+    localNameSection.push(...unsignedLEB128(func));
+    localNameSection.push(...unsignedLEB128(locals.size));
+    for (const [name, index] of locals.entries()) {
+      localNameSection.push(...unsignedLEB128(index));
+      localNameSection.push(...encodeString(name));
+    }
+  }
+  wasmModule.customSections.push([
+    ...encodeString('name'),
+    0x00, // The SubSection Id
+    ...encodeVector(encodeString(programName)), // The Module Name
+    0x01, // The SubSection Id
+    ...unsignedLEB128(funcNameSection.length),
+    ...funcNameSection,
+    0x02, // The SubSection Id
+    ...unsignedLEB128(localNameSection.length),
+    ...localNameSection,
+  ]);
   // Return Compiled Module
   return Uint8Array.from([
     ...[0x00, 0x61, 0x73, 0x6d], // Magic Module Header
     ...[0x01, 0x00, 0x00, 0x00], // Wasm Module Version
     // Sections
-    ...createSection(WasmSection.Custom, wasmModule.customSection),
     ...createSection(WasmSection.Type, wasmModule.typeSection),
     ...createSection(WasmSection.Import, wasmModule.importSection),
     ...createSection(WasmSection.Func, wasmModule.functionSection),
@@ -330,5 +337,8 @@ export const compileModule = (wasmModule: WasmModule, includeDataCount = true): 
       : []),
     ...createSection(WasmSection.Code, wasmModule.codeSection),
     ...createSection(WasmSection.Data, wasmModule.dataSection),
+    ...wasmModule.customSections
+      .map((section) => _createSection(WasmSection.Custom, section))
+      .flat(),
   ]);
 };

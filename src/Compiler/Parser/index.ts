@@ -25,6 +25,7 @@ class Parser extends EmbeddedActionsParser {
     return {
       nodeType: Nodes.NodeType.Program,
       category: Nodes.NodeCategory.General,
+      name: this.file,
       body: body,
       data: {
         // Pools

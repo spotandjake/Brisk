@@ -32,8 +32,9 @@ export interface WasmModule {
   // Label Maps
   functionMap: Map<string, number>;
   globalMap: Map<string, number>;
+  localData: Map<number, Map<string, number>>;
   // Sections
-  customSection: number[][];
+  customSections: number[][];
   typeSection: number[][];
   importSection: number[][];
   functionSection: number[][];
