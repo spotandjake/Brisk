@@ -541,9 +541,9 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   const exportData: number[][] = [];
   for (const [name, moduleExport] of program.data._exports) {
     // TODO: Create Export Type Information
-    // Layout Vec([ Vec(Name), Encoded(PrimType | InterfaceLiteralType | ArrayLiteralType | Vec(ExportName))])
+    // Layout Vec([ Vec(Name), ...Encoded(PrimType | InterfaceLiteralType | ArrayLiteralType | Vec(ExportName))])
     /*
-     * Layout Vec([ Vec(Name), Encoded(Vec(ValueExport) | PrimType | InterfaceLiteralType | ArrayLiteralType, UnionType )])
+     * Layout Vec([ Vec(Name), ...Encoded(Vec(ValueExport) | PrimType | InterfaceLiteralType | ArrayLiteralType, UnionType )])
      * Encoding Rules
      * enum SubsectionID {
      *   ValueExport = 0,
