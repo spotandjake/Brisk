@@ -512,9 +512,17 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         // Is A Single Line Function
         pathReturns = true;
       }
+      // Fix Closure Collection
+      const filteredClosure: VariableClosure = new Set();
+      for (const reference of closure) {
+        // Check If The Value Is Not Defined In The Above Scopes
+        if ([..._varStacks, _varStack].reverse().find((s) => [...s.values()].includes(reference))) {
+          filteredClosure.add(reference);
+        }
+      }
       // Set Data Payload
       node.data = {
-        _closure: closure,
+        _closure: filteredClosure,
         _varStack: varStack,
         _typeStack: typeStack,
 
@@ -692,7 +700,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       if (!_varStack.has(node.name)) {
         if (getVariable(_variables, node).mainScope)
           setVariable(_variables, node, { global: true });
-        _closure.add(node.reference);
+        else _closure.add(node.reference);
       }
       // Set Variable To Used
       setVariable(_variables, node, { used: true });

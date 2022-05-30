@@ -10,6 +10,7 @@ import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { BriskErrorType } from '../Errors/Errors';
 import { BriskError } from '../Errors/Compiler';
 // Values
+export const brisk_moduleFunctionOffset = '$brisk$moduleFunctionOffset';
 export const brisk_Void_Value = 0x03;
 // Helpers
 export const encodeBriskType = (

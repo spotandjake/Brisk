@@ -1,4 +1,5 @@
 import {
+  ResolvedBytes,
   WasmExternalKind,
   WasmFunction,
   WasmImport,
@@ -20,25 +21,67 @@ export const createSection = (sectionType: WasmSection, section: number[][]): nu
     ]);
 };
 // Wasm Import Builder
-export const createImport = (
-  importKind: WasmExternalKind,
+export const createFunctionImport = (
   importModule: string,
   importField: string,
-  importType: number
+  funcSignatureReference: number
 ): WasmImport => {
-  // TODO: Handle Importing, table, global
-  // Return Value
   return {
-    kind: importKind,
+    kind: WasmExternalKind.function,
     name: importField,
     importData: [
       ...encodeString(importModule),
       ...encodeString(importField),
-      importKind,
-      importType,
+      WasmExternalKind.function,
+      funcSignatureReference,
     ],
   };
 };
+export const createGlobalImport = (
+  importModule: string,
+  importField: string,
+  importType: ResolvedBytes,
+  mutable: boolean
+): WasmImport => {
+  return {
+    kind: WasmExternalKind.function,
+    name: importField,
+    importData: [
+      ...encodeString(importModule),
+      ...encodeString(importField),
+      WasmExternalKind.function,
+      ...importType,
+      mutable ? 0x01 : 0x00,
+    ],
+  };
+};
+// TODO: createTableImport
+// TODO: createMemoryImport
+// export const createImport = (
+//   wasmModule: WasmModule,
+//   importKind: WasmExternalKind,
+//   importModule: string,
+//   importField: string,
+//   importType: ResolvedBytes
+// ): WasmImport => {
+//   // TODO: Handle Importing, table, global
+//   // Deal With The Type
+//   if (importType[0] == 0x60) {
+//     // If The Wasm Type Is A Function Type Then Create A Type Reference
+//     importType = [addType(wasmModule, importType)];
+//   }
+//   // Return Value
+//   return {
+//     kind: importKind,
+//     name: importField,
+//     importData: [
+//       ...encodeString(importModule),
+//       ...encodeString(importField),
+//       importKind,
+//       ...importType,
+//     ],
+//   };
+// };
 // Main Wasm Module Creator
 export const createModule = (imports?: WasmImport[]): WasmModule => {
   // Module State
@@ -81,24 +124,24 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
   return moduleState;
 };
 // Wasm Module Import Mutations
-export const addImport = (module: WasmModule, wasmImport: WasmImport): number => {
+export const addImport = (wasmModule: WasmModule, wasmImport: WasmImport): number => {
   // Set Import Label
   if (wasmImport.kind == WasmExternalKind.function)
-    module.functionMap.set(wasmImport.name, module.functionSection.length);
+    wasmModule.functionMap.set(wasmImport.name, wasmModule.functionSection.length);
   else if (wasmImport.kind == WasmExternalKind.global)
-    module.globalMap.set(wasmImport.name, module.globalSection.length);
+    wasmModule.globalMap.set(wasmImport.name, wasmModule.globalSection.length);
   // Add Import To Import Section
-  module.importSection.push(wasmImport.importData);
+  wasmModule.importSection.push(wasmImport.importData);
   // Add a Empty Section Element So The Index's are correct
-  if (wasmImport.kind == WasmExternalKind.function) return module.functionSection.push([]) - 1;
-  if (wasmImport.kind == WasmExternalKind.table) return module.tableSection.push([]) - 1;
-  if (wasmImport.kind == WasmExternalKind.memory) return module.memorySection.push([]) - 1;
-  if (wasmImport.kind == WasmExternalKind.global) return module.globalSection.push([]) - 1;
-  // Help Typescript
+  if (wasmImport.kind == WasmExternalKind.function) return wasmModule.functionSection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.table) return wasmModule.tableSection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.memory) return wasmModule.memorySection.push([]) - 1;
+  if (wasmImport.kind == WasmExternalKind.global) return wasmModule.globalSection.push([]) - 1;
+  // For Some Reason TypeScript Doesn't Realize This Code Is Dead
   return 0;
 };
 // Wasm Module Function Mutations
-export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule => {
+export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmModule => {
   // Get A List Of Local Names And Index's
   const localNames: Map<string, number> = new Map();
   for (const param of func.paramNames) {
@@ -118,19 +161,19 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
         wasmBody.push(...unsignedLEB128(localNames.get(byte)!)); // Wasm Local Set
       } else if (lastByte == 0x22 && localNames.has(byte)) {
         wasmBody.push(...unsignedLEB128(localNames.get(byte)!)); // Wasm Local Tee
-      } else if (lastByte == 0x23 && module.globalMap.has(byte)) {
-        wasmBody.push(...unsignedLEB128(module.globalMap.get(byte)!)); // Wasm Global Get
-      } else if (lastByte == 0x24 && module.globalMap.has(byte)) {
-        wasmBody.push(...unsignedLEB128(module.globalMap.get(byte)!)); // Wasm Global Set
-      } else if (lastByte == 0x10 && module.functionMap.has(byte)) {
-        wasmBody.push(...unsignedLEB128(module.functionMap.get(byte)!)); // Wasm Func Call
+      } else if (lastByte == 0x23 && wasmModule.globalMap.has(byte)) {
+        wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Get
+      } else if (lastByte == 0x24 && wasmModule.globalMap.has(byte)) {
+        wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Set
+      } else if (lastByte == 0x10 && wasmModule.functionMap.has(byte)) {
+        wasmBody.push(...unsignedLEB128(wasmModule.functionMap.get(byte)!)); // Wasm Func Call
       } else throw new Error(`Unknown Label Value: ${lastByte} ${byte}`);
     } else wasmBody.push(byte);
   }
   // Add Function To TypeSection
-  const typeReference = addType(module, func.functionType);
+  const typeReference = addType(wasmModule, func.functionType);
   // Add Function To FunctionSection
-  module.functionSection.push([typeReference]);
+  wasmModule.functionSection.push([typeReference]);
   // Add Function To CodeSection
   const code: number[] = [
     ...unsignedLEB128(func.locals.length),
@@ -144,107 +187,110 @@ export const addFunction = (module: WasmModule, func: WasmFunction): WasmModule 
     ...wasmBody, // Add Function Body
     0x0b, // Wasm End Instruction
   ];
-  module.codeSection.push([...unsignedLEB128(code.length), ...code]);
+  wasmModule.codeSection.push([...unsignedLEB128(code.length), ...code]);
   // Set Function Reference
-  module.functionMap.set(func.name, module.functionSection.length - 1);
+  wasmModule.functionMap.set(func.name, wasmModule.functionSection.length - 1);
   // Return Module
-  return module;
+  return wasmModule;
 };
 // Wasm Type Element Mutations
-export const addType = (module: WasmModule, type: number[]): number => {
+export const addType = (wasmModule: WasmModule, type: number[]): number => {
   // Check If The Type Exists Already
-  const typeIndex = module.typeSection.findIndex((t) => {
+  const typeIndex = wasmModule.typeSection.findIndex((t) => {
     return t.every((b, i) => b == type[i]);
   });
   if (typeIndex != -1) return typeIndex;
   // Otherwise Add The Type
-  return module.typeSection.push(type) - 1; // Add Type
+  return wasmModule.typeSection.push(type) - 1; // Add Type
 };
 // Wasm Module Element Mutations
 // TODO: Test This
-export const addElement = (module: WasmModule, values: number[]): WasmModule => {
+export const addElement = (wasmModule: WasmModule, values: number[]): WasmModule => {
   // Add Element
-  module.elementSection.push([
+  wasmModule.elementSection.push([
     0x00, // TODO: Segment Flags, figure out what they mean
     0x041, // Wasm i32.const Instruction
     // TODO: Determine a better way to get this offset
-    ...unsignedLEB128(module.elementSection.length),
+    ...unsignedLEB128(wasmModule.elementSection.length),
     0x0b,
     ...unsignedLEB128(values.length),
     // TODO: Determine HowTo Resolve Function Labels from here
     ...values.flat(),
   ]);
-  // Set Table Length
   // Return Module
-  return module;
+  return wasmModule;
 };
 // Wasm Module Memory Mutations
 // TODO: Consider Having this be passed in, in createModule
-export const addMemory = (module: WasmModule, memType: number[]): WasmModule => {
-  module.memorySection.push(memType);
-  return module;
+export const addMemory = (wasmModule: WasmModule, memType: number[]): WasmModule => {
+  wasmModule.memorySection.push(memType);
+  return wasmModule;
 };
 // Wasm Module Global Mutations
 export const addGlobal = (
-  module: WasmModule,
+  wasmModule: WasmModule,
   globalName: string,
   mutable: boolean,
   globalType: number[],
   value: number[]
 ): WasmModule => {
   // Set Global Label
-  module.globalMap.set(globalName, module.globalSection.length);
+  wasmModule.globalMap.set(globalName, wasmModule.globalSection.length);
   // Add The Module
-  module.globalSection.push([
+  wasmModule.globalSection.push([
     ...globalType, // Global Type
     mutable ? 0x01 : 0x00, // Mutable Code
     ...value, // Global Value
     0x0b, // Wasm End Instruction
   ]);
   // Return The Module
-  return module;
+  return wasmModule;
 };
 // Wasm Module Export Mutations
 export const addExport = (
-  module: WasmModule,
+  wasmModule: WasmModule,
   exportName: string,
   exportKind: WasmExternalKind,
   exportIdentifier: number | string
 ): WasmModule => {
   // Resolve Export Value
   if (typeof exportIdentifier == 'string') {
-    if (exportKind == WasmExternalKind.function && module.functionMap.has(exportIdentifier))
-      exportIdentifier = module.functionMap.get(exportIdentifier)!;
+    if (exportKind == WasmExternalKind.function && wasmModule.functionMap.has(exportIdentifier))
+      exportIdentifier = wasmModule.functionMap.get(exportIdentifier)!;
     else throw new Error(`Could Not Find Label: ${exportIdentifier}`);
   }
   // Add The Export
-  module.exportSection.push([
+  wasmModule.exportSection.push([
     ...encodeString(exportName), // Encode Export Name
     exportKind, // Export Kind
     ...unsignedLEB128(exportIdentifier), // Export Index
   ]);
   // Return The Module
-  return module;
+  return wasmModule;
 };
 // Wasm Module Start Mutations
-export const setStart = (module: WasmModule, startIdentifier: number | string): WasmModule => {
+export const setStart = (wasmModule: WasmModule, startIdentifier: number | string): WasmModule => {
   // Resolve Export Value
   if (typeof startIdentifier == 'string') {
-    if (module.functionMap.has(startIdentifier))
-      startIdentifier = module.functionMap.get(startIdentifier)!;
+    if (wasmModule.functionMap.has(startIdentifier))
+      startIdentifier = wasmModule.functionMap.get(startIdentifier)!;
     else throw new Error(`Could Not Find Label: ${startIdentifier}`);
   }
   // Set The Start Value
-  module.startSection[0] = [
+  wasmModule.startSection[0] = [
     ...unsignedLEB128(startIdentifier), // Start Index
   ];
   // Return The Module
-  return module;
+  return wasmModule;
 };
 // Wasm Module Data Mutations
-export const addData = (module: WasmModule, memoryOffset: number, data: number[]): WasmModule => {
+export const addData = (
+  wasmModule: WasmModule,
+  memoryOffset: number,
+  data: number[]
+): WasmModule => {
   // TODO: Look into how this supports multiple Memories with memoryIndex param
-  module.dataSection.push([
+  wasmModule.dataSection.push([
     0x00, // Segment Flags
     0x41, // Wasm i32.const Instruction
     ...unsignedLEB128(memoryOffset), // Memory Offset
@@ -252,16 +298,16 @@ export const addData = (module: WasmModule, memoryOffset: number, data: number[]
     ...unsignedLEB128(data.length), // Data Length
     ...data, // Data
   ]);
-  return module;
+  return wasmModule;
 };
 // Compile Module
-export const compileModule = (module: WasmModule, includeDataCount = true): Uint8Array => {
+export const compileModule = (wasmModule: WasmModule, includeDataCount = true): Uint8Array => {
   // Add A Table
-  if (module.elementSection.length > 0) {
-    module.tableSection.push([
+  if (wasmModule.elementSection.length > 0) {
+    wasmModule.tableSection.push([
       0x70, // Table Type
       0x00, // Limit Flag That We Only Want A Min Value
-      ...unsignedLEB128(module.elementSection.length), // Min Value
+      ...unsignedLEB128(wasmModule.elementSection.length), // Min Value
     ]);
   }
   // Return Compiled Module
@@ -269,20 +315,20 @@ export const compileModule = (module: WasmModule, includeDataCount = true): Uint
     ...[0x00, 0x61, 0x73, 0x6d], // Magic Module Header
     ...[0x01, 0x00, 0x00, 0x00], // Wasm Module Version
     // Sections
-    ...createSection(WasmSection.Custom, module.customSection),
-    ...createSection(WasmSection.Type, module.typeSection),
-    ...createSection(WasmSection.Import, module.importSection),
-    ...createSection(WasmSection.Func, module.functionSection),
-    ...createSection(WasmSection.Table, module.tableSection),
-    ...createSection(WasmSection.Memory, module.memorySection),
-    ...createSection(WasmSection.Global, module.globalSection),
-    ...createSection(WasmSection.Export, module.exportSection),
-    ..._createSection(WasmSection.Start, module.startSection.flat()),
-    ...createSection(WasmSection.Element, module.elementSection),
-    ...(module.dataSection.length != 0 && includeDataCount
-      ? _createSection(WasmSection.DataCount, unsignedLEB128(module.dataSection.length))
+    ...createSection(WasmSection.Custom, wasmModule.customSection),
+    ...createSection(WasmSection.Type, wasmModule.typeSection),
+    ...createSection(WasmSection.Import, wasmModule.importSection),
+    ...createSection(WasmSection.Func, wasmModule.functionSection),
+    ...createSection(WasmSection.Table, wasmModule.tableSection),
+    ...createSection(WasmSection.Memory, wasmModule.memorySection),
+    ...createSection(WasmSection.Global, wasmModule.globalSection),
+    ...createSection(WasmSection.Export, wasmModule.exportSection),
+    ..._createSection(WasmSection.Start, wasmModule.startSection.flat()),
+    ...createSection(WasmSection.Element, wasmModule.elementSection),
+    ...(wasmModule.dataSection.length != 0 && includeDataCount
+      ? _createSection(WasmSection.DataCount, unsignedLEB128(wasmModule.dataSection.length))
       : []),
-    ...createSection(WasmSection.Code, module.codeSection),
-    ...createSection(WasmSection.Data, module.dataSection),
+    ...createSection(WasmSection.Code, wasmModule.codeSection),
+    ...createSection(WasmSection.Data, wasmModule.dataSection),
   ]);
 };

@@ -1,15 +1,11 @@
 // Test Utils
 import { expect, test } from '@jest/globals';
 // Test Components
-import { WasmExternalKind, WasmSection, WasmTypes } from '../../../src/wasmBuilder/Types/Nodes';
-import {
-  createFunctionType,
-  createMemoryType,
-  createNumericType,
-} from '../../../src/wasmBuilder/Build/WasmTypes';
+import { WasmSection, WasmTypes } from '../../../src/wasmBuilder/Types/Nodes';
+import { createMemoryType, createNumericType } from '../../../src/wasmBuilder/Build/WasmTypes';
 import * as WasmModule from '../../../src/wasmBuilder/Build/WasmModule';
 import * as WasmExpressions from '../../../src/wasmBuilder/Build/Expression';
-import { encodeString, unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
+import { unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
 // WasmBuilder WasmModule Tests
 // Section Tests
 test('WasmBuilder-WasmTypes: _createSection', () => {
@@ -62,8 +58,8 @@ test('WasmBuilder-WasmTypes: createEmptyModule', () => {
 // TODO: addElement
 // addMemory
 test('WasmBuilder-WasmTypes: addMemory', () => {
-  const module = WasmModule.createModule();
-  expect(WasmModule.addMemory(module, createMemoryType(1))).toEqual({
+  const wasmModule = WasmModule.createModule();
+  expect(WasmModule.addMemory(wasmModule, createMemoryType(1))).toEqual({
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),
@@ -84,10 +80,10 @@ test('WasmBuilder-WasmTypes: addMemory', () => {
 });
 // addGlobal
 test('WasmBuilder-WasmTypes: addGlobal', () => {
-  const module = WasmModule.createModule();
+  const wasmModule = WasmModule.createModule();
   expect(
     WasmModule.addGlobal(
-      module,
+      wasmModule,
       'test',
       true,
       createNumericType(WasmTypes.WasmI32),
@@ -123,8 +119,8 @@ test('WasmBuilder-WasmTypes: addGlobal', () => {
 // TODO: setStart
 // addData
 test('WasmBuilder-WasmTypes: addData', () => {
-  const module = WasmModule.createModule();
-  expect(WasmModule.addData(module, 10, [0x00, 0x00, 0x00, 0x00])).toEqual({
+  const wasmModule = WasmModule.createModule();
+  expect(WasmModule.addData(wasmModule, 10, [0x00, 0x00, 0x00, 0x00])).toEqual({
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map(),

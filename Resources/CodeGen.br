@@ -6,19 +6,7 @@ const loop: Function = (t: (i32) => i32, let index: i32): i32 => {
   return(1n);
 };
 loop((index: i32): i32 => {
-  // @wasm.i32.store(8n, 48n);
-  // @wasm.i32.store(1n, 49n);
-  // @wasm.i32.store(2n, 50n);
-  // @wasm.i32.store(3n, 51n);
-  // @wasm.i32.store(4n, 52n);
-  // @wasm.i32.store(5n, 53n);
-  // @wasm.i32.store(6n, 54n);
-  // @wasm.i32.store(7n, 55n);
-  // print(@wasm.i32.load(8n));
+  print(index);
   if (index == 100n) return(0n);
   return(1n);
 }, 0n);
-// const test: i32 = 1n;
-
-@wasm.i32.store(8n, 48n);
-print(@wasm.i32.load(8n));

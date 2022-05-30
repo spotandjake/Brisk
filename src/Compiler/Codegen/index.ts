@@ -1,5 +1,10 @@
 // Imports
-import { brisk_Void_Value, encodeBriskType, initializeBriskType } from './Helpers';
+import {
+  brisk_Void_Value,
+  brisk_moduleFunctionOffset,
+  encodeBriskType,
+  initializeBriskType,
+} from './Helpers';
 import {
   ArithmeticExpressionOperator,
   ComparisonExpressionOperator,
@@ -8,7 +13,7 @@ import {
   PostFixOperator,
   ProgramNode,
 } from '../Types/ParseNodes';
-import { UnresolvedBytes, WasmExternalKind, WasmModule } from '../../wasmBuilder/Types/Nodes';
+import { UnresolvedBytes, WasmModule } from '../../wasmBuilder/Types/Nodes';
 import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/typeBuilders';
 import {
@@ -19,7 +24,8 @@ import {
   addMemory,
   addType,
   compileModule,
-  createImport,
+  createFunctionImport,
+  createGlobalImport,
   createModule,
   setStart,
 } from '../../wasmBuilder/Build/WasmModule';
@@ -27,6 +33,7 @@ import { CodeGenNode, CodeGenProperties } from '../Types/CodeGenNodes';
 import { mapExpression } from './WasmInstructionMap';
 import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
 import { getVariable } from '../Helpers/Helpers';
+import { WasmTypes } from '../../wasmBuilder/Types/Nodes';
 import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { BriskErrorType } from '../Errors/Errors';
@@ -43,7 +50,7 @@ const generateCode = (
 ): UnresolvedBytes => {
   const {
     // Our Global Variable And Type Pools
-    // _imports,
+    _imports,
     // _exports,
     _variables,
     _types,
@@ -94,25 +101,16 @@ const generateCode = (
     case NodeType.WasmImportStatement: {
       // TODO: Handle Destructuring
       // Compile Type
-      const importType = addType(
-        wasmModule,
-        encodeBriskType(rawProgram, properties, node.typeSignature, true)
-      );
-      // Compile Import Statement
-      // Build Import
-      // Add Import
-      // TODO: Allow Importing Tables And Memory
-      // Function Types Start With 0x60
-      const isFunctionImport = wasmModule.typeSection[importType][0] == 0x60;
-      let importKind: WasmExternalKind;
-      if (isFunctionImport) importKind = WasmExternalKind.function;
-      else importKind = WasmExternalKind.global;
-      const reference = addImport(
-        wasmModule,
-        createImport(importKind, node.source.value, node.variable.name, importType)
-      );
+      const importType = encodeBriskType(rawProgram, properties, node.typeSignature, true);
       // Add The Function To The Table
-      if (isFunctionImport) {
+      if (importType[0] == 0x60) {
+        // Add Function Type
+        const funcSignatureReference = addType(wasmModule, importType);
+        // Add Import
+        const reference = addImport(
+          wasmModule,
+          createFunctionImport(node.source.value, node.variable.name, funcSignatureReference)
+        );
         // Add To The Function Table
         wasmModule = addElement(wasmModule, [reference]);
         // Add The Global
@@ -123,8 +121,12 @@ const generateCode = (
           encodeBriskType(rawProgram, properties, node.typeSignature, false),
           Expressions.i32_ConstExpression(reference)
         );
-        // Return A Function Reference
-        return [];
+      } else {
+        // Must Be A Global Import
+        addImport(
+          wasmModule,
+          createGlobalImport(node.source.value, node.variable.name, importType, false)
+        );
       }
       // Return Blank Statement
       return [];
@@ -375,6 +377,9 @@ const generateCode = (
       break;
     case NodeType.FunctionLiteral: {
       // TODO: Handle Building Closure
+      if (node.data._closure.size != 0) {
+        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      }
       // TODO: Handle Polymorphic Functions
       // Handle Parameters
       // TODO: Handle Destructuring Parameters
@@ -430,7 +435,14 @@ const generateCode = (
       wasmModule = addElement(wasmModule, [wasmModule.functionSection.length - 1]);
       // Return A Function Reference
       // TODO: This is a terrible way to determine the function index
-      return Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1);
+      if (_imports.size != 0) {
+        return Expressions.i32_AddExpression(
+          Expressions.global_GetExpression(brisk_moduleFunctionOffset), // Add The Module Function Offset
+          Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1)
+        );
+      } else {
+        return Expressions.i32_ConstExpression(wasmModule.functionSection.length - 1);
+      }
     }
     // TODO: Handle ArrayLiteral
     // TODO: Handle ObjectLiteral
@@ -463,9 +475,28 @@ const generateCode = (
 // Main Entry
 const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Array => {
   // Create A New Module
-  let module = createModule();
-  // Add The Memory
-  module = addMemory(module, Types.createMemoryType(1));
+  let wasmModule = createModule();
+  // Module SetUp
+  wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
+  wasmModule = addGlobal(
+    // The Table Offset For Use In Linking
+    wasmModule,
+    brisk_moduleFunctionOffset,
+    false,
+    Types.createNumericType(WasmTypes.WasmI32),
+    Expressions.i32_ConstExpression(0)
+  );
+  if (program.data._imports.size != 0) {
+    addImport(
+      wasmModule,
+      createGlobalImport(
+        'brisk:LinkingConstant',
+        brisk_moduleFunctionOffset,
+        Types.createNumericType(WasmTypes.WasmI32),
+        false
+      )
+    );
+  }
   // Create Function
   let func = createFunction('main', Types.createFunctionType([], []), [], [], []);
   // Build The Body
@@ -474,7 +505,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     ...program.body.map((node) => {
       return generateCode(
         rawProgram,
-        module,
+        wasmModule,
         {
           _imports: program.data._imports,
           _exports: program.data._exports,
@@ -495,10 +526,10 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   // Set Body Function
   func = setBody(func, body);
   // Add The Main Function
-  module = addFunction(module, func);
-  module = setStart(module, 'main');
+  wasmModule = addFunction(wasmModule, func);
+  wasmModule = setStart(wasmModule, 'main');
   // Return The Compiled Module
-  return compileModule(module);
+  return compileModule(wasmModule);
 };
 
 export default generateCodeProgram;
