@@ -13,15 +13,15 @@
 # Description
 ***
 
-`Brisk` is a language written with the sole purpose of educating myself on language and compiler design and to get familiar with wasm.
+`Brisk` is a language written with the sole purpose of educating myself on language and compiler design and to get familiar with [wasm](https://webassembly.org/).
 # Language Goals
 ***
 
-An Easy To Program Language That Compiles To Web Assembly. The Goal Of brisk Is To Allow Users To Write Code Easily While Still Being Performant And Powerful. Brisk Syntax Is Similar To Typescript At Its Core While Adding Features Such As Advanced Enums That Make It Extremely Powerful.
+An easy to program language that compiles to [Web Assembly](https://webassembly.org/). the goal of Brisk is to allow users to write code easily while still being performant and powerful. Brisk syntax is similar to [Typescript](https://www.typescriptlang.org/) at its core while adding features such as advanced enums that make it far more powerful and robust.
 # Language Fundamentals
 ***
 
-Brisk is a super basic easy to use, and easy to extend the language with only the bare minimum set in stone.
+Brisk is a super basic easy to use, and easy to extend the language.
 
 # Getting started
 ***

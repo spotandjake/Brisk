@@ -1,7 +1,6 @@
 # Brisk Planning
 
 + Planning Language
-  
   + Syntax
     + Aliasing A Wasm Call `@Wasm.[Type].[Command](...Parameters)`
     + Lexer
