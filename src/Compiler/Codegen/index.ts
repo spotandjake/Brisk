@@ -538,9 +538,23 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     })
   );
   // Add The Exports
+  const exportData: number[][] = [];
   for (const [name, moduleExport] of program.data._exports) {
-    // Create Export Type Information
+    // TODO: Create Export Type Information
     // Layout Vec([ Vec(Name), Encoded(PrimType | InterfaceLiteralType | ArrayLiteralType | Vec(ExportName))])
+    /*
+     * Layout Vec([ Vec(Name), Encoded(Vec(ValueExport) | PrimType | InterfaceLiteralType | ArrayLiteralType, UnionType )])
+     * Encoding Rules
+     * enum SubsectionID {
+     *   ValueExport = 0,
+     *   PrimType = 1,
+     *   ArrayLiteralType = 2,
+     *   InterfaceLiteralType = 3,
+     *   UnionType = 4,
+     * }
+     * Value Export Encoding Pattern
+     * [ SubsectionID, strLength, str ]
+     */
     // Add Export
     wasmModule = addExport(
       wasmModule,
@@ -549,6 +563,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
       generateVariableName(moduleExport.name, moduleExport.reference!)
     );
   }
+  // TODO: Add The ModuleFunctionSignature
   // Set Body Function
   func = setBody(func, body);
   // Add The Main Function
