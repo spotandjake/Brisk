@@ -17,6 +17,7 @@ The `Brisk module signature` exists in a `Wasm` custom section.
 ```ts
 type WasmCustomSection = [
   WasmSection.Custom,
+  sectionLength,
   encodeString('BriskModuleSignature'),
   TypeSection,
   ExportSection,
