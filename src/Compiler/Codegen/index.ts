@@ -1,6 +1,7 @@
 // Imports
 import {
   brisk_Void_Value,
+  brisk_moduleIdentifier,
   brisk_moduleFunctionOffset,
   encodeBriskType,
   initializeBriskType,
@@ -39,6 +40,8 @@ import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { BriskErrorType } from '../Errors/Errors';
 import { BriskError } from '../Errors/Compiler';
+// Helpers
+const generateVariableName = (name: string, reference: number) => `${name}${reference}`;
 // CodeGen
 const generateCode = (
   // Code
@@ -132,13 +135,17 @@ const generateCode = (
       // Return Blank Statement
       return [];
     }
-    // TODO: Handle ExportStatement
+    case NodeType.ExportStatement: {
+      // Generate Code For The Export
+      const exportBytes = _generateCode(node.value);
+      // Return The Code For The Export
+      return exportBytes;
+    }
     case NodeType.DeclarationStatement: {
       // TODO: Handle Variable Destructuring
       // Get The Variable Information
-      const selfReference = node.name.reference!;
-      const varData = _variables.get(selfReference)!;
-      const name = `${varData.name}${selfReference}`;
+      const varData = getVariable(_variables, node.name);
+      const name = generateVariableName(varData.name, varData.reference);
       if (varData.global) {
         // Add Global
         wasmModule = addGlobal(
@@ -149,20 +156,25 @@ const generateCode = (
           initializeBriskType(rawProgram, properties, varData.type)
         );
         // Assign To A Wasm Global
-        return Expressions.global_SetExpression(name, _generateCode(node.value, { selfReference }));
+        return Expressions.global_SetExpression(
+          name,
+          _generateCode(node.value, { selfReference: varData.reference })
+        );
       } else {
         addLocal(wasmFunction, [encodeBriskType(rawProgram, properties, varData.type), name]);
         // Return The Set Expression
-        return Expressions.local_SetExpression(name, _generateCode(node.value, { selfReference }));
+        return Expressions.local_SetExpression(
+          name,
+          _generateCode(node.value, { selfReference: varData.reference })
+        );
       }
     }
     case NodeType.AssignmentStatement: {
       // Get The Variable Information
       if (node.name.nodeType != NodeType.MemberAccess) {
-        const selfReference = node.name.reference!;
-        const varData = _variables.get(selfReference)!;
-        const name = `${varData.name}${selfReference}`;
-        const body = _generateCode(node.value, { selfReference: selfReference });
+        const varData = getVariable(_variables, node.name);
+        const name = generateVariableName(varData.name, varData.reference);
+        const body = _generateCode(node.value, { selfReference: varData.reference });
         if (varData.global) {
           // Assign To A Wasm Global
           return Expressions.global_SetExpression(name, body);
@@ -183,7 +195,7 @@ const generateCode = (
     case NodeType.PostFixStatement: {
       // Get The Variable Information
       if (node.name.nodeType != NodeType.MemberAccess) {
-        const varData = _variables.get(node.name.reference!)!;
+        const varData = getVariable(_variables, node.name);
         // Build Get Expression
         const val: UnresolvedBytes = varData.global
           ? Expressions.global_GetExpression(`${varData.name}${varData.reference}`)
@@ -525,12 +537,24 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
       );
     })
   );
+  // Add The Exports
+  for (const [name, moduleExport] of program.data._exports) {
+    // Create Export Type Information
+    // Layout Vec([ Vec(Name), Encoded(PrimType | InterfaceLiteralType | ArrayLiteralType | Vec(ExportName))])
+    // Add Export
+    wasmModule = addExport(
+      wasmModule,
+      `${brisk_moduleIdentifier}${name}`,
+      WasmExternalKind.global,
+      generateVariableName(moduleExport.name, moduleExport.reference!)
+    );
+  }
   // Set Body Function
   func = setBody(func, body);
   // Add The Main Function
   wasmModule = addFunction(wasmModule, func);
   wasmModule = setStart(wasmModule, '_start');
-  wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
+  // wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
   // Return The Compiled Module
   return compileModule(wasmModule, program.name);

@@ -6,10 +6,9 @@ import Node, {
   NodeType,
   ProgramNode,
   TypeLiteral,
-  TypeUsageNode,
   UnaryExpressionOperator,
-  VariableUsageNode,
 } from '../Types/ParseNodes';
+import { VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { mapExpression } from './WasmTypes';
 import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
@@ -17,7 +16,7 @@ import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler
 import { BriskErrorType } from '../Errors/Errors';
 import { getExpressionType, nameType, resolveType, typeCompatible, typeEqual } from './Helpers';
 
-import { setType, setVariable } from '../Helpers/Helpers';
+import { getVariable, setType, setVariable } from '../Helpers/Helpers';
 // TODO: Implement Type Narrowing
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
@@ -143,60 +142,99 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.ExportStatement: {
       // TypeCheck Value
       node.value == _typeCheckNode(node.value);
-      // TypeCheck Object Literal
-      if (node.value.nodeType == NodeType.ObjectLiteral) {
-        // Add Fields To Export
-        for (const field of node.value.fields) {
-          if (field.nodeType == NodeType.ValueSpread) {
-            // A Value Spread Will Be Caught At Analysis And Should Never Make It Here
-            BriskError(rawProgram, BriskErrorType.CompilerError, [], field.position);
-          } else {
-            // Update The Export Info
-            _exports.set(field.name, {
-              name: field.name,
-              value: field.fieldValue,
-              typeExport: false,
-              valueExport: true,
-            });
-          }
+      // Add Export
+      const setExport = (exportName: string, exportValue: VariableData): void => {
+        // Set The Export
+        _exports.set(exportName, exportValue);
+      };
+      // Handle Export Data
+      switch (node.value.nodeType) {
+        // TODO: Handle All Export Types
+        case NodeType.DeclarationStatement: {
+          // TODO: Disallow Destructuring Here
+          // Set Var Data
+          setVariable(_variables, node.value.name, { global: true, used: true });
+          // Handle Adding Export Information
+          const varData = getVariable(_variables, node.value.name);
+          setExport(varData.name, varData);
+          break;
         }
-        return node;
-      } else if (
-        node.value.nodeType == NodeType.InterfaceDefinition ||
-        node.value.nodeType == NodeType.EnumDefinitionStatement ||
-        node.value.nodeType == NodeType.TypeAliasDefinition
-      ) {
-        // Set Exported
-        _exports.set(node.value.name, {
-          name: node.value.name,
-          value: <TypeUsageNode>{
-            nodeType: NodeType.TypeUsage,
-            category: NodeCategory.Type,
-            name: node.value.name,
-            position: node.position,
-          },
-          typeExport: true,
-          valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement,
-        });
-      } else {
-        // Regular Export
-        const exportName: string =
-          node.value.nodeType == NodeType.DeclarationStatement
-            ? node.value.name.name
-            : node.value.name;
-        // Set Exported
-        _exports.set(exportName, {
-          name: exportName,
-          value: <VariableUsageNode>{
-            nodeType: NodeType.VariableUsage,
-            category: NodeCategory.Variable,
-            name: exportName,
-            position: node.position,
-          },
-          typeExport: false,
-          valueExport: true,
-        });
+        case NodeType.VariableUsage: {
+          /// Set Var Data
+          setVariable(_variables, node.value, { global: true, used: true });
+          // Handle Adding Export Information
+          const varData = getVariable(_variables, node.value);
+          setExport(varData.name, varData);
+          break;
+        }
+        // case NodeType.ObjectLiteral:
+        //   break;
+        // case NodeType.EnumDefinitionStatement:
+        //   break;
+        // case NodeType.TypeAliasDefinition:
+        //   break;
+        // case NodeType.InterfaceDefinition:
+        //   break;
+        default:
+          BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       }
+      // // TypeCheck Object Literal
+      // if (node.value.nodeType == NodeType.ObjectLiteral) {
+      //   // Add Fields To Export
+      //   for (const field of node.value.fields) {
+      //     if (field.nodeType == NodeType.ValueSpread) {
+      //       // A Value Spread Will Be Caught At Analysis And Should Never Make It Here
+      //       BriskError(rawProgram, BriskErrorType.CompilerError, [], field.position);
+      //     } else {
+      //       // Update The Export Info
+      //       _exports.set(field.name, {
+      //         name: field.name,
+      //         value: field.fieldValue,
+      //         typeExport: false,
+      //         valueExport: true,
+      //       });
+      //     }
+      //   }
+      //   return node;
+      // } else if (
+      //   node.value.nodeType == NodeType.InterfaceDefinition ||
+      //   node.value.nodeType == NodeType.EnumDefinitionStatement ||
+      //   node.value.nodeType == NodeType.TypeAliasDefinition
+      // ) {
+      //   // Set Exported
+      //   _exports.set(node.value.name, {
+      //     name: node.value.name,
+      //     value: <TypeUsageNode>{
+      //       nodeType: NodeType.TypeUsage,
+      //       category: NodeCategory.Type,
+      //       name: node.value.name,
+      //       reference: node.value.reference,
+      //       position: node.position,
+      //     },
+      //     typeExport: true,
+      //     valueExport: node.value.nodeType == NodeType.EnumDefinitionStatement,
+      //   });
+      // } else {
+      //   // TODO: Ensure YOu Cannot Export const { a, b}
+      //   // Regular Export
+      //   const varData = getVariable(
+      //     _variables,
+      //     node.value.nodeType == NodeType.DeclarationStatement ? node.value.name : node.value
+      //   );
+      //   // Set Exported
+      //   _exports.set(varData.name, {
+      //     name: varData.name,
+      //     value: <VariableUsageNode>{
+      //       nodeType: NodeType.VariableUsage,
+      //       category: NodeCategory.Variable,
+      //       name: varData.name,
+      //       reference: varData.reference,
+      //       position: node.position,
+      //     },
+      //     typeExport: false,
+      //     valueExport: true,
+      //   });
+      // }
       return node;
     }
     case NodeType.DeclarationStatement:

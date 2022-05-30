@@ -235,6 +235,8 @@ export const addExport = (
   if (typeof exportIdentifier == 'string') {
     if (exportKind == WasmExternalKind.function && wasmModule.functionMap.has(exportIdentifier))
       exportIdentifier = wasmModule.functionMap.get(exportIdentifier)!;
+    else if (exportKind == WasmExternalKind.global && wasmModule.globalMap.has(exportIdentifier))
+      exportIdentifier = wasmModule.globalMap.get(exportIdentifier)!;
     else throw new Error(`Could Not Find Label: ${exportIdentifier}`);
   }
   // Add The Export

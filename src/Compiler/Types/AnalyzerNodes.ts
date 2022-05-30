@@ -1,4 +1,4 @@
-import { Expression, TypeLiteral, TypeUsageNode } from './ParseNodes';
+import { TypeLiteral } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>;
 interface ImportItem {
@@ -6,13 +6,7 @@ interface ImportItem {
   path: string;
   position: Position;
 }
-interface ExportItem {
-  name: string;
-  value: Expression | TypeUsageNode;
-  typeExport: boolean;
-  valueExport: boolean;
-}
-export type ExportMap = Map<string, ExportItem>;
+export type ExportMap = Map<string, VariableData>;
 export interface AnalyzerProperties {
   // Pools
   _imports: ImportMap;
@@ -43,7 +37,6 @@ export interface VariableData {
   global?: boolean;
   constant: boolean;
   parameter?: boolean;
-  exported?: boolean;
   import?: boolean;
   wasmImport?: boolean;
   used?: boolean;
