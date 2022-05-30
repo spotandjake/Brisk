@@ -112,6 +112,7 @@ type ArrayType = [
 ```ts
 type InterfaceField = [
   encodeString(fieldName),
+  0x00 | 0x01, // 0x01 meaning it is mutable, 0x00 indicating it is immutable
   BriskType,
 ]
 type InterfaceType = [
