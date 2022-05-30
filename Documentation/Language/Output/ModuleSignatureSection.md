@@ -29,10 +29,7 @@ The `Type Section` stores all the types relating to the exports.
 type TypeSection = [
   TypeSectionID,
   TypeSectionCount,
-  // A map of type references to type locations
-  TypeLocation[],
-  // The actual types
-  Vector(BriskType[]),
+  BriskType[],
 ]
 ```
 ## Brisk Types
