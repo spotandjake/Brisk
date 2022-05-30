@@ -18,6 +18,7 @@ import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/typeBuilders';
 import {
   addElement,
+  addExport,
   addFunction,
   addGlobal,
   addImport,
@@ -33,7 +34,7 @@ import { CodeGenNode, CodeGenProperties } from '../Types/CodeGenNodes';
 import { mapExpression } from './WasmInstructionMap';
 import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
 import { getVariable } from '../Helpers/Helpers';
-import { WasmTypes } from '../../wasmBuilder/Types/Nodes';
+import { WasmExternalKind, WasmTypes } from '../../wasmBuilder/Types/Nodes';
 import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
 import { BriskErrorType } from '../Errors/Errors';
@@ -499,7 +500,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     );
   }
   // Create Function
-  let func = createFunction('main', Types.createFunctionType([], []), [], [], []);
+  let func = createFunction('_start', Types.createFunctionType([], []), [], [], []);
   // Build The Body
   const body: UnresolvedBytes[] = [];
   body.push(
@@ -528,7 +529,8 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   func = setBody(func, body);
   // Add The Main Function
   wasmModule = addFunction(wasmModule, func);
-  wasmModule = setStart(wasmModule, 'main');
+  wasmModule = setStart(wasmModule, '_start');
+  wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   // Return The Compiled Module
   return compileModule(wasmModule, program.name);
 };
