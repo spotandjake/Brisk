@@ -45,7 +45,7 @@ type BriskType =
   | InterfaceType
   | EnumType;
 ```
-The id's for each type element can be found here.
+The IDS for each type element can be found here.
 ```ts
 enum BriskTypeID {
   PrimitiveType = 0x00,
