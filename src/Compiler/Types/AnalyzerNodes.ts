@@ -1,4 +1,4 @@
-import { TypeLiteral } from './ParseNodes';
+import { BaseTypes, TypeLiteral } from './ParseNodes';
 import { Position } from './Types';
 export type ImportMap = Map<string, ImportItem>;
 interface ImportItem {
@@ -41,6 +41,7 @@ export interface VariableData {
   wasmImport?: boolean;
   used?: boolean;
   type: TypeLiteral;
+  baseType: BaseTypes | undefined;
 }
 export type VariableMap = Map<number, Required<VariableData>>;
 export type VariableStack = Map<string, number>;

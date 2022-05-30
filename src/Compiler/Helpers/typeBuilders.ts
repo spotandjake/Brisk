@@ -2,6 +2,7 @@
 import { Position } from '../Types/Types';
 import {
   ArrayTypeLiteralNode,
+  BaseTypes,
   FunctionSignatureLiteralNode,
   GenericTypeNode,
   NodeCategory,
@@ -9,6 +10,7 @@ import {
   NumberLiteralNode,
   ParenthesisTypeLiteralNode,
   PrimTypes,
+  TypeBaseUnionLiteralNode,
   TypeLiteral,
   TypePrimLiteralNode,
   TypeUnionLiteralNode,
@@ -70,6 +72,17 @@ export const createUnionType = (
   position: Position,
   ...types: TypeLiteral[]
 ): TypeUnionLiteralNode => {
+  return {
+    nodeType: NodeType.TypeUnionLiteral,
+    category: NodeCategory.Type,
+    types: types,
+    position: position,
+  };
+};
+export const createBaseUnionType = (
+  position: Position,
+  ...types: BaseTypes[]
+): TypeBaseUnionLiteralNode => {
   return {
     nodeType: NodeType.TypeUnionLiteral,
     category: NodeCategory.Type,

@@ -81,6 +81,7 @@ export const createVariable = (
     import: false,
     wasmImport: false,
     used: false,
+    baseType: undefined,
   };
   // Add Variable To Pool
   pool.set(reference, { ...defaultValue, ...data, reference: reference });

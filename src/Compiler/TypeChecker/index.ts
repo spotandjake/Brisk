@@ -137,7 +137,10 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze Type
       node.typeSignature = _typeCheckNode(node.typeSignature);
       // Set Variable
-      setVariable(_variables, node.variable, { type: node.typeSignature });
+      setVariable(_variables, node.variable, {
+        type: node.typeSignature,
+        baseType: resolveType(rawProgram, _types, _typeStack, _typeStacks, node.typeSignature),
+      });
       return node;
     case NodeType.ExportStatement: {
       // TypeCheck Value
@@ -288,7 +291,10 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
       );
       // Set Variable Type To Be More Accurate
-      setVariable(_variables, node.name, { type: node.varType });
+      setVariable(_variables, node.name, {
+        type: node.varType,
+        baseType: resolveType(rawProgram, _types, _typeStack, _typeStacks, node.varType),
+      });
       // Analyze Value
       node.value = _typeCheckNode(node.value);
       // Return Node
@@ -890,7 +896,10 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       node.paramType = _typeCheckNode(node.paramType);
       // TODO: Handle Rest Syntax
       // Set Variable Type To Be More Accurate
-      setVariable(_variables, node.name, { type: node.paramType });
+      setVariable(_variables, node.name, {
+        type: node.paramType,
+        baseType: resolveType(rawProgram, _types, _typeStack, _typeStacks, node.paramType),
+      });
       // Return Value
       return node;
   }

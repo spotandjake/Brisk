@@ -167,6 +167,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           constant: true,
           import: true,
           type: createPrimType(node.variable.position, 'Unknown'),
+          baseType: undefined,
         },
         node.position
       );
@@ -187,6 +188,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           constant: true,
           wasmImport: true,
           type: node.typeSignature,
+          baseType: undefined,
         },
         node.position
       );
@@ -337,6 +339,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           mainScope: parentNode.nodeType == NodeType.Program,
           constant: node.declarationType == DeclarationTypes.Constant,
           type: node.varType,
+          baseType: undefined,
         },
         node.position
       );
@@ -430,6 +433,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
             reference: node.reference,
             position: node.position,
           },
+          baseType: undefined,
         },
         node.position
       );
@@ -776,6 +780,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           constant: !node.mutable,
           parameter: true,
           type: node.paramType,
+          baseType: undefined,
         },
         node.position
       );

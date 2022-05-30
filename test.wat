@@ -1,16 +1,11 @@
 (module $./Resources/CodeGen.br
-  (type (;0;) (func (param i32) (result i32)))
-  (type (;1;) (func))
-  (import "env" "print" (func $print (type 0)))
-  (func $_start (type 1)
-    (global.set 2
+  (type (;0;) (func))
+  (func $_start (type 0)
+    (global.set 1
       (i32.const 1)))
-  (table (;0;) 1 funcref)
   (memory (;0;) 1)
   (global (;0;) i32 (i32.const 0))
-  (global (;1;) i32 (i32.const 0))
-  (global (;2;) (mut i32) (i32.const 0))
-  (export "$Brisk$test" (global 2))
+  (global (;1;) (mut i32) (i32.const 0))
+  (export "$Brisk$test" (global 1))
   (export "memory" (memory 0))
-  (start $_start)
-  (elem (;0;) (i32.const 0) func $print))
+  (start $_start))

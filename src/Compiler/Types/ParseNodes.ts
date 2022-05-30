@@ -418,14 +418,20 @@ export interface ValueSpreadNode {
 // Types
 export type TypeDefinition = TypeAliasDefinitionNode | InterfaceDefinitionNode;
 export type TypeLiteral =
-  | TypePrimLiteralNode
-  | TypeUnionLiteralNode
-  | ArrayTypeLiteralNode
+  | BaseTypes
   | ParenthesisTypeLiteralNode
-  | FunctionSignatureLiteralNode
-  | InterfaceLiteralNode
-  | EnumDefinitionStatementNode
   | TypeUsageNode
+  | TypeUnionLiteralNode
+  | InterfaceLiteralNode
+  | ArrayTypeLiteralNode
+  | FunctionSignatureLiteralNode;
+export type BaseTypes =
+  | TypePrimLiteralNode
+  | TypeBaseUnionLiteralNode
+  | ArrayBaseTypeLiteralNode
+  | FunctionBaseSignatureLiteralNode
+  | InterfaceBaseLiteralNode
+  | EnumDefinitionStatementNode
   | GenericTypeNode;
 // Type Definition
 export interface TypeAliasDefinitionNode {
@@ -444,7 +450,7 @@ export interface InterfaceDefinitionNode {
   nodeType: NodeType.InterfaceDefinition;
   category: NodeCategory.Type;
   name: string;
-  typeLiteral: InterfaceLiteralNode;
+  typeLiteral: InterfaceLiteralNode | InterfaceBaseLiteralNode;
   genericTypes: undefined | GenericTypeNode[];
   reference?: number;
   data: {
@@ -504,11 +510,24 @@ export interface TypeUnionLiteralNode {
   types: TypeLiteral[];
   position: Position;
 }
+export interface TypeBaseUnionLiteralNode {
+  nodeType: NodeType.TypeUnionLiteral;
+  category: NodeCategory.Type;
+  types: BaseTypes[];
+  position: Position;
+}
 export interface ArrayTypeLiteralNode {
   nodeType: NodeType.ArrayTypeLiteral;
   category: NodeCategory.Type;
   length?: NumberLiteralNode;
   value: TypeLiteral;
+  position: Position;
+}
+export interface ArrayBaseTypeLiteralNode {
+  nodeType: NodeType.ArrayTypeLiteral;
+  category: NodeCategory.Type;
+  length?: NumberLiteralNode;
+  value: BaseTypes;
   position: Position;
 }
 export interface ParenthesisTypeLiteralNode {
@@ -528,10 +547,27 @@ export interface FunctionSignatureLiteralNode {
   };
   position: Position;
 }
+export interface FunctionBaseSignatureLiteralNode {
+  nodeType: NodeType.FunctionSignatureLiteral;
+  category: NodeCategory.Type;
+  params: BaseTypes[];
+  returnType: BaseTypes;
+  genericTypes: undefined | GenericTypeNode[];
+  data: {
+    _typeStack: TypeStack;
+  };
+  position: Position;
+}
 export interface InterfaceLiteralNode {
   nodeType: NodeType.InterfaceLiteral;
   category: NodeCategory.Type;
   fields: InterfaceFieldNode[];
+  position: Position;
+}
+export interface InterfaceBaseLiteralNode {
+  nodeType: NodeType.InterfaceLiteral;
+  category: NodeCategory.Type;
+  fields: InterfaceBaseFieldNode[];
   position: Position;
 }
 // TypeUsage
@@ -548,6 +584,15 @@ export interface InterfaceFieldNode {
   category: NodeCategory.Type;
   name: string;
   fieldType: TypeLiteral;
+  optional: boolean;
+  mutable: boolean;
+  position: Position;
+}
+export interface InterfaceBaseFieldNode {
+  nodeType: NodeType.InterfaceField;
+  category: NodeCategory.Type;
+  name: string;
+  fieldType: BaseTypes;
   optional: boolean;
   mutable: boolean;
   position: Position;

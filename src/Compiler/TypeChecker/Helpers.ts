@@ -1,4 +1,5 @@
 import {
+  BaseTypes,
   EnumVariantNode,
   Expression,
   InterfaceFieldNode,
@@ -14,9 +15,9 @@ import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { mapExpression } from './WasmTypes';
 import {
   createArrayType,
+  createBaseUnionType,
   createFunctionSignatureType,
   createPrimType,
-  createUnionType,
 } from '../Helpers/typeBuilders';
 import { getType, getVariable } from '../Helpers/Helpers';
 import { BriskTypeError } from '../Errors/Compiler';
@@ -43,6 +44,7 @@ export const buildObjectType = (
       position: memberAccess.position,
     };
   } else {
+    // TODO: Remove Any
     return createPrimType(memberAccess.position, 'Any');
   }
 };
@@ -509,7 +511,7 @@ export const resolveType = (
   typeStack: TypeStack,
   typeStacks: TypeStack[],
   type: TypeLiteral
-): TypeLiteral => {
+): BaseTypes => {
   // TODO: Handle Recursive Types
   switch (type.nodeType) {
     case NodeType.TypePrimLiteral:
@@ -523,7 +525,7 @@ export const resolveType = (
       }
       return type;
     case NodeType.TypeUnionLiteral: {
-      const types: TypeLiteral[] = [];
+      const types: BaseTypes[] = [];
       for (const t of type.types) {
         const resolvedType = resolveType(rawProgram, typePool, typeStack, typeStacks, t);
         // TODO: Improve Type Simplification
@@ -816,7 +818,7 @@ export const getExpressionType = (
       return resolveType(rawProgram, typePool, typeStack, typeStacks, expression.paramType);
     case NodeType.ArrayLiteral: {
       // Get All Field Types
-      const elementTypes: TypeLiteral[] = [];
+      const elementTypes: BaseTypes[] = [];
       for (const element of expression.elements) {
         if (element.nodeType == NodeType.ValueSpread) {
           // Check That Spread Value Is an ArrayLiteral
@@ -838,10 +840,18 @@ export const getExpressionType = (
             );
           }
           // Build Onto The Type
-          elementTypes.push(resolvedType.value);
+          elementTypes.push(
+            resolveType(rawProgram, typePool, typeStack, typeStacks, resolvedType.value)
+          );
         } else {
           elementTypes.push(
-            getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, element)
+            resolveType(
+              rawProgram,
+              typePool,
+              typeStack,
+              typeStacks,
+              getExpressionType(rawProgram, varPool, typePool, typeStack, typeStacks, element)
+            )
           );
         }
       }
@@ -852,7 +862,7 @@ export const getExpressionType = (
           typePool,
           typeStack,
           typeStacks,
-          createUnionType(expression.position, ...elementTypes)
+          createBaseUnionType(expression.position, ...elementTypes)
         ),
         elementTypes.length
       );

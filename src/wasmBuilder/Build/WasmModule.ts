@@ -12,6 +12,10 @@ export const _createSection = (sectionType: WasmSection, sectionData: number[]):
   sectionType,
   ...encodeVector(sectionData),
 ];
+export const createCustomSection = (wasmModule: WasmModule, sectionData: number[]): WasmModule => {
+  wasmModule.customSections.push(sectionData);
+  return wasmModule;
+};
 export const createSection = (sectionType: WasmSection, section: number[][]): number[] => {
   if (section.length === 0) return [];
   else
