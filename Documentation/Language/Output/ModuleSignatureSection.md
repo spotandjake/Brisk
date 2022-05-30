@@ -1,20 +1,19 @@
 # Brisk Module Signature Section
-This document covers the binary layout of The Brisk Module Signature Used In Linking
-# Function
-# Vector
-Vector Takes A Buffer and returns the length and data in the format shown below.
+This document covers the binary layout of The `Brisk module signature` Used In Linking.
+# Helpers
+## Vector
+Vector takes A `Buffer` and returns both the length and data.
 ```ts
-[ DataLength, Data ]
+[ dataLength, data ]
 ```
 ## encodeString
-Encode String takes a string and returns a Vector as shown below
+`encodeString` takes a `String` and returns a `Vector` containing the length and encoded string.
 ```ts
-[ StringLength, EncodedStringData ]
+[ strLength, encodedStrData ]
 ```
 # Binary Format
-The ModuleFunction Signature Exists In A Wasm Custom Function
+The `Brisk module signature` exists in a `Wasm` custom section.
 ## Layout
-The Layout of this section is shown below.
 ```ts
 type WasmCustomSection = [
   WasmSection.Custom,
@@ -24,25 +23,19 @@ type WasmCustomSection = [
 ]
 ```
 ## Type Section
-The Type Section Stores All The Types Relating To The Exports. The Layout Is Shown Below.
+The `Type Section` stores all the types relating to the exports.
 ```ts
 type TypeSection = [
   TypeSectionID,
   TypeSectionCount,
-  // A Map Of Type References To Type Locations
-  TypeMapElement[],
-  // The Actual Types
+  // A map of type references to type locations
+  TypeLocation[],
+  // The actual types
   Vector(BriskType[]),
 ]
 ```
-The Layout Of The Type Map Is Given Below.
-```ts
-type TypeMapElement = [
-  Index, // The Index Of The Type
-]
-```
 ## Brisk Types
-The Brisk Types Can Be One Of The Types Listed Below Each Type Contains Different Information And As Such Is Encoded Differently.
+The Brisk types can be one of the types listed below each type contains different information and as such is encoded differently.
 ```ts
 type BriskType = 
   | PrimitiveType
@@ -52,7 +45,7 @@ type BriskType =
   | InterfaceType
   | EnumType;
 ```
-The Id's For Each Type Element Can Be Found Here.
+The id's for each type element can be found here.
 ```ts
 enum BriskTypeID {
   PrimitiveType = 0x00,
@@ -64,8 +57,7 @@ enum BriskTypeID {
 }
 ```
 ### Primitive Type
-The Primitive Type Is The Most Basic Type In Brisk.
-The Id's Of Each Primitive Type Are Shown Below
+The layout for a primitive type is shown below. 
 ```ts
 enum BriskPrimitiveTypeID {
   u32 = 0,
@@ -78,19 +70,15 @@ enum BriskPrimitiveTypeID {
   Void = 7,
   String = 8,
   Number = 9,
-  Unknown = 10, // This May Be Removed
-  Any = 11, // This May Be Removed
+  Unknown = 10, // This may be removed
+  Any = 11, // This may be removed
 }
-```
-The Layout For A Primitive Type Section Is Shown Below. 
-```ts
 type PrimitiveType = [
   BriskTypeID.PrimitiveType,
   BriskPrimitiveTypeID
 ]
 ```
 ### Union Types
-Union Types Represent An Or Type In Brisk. The Layout Is Shown Below.
 ```ts
 type UnionType = [
   BriskTypeID.UnionType,
@@ -105,7 +93,7 @@ type FunctionType = [
   // Parameters
   ParameterCount,
   BriskType[],
-  // Return Type
+  // Return type
   BriskType
 ]
 ```
@@ -113,11 +101,11 @@ type FunctionType = [
 ```ts
 type ArrayType = [
   BriskTypeID.ArrayType,
-  // Array Type
+  // Array type
   BriskType,
-  // Length
-  0x01 | 0x00, // 0x01 means it has a static length, 0x00 means it doesn't
-  ArrayLength?, // The Length of the array if it is static otherwise nothing goes here
+  // length
+  0x01 | 0x00, // 0x01 means it has a static length, 0x00 means it does not
+  ArrayLength?, // The length of the array if it is static otherwise nothing goes here
 ]
 ```
 ### Interface Types
@@ -128,18 +116,15 @@ type InterfaceField = [
 ]
 type InterfaceType = [
   BriskTypeID.InterfaceType,
-  // Field Count
+  // Field count
   FieldCount,
   InterfaceField[]
 ]
 ```
 ### Enum Types
 TODO: Enum types need to be implemented into the spec
-
-
-
 # Export Section
-The export section contains all the export data. The Layout Is Below.
+The export section contains all the export data.
 ```ts
 type TypeSection = [
   ExportSectionID,
@@ -151,7 +136,7 @@ type TypeSection = [
 type BriskExport = ValueExport | TypeExport;
 ```
 ## BriskExport
-There are two types sof exports in brisk a type export or a Value export. The IDS are shown below.
+There are two types of exports in Brisk a `Type export` or a `Value export`.
 ```ts
 enum BriskExportID {
   Value = 0x00,
