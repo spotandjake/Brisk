@@ -17,6 +17,7 @@ The `Brisk module signature` exists in a `Wasm` custom section.
 ```ts
 type WasmCustomSection = [
   WasmSection.Custom,
+  sectionLength,
   encodeString('BriskModuleSignature'),
   TypeSection,
   ExportSection,
@@ -28,10 +29,7 @@ The `Type Section` stores all the types relating to the exports.
 type TypeSection = [
   TypeSectionID,
   TypeSectionCount,
-  // A map of type references to type locations
-  TypeLocation[],
-  // The actual types
-  Vector(BriskType[]),
+  BriskType[],
 ]
 ```
 ## Brisk Types
@@ -112,6 +110,7 @@ type ArrayType = [
 ```ts
 type InterfaceField = [
   encodeString(fieldName),
+  0x00 | 0x01, // 0x01 meaning it is mutable, 0x00 indicating it is immutable
   BriskType,
 ]
 type InterfaceType = [
