@@ -570,13 +570,13 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   moduleSignatureSection.push(...encodeString('BriskModuleSignature'));
   // Push On Type Section
   moduleSignatureSection.push(0x00); // Type Section ID
-  moduleSignatureSection.push(typeData.length); // Type Section Count
+  moduleSignatureSection.push(...unsignedLEB128(typeData.length)); // Type Section Count
   for (const _type of typeData) {
     moduleSignatureSection.push(..._type);
   }
   // Push On Export Section
   moduleSignatureSection.push(0x01); // Export Section ID
-  moduleSignatureSection.push(exportData.length); // Export Section Count
+  moduleSignatureSection.push(...unsignedLEB128(exportData.length)); // Export Section Count
   for (const _export of exportData) {
     moduleSignatureSection.push(..._export);
   }

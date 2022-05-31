@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
 import compile from '../Compiler/index';
+import Link from '../Linker/index';
 import Runner from '../Runner/index';
 import { BriskCustomError } from '../Compiler/Errors/Compiler';
 import { ExportList } from '../Compiler/Types/Types';
@@ -55,6 +56,7 @@ program.argument('<file>', 'File to compile').action(async (filePath: string) =>
   console.log('================================================================');
   console.dir(output, { depth: null });
   // Link
+  Link(output);
   // Run
   Runner(output);
 });
