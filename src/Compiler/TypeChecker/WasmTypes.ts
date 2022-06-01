@@ -1,4 +1,4 @@
-import { Position } from '../Types/Types';
+import { Position } from '../../Types/Types';
 import {
   FunctionSignatureLiteralNode,
   TypeLiteral,

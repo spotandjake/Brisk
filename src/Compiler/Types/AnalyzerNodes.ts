@@ -1,5 +1,5 @@
 import { BaseTypes, TypeLiteral } from './ParseNodes';
-import { Position } from './Types';
+import { Position } from '../../Types/Types';
 export type ImportMap = Map<string, ImportItem>;
 interface ImportItem {
   name: string;

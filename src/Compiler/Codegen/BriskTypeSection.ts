@@ -1,158 +1,111 @@
-import {
-  ArrayBaseTypeLiteralNode,
-  BaseTypes,
-  EnumDefinitionStatementNode,
-  FunctionBaseSignatureLiteralNode,
-  InterfaceBaseLiteralNode,
-  NodeType,
-  PrimTypes,
-  TypeBaseUnionLiteralNode,
-  TypePrimLiteralNode,
-} from '../Types/ParseNodes';
+import { BaseTypes, NodeType, primTypes } from '../Types/ParseNodes';
+import { BriskTypeID } from '../../Types/WasmFormat';
 import { encodeString, unsignedLEB128 } from '../../wasmBuilder/Build/Utils';
 import { ResolvedBytes } from '../../wasmBuilder/Types/Nodes';
+import { brisk_moduleIdentifier } from '../Codegen/Helpers';
 import { BriskError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Builder For The Brisk Module Signature Section
-// Types
-const enum BriskTypeID {
-  PrimitiveType = 0x00,
-  UnionType = 0x01,
-  FunctionType = 0x02,
-  ArrayType = 0x03,
-  InterfaceType = 0x04,
-  EnumType = 0x05,
-}
+import { ExportMap } from '../Types/AnalyzerNodes';
 // Helpers
-const briskPrimTypeMap = (name: PrimTypes): ResolvedBytes => {
-  switch (name) {
-    case 'u32':
-      return unsignedLEB128(0x00);
-    case 'u64':
-      return unsignedLEB128(0x01);
-    case 'i32':
-      return unsignedLEB128(0x02);
-    case 'i64':
-      return unsignedLEB128(0x03);
-    case 'f32':
-      return unsignedLEB128(0x04);
-    case 'f64':
-      return unsignedLEB128(0x05);
-    case 'Boolean':
-      return unsignedLEB128(0x06);
-    case 'Void':
-      return unsignedLEB128(0x07);
-    case 'String':
-      return unsignedLEB128(0x08);
-    case 'Number':
-      return unsignedLEB128(0x09);
-    case 'Function':
-      return unsignedLEB128(0x0a);
-    // TODO: Remove Unknown And Any
-    case 'Unknown':
-      return unsignedLEB128(0x0b);
-    case 'Any':
-      return unsignedLEB128(0x0c);
-  }
-};
-// Encode Primitives
-export const encodeType = (rawProgram: string, briskType: BaseTypes): ResolvedBytes => {
-  switch (briskType.nodeType) {
-    case NodeType.TypePrimLiteral:
-      return encodePrimitiveType(briskType);
-    case NodeType.TypeUnionLiteral:
-      return encodeUnionType(rawProgram, briskType);
-    case NodeType.FunctionSignatureLiteral:
-      return encodeFunctionType(rawProgram, briskType);
-    case NodeType.ArrayTypeLiteral:
-      return encodeArrayType(rawProgram, briskType);
-    case NodeType.InterfaceLiteral:
-      return encodeInterfaceType(rawProgram, briskType);
-    case NodeType.EnumDefinitionStatement:
-      return encodeEnumType(rawProgram, briskType);
-    case NodeType.GenericType:
-      // TODO: Support Exporting Types Containing Generics
-      return BriskError(
-        rawProgram,
-        BriskErrorType.FeatureNotYetImplemented,
-        [],
-        briskType.position
-      );
-  }
-};
-export const encodePrimitiveType = (primType: TypePrimLiteralNode): ResolvedBytes => {
-  return [BriskTypeID.PrimitiveType, ...briskPrimTypeMap(primType.name)];
-};
-export const encodeUnionType = (
+export const compileType = (
   rawProgram: string,
-  unionType: TypeBaseUnionLiteralNode
-): ResolvedBytes => {
-  // TODO: Consider using References here instead of including the types
-  return [
-    BriskTypeID.UnionType,
-    ...unionType.types
-      .map((briskType): ResolvedBytes => {
-        return encodeType(rawProgram, briskType);
-      })
-      .flat(),
-  ];
-};
-export const encodeFunctionType = (
-  rawProgram: string,
-  funcType: FunctionBaseSignatureLiteralNode
-): ResolvedBytes => {
-  // TODO: Handle Generics
-  // TODO: Consider using References here instead of including the types
-  return [
-    BriskTypeID.FunctionType,
-    ...unsignedLEB128(funcType.params.length),
-    ...funcType.params
-      .map((param) => {
-        return encodeType(rawProgram, param);
-      })
-      .flat(),
-    ...encodeType(rawProgram, funcType.returnType),
-  ];
-};
-export const encodeArrayType = (
-  rawProgram: string,
-  arrType: ArrayBaseTypeLiteralNode
-): ResolvedBytes => {
-  // TODO: Consider using References here instead of including the types
-  return [
-    BriskTypeID.ArrayType,
-    ...encodeType(rawProgram, arrType.value),
-    ...(arrType.length != undefined ? [0x01, ...unsignedLEB128(arrType.length.value)] : [0x00]),
-  ];
-};
-export const encodeInterfaceType = (
-  rawProgram: string,
-  interfaceType: InterfaceBaseLiteralNode
-): ResolvedBytes => {
-  // TODO: Consider using References here instead of including the types
-  // TODO: Handle Generics
-  return [
-    BriskTypeID.InterfaceType,
-    ...unsignedLEB128(interfaceType.fields.length),
-    ...interfaceType.fields
-      .map((field): ResolvedBytes => {
+  typeList: ResolvedBytes[],
+  briskType: BaseTypes
+): number => {
+  const _compileType = (briskType: BaseTypes): ResolvedBytes => {
+    switch (briskType.nodeType) {
+      case NodeType.TypePrimLiteral:
         return [
-          ...encodeString(field.name),
-          field.mutable ? 0x01 : 0x00,
-          ...encodeType(rawProgram, field.fieldType),
+          BriskTypeID.PrimitiveType,
+          ...unsignedLEB128([...primTypes].indexOf(briskType.name)),
         ];
-      })
-      .flat(),
+      case NodeType.TypeUnionLiteral:
+        return [
+          BriskTypeID.UnionType,
+          ...briskType.types.map((t) => compileType(rawProgram, typeList, t)),
+        ];
+      case NodeType.FunctionSignatureLiteral:
+        // TODO: Handle Generics
+        return [
+          BriskTypeID.FunctionType,
+          ...unsignedLEB128(briskType.params.length),
+          ...briskType.params.map((param) => compileType(rawProgram, typeList, param)),
+          compileType(rawProgram, typeList, briskType.returnType),
+        ];
+      case NodeType.ArrayTypeLiteral:
+        return [
+          BriskTypeID.ArrayType,
+          compileType(rawProgram, typeList, briskType.value),
+          ...(briskType.length != undefined
+            ? [0x01, ...unsignedLEB128(briskType.length.value)]
+            : [0x00]),
+        ];
+      case NodeType.InterfaceLiteral:
+        // TODO: Handle Generics
+        return [
+          BriskTypeID.InterfaceType,
+          ...unsignedLEB128(briskType.fields.length),
+          ...briskType.fields
+            .map((field): ResolvedBytes => {
+              return [
+                ...encodeString(field.name),
+                field.mutable ? 0x01 : 0x00,
+                compileType(rawProgram, typeList, field.fieldType),
+              ];
+            })
+            .flat(),
+        ];
+      case NodeType.EnumDefinitionStatement:
+      case NodeType.GenericType:
+        // TODO: Support Generics And Enums
+        return BriskError(
+          rawProgram,
+          BriskErrorType.FeatureNotYetImplemented,
+          [],
+          briskType.position
+        );
+    }
+  };
+  // Compile The Type
+  const compiledType = _compileType(briskType);
+  const matchingTypeIndex = typeList.findIndex((_type) => {
+    return _type.length == compiledType.length && _type.every((b, i) => b == compiledType[i]);
+  });
+  // Add Type To Type List
+  const typeIndex = matchingTypeIndex == -1 ? typeList.push(compiledType) - 1 : matchingTypeIndex;
+  // Return A Reference
+  return typeIndex;
+};
+// Create Wasm Module Type Signature
+export const compileModuleSignature = (rawProgram: string, exports: ExportMap): ResolvedBytes => {
+  // Create The Array
+  const typeList: ResolvedBytes[] = [];
+  const exportList: ResolvedBytes[] = [];
+  // Deal with Each Export
+  for (const [exportName, exportData] of exports) {
+    // TODO: Ensure That The Export Type Will Never Be Undefined
+    if (exportData.baseType == undefined) {
+      return BriskError(rawProgram, BriskErrorType.CompilerError, [], exportData.type.position);
+    }
+    // Compile Type
+    // TODO: Look Into Sending The Position Of Each Type
+    const typeIndex = compileType(rawProgram, typeList, exportData.baseType);
+    // Add Export To Export Map
+    // TODO: Support Exporting Types
+    exportList.push([
+      0x00, // 0x00 is A Value Export, 0x01 is A Type Export
+      ...encodeString(exportName), // Actual Export Name
+      ...unsignedLEB128(typeIndex), // Type Index
+      ...encodeString(`${brisk_moduleIdentifier}${exportName}`), // Reference To The Export
+    ]);
+  }
+  // Return The Section
+  return [
+    ...encodeString('BriskModuleSignature'),
+    ...unsignedLEB128(typeList.length),
+    ...typeList.flat(),
+    ...unsignedLEB128(exportList.length),
+    ...exportList.flat(),
   ];
 };
-export const encodeEnumType = (
-  rawProgram: string,
-  enumType: EnumDefinitionStatementNode
-): ResolvedBytes => {
-  // TODO: Consider using References here instead of including the types
-  // TODO: Handle Generics
-  // TODO: Implement Encoding Enum Type
-  BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], enumType.position);
-  return [BriskTypeID.EnumType];
-};
-// TODO: Decode Primitives

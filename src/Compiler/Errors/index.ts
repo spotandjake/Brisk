@@ -1,4 +1,4 @@
-import { Position } from '../Types/Types';
+import { Position } from '../../Types/Types';
 import { prettyError } from './ErrorBuilder';
 import { BriskErrorMessage, BriskErrorType } from './Errors';
 //@ts-ignore

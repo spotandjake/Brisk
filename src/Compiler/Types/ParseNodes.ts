@@ -1,5 +1,5 @@
 // General Imports
-import { Position } from './Types';
+import { Position } from '../../Types/Types';
 import { AnalyzerProperties, TypeStack, VariableClosure, VariableStack } from './AnalyzerNodes';
 // Node Types
 export const enum NodeType {

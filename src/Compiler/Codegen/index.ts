@@ -14,7 +14,7 @@ import {
   PostFixOperator,
   ProgramNode,
 } from '../Types/ParseNodes';
-import { ResolvedBytes, UnresolvedBytes, WasmModule } from '../../wasmBuilder/Types/Nodes';
+import { UnresolvedBytes, WasmModule } from '../../wasmBuilder/Types/Nodes';
 import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/typeBuilders';
 import {
@@ -35,12 +35,11 @@ import {
 import { CodeGenNode, CodeGenProperties } from '../Types/CodeGenNodes';
 import { mapExpression } from './WasmInstructionMap';
 import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
-import { encodeString, unsignedLEB128 } from '../../wasmBuilder/Build/Utils';
 import { getVariable } from '../Helpers/Helpers';
 import { WasmExternalKind, WasmTypes } from '../../wasmBuilder/Types/Nodes';
 import * as Types from '../../wasmBuilder/Build/WasmTypes';
 import * as Expressions from '../../wasmBuilder/Build/Expression';
-import * as BriskTypeSection from './BriskTypeSection';
+import { compileModuleSignature } from './BriskTypeSection';
 import { BriskErrorType } from '../Errors/Errors';
 import { BriskError } from '../Errors/Compiler';
 // Helpers
@@ -540,22 +539,8 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
       );
     })
   );
-  // Add The Exports
-  const typeData: ResolvedBytes[] = [];
-  const exportData: ResolvedBytes[] = [];
+  // Add Exports
   for (const [name, moduleExport] of program.data._exports) {
-    // TODO: Reimplement Type Export
-    // Encode Type
-    if (moduleExport.baseType == undefined)
-      return BriskError(rawProgram, BriskErrorType.CompilerError, [], program.position);
-    typeData.push(BriskTypeSection.encodeType(rawProgram, moduleExport.baseType));
-    // TODO: Create Export Type Information
-    exportData.push([
-      0x00, // 0x00 is A Value Export, 0x01 is A Type Export
-      ...encodeString(name), // Actual Export Name
-      ...unsignedLEB128(typeData.length - 1), // Type Index
-      ...encodeString(`${brisk_moduleIdentifier}${name}`), // Reference To The Export
-    ]);
     // Add Export
     wasmModule = addExport(
       wasmModule,
@@ -564,24 +549,11 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
       generateVariableName(moduleExport.name, moduleExport.reference!)
     );
   }
-  // TODO: Add The ModuleFunctionSignature
-  const moduleSignatureSection: number[] = [];
-  // Push Section Header
-  moduleSignatureSection.push(...encodeString('BriskModuleSignature'));
-  // Push On Type Section
-  moduleSignatureSection.push(0x00); // Type Section ID
-  moduleSignatureSection.push(...unsignedLEB128(typeData.length)); // Type Section Count
-  for (const _type of typeData) {
-    moduleSignatureSection.push(..._type);
-  }
-  // Push On Export Section
-  moduleSignatureSection.push(0x01); // Export Section ID
-  moduleSignatureSection.push(...unsignedLEB128(exportData.length)); // Export Section Count
-  for (const _export of exportData) {
-    moduleSignatureSection.push(..._export);
-  }
   // Add Section
-  wasmModule = createCustomSection(wasmModule, moduleSignatureSection);
+  wasmModule = createCustomSection(
+    wasmModule,
+    compileModuleSignature(rawProgram, program.data._exports)
+  );
   // Set Body Function
   func = setBody(func, body);
   // Add The Main Function

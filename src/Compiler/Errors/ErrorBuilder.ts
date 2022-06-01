@@ -1,4 +1,4 @@
-import { Position } from '../Types/Types';
+import { Position } from '../../Types/Types';
 // Line Number Code
 const addLineNumbers = (code: string, lineNumber: number) => {
   return code
@@ -27,9 +27,9 @@ export const prettyError = (code: string, message: string, position: Position) =
     position.length == 0
       ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
       : `\x1b[0m${code.slice(
-        startOfLine + 1,
-        offset
-      )}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${code.slice(offset + position.length, endOfLine)}`;
+          startOfLine + 1,
+          offset
+        )}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${code.slice(offset + position.length, endOfLine)}`;
   // After Message
   const afterMessage = code.slice(
     endOfLine + 1,

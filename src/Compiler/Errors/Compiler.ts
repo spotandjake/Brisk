@@ -1,5 +1,5 @@
 import _BriskError, { _BriskCustomError } from './index';
-import { Position } from '../Types/Types';
+import { Position } from '../../Types/Types';
 import { BriskErrorType } from './Errors';
 type ErrCode = BriskErrorType;
 type Pos = Position;
