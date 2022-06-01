@@ -138,8 +138,6 @@ class FileDecoder extends Decoder {
         this.dataCountSection = this.getCurrentSlice(sectionLength);
         break;
       default:
-        console.log(this.currentIndex);
-        console.log(this.buffer.slice(this.currentIndex));
         throw 'Linking Error, Unknown Section Index';
     }
   }
