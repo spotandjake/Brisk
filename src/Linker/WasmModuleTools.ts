@@ -20,10 +20,24 @@ export class Decoder {
   }
   public decodeString(): string {
     // Get String Length
-    const stringLength = this.decodeSignedLeb128();
+    const stringLength = this.decodeUnSignedLeb128();
     const stringValue = String.fromCharCode(...this.getCurrentSlice(stringLength));
     // Return String Value
     return stringValue;
+  }
+  public decodeUnSignedLeb128(): number {
+    let result = 0;
+    let shift = 0;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const byte = this.getCurrentIndex();
+      result |= (byte & 0x7f) << shift;
+      if ((0x80 & byte) == 0) {
+        break;
+      }
+      shift += 7;
+    }
+    return result;
   }
   public decodeSignedLeb128(): number {
     let result = 0;

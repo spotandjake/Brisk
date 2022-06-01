@@ -40,7 +40,7 @@ class FileDecoder extends Decoder {
       if (sectionName == 'BriskModuleSignature') {
         foundSignature = true;
         // Parse The Type Section Of The Signature
-        const typeCount = sectionDecoder.decodeSignedLeb128();
+        const typeCount = sectionDecoder.decodeUnSignedLeb128();
         for (let typeIndex = 0; typeIndex < typeCount; typeIndex++) {
           this.parseType(sectionDecoder, typeIndex);
         }
@@ -63,19 +63,20 @@ class FileDecoder extends Decoder {
       case BriskTypeID.PrimitiveType:
         this.TypeList.set(
           typeIndex,
-          createPrimType(position, [...primTypes][sectionDecoder.decodeSignedLeb128()])
+          createPrimType(position, [...primTypes][sectionDecoder.decodeUnSignedLeb128()])
         );
         break;
       case BriskTypeID.UnionType: {
-        const unionTypeCount = sectionDecoder.decodeSignedLeb128();
+        const unionTypeCount = sectionDecoder.decodeUnSignedLeb128();
         const typeReferences: BaseTypes[] = [];
         for (let i = 0; i < unionTypeCount; i++) {
           // The Only Reason This Should Be Undefined Is An Invalid Reference
-          typeReferences.push(this.TypeList.get(sectionDecoder.decodeSignedLeb128())!);
+          typeReferences.push(this.TypeList.get(sectionDecoder.decodeUnSignedLeb128())!);
         }
         this.TypeList.set(typeIndex, createBaseUnionType(position, ...typeReferences));
         break;
       }
+      // TODO: Support The Other Types
       case BriskTypeID.FunctionType:
       // break;
       case BriskTypeID.ArrayType:
@@ -93,8 +94,9 @@ class FileDecoder extends Decoder {
     // Determine Section Length
     const sectionID = this.getCurrentIndex();
     // Determine Section Type
-    const sectionLength = this.decodeSignedLeb128();
+    const sectionLength = this.decodeUnSignedLeb128();
     // Get The Section Slice
+    console.log(`SectionID: ${sectionID}, index: ${this.currentIndex}, length: ${sectionLength}`);
     switch (sectionID) {
       case WasmSection.Custom:
         this.customSections.push(this.getCurrentSlice(sectionLength));
@@ -136,6 +138,8 @@ class FileDecoder extends Decoder {
         this.dataCountSection = this.getCurrentSlice(sectionLength);
         break;
       default:
+        console.log(this.currentIndex);
+        console.log(this.buffer.slice(this.currentIndex));
         throw 'Linking Error, Unknown Section Index';
     }
   }

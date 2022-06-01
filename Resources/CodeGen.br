@@ -42,3 +42,6 @@
 //   return(1n);
 // }, 0n);
 export let test: i32 = 1n;
+export const testFunction: Function = (t: i32): i32 => {
+  return(1n);
+};
