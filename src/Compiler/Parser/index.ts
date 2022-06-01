@@ -1674,9 +1674,10 @@ const parse = (lexingResult: ILexingResult, code: string, file: string) => {
   const parsed = parser.program();
   if (parser.errors.length > 0) {
     const { message, token } = parser.errors[0];
+    const expectedSemiColon = message == 'Expected SemiColon';
     const position = {
       offset: token.startOffset,
-      length: (token.endOffset ?? 0) - token.startOffset + 1,
+      length: expectedSemiColon ? 1 : (token.endOffset ?? 0) - token.startOffset + 1,
       line: token.startLine || 0,
       col: token.startColumn || 0,
       file: file,

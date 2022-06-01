@@ -6,7 +6,7 @@ import { brisk_moduleIdentifier } from '../Codegen/Helpers';
 import { BriskError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 // Builder For The Brisk Module Signature Section
-import { ExportMap } from '../Types/AnalyzerNodes';
+import { ExportMap, ImportMap } from '../Types/AnalyzerNodes';
 // Helpers
 export const compileType = (
   rawProgram: string,
@@ -78,10 +78,15 @@ export const compileType = (
   return typeIndex;
 };
 // Create Wasm Module Type Signature
-export const compileModuleSignature = (rawProgram: string, exports: ExportMap): ResolvedBytes => {
+export const compileModuleSignature = (
+  rawProgram: string,
+  exports: ExportMap,
+  imports: ImportMap
+): ResolvedBytes => {
   // Create The Array
   const typeList: ResolvedBytes[] = [];
   const exportList: ResolvedBytes[] = [];
+  const importList: ResolvedBytes[] = [];
   // Deal with Each Export
   for (const [exportName, exportData] of exports) {
     // TODO: Ensure That The Export Type Will Never Be Undefined
@@ -100,6 +105,15 @@ export const compileModuleSignature = (rawProgram: string, exports: ExportMap): 
       ...encodeString(`${brisk_moduleIdentifier}${exportName}`), // Reference To The Export
     ]);
   }
+  // Deal With Imports
+  for (const [importName, importData] of imports) {
+    // Add Export To Export Map
+    importList.push([
+      ...encodeString(importName), // Import Item
+      ...encodeString(importData.path), // Import Path
+      ...encodeString(`${brisk_moduleIdentifier}${importData.path}`), // Wasm Import Name
+    ]);
+  }
   // Return The Section
   return [
     ...encodeString('BriskModuleSignature'),
@@ -107,5 +121,7 @@ export const compileModuleSignature = (rawProgram: string, exports: ExportMap): 
     ...typeList.flat(),
     ...unsignedLEB128(exportList.length),
     ...exportList.flat(),
+    ...unsignedLEB128(importList.length),
+    ...importList.flat(),
   ];
 };

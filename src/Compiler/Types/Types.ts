@@ -1,9 +1,3 @@
-export interface ExportItem {
-  name: string;
-  path: string;
-}
-export type ExportList = Map<string, ExportItem>;
-
 export const enum NumberType {
   I32,
   I64,

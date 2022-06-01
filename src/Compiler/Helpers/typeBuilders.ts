@@ -1,8 +1,10 @@
 // General Imports
 import { Position } from '../../Types/Types';
 import {
+  ArrayBaseTypeLiteralNode,
   ArrayTypeLiteralNode,
   BaseTypes,
+  FunctionBaseSignatureLiteralNode,
   FunctionSignatureLiteralNode,
   GenericTypeNode,
   NodeCategory,
@@ -38,6 +40,19 @@ export const createArrayType = (
     position: position,
   };
 };
+export const createBaseArrayType = (
+  position: Position,
+  type: BaseTypes,
+  length?: number
+): ArrayBaseTypeLiteralNode => {
+  return {
+    nodeType: NodeType.ArrayTypeLiteral,
+    category: NodeCategory.Type,
+    length: length ? createNumberTypeLiteral(position, length) : undefined,
+    value: type,
+    position: position,
+  };
+};
 export const createFunctionSignatureType = (
   position: Position,
   genericTypes: GenericTypeNode[] | undefined,
@@ -45,6 +60,25 @@ export const createFunctionSignatureType = (
   returnType: TypeLiteral,
   _typeStack: TypeStack
 ): FunctionSignatureLiteralNode => {
+  return {
+    nodeType: NodeType.FunctionSignatureLiteral,
+    category: NodeCategory.Type,
+    params: paramTypes,
+    returnType: returnType,
+    genericTypes: genericTypes,
+    data: {
+      _typeStack: _typeStack,
+    },
+    position: position,
+  };
+};
+export const createBaseFunctionSignatureType = (
+  position: Position,
+  genericTypes: GenericTypeNode[] | undefined,
+  paramTypes: BaseTypes[],
+  returnType: BaseTypes,
+  _typeStack: TypeStack
+): FunctionBaseSignatureLiteralNode => {
   return {
     nodeType: NodeType.FunctionSignatureLiteral,
     category: NodeCategory.Type,

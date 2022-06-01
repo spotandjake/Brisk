@@ -2,6 +2,8 @@ import { IParserErrorMessageProvider, TokenType } from 'chevrotain';
 const errorHandler = (): IParserErrorMessageProvider => {
   return {
     buildMismatchTokenMessage: ({ actual, expected }) => {
+      // Better Errors For Parsing
+      if (expected.LABEL == 'Semicolon') return 'Expected SemiColon';
       return `Failed to Parse Found: \`${actual.tokenType.LABEL}\`, Expected \`${expected.LABEL}\``;
     },
     buildNotAllInputParsedMessage: ({ firstRedundant: { image } }) => {

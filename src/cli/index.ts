@@ -1,5 +1,6 @@
 // Main Cli entry point
 // Imports
+import { ExportMap } from '../Compiler/Types/AnalyzerNodes';
 import { Command } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -7,7 +8,6 @@ import compile from '../Compiler/index';
 import Link from '../Linker/index';
 import Runner from '../Runner/index';
 import { BriskCustomError } from '../Compiler/Errors/Compiler';
-import { ExportList } from '../Compiler/Types/Types';
 //@ts-ignore
 import { __VERSION__ } from '@brisk/config';
 // Commander Setup
@@ -18,10 +18,11 @@ program.version(__VERSION__);
 program.option('-v, --version', 'output CLI, Compiler and LSP versions');
 // File Compiler
 const compileFile = async (
+  basePath: string,
   filePath: string
-): Promise<{ output: Uint8Array; exports: ExportList }> => {
+): Promise<{ output: Uint8Array; exports: ExportMap }> => {
   // Normalize File Path
-  const _filePath = path.resolve(process.cwd(), filePath);
+  const _filePath = path.resolve(process.cwd(), path.dirname(basePath), filePath);
   // Read File
   const fileContent = await fs.readFile(_filePath, 'utf8').catch(() => {
     return BriskCustomError('', 'Error', `No Such File ${filePath} Could Be Found At ${_filePath}`);
@@ -29,7 +30,6 @@ const compileFile = async (
   // Compile File
   const compiled = await compile(fileContent, filePath, compileFile);
   // Save File
-  console.log(path.basename(_filePath, path.extname(_filePath)));
   await fs.writeFile(
     path.join(path.dirname(_filePath), `${path.basename(_filePath, path.extname(_filePath))}.wasm`),
     compiled.output
@@ -43,7 +43,7 @@ program
   .description('Compile A Given Brisk File')
   .action(async (filePath: string) => {
     // Compile
-    const { output } = await compileFile(filePath);
+    const { output } = await compileFile('', filePath);
     // Log Output
     console.log('================================================================');
     console.dir(output, { depth: null });
@@ -51,7 +51,7 @@ program
   });
 program.argument('<file>', 'File to compile').action(async (filePath: string) => {
   // Compile
-  const { output } = await compileFile(filePath);
+  const { output } = await compileFile('', filePath);
   // Log Output
   console.log('================================================================');
   console.dir(output, { depth: null });

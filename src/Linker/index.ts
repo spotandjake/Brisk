@@ -1,9 +1,28 @@
 import { Position } from '../Types/Types';
 import { BriskTypeID } from '../Types/WasmFormat';
 import { BaseTypes, primTypes } from '../Compiler/Types/ParseNodes';
-import { createBaseUnionType, createPrimType } from '../Compiler/Helpers/typeBuilders';
+import {
+  createBaseFunctionSignatureType,
+  createBaseUnionType,
+  createPrimType,
+} from '../Compiler/Helpers/typeBuilders';
 import { WasmSection } from '../wasmBuilder/Types/Nodes';
 import { Decoder } from './WasmModuleTools';
+// Types
+interface ValueExport {
+  valueExport: true;
+  exportType: BaseTypes;
+  exportName: string;
+}
+interface TypeExport {
+  valueExport: false;
+  exportType: BaseTypes;
+}
+interface BriskImport {
+  importPath: string;
+  importReference: string;
+}
+// File Decoder
 class FileDecoder extends Decoder {
   // Wasm Sections
   private customSections: number[][] = [];
@@ -21,6 +40,8 @@ class FileDecoder extends Decoder {
   private dataCountSection: number[] = [];
   // Module Signature
   private TypeList: Map<number, BaseTypes> = new Map();
+  private ExportList: Map<string, ValueExport | TypeExport> = new Map();
+  private ImportList: Map<string, BriskImport> = new Map();
   // Constructor
   constructor(wasmBinary: number[]) {
     // Super
@@ -44,7 +65,42 @@ class FileDecoder extends Decoder {
         for (let typeIndex = 0; typeIndex < typeCount; typeIndex++) {
           this.parseType(sectionDecoder, typeIndex);
         }
+        // Parse The Export Section
+        const exportCount = sectionDecoder.decodeUnSignedLeb128();
+        for (let exportIndex = 0; exportIndex < exportCount; exportIndex++) {
+          const exportType = sectionDecoder.decodeSignedLeb128();
+          const exportName = sectionDecoder.decodeString();
+          const typeIndex = sectionDecoder.decodeSignedLeb128();
+          if (exportType == 0x00) {
+            // Value Export
+            const exportReferenceName = sectionDecoder.decodeString();
+            this.ExportList.set(exportName, {
+              valueExport: true,
+              exportType: this.TypeList.get(typeIndex)!,
+              exportName: exportReferenceName,
+            });
+          } else {
+            // TypeExport
+            this.ExportList.set(exportName, {
+              valueExport: false,
+              exportType: this.TypeList.get(typeIndex)!,
+            });
+          }
+        }
+        // Parse The Import Section
+        const importCount = sectionDecoder.decodeUnSignedLeb128();
+        for (let importIndex = 0; importIndex < importCount; importIndex++) {
+          const importName = sectionDecoder.decodeString();
+          const importPath = sectionDecoder.decodeString();
+          const importReference = sectionDecoder.decodeString();
+          this.ImportList.set(importName, {
+            importPath: importPath,
+            importReference: importReference,
+          });
+        }
       }
+      // TODO: Map Dependency Tree
+      // TODO: Perform Linking
     }
     if (!foundSignature) throw 'Cannot Find Module Signature';
   }
@@ -77,8 +133,23 @@ class FileDecoder extends Decoder {
         break;
       }
       // TODO: Support The Other Types
-      case BriskTypeID.FunctionType:
-      // break;
+      case BriskTypeID.FunctionType: {
+        // Deal With Params
+        const paramCount = sectionDecoder.decodeUnSignedLeb128();
+        const paramTypes: BaseTypes[] = [];
+        for (let i = 0; i < paramCount; i++) {
+          // The Only Reason This Should Be Undefined Is An Invalid Reference
+          paramTypes.push(this.TypeList.get(sectionDecoder.decodeUnSignedLeb128())!);
+        }
+        // Deal With Return Type
+        const returnTypes = this.TypeList.get(sectionDecoder.decodeUnSignedLeb128())!;
+        // Deal With Function Signature Type
+        this.TypeList.set(
+          typeIndex,
+          createBaseFunctionSignatureType(position, undefined, paramTypes, returnTypes, new Map())
+        );
+        break;
+      }
       case BriskTypeID.ArrayType:
       // break;
       case BriskTypeID.InterfaceType:
@@ -145,7 +216,8 @@ class FileDecoder extends Decoder {
 // The Brisk Linker
 const Link = (wasmBinary: Uint8Array) => {
   try {
-    new FileDecoder(Array.from(wasmBinary));
+    const decodedFile = new FileDecoder(Array.from(wasmBinary));
+    console.log(decodedFile);
   } catch (err) {
     console.log(err);
   }

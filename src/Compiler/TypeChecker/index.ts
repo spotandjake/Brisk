@@ -1,4 +1,3 @@
-import { ExportList } from '../Types/Types';
 import Node, {
   EnumVariantNode,
   GenericTypeNode,
@@ -8,7 +7,7 @@ import Node, {
   TypeLiteral,
   UnaryExpressionOperator,
 } from '../Types/ParseNodes';
-import { VariableData } from '../Types/AnalyzerNodes';
+import { ExportMap, VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { mapExpression } from './WasmTypes';
 import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
@@ -25,7 +24,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
   // Code
   rawProgram: string,
   // ImportData
-  importData: Map<string, ExportList>,
+  importData: Map<string, ExportMap>,
   // Stacks
   properties: TypeCheckProperties,
   // Nodes
@@ -118,20 +117,23 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       });
       return node;
     case NodeType.ImportStatement: {
-      // // Get Import
-      // const importModule = importData.get(node.source.value);
-      // if (importModule == undefined) {
-      //   return BriskTypeError(
-      //     rawProgram,
-      //     BriskErrorType.ModuleDoesNotExist,
-      //     [node.source.value],
-      //     node.source.position
-      //   );
-      // }
-      // TODO: Handle TypeValidation Of Destructured Declarations
+      // TODO: Make it so a destructure imports everything and a name imports it as an object
+      // Get The Export Name
+      const moduleMap = importData.get(node.source.value);
+      if (moduleMap == undefined)
+        return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
+      const exportData = moduleMap.get(node.variable.name);
+      if (exportData == undefined)
+        return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
+      // TODO: Allow Importing Types
       // Set Variable Type
-      // TODO: Figure Out Type Checking For This
-      return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+      setVariable(_variables, node.variable, {
+        type: exportData.baseType,
+        baseType: exportData.baseType,
+        global: true,
+      });
+      // Return Node
+      return node;
     }
     case NodeType.WasmImportStatement:
       // Analyze Type
@@ -908,7 +910,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
 const typeCheckProgram = (
   rawProgram: string,
   program: ProgramNode,
-  importData: Map<string, ExportList>
+  importData: Map<string, ExportMap>
 ): ProgramNode => {
   // Return The Node
   return {

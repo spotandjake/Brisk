@@ -104,6 +104,25 @@ const generateCode = (
       return body.flat();
     }
     // TODO: Handle Import Statement
+    case NodeType.ImportStatement: {
+      const importType = encodeBriskType(
+        rawProgram,
+        properties,
+        getVariable(_variables, node.variable).type
+      );
+      // Add The Import
+      const importReference = addImport(
+        wasmModule,
+        createGlobalImport(
+          `${brisk_moduleIdentifier}${node.source.value}`,
+          generateVariableName(node.variable.name, node.variable.reference!),
+          importType,
+          false
+        )
+      );
+      // Return A Reference To The Import
+      return Expressions.i32_ConstExpression(importReference);
+    }
     case NodeType.WasmImportStatement: {
       // TODO: Handle Destructuring
       // Compile Type
@@ -552,7 +571,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   // Add Section
   wasmModule = createCustomSection(
     wasmModule,
-    compileModuleSignature(rawProgram, program.data._exports)
+    compileModuleSignature(rawProgram, program.data._exports, program.data._imports)
   );
   // Set Body Function
   func = setBody(func, body);

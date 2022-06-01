@@ -1,3 +1,4 @@
+// import malloc from './memory.br';
 // import wasm print: (i32) => i32 from 'env';
 // import wasm fd_write: (i32, i32, i32, i32) => i32 from 'wasi_snapshot_preview1';
 // // Write Hello World
