@@ -1,53 +1,9 @@
 import { Position } from '../Types/Types';
 import { BriskTypeID } from '../Types/WasmFormat';
 import { BaseTypes, primTypes } from '../Compiler/Types/ParseNodes';
-import { createPrimType, createBaseUnionType } from '../Compiler/Helpers/typeBuilders';
+import { createBaseUnionType, createPrimType } from '../Compiler/Helpers/typeBuilders';
 import { WasmSection } from '../wasmBuilder/Types/Nodes';
 import { Decoder } from './WasmModuleTools';
-// class SectionDecoder {
-//   // General Properties
-//   private currentIndex = 0;
-//   // Wasm Sections
-//   private wasmSection: number[];
-//   // Constructor
-//   constructor(wasmSection: number[]) {
-//     // Set Properties
-//     this.wasmSection = wasmSection;
-//   }
-//   // Helpers
-//   public getCurrentSlice(length: number): number[] {
-//     this.currentIndex += length;
-//     return this.wasmSection.slice(this.currentIndex - length, this.currentIndex);
-//   }
-//   public getCurrentIndex(): number {
-//     this.currentIndex++;
-//     return this.wasmSection[this.currentIndex - 1];
-//   }
-//   public decodeString(): string {
-//     // Get String Length
-//     const stringLength = this.decodeSignedLeb128();
-//     const stringValue = String.fromCharCode(...this.getCurrentSlice(stringLength));
-//     // Return String Value
-//     return stringValue;
-//   }
-//   public decodeSignedLeb128(): number {
-//     let result = 0;
-//     let shift = 0;
-//     // eslint-disable-next-line no-constant-condition
-//     while (true) {
-//       const byte = this.wasmSection[this.currentIndex];
-//       this.currentIndex++;
-//       result |= (byte & 0x7f) << shift;
-//       shift += 7;
-//       if ((0x80 & byte) === 0) {
-//         if (shift < 32 && (byte & 0x40) !== 0) {
-//           return result | (~0 << shift);
-//         }
-//         return result;
-//       }
-//     }
-//   }
-// }
 class FileDecoder extends Decoder {
   // Wasm Sections
   private customSections: number[][] = [];

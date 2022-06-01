@@ -23,13 +23,12 @@ export const prettyError = (code: string, message: string, position: Position) =
   }
   // Build First Line
   const incorrectCode = code.slice(offset, offset + position.length);
+  const beforePiece = code.slice(startOfLine + 1, offset);
+  const afterPiece = code.slice(offset + position.length, endOfLine);
   const line =
     position.length == 0
       ? `\x1b[0m${code.slice(startOfLine + 1, endOfLine)}`
-      : `\x1b[0m${code.slice(
-          startOfLine + 1,
-          offset
-        )}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${code.slice(offset + position.length, endOfLine)}`;
+      : `\x1b[0m${beforePiece}\x1b[31m\x1b[1m${incorrectCode}\x1b[0m${afterPiece}`;
   // After Message
   const afterMessage = code.slice(
     endOfLine + 1,

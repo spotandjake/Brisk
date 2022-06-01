@@ -21,7 +21,7 @@
     "injectExtension": " gulp injectExtension",
     "clean": "gulp clean",
     "typecheck": "tsc --project tsconfig.json",
-    "lint": "eslint src/**",
+    "lint": "eslint src/** --no-error-on-unmatched-pattern",
     "mock": "gulp mock && node --enable-source-maps ./__tests__/dist/Data.js"
   },
   "jest": {
