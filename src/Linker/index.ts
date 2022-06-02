@@ -6,6 +6,22 @@ import {
   createBaseUnionType,
   createPrimType,
 } from '../Compiler/Helpers/typeBuilders';
+import { UnresolvedBytes, WasmModule } from '../wasmBuilder/Types/Nodes';
+import {
+  addElement,
+  addExport,
+  addFunction,
+  addGlobal,
+  addImport,
+  addMemory,
+  addType,
+  compileModule,
+  createCustomSection,
+  createFunctionImport,
+  createGlobalImport,
+  createModule,
+  setStart,
+} from '../wasmBuilder/Build/WasmModule';
 import { WasmSection } from '../wasmBuilder/Types/Nodes';
 import { Decoder } from './WasmModuleTools';
 import fs from 'fs/promises';
@@ -44,6 +60,8 @@ class FileDecoder extends Decoder {
   private TypeList: Map<number, BaseTypes> = new Map();
   private ExportList: Map<string, ValueExport | TypeExport> = new Map();
   private ImportList: Map<string, BriskImport> = new Map();
+  // Output Module
+  private wasmModule: WasmModule = createModule();
   // Constructor
   constructor(wasmBinary: number[]) {
     // Super
@@ -105,26 +123,33 @@ class FileDecoder extends Decoder {
     if (!foundSignature) throw 'Cannot Find Module Signature';
   }
   // Link Function
-  public async link(filePath: string) {
+  public async link(filePath: string): WasmModule {
     // Collect The Dependency's Below
     const depTree = await this.collectDependencyTree(filePath, new Map());
-    console.log(depTree);
+    depTree.set(filePath, this);
     // Variables Needed For Linking
-    // TODO: Set The Table Offset For The Main Module To 0
+    let tableSize = 0;
     // For Each Module
     for (const [importPath, briskImport] of depTree) {
       // TODO: Combine The Function Tables
-      console.log(briskImport.tableSection);
-      console.log(briskImport.elementSection);
+      if (briskImport.tableSection.length != 0) {
+        console.log(briskImport.tableSection);
+        const tableDecoder = new Decoder(briskImport.tableSection, 1);
+        tableDecoder.getCurrentIndex();
+        tableDecoder.getCurrentIndex();
+        tableSize += tableDecoder.decodeUnSignedLeb128();
+      }
       // TODO: Set The Function Offset
       // TODO: Resolve Imports
       // TODO: Rename The Globals And Functions
       // TODO: For Each Function
       // TODO: Remap The Function Calls
       // TODO: Remap The Global Calls
-      // TODO: If Needed Remap The Locals
+      // Combine The Other Parts
       // TODO: Fix Name Section
     }
+    // Return Module
+    return this.wasmModule;
   }
   // Collect Dependency Tree
   public async collectDependencyTree(
