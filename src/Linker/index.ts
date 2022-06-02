@@ -100,9 +100,23 @@ class FileDecoder extends Decoder {
         }
       }
       // TODO: Map Dependency Tree
+      // TODO: Sort Dependency Tree
       // TODO: Perform Linking
     }
     if (!foundSignature) throw 'Cannot Find Module Signature';
+  }
+  // Link Function
+  private Link() {
+    // TODO: For Each Module
+    // TODO: Resolve Imports
+    // TODO: Combine The Function Tables
+    // TODO: Set The Function Offset
+    // TODO: Rename The Globals And Functions
+    // TODO: For Each Function
+    // TODO: Remap The Function Calls
+    // TODO: Remap The Global Calls
+    // TODO: If Needed Remap The Locals
+    // TODO: Fix Name Section
   }
   // Parse Type
   private parseType(sectionDecoder: Decoder, typeIndex: number): BaseTypes {
