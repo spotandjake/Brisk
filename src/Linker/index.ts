@@ -6,21 +6,21 @@ import {
   createBaseUnionType,
   createPrimType,
 } from '../Compiler/Helpers/typeBuilders';
-import { UnresolvedBytes, WasmModule } from '../wasmBuilder/Types/Nodes';
+import { WasmModule } from '../wasmBuilder/Types/Nodes';
 import {
-  addElement,
-  addExport,
-  addFunction,
-  addGlobal,
-  addImport,
-  addMemory,
-  addType,
-  compileModule,
-  createCustomSection,
-  createFunctionImport,
-  createGlobalImport,
+  // addElement,
+  // addExport,
+  // addFunction,
+  // addGlobal,
+  // addImport,
+  // addMemory,
+  // addType,
+  // compileModule,
+  // createCustomSection,
+  // createFunctionImport,
+  // createGlobalImport,
   createModule,
-  setStart,
+  // setStart,
 } from '../wasmBuilder/Build/WasmModule';
 import { WasmSection } from '../wasmBuilder/Types/Nodes';
 import { Decoder } from './WasmModuleTools';
@@ -123,7 +123,7 @@ class FileDecoder extends Decoder {
     if (!foundSignature) throw 'Cannot Find Module Signature';
   }
   // Link Function
-  public async link(filePath: string): WasmModule {
+  public async link(filePath: string): Promise<WasmModule> {
     // Collect The Dependency's Below
     const depTree = await this.collectDependencyTree(filePath, new Map());
     depTree.set(filePath, this);
