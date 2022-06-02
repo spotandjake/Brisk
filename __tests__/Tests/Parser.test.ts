@@ -18,7 +18,7 @@ test('Parser: Main Pass', () => {
       };
     }),
   };
-  expect(parse(Parser_Main, '', 'file')).toMatchSnapshot();
+  expect(parse(Parser_Main, '', '', 'file')).toMatchSnapshot();
 });
 test('Parser: Literals Pass', () => {
   const data = JSON.parse(fs.readFileSync('./__tests__/Data/Parser/Literals_Pass.json', 'utf8'));
@@ -31,5 +31,5 @@ test('Parser: Literals Pass', () => {
       };
     }),
   };
-  expect(parse(Parser_Main, '', 'file')).toMatchSnapshot();
+  expect(parse(Parser_Main, '', '', 'file')).toMatchSnapshot();
 });

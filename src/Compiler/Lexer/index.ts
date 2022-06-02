@@ -7,7 +7,7 @@ import { BriskErrorType } from '../Errors/Errors';
 import { __DEBUG__ } from '@brisk/config';
 // =================================================================
 // Lex code
-const lex = (code: string, file: string) => {
+const lex = (code: string, basePath: string, file: string) => {
   const tokenized = new Lexer(Tokens, {
     ensureOptimizations: true,
     skipValidations: !__DEBUG__,
@@ -22,6 +22,7 @@ const lex = (code: string, file: string) => {
         length: tokenized.groups.Reserved[0].image.length,
         line: tokenized.groups.Reserved[0].startLine || 0,
         col: tokenized.groups.Reserved[0].startColumn || 0,
+        basePath: basePath,
         file: file,
       }
     );
@@ -32,6 +33,7 @@ const lex = (code: string, file: string) => {
       length: length,
       line: line || 0,
       col: column || 0,
+      basePath: basePath,
       file: file,
     };
     BriskCustomError(code, 'Syntax', message, position);

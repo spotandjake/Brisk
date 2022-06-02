@@ -151,6 +151,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       };
     }
     case NodeType.ImportStatement: {
+      // Add Import
       _imports.set(node.variable.name, {
         name: node.variable.name,
         path: node.source.value,

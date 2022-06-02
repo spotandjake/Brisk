@@ -9,18 +9,19 @@ import { BriskErrorType } from './Errors/Errors';
 // The Compiler Entry
 const compile = async (
   rawProgram: string,
+  basePath: string,
   filePath: string,
   fileCompiler?: (
     basePath: string,
     filePath: string
-  ) => Promise<{ output: Uint8Array; exports: ExportMap }>
+  ) => Promise<{ output: Uint8Array; exports: ExportMap; compiledPath: string }>
 ): Promise<{ output: Uint8Array; exports: ExportMap }> => {
   // Compilation Steps
   // TODO: Try To Read The Wasm File
   // 1. Lex
-  const lexed = lex(rawProgram, filePath);
+  const lexed = lex(rawProgram, basePath, filePath);
   // 2. Parse
-  const parsed = parse(lexed, rawProgram, filePath);
+  const parsed = parse(lexed, rawProgram, basePath, filePath);
   // 3. Analyze ParseTree
   const analyzed = analyze(rawProgram, parsed);
   // 4. Handle Compilation Of Other Files
@@ -28,7 +29,7 @@ const compile = async (
   for (const sourceInfo of analyzed.data._imports.values()) {
     if (fileCompiler) {
       // Compile File
-      const { exports } = await fileCompiler(filePath, sourceInfo.path);
+      const { exports } = await fileCompiler(basePath, sourceInfo.path);
       // Set Export Map
       importData.set(sourceInfo.path, exports);
     } else {

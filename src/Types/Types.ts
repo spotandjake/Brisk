@@ -3,5 +3,6 @@ export interface Position {
   length: number;
   line: number;
   col: number;
+  basePath: string;
   file: string;
 }

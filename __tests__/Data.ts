@@ -18,9 +18,9 @@ const serializeInput = (lexStream: ILexingResult): string => {
 // Generate Data for parser tests
 fs.writeFileSync(
   './__tests__/Data/Parser/Parser_Pass.json',
-  serializeInput(lex(Parser_Pass, 'file'))
+  serializeInput(lex(Parser_Pass, '', 'file'))
 );
 fs.writeFileSync(
   './__tests__/Data/Parser/Literals_Pass.json',
-  serializeInput(lex(Literals_pass, 'file'))
+  serializeInput(lex(Literals_pass, '', 'file'))
 );

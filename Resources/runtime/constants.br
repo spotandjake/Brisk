@@ -1,0 +1,1 @@
+export const heapOffset: i32 = 0n;

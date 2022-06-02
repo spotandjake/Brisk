@@ -9,13 +9,15 @@ import { BriskCustomError } from '../Errors/Compiler';
 import { __DEBUG__ } from '@brisk/config';
 // Parser
 class Parser extends EmbeddedActionsParser {
+  private basePath: string;
   private file: string;
-  constructor(tokens: TokenType[], file: string) {
+  constructor(tokens: TokenType[], basePath: string, file: string) {
     super(tokens, {
       maxLookahead: 2,
       skipValidations: !__DEBUG__,
       errorMessageProvider: ErrorProvider(),
     });
+    this.basePath = basePath;
     this.file = file;
     this.performSelfAnalysis();
   }
@@ -42,6 +44,7 @@ class Parser extends EmbeddedActionsParser {
         length: (this.input.at(-1)?.endOffset || -1) + 1,
         line: 0,
         col: 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -112,6 +115,7 @@ class Parser extends EmbeddedActionsParser {
         length: flag.endOffset! - flag.startOffset + 1,
         line: flag.startLine || 0,
         col: flag.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -139,6 +143,7 @@ class Parser extends EmbeddedActionsParser {
         length: close.endOffset! - open.startOffset + 1,
         line: open.startLine || 0,
         col: open.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -208,6 +213,7 @@ class Parser extends EmbeddedActionsParser {
           location.startOffset,
         line: location.startLine || 0,
         col: location.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -248,6 +254,7 @@ class Parser extends EmbeddedActionsParser {
               length: source.position.offset + source.position.length - location.startOffset,
               line: location.startLine || 0,
               col: location.startColumn || 0,
+              basePath: this.basePath,
               file: this.file,
             },
           };
@@ -263,6 +270,7 @@ class Parser extends EmbeddedActionsParser {
               length: source?.position.offset + source?.position.length - location.startOffset,
               line: location.startLine || 0,
               col: location.startColumn || 0,
+              basePath: this.basePath,
               file: this.file,
             },
           };
@@ -290,6 +298,7 @@ class Parser extends EmbeddedActionsParser {
           length: variable.position.offset + variable.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -332,6 +341,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.position.offset + value.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -375,6 +385,7 @@ class Parser extends EmbeddedActionsParser {
           length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -446,6 +457,7 @@ class Parser extends EmbeddedActionsParser {
             length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -494,6 +506,7 @@ class Parser extends EmbeddedActionsParser {
           length: (value?.endOffset ?? identifier.endOffset) - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -747,6 +760,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.position.offset + value.position.length - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -825,6 +839,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.position.offset + value.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -846,6 +861,7 @@ class Parser extends EmbeddedActionsParser {
             length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -869,6 +885,7 @@ class Parser extends EmbeddedActionsParser {
             length: args.position.offset + args.position.length - location.startOffset,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -893,6 +910,7 @@ class Parser extends EmbeddedActionsParser {
         length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -930,6 +948,7 @@ class Parser extends EmbeddedActionsParser {
         length: value.endOffset! - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -946,6 +965,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -963,6 +983,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -980,6 +1001,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -997,6 +1019,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1014,6 +1037,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1031,6 +1055,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1048,6 +1073,7 @@ class Parser extends EmbeddedActionsParser {
           length: value.endOffset! - value.startOffset + 1,
           line: value.startLine || 0,
           col: value.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1064,6 +1090,7 @@ class Parser extends EmbeddedActionsParser {
         length: value.endOffset! - value.startOffset + 1,
         line: value.startLine || 0,
         col: value.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -1088,6 +1115,7 @@ class Parser extends EmbeddedActionsParser {
         length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -1111,6 +1139,7 @@ class Parser extends EmbeddedActionsParser {
         length: close.endOffset! - location.startOffset + 1,
         line: location.startLine || 0,
         col: location.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -1156,6 +1185,7 @@ class Parser extends EmbeddedActionsParser {
           length: fieldValue.position.offset + fieldValue.position.length - identifier.startOffset,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1174,6 +1204,7 @@ class Parser extends EmbeddedActionsParser {
           length: fieldValue.position.offset + fieldValue.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1204,6 +1235,7 @@ class Parser extends EmbeddedActionsParser {
           length: identifier.endOffset! - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1221,6 +1253,7 @@ class Parser extends EmbeddedActionsParser {
         length: identifier.endOffset! - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
@@ -1245,6 +1278,7 @@ class Parser extends EmbeddedActionsParser {
           length: parent.position.length + property.position.length,
           line: parent.position.line,
           col: parent.position.col,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1269,6 +1303,7 @@ class Parser extends EmbeddedActionsParser {
           length: length,
           line: start.startLine || 0,
           col: start.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1334,6 +1369,7 @@ class Parser extends EmbeddedActionsParser {
           length: body.position.offset + body.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1365,6 +1401,7 @@ class Parser extends EmbeddedActionsParser {
           length: typeLiteral.position.offset + typeLiteral.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1396,6 +1433,7 @@ class Parser extends EmbeddedActionsParser {
               1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -1453,6 +1491,7 @@ class Parser extends EmbeddedActionsParser {
             length: closeValue.endOffset! - value.position.offset + 1,
             line: value.position.line,
             col: value.position.col,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -1485,6 +1524,7 @@ class Parser extends EmbeddedActionsParser {
           length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1519,6 +1559,7 @@ class Parser extends EmbeddedActionsParser {
             length: returnType.position.offset + returnType.position.length - location.startOffset,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -1544,6 +1585,7 @@ class Parser extends EmbeddedActionsParser {
           length: close.endOffset! - location.startOffset + 1,
           line: location.startLine || 0,
           col: location.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1574,6 +1616,7 @@ class Parser extends EmbeddedActionsParser {
           length: fieldType.position.offset + fieldType.position.length - identifier.startOffset,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
+          basePath: this.basePath,
           file: this.file,
         },
       };
@@ -1643,6 +1686,7 @@ class Parser extends EmbeddedActionsParser {
             length: close.endOffset! - location.startOffset + 1,
             line: location.startLine || 0,
             col: location.startColumn || 0,
+            basePath: this.basePath,
             file: this.file,
           },
         };
@@ -1660,15 +1704,16 @@ class Parser extends EmbeddedActionsParser {
         length: identifier.endOffset! - identifier.startOffset + 1,
         line: identifier.startLine || 0,
         col: identifier.startColumn || 0,
+        basePath: this.basePath,
         file: this.file,
       },
     };
   });
 }
 // Parse code
-const parse = (lexingResult: ILexingResult, code: string, file: string) => {
+const parse = (lexingResult: ILexingResult, code: string, basePath: string, file: string) => {
   // =================================================================
-  const parser = new Parser(Tokens.Tokens, file);
+  const parser = new Parser(Tokens.Tokens, basePath, file);
   // "input" is a setter which will reset the parser's state.
   parser.input = lexingResult.tokens;
   const parsed = parser.program();
@@ -1680,6 +1725,7 @@ const parse = (lexingResult: ILexingResult, code: string, file: string) => {
       length: expectedSemiColon ? 1 : (token.endOffset ?? 0) - token.startOffset + 1,
       line: token.startLine || 0,
       col: token.startColumn || 0,
+      basePath: basePath,
       file: file,
     };
     BriskCustomError(code, 'ParseError', message, position);

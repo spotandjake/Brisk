@@ -1,3 +1,4 @@
+import heapOffset from './runtime/constants.br';
 export const malloc: Function = (size: i32): i32 => {
   return(0n);
 };

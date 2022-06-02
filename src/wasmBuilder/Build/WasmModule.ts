@@ -48,12 +48,12 @@ export const createGlobalImport = (
   mutable: boolean
 ): WasmImport => {
   return {
-    kind: WasmExternalKind.function,
+    kind: WasmExternalKind.global,
     name: importField,
     importData: [
       ...encodeString(importModule),
       ...encodeString(importField),
-      WasmExternalKind.function,
+      WasmExternalKind.global,
       ...importType,
       mutable ? 0x01 : 0x00,
     ],

@@ -1,0 +1,2 @@
+import wasm print: (i32) => i32 from 'env';
+export print;

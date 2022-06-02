@@ -20,22 +20,27 @@ program.option('-v, --version', 'output CLI, Compiler and LSP versions');
 const compileFile = async (
   basePath: string,
   filePath: string
-): Promise<{ output: Uint8Array; exports: ExportMap }> => {
+): Promise<{ output: Uint8Array; exports: ExportMap; compiledPath: string }> => {
   // Normalize File Path
-  const _filePath = path.resolve(process.cwd(), path.dirname(basePath), filePath);
+  const _filePath = path.isAbsolute(filePath) ? filePath : path.resolve(basePath, filePath);
   // Read File
   const fileContent = await fs.readFile(_filePath, 'utf8').catch(() => {
     return BriskCustomError('', 'Error', `No Such File ${filePath} Could Be Found At ${_filePath}`);
   });
   // Compile File
-  const compiled = await compile(fileContent, filePath, compileFile);
-  // Save File
-  await fs.writeFile(
-    path.join(path.dirname(_filePath), `${path.basename(_filePath, path.extname(_filePath))}.wasm`),
-    compiled.output
+  const compiled = await compile(fileContent, path.dirname(_filePath), filePath, compileFile);
+  // Generate Compiled Path
+  const compiledPath = path.relative(
+    basePath,
+    path.join(path.dirname(_filePath), `${path.basename(_filePath, path.extname(_filePath))}.wasm`)
   );
+  // Save File
+  await fs.writeFile(path.resolve(basePath, compiledPath), compiled.output);
   // Return ExportList
-  return compiled;
+  return {
+    ...compiled,
+    compiledPath: compiledPath,
+  };
 };
 // Tasks
 program
@@ -43,7 +48,7 @@ program
   .description('Compile A Given Brisk File')
   .action(async (filePath: string) => {
     // Compile
-    const { output } = await compileFile('', filePath);
+    const { output } = await compileFile(process.cwd(), filePath);
     // Log Output
     console.log('================================================================');
     console.dir(output, { depth: null });
@@ -51,12 +56,12 @@ program
   });
 program.argument('<file>', 'File to compile').action(async (filePath: string) => {
   // Compile
-  const { output } = await compileFile('', filePath);
+  const { output, compiledPath } = await compileFile(process.cwd(), filePath);
   // Log Output
   console.log('================================================================');
   console.dir(output, { depth: null });
   // Link
-  Link(output);
+  await Link(compiledPath);
   // Run
   Runner(output);
 });

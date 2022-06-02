@@ -47,14 +47,14 @@ const serializeLex = (lexStream: ILexingResult) => {
 };
 // Lexer Tests
 test('Lexer: Pass', () => {
-  expect(serializeLex(lex(Lexer_Pass, 'file'))).toMatchSnapshot();
+  expect(serializeLex(lex(Lexer_Pass, '', 'file'))).toMatchSnapshot();
 });
 test('Lexer: Import Pass', () => {
-  expect(serializeLex(lex(Import_Pass, 'file'))).toMatchSnapshot();
+  expect(serializeLex(lex(Import_Pass, '', 'file'))).toMatchSnapshot();
 });
 test('Lexer: Export Pass', () => {
-  expect(serializeLex(lex(Export_Pass, 'file'))).toMatchSnapshot();
+  expect(serializeLex(lex(Export_Pass, '', 'file'))).toMatchSnapshot();
 });
 test('Lexer: Literals Pass', () => {
-  expect(serializeLex(lex(Literals_Pass, 'file'))).toMatchSnapshot();
+  expect(serializeLex(lex(Literals_Pass, '', 'file'))).toMatchSnapshot();
 });

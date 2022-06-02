@@ -111,7 +111,7 @@ const generateCode = (
         getVariable(_variables, node.variable).type
       );
       // Add The Import
-      const importReference = addImport(
+      addImport(
         wasmModule,
         createGlobalImport(
           `${brisk_moduleIdentifier}${node.source.value}`,
@@ -121,7 +121,7 @@ const generateCode = (
         )
       );
       // Return A Reference To The Import
-      return Expressions.i32_ConstExpression(importReference);
+      return []; // Return A Blank Expression
     }
     case NodeType.WasmImportStatement: {
       // TODO: Handle Destructuring

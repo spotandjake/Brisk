@@ -8,6 +8,8 @@ import {
 } from '../Compiler/Helpers/typeBuilders';
 import { WasmSection } from '../wasmBuilder/Types/Nodes';
 import { Decoder } from './WasmModuleTools';
+import fs from 'fs/promises';
+import path from 'path';
 // Types
 interface ValueExport {
   valueExport: true;
@@ -99,24 +101,53 @@ class FileDecoder extends Decoder {
           });
         }
       }
-      // TODO: Map Dependency Tree
-      // TODO: Sort Dependency Tree
-      // TODO: Perform Linking
     }
     if (!foundSignature) throw 'Cannot Find Module Signature';
   }
   // Link Function
-  private Link() {
-    // TODO: For Each Module
-    // TODO: Resolve Imports
-    // TODO: Combine The Function Tables
-    // TODO: Set The Function Offset
-    // TODO: Rename The Globals And Functions
-    // TODO: For Each Function
-    // TODO: Remap The Function Calls
-    // TODO: Remap The Global Calls
-    // TODO: If Needed Remap The Locals
-    // TODO: Fix Name Section
+  public async link(filePath: string) {
+    // Collect The Dependency's Below
+    const depTree = await this.collectDependencyTree(filePath, new Map());
+    console.log(depTree);
+    // Variables Needed For Linking
+    // TODO: Set The Table Offset For The Main Module To 0
+    // For Each Module
+    for (const [importPath, briskImport] of depTree) {
+      // TODO: Combine The Function Tables
+      console.log(briskImport.tableSection);
+      console.log(briskImport.elementSection);
+      // TODO: Set The Function Offset
+      // TODO: Resolve Imports
+      // TODO: Rename The Globals And Functions
+      // TODO: For Each Function
+      // TODO: Remap The Function Calls
+      // TODO: Remap The Global Calls
+      // TODO: If Needed Remap The Locals
+      // TODO: Fix Name Section
+    }
+  }
+  // Collect Dependency Tree
+  public async collectDependencyTree(
+    filePath: string,
+    moduleImports: Map<string, FileDecoder>
+  ): Promise<Map<string, FileDecoder>> {
+    // Add Every Import To The Set
+    for (const { importPath } of this.ImportList.values()) {
+      // Resolve The Path
+      const modulePath = path.resolve(
+        path.dirname(filePath),
+        `${importPath.replace('.br', '')}.wasm`
+      );
+      if (!moduleImports.has(modulePath)) {
+        // If The Dependency Is Not In The Tree Then Analyze It
+        const moduleBuffer = await fs.readFile(modulePath);
+        const moduleDecoder = new FileDecoder(Array.from(moduleBuffer));
+        await moduleDecoder.collectDependencyTree(filePath, moduleImports);
+        // Add The Dependency To The Tree
+        moduleImports.set(modulePath, moduleDecoder);
+      }
+    }
+    return moduleImports;
   }
   // Parse Type
   private parseType(sectionDecoder: Decoder, typeIndex: number): BaseTypes {
@@ -126,6 +157,8 @@ class FileDecoder extends Decoder {
       length: 0,
       line: 0,
       col: 0,
+      // TODO: Use An Actual Base Path Here
+      basePath: 'TODO:',
       file: 'Unknown',
     };
     const typeID = sectionDecoder.getCurrentIndex();
@@ -181,7 +214,7 @@ class FileDecoder extends Decoder {
     // Determine Section Type
     const sectionLength = this.decodeUnSignedLeb128();
     // Get The Section Slice
-    console.log(`SectionID: ${sectionID}, index: ${this.currentIndex}, length: ${sectionLength}`);
+    // console.log(`SectionID: ${sectionID}, index: ${this.currentIndex}, length: ${sectionLength}`);
     switch (sectionID) {
       case WasmSection.Custom:
         this.customSections.push(this.getCurrentSlice(sectionLength));
@@ -228,13 +261,14 @@ class FileDecoder extends Decoder {
   }
 }
 // The Brisk Linker
-const Link = (wasmBinary: Uint8Array) => {
-  try {
-    const decodedFile = new FileDecoder(Array.from(wasmBinary));
-    console.log(decodedFile);
-  } catch (err) {
-    console.log(err);
-  }
+const Link = async (filePath: string) => {
+  // Read The File
+  const wasmBinary = await fs.readFile(filePath);
+  // Decode File
+  const decodedFile = new FileDecoder(Array.from(wasmBinary));
+  // Perform Linking
+  await decodedFile.link(filePath);
+  // console.log(decodedFile);
   return false;
 };
 // Export Linker
