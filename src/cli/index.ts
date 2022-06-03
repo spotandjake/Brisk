@@ -61,7 +61,8 @@ program.argument('<file>', 'File to compile').action(async (filePath: string) =>
   console.log('================================================================');
   console.dir(output, { depth: null });
   // Link
-  await Link(compiledPath);
+  const linked = await Link(compiledPath);
+  await fs.writeFile(compiledPath, linked);
   // Run
   Runner(output);
 });

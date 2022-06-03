@@ -6,7 +6,8 @@ import {
   createBaseUnionType,
   createPrimType,
 } from '../Compiler/Helpers/typeBuilders';
-import { WasmModule } from '../wasmBuilder/Types/Nodes';
+import { WasmFunction, WasmModule } from '../wasmBuilder/Types/Nodes';
+import { createFunction } from '../wasmBuilder/Build/Function';
 import {
   // addElement,
   // addExport,
@@ -15,7 +16,7 @@ import {
   // addImport,
   // addMemory,
   // addType,
-  // compileModule,
+  compileModule,
   // createCustomSection,
   // createFunctionImport,
   // createGlobalImport,
@@ -123,31 +124,49 @@ class FileDecoder extends Decoder {
     if (!foundSignature) throw 'Cannot Find Module Signature';
   }
   // Link Function
+  private async linkFunction(
+    globalOffset: number,
+    functionOffset: number,
+    func: number[]
+  ): Promise<WasmFunction> {
+    // Get Names From Parent Function
+    // TODO: Remap Globals
+    // TODO: Remap Calls
+    // const func = createFunction();
+    // TODO: Return The Function
+    return createFunction(functionOffset);
+  }
+  // Link Function
   public async link(filePath: string): Promise<WasmModule> {
     // Collect The Dependency's Below
     const depTree = await this.collectDependencyTree(filePath, new Map());
     depTree.set(filePath, this);
     // Variables Needed For Linking
-    let tableSize = 0;
+    let elementCount = 0;
+    let globalCount = 0;
+    let functionCount = 1; // Set to 1 for the New Main Function
     // For Each Module
     for (const [importPath, briskImport] of depTree) {
       // TODO: Combine The Function Tables
       if (briskImport.tableSection.length != 0) {
-        console.log(briskImport.tableSection);
         const tableDecoder = new Decoder(briskImport.tableSection, 1);
         tableDecoder.getCurrentIndex();
         tableDecoder.getCurrentIndex();
-        tableSize += tableDecoder.decodeUnSignedLeb128();
+        elementCount += tableDecoder.decodeUnSignedLeb128();
       }
+      // TODO: Move The Table Elements
       // TODO: Set The Function Offset
       // TODO: Resolve Imports
       // TODO: Rename The Globals And Functions
-      // TODO: For Each Function
-      // TODO: Remap The Function Calls
-      // TODO: Remap The Global Calls
+      // TODO: Remap Each Function
+      // TODO: Move Over Data Sections
       // Combine The Other Parts
-      // TODO: Fix Name Section
+      // TODO: Remap Name Function
     }
+    // TODO: Create New Table Section
+    // TODO: Create The New Main Function And Call The Other Main Functions
+    // TODO: Set The Main Function To The Start
+    // TODO: Reexport the entry's exports
     // Return Module
     return this.wasmModule;
   }
@@ -292,9 +311,7 @@ const Link = async (filePath: string) => {
   // Decode File
   const decodedFile = new FileDecoder(Array.from(wasmBinary));
   // Perform Linking
-  await decodedFile.link(filePath);
-  // console.log(decodedFile);
-  return false;
+  return compileModule(await decodedFile.link(filePath), filePath, true);
 };
 // Export Linker
 export default Link;
