@@ -12,7 +12,7 @@ import {
   // addElement,
   // addExport,
   // addFunction,
-  // addGlobal,
+  addGlobal,
   // addImport,
   // addMemory,
   // addType,
@@ -129,12 +129,15 @@ class FileDecoder extends Decoder {
     functionOffset: number,
     func: number[]
   ): Promise<WasmFunction> {
+    // Check If Anything may need To Be Mapped
+    const mayNeedMapping = func.some((byte) => byte == 0x23 || byte == 0x24 || 0x10); // Global.get, Global.set, call
+    console.log(mayNeedMapping);
     // Get Names From Parent Function
     // TODO: Remap Globals
     // TODO: Remap Calls
     // const func = createFunction();
     // TODO: Return The Function
-    return createFunction(functionOffset);
+    // return createFunction(functionOffset);
   }
   // Link Function
   public async link(filePath: string): Promise<WasmModule> {
@@ -147,6 +150,9 @@ class FileDecoder extends Decoder {
     let functionCount = 1; // Set to 1 for the New Main Function
     // For Each Module
     for (const [importPath, briskImport] of depTree) {
+      // TODO: Remap External Imports
+      // TODO: Map Brisk Imports
+      // TODO: Replace The Function Index
       // TODO: Combine The Function Tables
       if (briskImport.tableSection.length != 0) {
         const tableDecoder = new Decoder(briskImport.tableSection, 1);
@@ -156,9 +162,19 @@ class FileDecoder extends Decoder {
       }
       // TODO: Move The Table Elements
       // TODO: Set The Function Offset
-      // TODO: Resolve Imports
       // TODO: Rename The Globals And Functions
       // TODO: Remap Each Function
+      const codeDecoder = new Decoder(briskImport.codeSection, 0);
+      const functionCount = codeDecoder.decodeUnSignedLeb128();
+      for (let i = 0; i < functionCount; i++) {
+        const functionSize = codeDecoder.decodeUnSignedLeb128();
+        const functionBody = codeDecoder.getCurrentSlice(functionSize);
+        console.log(functionSize);
+        console.log(functionBody);
+        console.log(functionBody.length);
+      }
+      // console.log(codeDecoder);
+      // console.log(functionCount);
       // TODO: Move Over Data Sections
       // Combine The Other Parts
       // TODO: Remap Name Function
