@@ -5,6 +5,9 @@ import {
   WasmImport,
   WasmModule,
   WasmSection,
+  funcRefIdentifier,
+  globalRefIdentifier,
+  typeRefIdentifier,
 } from '../Types/Nodes';
 import { encodeString, encodeVector, unsignedLEB128 } from './Utils';
 // Helpers
@@ -69,6 +72,10 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     functionMap: new Map(),
     globalMap: new Map(),
     localData: new Map(),
+    // LinkingInfo
+    functionReferences: [],
+    typeReferences: [],
+    globalReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
@@ -122,6 +129,7 @@ export const addImport = (wasmModule: WasmModule, wasmImport: WasmImport): numbe
 };
 // Wasm Module Function Mutations
 export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmModule => {
+  // TODO: Handle Positions For Linking Section
   // Get A List Of Local Names And Index's
   const localNames: Map<string, number> = new Map();
   for (const param of func.paramNames) {
@@ -132,6 +140,9 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
   }
   // Resolve Function Body Labels
   const wasmBody: number[] = [];
+  const functionReferences: number[] = [];
+  const typeReferences: number[] = [];
+  const globalReferences: number[] = [];
   for (const byte of func.body.flat()) {
     if (typeof byte == 'string') {
       const lastByte = wasmBody.at(-1);
@@ -148,6 +159,17 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
       } else if (lastByte == 0x10 && wasmModule.functionMap.has(byte)) {
         wasmBody.push(...unsignedLEB128(wasmModule.functionMap.get(byte)!)); // Wasm Func Call
       } else throw new Error(`Unknown Label Value: ${lastByte} ${byte}`);
+    } else if (typeof byte == 'symbol') {
+      if (byte == funcRefIdentifier) {
+        // Add The Position To The Linking Info
+        functionReferences.push(wasmBody.length);
+      } else if (byte == typeRefIdentifier) {
+        // Add The Position To The Linking Info
+        typeReferences.push(wasmBody.length);
+      } else if (byte == globalRefIdentifier) {
+        // Add The Position To The Linking Info
+        globalReferences.push(wasmBody.length);
+      }
     } else wasmBody.push(byte);
   }
   // Add Function To TypeSection
@@ -164,9 +186,15 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
         return [1, ...local];
       })
       .flat(),
-    ...wasmBody, // Add Function Body
-    0x0b, // Wasm End Instruction
   ];
+  // Push References To Linking Info
+  const codeSectionLength = wasmModule.codeSection.flat().length + code.length;
+  wasmModule.functionReferences.push(...functionReferences.map((ref) => ref + codeSectionLength));
+  wasmModule.typeReferences.push(...typeReferences.map((ref) => ref + codeSectionLength));
+  wasmModule.globalReferences.push(...globalReferences.map((ref) => ref + codeSectionLength));
+  // Finish Code Section
+  code.push(...wasmBody); // Add Function Body
+  code.push(0x0b); // Wasm End Instruction
   wasmModule.codeSection.push([...unsignedLEB128(code.length), ...code]);
   // Set Function Reference
   wasmModule.functionMap.set(func.name, wasmModule.functionSection.length - 1);
@@ -215,7 +243,7 @@ export const addGlobal = (
   mutable: boolean,
   globalType: number[],
   value: number[]
-): WasmModule => {
+): number => {
   // Set Global Label
   wasmModule.globalMap.set(globalName, wasmModule.globalSection.length);
   // Add The Module
@@ -226,7 +254,7 @@ export const addGlobal = (
     0x0b, // Wasm End Instruction
   ]);
   // Return The Module
-  return wasmModule;
+  return wasmModule.globalSection.length - 1;
 };
 // Wasm Module Export Mutations
 export const addExport = (

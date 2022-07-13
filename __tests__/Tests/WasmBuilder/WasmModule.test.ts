@@ -83,15 +83,14 @@ test('WasmBuilder-WasmTypes: addMemory', () => {
 // addGlobal
 test('WasmBuilder-WasmTypes: addGlobal', () => {
   const wasmModule = WasmModule.createModule();
-  expect(
-    WasmModule.addGlobal(
-      wasmModule,
-      'test',
-      true,
-      createNumericType(WasmTypes.WasmI32),
-      WasmExpressions.i32_ConstExpression(1)
-    )
-  ).toEqual({
+  WasmModule.addGlobal(
+    wasmModule,
+    'test',
+    true,
+    createNumericType(WasmTypes.WasmI32),
+    WasmExpressions.i32_ConstExpression(1)
+  );
+  expect(wasmModule).toEqual({
     // Label Maps
     functionMap: new Map(),
     globalMap: new Map([['test', 0]]),

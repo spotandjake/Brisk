@@ -1,6 +1,10 @@
 // Wasm Info
 export type ResolvedBytes = number[];
-export type UnresolvedBytes = (number | string)[];
+// Identifiers
+export const funcRefIdentifier = Symbol('FunctionReference');
+export const typeRefIdentifier = Symbol('TypeReference');
+export const globalRefIdentifier = Symbol('GlobalReference');
+export type UnresolvedBytes = (number | string | symbol)[];
 export const enum WasmExternalKind {
   function = 0x00,
   table = 0x01,
@@ -33,6 +37,10 @@ export interface WasmModule {
   functionMap: Map<string, number>;
   globalMap: Map<string, number>;
   localData: Map<number, Map<string, number>>;
+  // LinkingInfo
+  functionReferences: number[];
+  typeReferences: number[];
+  globalReferences: number[];
   // Sections
   customSections: number[][];
   typeSection: number[][];

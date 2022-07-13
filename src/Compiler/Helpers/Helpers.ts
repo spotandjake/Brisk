@@ -113,7 +113,12 @@ export const getVariableReference = (
   const parentStack = [...stacks, stack].reverse().find((s) => s.has(variable.name));
   // Error if not found
   if (parentStack == undefined)
-    return BriskReferenceError(rawProgram, BriskErrorType.VariableNotFound, [], variable.position);
+    return BriskReferenceError(
+      rawProgram,
+      BriskErrorType.VariableNotFound,
+      [variable.name],
+      variable.position
+    );
   // Get Reference
   return parentStack.get(variable.name)!;
 };
@@ -215,7 +220,7 @@ export const getTypeReference = (
   const parentStack = [...stacks, stack].reverse().find((s) => s.has(type.name));
   // Error if not found
   if (parentStack == undefined)
-    return BriskReferenceError(rawProgram, BriskErrorType.VariableNotFound, [], type.position);
+    return BriskReferenceError(rawProgram, BriskErrorType.TypeNotFound, [type.name], type.position);
   // Get Reference
   return parentStack.get(type.name)!;
 };

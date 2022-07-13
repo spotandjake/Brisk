@@ -31,7 +31,6 @@
 // pointer = writeCharacter(pointer, 108n); // l
 // pointer = writeCharacter(pointer, 100n); // d
 // pointer = writeCharacter(pointer, 10n); // newline
-
 // const loop: Function = (t: (i32) => i32, let index: i32): i32 => {
 //   const test: i32 = t(index);
 //   index++;

@@ -5,7 +5,7 @@ import { Command } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
 import compile from '../Compiler/index';
-import Link from '../Linker/index';
+// import Link from '../Linker/index';
 import Runner from '../Runner/index';
 import { BriskCustomError } from '../Compiler/Errors/Compiler';
 //@ts-ignore
@@ -61,8 +61,8 @@ program.argument('<file>', 'File to compile').action(async (filePath: string) =>
   console.log('================================================================');
   console.dir(output, { depth: null });
   // Link
-  const linked = await Link(compiledPath);
-  await fs.writeFile(compiledPath, linked);
+  // const linked = await Link(compiledPath);
+  await fs.writeFile(compiledPath, output);
   // Run
   Runner(output);
 });

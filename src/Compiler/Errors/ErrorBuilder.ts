@@ -8,6 +8,66 @@ const addLineNumbers = (code: string, lineNumber: number) => {
 };
 // Builds Pretty Error Messages
 export const prettyError = (code: string, message: string, position: Position) => {
+  // // Static Properties
+  // const lineCount = 3;
+  // const maxLineWidth = process?.stdout?.columns ?? 80;
+  // // Cut Error Into Pieces
+  // // const aboveCode = code.substring();
+  // // const badCode = code.substring(position.offset, position.offset + position.length);
+  // // const belowCode = code.substring();
+  // const lines = code.split('\n');
+  // const buffer = [];
+  // let offset = 0;
+  // for (let i = 0; i < lines.length; i++) {
+  //   const line = lines[i];
+  //   // Build Length
+  //   offset += line.length;
+  //   // If We found the area of interest get rid of anything extra
+  //   if (i == position.line - 1) {
+  //     // Build The message
+  //     let str = '';
+  //     // Push The Line Start
+  //     str += line.slice(0, position.col - 1);
+  //     // Push The Error Section
+  //     str += `\x1b[31m\x1b[1m${line.slice(
+  //       position.col - 1,
+  //       position.col + position.length - 1
+  //     )}\x1b[0m`;
+  //     // Push The Line End
+  //     str += line.slice(position.col + position.length - 1);
+  //     // Push The Line
+  //     buffer.push(str);
+  //     // Append The Formatting For The Error
+  //     buffer.push(
+  //       `\x1b[35m\x1b[1m${' '.repeat(position.col - 1)}${'─'.repeat(
+  //         Math.floor(position.length / 2) - (position.length % 2 == 0 ? 1 : 0)
+  //       )}┬${'─'.repeat(Math.floor(position.length / 2))}\x1b[0m`
+  //     );
+  //     buffer.push(
+  //       `${' '.repeat(
+  //         position.col + Math.floor(position.length / 2) - (position.length % 2 == 0 ? 2 : 1)
+  //       )}\x1b[35m\x1b[1m│\x1b[0m`
+  //     );
+  //     // Push Message
+  //     let msg = '';
+  //     msg += '\x1b[35m\x1b[1m';
+  //     msg += `${' '.repeat(
+  //       position.col + Math.floor(position.length / 2) - (position.length % 2 == 0 ? 2 : 1)
+  //     )}`;
+  //     msg += '╰─ ';
+  //     msg += message;
+  //     msg += '\x1b[0m';
+  //     buffer.push(msg);
+  //   } else {
+  //     // Append To Buffer
+  //     buffer.push(line);
+  //   }
+  // }
+  // console.log(code);
+  // console.log(position);
+  // console.log(buffer.join('\n'));
+  // Build Output
+  // Return Output
   // Create Detailed Error Message
   const width = process.stdout.columns || 80;
   const offset = position.offset;

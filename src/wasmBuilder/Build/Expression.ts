@@ -1,4 +1,10 @@
-import { ResolvedBytes, UnresolvedBytes } from '../Types/Nodes';
+import {
+  ResolvedBytes,
+  UnresolvedBytes,
+  funcRefIdentifier,
+  globalRefIdentifier,
+  typeRefIdentifier,
+} from '../Types/Nodes';
 import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
 // Expressions
 export const unreachableExpression = (): ResolvedBytes => [0x00]; // Wasm Unreachable Instruction
@@ -102,6 +108,7 @@ export const callExpression = (
 ): UnresolvedBytes => [
   ...params.flat(),
   0x10, // Wasm Call Instruction
+  funcRefIdentifier, // funcRefIdentifier
   ...(typeof func == 'string' ? [func] : unsignedLEB128(func)), // Encoded Func Index
 ];
 export const call_indirect = (
@@ -112,6 +119,7 @@ export const call_indirect = (
   ...params.flat(), // Parameters
   ...funcIndex, // Function Index
   0x11, // Wasm Call_indirect Instruction
+  typeRefIdentifier, // typeRefIdentifier
   funcType, // Function Type Reference
   0x00, // Wasm Function Table
   // TODO: Allow You To Set The Function Table
@@ -124,7 +132,7 @@ export const dropExpression = (body: UnresolvedBytes): UnresolvedBytes => [
 // TODO: Select
 export const local_GetExpression = (local: number | string): UnresolvedBytes => [
   0x20, // Wasm Local.Get Instruction
-  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Func Index
+  ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
 ];
 export const local_SetExpression = (
   local: number | string,
@@ -144,6 +152,7 @@ export const local_TeeExpression = (
 ];
 export const global_GetExpression = (global: number | string): UnresolvedBytes => [
   0x23, // Wasm Global.Get Instruction
+  globalRefIdentifier, // globalRefIdentifier
   ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
 ];
 export const global_SetExpression = (
@@ -152,6 +161,7 @@ export const global_SetExpression = (
 ): UnresolvedBytes => [
   ...body, // Body Content
   0x24, // Wasm Local.Set Instruction
+  globalRefIdentifier, // globalRefIdentifier
   ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
 ];
 // TODO: table_get

@@ -32,6 +32,7 @@ import {
   createModule,
   setStart,
 } from '../../wasmBuilder/Build/WasmModule';
+import { encodeString, unsignedLEB128 } from '../../wasmBuilder/Build/Utils';
 import { CodeGenNode, CodeGenProperties } from '../Types/CodeGenNodes';
 import { mapExpression } from './WasmInstructionMap';
 import { addLocal, createFunction, setBody } from '../../wasmBuilder/Build/Function';
@@ -139,7 +140,7 @@ const generateCode = (
         // Add To The Function Table
         wasmModule = addElement(wasmModule, [reference]);
         // Add The Global
-        wasmModule = addGlobal(
+        addGlobal(
           wasmModule,
           `${node.variable.name}${node.variable.reference!}`,
           false,
@@ -169,7 +170,7 @@ const generateCode = (
       const name = generateVariableName(varData.name, varData.reference);
       if (varData.global) {
         // Add Global
-        wasmModule = addGlobal(
+        addGlobal(
           wasmModule,
           name,
           true,
@@ -513,7 +514,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   // TODO: Handle Compiling Type Information For Exports
   // Module SetUp
   wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
-  wasmModule = addGlobal(
+  const moduleFunctionOffset = addGlobal(
     // The Table Offset For Use In Linking
     wasmModule,
     brisk_moduleFunctionOffset,
@@ -580,6 +581,27 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   wasmModule = setStart(wasmModule, '_start');
   // wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
+  // TODO: Compile LinkingInfo Section
+  console.log('GlobalReferences:', wasmModule.globalReferences);
+  console.log('FunctionReferences:', wasmModule.functionReferences);
+  console.log('TypeReferences:', wasmModule.typeReferences);
+  wasmModule = createCustomSection(wasmModule, [
+    // Custom Section Id
+    ...encodeString('LinkingInfo'),
+    // importIdentifier
+    ...encodeString('$Brisk$'),
+    // functionOffsetGlobal
+    ...unsignedLEB128(moduleFunctionOffset),
+    // functionReferences
+    ...unsignedLEB128(wasmModule.functionReferences.length),
+    ...wasmModule.functionReferences.map((ref) => unsignedLEB128(ref)).flat(),
+    // typeReferences
+    ...unsignedLEB128(wasmModule.typeReferences.length),
+    ...wasmModule.typeReferences.map((ref) => unsignedLEB128(ref)).flat(),
+    // globalReferences
+    ...unsignedLEB128(wasmModule.globalReferences.length),
+    ...wasmModule.globalReferences.map((ref) => unsignedLEB128(ref)).flat(),
+  ]);
   // Return The Compiled Module
   return compileModule(wasmModule, program.name);
 };
