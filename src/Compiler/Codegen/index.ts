@@ -115,7 +115,7 @@ const generateCode = (
       addImport(
         wasmModule,
         createGlobalImport(
-          `${brisk_moduleIdentifier}${node.source.value}`,
+          `${brisk_moduleIdentifier}${node.source.value}.wasm`,
           generateVariableName(node.variable.name, node.variable.reference!),
           importType,
           false
@@ -582,9 +582,6 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   // wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
   // TODO: Compile LinkingInfo Section
-  console.log('GlobalReferences:', wasmModule.globalReferences);
-  console.log('FunctionReferences:', wasmModule.functionReferences);
-  console.log('TypeReferences:', wasmModule.typeReferences);
   wasmModule = createCustomSection(wasmModule, [
     // Custom Section Id
     ...encodeString('LinkingInfo'),

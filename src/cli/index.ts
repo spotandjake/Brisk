@@ -32,7 +32,10 @@ const compileFile = async (
   // Generate Compiled Path
   const compiledPath = path.relative(
     basePath,
-    path.join(path.dirname(_filePath), `${path.basename(_filePath, path.extname(_filePath))}.wasm`)
+    path.join(
+      path.dirname(_filePath),
+      `${path.basename(_filePath, path.extname(_filePath))}.br.wasm`
+    )
   );
   // Save File
   await fs.writeFile(path.resolve(basePath, compiledPath), compiled.output);
