@@ -73,9 +73,7 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     globalMap: new Map(),
     localData: new Map(),
     // LinkingInfo
-    functionReferences: [],
-    typeReferences: [],
-    globalReferences: [],
+    codeReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
@@ -188,10 +186,7 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
       .flat(),
   ];
   // Push References To Linking Info
-  const codeSectionLength = wasmModule.codeSection.flat().length + code.length;
-  wasmModule.functionReferences.push(...functionReferences.map((ref) => ref + codeSectionLength));
-  wasmModule.typeReferences.push(...typeReferences.map((ref) => ref + codeSectionLength));
-  wasmModule.globalReferences.push(...globalReferences.map((ref) => ref + codeSectionLength));
+  wasmModule.codeReferences.push([functionReferences, typeReferences, globalReferences]);
   // Finish Code Section
   code.push(...wasmBody); // Add Function Body
   code.push(0x0b); // Wasm End Instruction

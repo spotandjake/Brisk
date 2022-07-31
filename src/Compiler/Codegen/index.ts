@@ -589,15 +589,34 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     ...encodeString('$Brisk$'),
     // functionOffsetGlobal
     ...unsignedLEB128(moduleFunctionOffset),
-    // functionReferences
-    ...unsignedLEB128(wasmModule.functionReferences.length),
-    ...wasmModule.functionReferences.map((ref) => unsignedLEB128(ref)).flat(),
-    // typeReferences
-    ...unsignedLEB128(wasmModule.typeReferences.length),
-    ...wasmModule.typeReferences.map((ref) => unsignedLEB128(ref)).flat(),
-    // globalReferences
-    ...unsignedLEB128(wasmModule.globalReferences.length),
-    ...wasmModule.globalReferences.map((ref) => unsignedLEB128(ref)).flat(),
+    // References
+    ...unsignedLEB128(wasmModule.codeReferences.length),
+    ...wasmModule.codeReferences
+      .map((ref) => {
+        const [funcRefs, typeRefs, globalRefs] = ref;
+        // Encode
+        return [
+          ...unsignedLEB128(funcRefs.length),
+          ...funcRefs
+            .map((funcRef) => {
+              return unsignedLEB128(funcRef);
+            })
+            .flat(),
+          ...unsignedLEB128(typeRefs.length),
+          ...typeRefs
+            .map((typeRef) => {
+              return unsignedLEB128(typeRef);
+            })
+            .flat(),
+          ...unsignedLEB128(globalRefs.length),
+          ...globalRefs
+            .map((globalRef) => {
+              return unsignedLEB128(globalRef);
+            })
+            .flat(),
+        ];
+      })
+      .flat(),
   ]);
   // Return The Compiled Module
   return compileModule(wasmModule, program.name);

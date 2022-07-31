@@ -38,9 +38,7 @@ export interface WasmModule {
   globalMap: Map<string, number>;
   localData: Map<number, Map<string, number>>;
   // LinkingInfo
-  functionReferences: number[];
-  typeReferences: number[];
-  globalReferences: number[];
+  codeReferences: [number[], number[], number[]][]; // vec(codeRefs) -> codeRefs = [vec(funcRef), vec(typeRef), vec(globalRef)]
   // Sections
   customSections: number[][];
   typeSection: number[][];
