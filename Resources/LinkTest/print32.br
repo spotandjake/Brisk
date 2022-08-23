@@ -1,0 +1,30 @@
+import wasm fd_write: (i32, i32, i32, i32) => i32 from 'wasi_snapshot_preview1';
+// TODO: Implement toString32
+export const print32: Function = (value: i32): Void => {
+  // Helper
+  let writeCharacterCode: Function = (let pointer: i32, character: i32): i32 => {
+    // Store Character
+    @wasm.i32.store(pointer, character);
+    // Add To The Index
+    pointer++;
+    // Return Pointer
+    return(pointer);
+  };
+  // Create String
+  const basePointer: i32 = 0n;
+  let pointer: i32 = @wasm.i32.add(basePointer, 8n);
+  let length: i32 = 0n;
+  // Handle String Conversion In toString
+  if (@wasm.i32.eqz(value)) {
+    pointer = writeCharacterCode(pointer, 48n);
+    length++;
+  };
+  // Write New Line
+  pointer = writeCharacterCode(pointer, 10n);
+  length++;
+  // Store Iov Info
+  @wasm.i32.store(basePointer, 8n);
+  @wasm.i32.store(@wasm.i32.add(basePointer, 4n), length);
+  // Write String
+  fd_write(1n, 0n, 1n, 40n);
+};

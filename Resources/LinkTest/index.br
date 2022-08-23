@@ -1,0 +1,3 @@
+import print32 from './print32.br';
+print32(0n);
+print32(1n);

@@ -137,7 +137,16 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
     localNames.set(local[1], localNames.size);
   }
   // Resolve Function Body Labels
-  const wasmBody: number[] = [];
+  const wasmBody: number[] = [
+    ...unsignedLEB128(func.locals.length),
+    // TODO: Optimize The local Format So That They Are Grouped
+    ...func.locals
+      .map(([local]) => {
+        // Change The 1 to the local length
+        return [1, ...local];
+      })
+      .flat(),
+  ];
   const functionReferences: number[] = [];
   const typeReferences: number[] = [];
   const globalReferences: number[] = [];
@@ -175,16 +184,7 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
   // Add Function To FunctionSection
   wasmModule.functionSection.push([typeReference]);
   // Add Function To CodeSection
-  const code: number[] = [
-    ...unsignedLEB128(func.locals.length),
-    // TODO: Optimize The local Format So That They Are Grouped
-    ...func.locals
-      .map(([local]) => {
-        // Change The 1 to the local length
-        return [1, ...local];
-      })
-      .flat(),
-  ];
+  const code: number[] = [];
   // Push References To Linking Info
   wasmModule.codeReferences.push([functionReferences, typeReferences, globalReferences]);
   // Finish Code Section
@@ -314,13 +314,11 @@ export const compileModule = (
   includeDataCount = true
 ): Uint8Array => {
   // Add A Table
-  if (wasmModule.elementSection.length > 0) {
-    wasmModule.tableSection.push([
-      0x70, // Table Type
-      0x00, // Limit Flag That We Only Want A Min Value
-      ...unsignedLEB128(wasmModule.elementSection.length), // Min Value
-    ]);
-  }
+  wasmModule.tableSection.push([
+    0x70, // Table Type
+    0x00, // Limit Flag That We Only Want A Min Value
+    ...unsignedLEB128(wasmModule.elementSection.length), // Min Value
+  ]);
   // Compile Name Section
   const funcNameSection: number[] = [wasmModule.functionMap.size];
   for (const [name, index] of wasmModule.functionMap.entries()) {

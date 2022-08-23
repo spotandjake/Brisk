@@ -522,17 +522,6 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     Types.createNumericType(WasmTypes.WasmI32),
     Expressions.i32_ConstExpression(0)
   );
-  if (program.data._imports.size != 0) {
-    addImport(
-      wasmModule,
-      createGlobalImport(
-        'brisk:LinkingConstant',
-        brisk_moduleFunctionOffset,
-        Types.createNumericType(WasmTypes.WasmI32),
-        false
-      )
-    );
-  }
   // Create Function
   let func = createFunction('_start', Types.createFunctionType([], []), [], [], []);
   // Build The Body
