@@ -28,6 +28,10 @@
           "br",
           "bk"
         ],
+        "icon": {
+          "light": "./Brisk.png",
+          "dark": "./Brisk.png"
+        },
         "configuration": "./language-configuration.json"
       }
     ],
