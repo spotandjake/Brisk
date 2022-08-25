@@ -134,6 +134,7 @@ gulp.task('buildExtension', async () => {
   await fs.promises.mkdir(`${folder}/syntaxes/`);
   // Copy Extension Files
   await fs.promises.copyFile('./src/extension/package.json', './dist/extension/package.json');
+  await fs.promises.copyFile('./src/extension/Brisk.png', './dist/extension/Brisk.png');
   await fs.promises.copyFile(
     './src/extension/language-configuration.json',
     './dist/extension/language-configuration.json'

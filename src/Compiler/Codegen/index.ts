@@ -116,6 +116,7 @@ const generateCode = (
         wasmModule,
         createGlobalImport(
           `${brisk_moduleIdentifier}${node.source.value}.wasm`,
+          `${brisk_moduleIdentifier}${node.variable.name}`,
           generateVariableName(node.variable.name, node.variable.reference!),
           importType,
           false
@@ -151,7 +152,13 @@ const generateCode = (
         // Must Be A Global Import
         addImport(
           wasmModule,
-          createGlobalImport(node.source.value, node.variable.name, importType, false)
+          createGlobalImport(
+            node.source.value,
+            node.variable.name,
+            node.variable.name,
+            importType,
+            false
+          )
         );
       }
       // Return Blank Statement

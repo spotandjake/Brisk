@@ -36,6 +36,7 @@ export const createFunctionImport = (
   return {
     kind: WasmExternalKind.function,
     name: importField,
+    valueName: importField,
     importData: [
       ...encodeString(importModule),
       ...encodeString(importField),
@@ -47,12 +48,14 @@ export const createFunctionImport = (
 export const createGlobalImport = (
   importModule: string,
   importField: string,
+  variableName: string,
   importType: ResolvedBytes,
   mutable: boolean
 ): WasmImport => {
   return {
     kind: WasmExternalKind.global,
     name: importField,
+    valueName: variableName,
     importData: [
       ...encodeString(importModule),
       ...encodeString(importField),
@@ -87,6 +90,9 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     elementSection: [],
     codeSection: [],
     dataSection: [],
+    // Maps
+    importGlobals: 0,
+    importFunctions: 0,
   };
   // Handle Imports
   if (imports != undefined) {
@@ -100,7 +106,7 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
       if (wasmImport.kind == WasmExternalKind.function)
         moduleState.functionMap.set(wasmImport.name, moduleState.functionSection.length - 1);
       else if (wasmImport.kind == WasmExternalKind.global)
-        moduleState.globalMap.set(wasmImport.name, moduleState.globalSection.length - 1);
+        moduleState.globalMap.set(wasmImport.name, moduleState.importGlobals++);
       // Add Import To Import Section
       moduleState.importSection.push(wasmImport.importData);
     }
@@ -112,9 +118,9 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
 export const addImport = (wasmModule: WasmModule, wasmImport: WasmImport): number => {
   // Set Import Label
   if (wasmImport.kind == WasmExternalKind.function)
-    wasmModule.functionMap.set(wasmImport.name, wasmModule.functionSection.length);
+    wasmModule.functionMap.set(wasmImport.valueName, wasmModule.functionSection.length);
   else if (wasmImport.kind == WasmExternalKind.global)
-    wasmModule.globalMap.set(wasmImport.name, wasmModule.globalSection.length);
+    wasmModule.globalMap.set(wasmImport.valueName, wasmModule.importGlobals++);
   // Add Import To Import Section
   wasmModule.importSection.push(wasmImport.importData);
   // Add a Empty Section Element So The Index's are correct
@@ -160,6 +166,8 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
       } else if (lastByte == 0x22 && localNames.has(byte)) {
         wasmBody.push(...unsignedLEB128(localNames.get(byte)!)); // Wasm Local Tee
       } else if (lastByte == 0x23 && wasmModule.globalMap.has(byte)) {
+        console.log(byte);
+        console.log(wasmModule.globalMap);
         wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Get
       } else if (lastByte == 0x24 && wasmModule.globalMap.has(byte)) {
         wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Set
@@ -240,7 +248,7 @@ export const addGlobal = (
   value: number[]
 ): number => {
   // Set Global Label
-  wasmModule.globalMap.set(globalName, wasmModule.globalSection.length);
+  wasmModule.globalMap.set(globalName, wasmModule.importGlobals + wasmModule.globalSection.length);
   // Add The Module
   wasmModule.globalSection.push([
     ...globalType, // Global Type

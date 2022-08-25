@@ -30,6 +30,7 @@ export const enum WasmSection {
 export interface WasmImport {
   kind: WasmExternalKind;
   name: string;
+  valueName: string;
   importData: number[];
 }
 export interface WasmModule {
@@ -52,6 +53,9 @@ export interface WasmModule {
   elementSection: number[][];
   codeSection: number[][];
   dataSection: number[][];
+  // Counts
+  importGlobals: number;
+  importFunctions: number;
 }
 export interface WasmFunction {
   name: string; // TODO: Not All Functions Need Names

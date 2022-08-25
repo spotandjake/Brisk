@@ -4,6 +4,11 @@
   "description": "Visual Studio Code Support For Brisk.",
   "version": "0.0.1",
   "publisher": "brisk-dev",
+  "icon": "Brisk.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spotandjake/Brisk"
+  },
   "engines": {
     "vscode": "^1.66.0"
   },
