@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Position } from '../Types/Types';
 import { BriskTypeID } from '../Types/WasmFormat';
 import { BaseTypes, primTypes } from '../Compiler/Types/ParseNodes';

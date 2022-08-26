@@ -117,13 +117,13 @@ test('WasmBuilder-Expressions: local_TeeExpression', () => {
   ]);
 });
 test('WasmBuilder-Expressions: global_GetExpression', () => {
-  expect(Expressions.global_GetExpression(0)).toEqual([0x23, ...unsignedLEB128(0)]);
+  expect(Expressions.global_GetExpression('test')).toEqual([0x23, 'test']);
 });
 test('WasmBuilder-Expressions: global_SetExpression', () => {
-  expect(Expressions.global_SetExpression(0, Expressions.nopExpression())).toEqual([
+  expect(Expressions.global_SetExpression('test', Expressions.nopExpression())).toEqual([
     ...Expressions.nopExpression(),
     0x24,
-    ...unsignedLEB128(0),
+    'test',
   ]);
 });
 // TODO: table_get

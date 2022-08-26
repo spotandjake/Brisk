@@ -53,9 +53,6 @@ export interface WasmModule {
   elementSection: number[][];
   codeSection: number[][];
   dataSection: number[][];
-  // Counts
-  importGlobals: number;
-  importFunctions: number;
 }
 export interface WasmFunction {
   name: string; // TODO: Not All Functions Need Names

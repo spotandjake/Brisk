@@ -18,6 +18,7 @@ const i32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i32');
 const i64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'i64');
 const f32Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f32');
 const f64Type = (pos: Position): TypeLiteral => createPrimType(pos, 'f64');
+const strType = (pos: Position): TypeLiteral => createPrimType(pos, 'String');
 const numberType = (pos: Position): TypeLiteral => createPrimType(pos, 'Number');
 const boolType = (pos: Position): TypeLiteral => createPrimType(pos, 'Boolean');
 // TODO: Replace Void With An Empty Type That Throws In An Expression Format
@@ -60,9 +61,9 @@ export const mapExpression = (
     case 'local.tee':
       return createFunctionType(pos, [i32Type(pos), stackType(pos)], stackType(pos));
     case 'global.get':
-      return createFunctionType(pos, [i32Type(pos)], stackType(pos));
+      return createFunctionType(pos, [strType(pos)], stackType(pos));
     case 'global.set':
-      return createFunctionType(pos, [i32Type(pos), stackType(pos)], voidType(pos));
+      return createFunctionType(pos, [strType(pos), stackType(pos)], voidType(pos));
     case 'i32.load':
       return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
     case 'i64.load':

@@ -33,10 +33,10 @@ export const mapExpression = (
       );
     // Global
     case 'global.get':
-      return Expressions.global_GetExpression((<Nodes.I32LiteralNode>args[0]).value);
+      return Expressions.global_GetExpression((<Nodes.StringLiteralNode>args[0]).value);
     case 'global.set':
       return Expressions.global_SetExpression(
-        (<Nodes.I32LiteralNode>args[0]).value,
+        (<Nodes.StringLiteralNode>args[0]).value,
         _generateCode(args[1])
       );
     case 'i32.load':

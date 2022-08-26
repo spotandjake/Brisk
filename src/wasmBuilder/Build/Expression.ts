@@ -150,19 +150,16 @@ export const local_TeeExpression = (
   0x22, // Wasm Local.Set Instruction
   ...(typeof local == 'string' ? [local] : unsignedLEB128(local)), // Encoded Local Index
 ];
-export const global_GetExpression = (global: number | string): UnresolvedBytes => [
+export const global_GetExpression = (global: string): UnresolvedBytes => [
   0x23, // Wasm Global.Get Instruction
   globalRefIdentifier, // globalRefIdentifier
-  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
+  global, // Global Name
 ];
-export const global_SetExpression = (
-  global: number | string,
-  body: UnresolvedBytes
-): UnresolvedBytes => [
+export const global_SetExpression = (global: string, body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x24, // Wasm Local.Set Instruction
   globalRefIdentifier, // globalRefIdentifier
-  ...(typeof global == 'string' ? [global] : unsignedLEB128(global)), // Encoded Global Index
+  global, // Global Name
 ];
 // TODO: table_get
 // TODO: table_set

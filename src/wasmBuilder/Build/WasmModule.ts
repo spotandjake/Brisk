@@ -68,7 +68,7 @@ export const createGlobalImport = (
 // TODO: createTableImport
 // TODO: createMemoryImport
 // Main Wasm Module Creator
-export const createModule = (imports?: WasmImport[]): WasmModule => {
+export const createModule = (): WasmModule => {
   // Module State
   const moduleState: WasmModule = {
     // Label Maps
@@ -90,27 +90,7 @@ export const createModule = (imports?: WasmImport[]): WasmModule => {
     elementSection: [],
     codeSection: [],
     dataSection: [],
-    // Maps
-    importGlobals: 0,
-    importFunctions: 0,
   };
-  // Handle Imports
-  if (imports != undefined) {
-    for (const wasmImport of imports) {
-      // Add a Empty Section Element So The Index's are correct
-      if (wasmImport.kind == WasmExternalKind.function) moduleState.functionSection.push([]);
-      else if (wasmImport.kind == WasmExternalKind.table) moduleState.tableSection.push([]);
-      else if (wasmImport.kind == WasmExternalKind.memory) moduleState.memorySection.push([]);
-      else if (wasmImport.kind == WasmExternalKind.global) moduleState.globalSection.push([]);
-      // Set Import Label
-      if (wasmImport.kind == WasmExternalKind.function)
-        moduleState.functionMap.set(wasmImport.name, moduleState.functionSection.length - 1);
-      else if (wasmImport.kind == WasmExternalKind.global)
-        moduleState.globalMap.set(wasmImport.name, moduleState.importGlobals++);
-      // Add Import To Import Section
-      moduleState.importSection.push(wasmImport.importData);
-    }
-  }
   // Return Module Contents
   return moduleState;
 };
@@ -120,9 +100,10 @@ export const addImport = (wasmModule: WasmModule, wasmImport: WasmImport): numbe
   if (wasmImport.kind == WasmExternalKind.function)
     wasmModule.functionMap.set(wasmImport.valueName, wasmModule.functionSection.length);
   else if (wasmImport.kind == WasmExternalKind.global)
-    wasmModule.globalMap.set(wasmImport.valueName, wasmModule.importGlobals++);
+    wasmModule.globalMap.set(wasmImport.valueName, wasmModule.globalSection.length);
   // Add Import To Import Section
   wasmModule.importSection.push(wasmImport.importData);
+  // TODO: Do The Mapping Properly
   // Add a Empty Section Element So The Index's are correct
   if (wasmImport.kind == WasmExternalKind.function) return wasmModule.functionSection.push([]) - 1;
   if (wasmImport.kind == WasmExternalKind.table) return wasmModule.tableSection.push([]) - 1;
@@ -166,8 +147,6 @@ export const addFunction = (wasmModule: WasmModule, func: WasmFunction): WasmMod
       } else if (lastByte == 0x22 && localNames.has(byte)) {
         wasmBody.push(...unsignedLEB128(localNames.get(byte)!)); // Wasm Local Tee
       } else if (lastByte == 0x23 && wasmModule.globalMap.has(byte)) {
-        console.log(byte);
-        console.log(wasmModule.globalMap);
         wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Get
       } else if (lastByte == 0x24 && wasmModule.globalMap.has(byte)) {
         wasmBody.push(...unsignedLEB128(wasmModule.globalMap.get(byte)!)); // Wasm Global Set
@@ -234,7 +213,6 @@ export const addElement = (wasmModule: WasmModule, values: number[]): WasmModule
   return wasmModule;
 };
 // Wasm Module Memory Mutations
-// TODO: Consider Having this be passed in, in createModule
 export const addMemory = (wasmModule: WasmModule, memType: number[]): WasmModule => {
   wasmModule.memorySection.push(memType);
   return wasmModule;
@@ -248,7 +226,7 @@ export const addGlobal = (
   value: number[]
 ): number => {
   // Set Global Label
-  wasmModule.globalMap.set(globalName, wasmModule.importGlobals + wasmModule.globalSection.length);
+  wasmModule.globalMap.set(globalName, wasmModule.globalSection.length);
   // Add The Module
   wasmModule.globalSection.push([
     ...globalType, // Global Type

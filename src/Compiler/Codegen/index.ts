@@ -521,14 +521,6 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   // TODO: Handle Compiling Type Information For Exports
   // Module SetUp
   wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
-  const moduleFunctionOffset = addGlobal(
-    // The Table Offset For Use In Linking
-    wasmModule,
-    brisk_moduleFunctionOffset,
-    false,
-    Types.createNumericType(WasmTypes.WasmI32),
-    Expressions.i32_ConstExpression(0)
-  );
   // Create Function
   let func = createFunction('_start', Types.createFunctionType([], []), [], [], []);
   // Build The Body
@@ -577,6 +569,14 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   wasmModule = setStart(wasmModule, '_start');
   // wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
+  const moduleFunctionOffset = addGlobal(
+    // The Table Offset For Use In Linking
+    wasmModule,
+    brisk_moduleFunctionOffset,
+    false,
+    Types.createNumericType(WasmTypes.WasmI32),
+    Expressions.i32_ConstExpression(0)
+  );
   // TODO: Compile LinkingInfo Section
   wasmModule = createCustomSection(wasmModule, [
     // Custom Section Id
