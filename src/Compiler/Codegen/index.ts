@@ -328,6 +328,66 @@ const generateCode = (
         } else {
           return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
         }
+      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticSub) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'i32' || exprAType.name == 'u32')
+            return Expressions.i32_SubExpression(lhs, rhs);
+          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+            return Expressions.i64_SubExpression(lhs, rhs);
+          else if (exprAType.name == 'f32') return Expressions.f32_SubExpression(lhs, rhs);
+          else if (exprAType.name == 'f64') return Expressions.f64_SubExpression(lhs, rhs);
+        } else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else if (node.operator == ArithmeticExpressionOperator.ArithmeticDiv) {
+          // Comparison
+          if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+            // Handle Stack Types
+            if (exprAType.name == 'i32' || exprAType.name == 'u32')
+              return Expressions.i32_Div_sExpression(lhs, rhs);
+            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+              return Expressions.i64_Div_sExpression(lhs, rhs);
+            else if (exprAType.name == 'f32') return Expressions.f32_DivExpression(lhs, rhs);
+            else if (exprAType.name == 'f64') return Expressions.f64_DivExpression(lhs, rhs);
+          } else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else if (node.operator == ArithmeticExpressionOperator.ArithmeticMul) {
+          // Comparison
+          if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+            // Handle Stack Types
+            if (exprAType.name == 'i32' || exprAType.name == 'u32')
+              return Expressions.i32_MulExpression(lhs, rhs);
+            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+              return Expressions.i64_MulExpression(lhs, rhs);
+            else if (exprAType.name == 'f32') return Expressions.f32_MulExpression(lhs, rhs);
+            else if (exprAType.name == 'f64') return Expressions.f64_MulExpression(lhs, rhs);
+            else {
+              // TODO: Handle Heap Types
+              return BriskError(
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          } else {
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
       } else {
         return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       }

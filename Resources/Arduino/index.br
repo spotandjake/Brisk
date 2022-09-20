@@ -1,0 +1,63 @@
+// Arduino Imports
+import wasm delay: (i32) => Void from 'arduino';
+import wasm pinMode: (i32, i32) => Void from 'arduino';
+import wasm digitalWrite: (i32, i32) => Void from 'arduino';
+// Config
+//L293D H-Bridge Chip Motor Control of two bi-directional DC Motors
+let leftEnable: i32 = 10n;
+let leftPin1: i32 = 6n;
+let leftPin2: i32 = 6n;
+let rightEnable: i32 = 2n;
+let rightPin1: i32 = 10n;
+let rightPin2: i32 = 9n;
+// Types
+// Functions
+let calcTurnTime: Function = (degrees: i32): i32 => {
+  let degreeTime: i32 = 600n / 90n; // It takes 600ms to turn 90 degrees
+  let turnTime: i32 = degreeTime * degrees;
+  return(turnTime);
+};
+// Commands
+let init: Function = (): Void => {
+  //Set motors pins as outputs
+  pinMode(leftEnable, 1n);
+  pinMode(leftPin1, 1n);
+  pinMode(leftPin2, 1n);
+  pinMode(rightEnable, 1n);
+  pinMode(rightPin1, 1n);
+  pinMode(rightPin2, 1n);
+  // TODO: Start Serial
+  // {
+  //   Serial.begin(9600);
+  //   MyBlue.begin(9600);
+  //   Serial.println("Ready to connect\nDefualt password is 1234 or 000");
+  // }
+};
+let stop: Function = (): Void => {
+  // This code turns off all motors (FREE-WHEEL STOP, When enable pin LOW)
+  // Start The Left Motor
+  digitalWrite(leftEnable, 0n);
+  digitalWrite(leftPin1, 0n);
+  digitalWrite(leftPin2, 0n);
+  // Start The Right Motor
+  digitalWrite(rightEnable, 0n);
+  digitalWrite(rightPin1, 0n);
+  digitalWrite(rightPin2, 0n);
+  delay(500n);
+};
+let moveForward: Function = (feet: i32): Void => {
+  // Start The Left Motor
+  digitalWrite(leftEnable, 1n);
+  digitalWrite(leftPin1, 0n);
+  digitalWrite(leftPin2, 1n);
+  // Start The Right Motor
+  digitalWrite(rightEnable, 1n);
+  digitalWrite(rightPin1, 0n);
+  digitalWrite(rightPin2, 1n);
+  // Wait The Given Time For Approx A Foot
+  delay(1500n * feet);
+};
+// Test
+init();
+moveForward(1n);
+stop();
