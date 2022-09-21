@@ -299,7 +299,7 @@ export const TknWasmCall = createToken({
   label: 'Wasm Call',
   name: LexerTokenType.TknWasmCall,
   categories: literalTokens,
-  pattern: /@wasm((\.[a-z\d]+)+)/,
+  pattern: /@wasm((\.[1-9a-zA-Z$_]+)+)/,
 }); // Wasm Call
 // Separators
 export const TknLParen = createToken({

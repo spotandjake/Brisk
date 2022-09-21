@@ -15,8 +15,8 @@ export const print32: Function = (value: i32): Void => {
   let pointer: i32 = @wasm.i32.add(basePointer, 8n);
   let length: i32 = 0n;
   // Handle String Conversion In toString
-  if (@wasm.i32.eqz(value)) {
-    pointer = writeCharacterCode(pointer, 48n);
+  if (@wasm.i32.lt_s(value, 10n)) {
+    pointer = writeCharacterCode(pointer, 48n + value);
     length++;
   };
   // Write New Line
