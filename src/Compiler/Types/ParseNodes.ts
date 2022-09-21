@@ -7,6 +7,7 @@ export const enum NodeType {
   Program,
   // Statements
   IfStatement,
+  WhileStatement,
   FlagStatement,
   BlockStatement,
   ImportStatement,
@@ -85,6 +86,7 @@ export interface ProgramNode {
 export type Statement =
   | FlagNode
   | IfStatementNode
+  | WhileStatementNode
   | BlockStatementNode
   | ImportStatementNode
   | WasmImportStatementNode
@@ -103,6 +105,16 @@ export interface IfStatementNode {
   body: Statement;
   alternative?: Statement;
 
+  data: {
+    pathReturns: boolean;
+  };
+  position: Position;
+}
+export interface WhileStatementNode {
+  nodeType: NodeType.WhileStatement;
+  category: NodeCategory.Statement;
+  condition: Expression;
+  body: Statement;
   data: {
     pathReturns: boolean;
   };

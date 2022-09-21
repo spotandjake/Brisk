@@ -89,6 +89,14 @@ const generateCode = (
       // Return Expression
       return Expressions.ifExpression(condition, body, alternative);
     }
+    case NodeType.WhileStatement: {
+      // Compile Conditions
+      const condition = _generateCode(node.condition);
+      // Compile Body
+      const body = _generateCode(node.body);
+      // Assemble Function
+      return Expressions.loopExpression(undefined, [body, Expressions.br_IfExpression(condition, 0)])
+    }
     // TODO: Handle Flag Statement
     case NodeType.BlockStatement: {
       // Compile Body

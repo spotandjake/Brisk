@@ -196,6 +196,12 @@ export const TknIf = createToken({
   pattern: 'if',
   categories: keywordTokens,
 });
+export const TknWhile = createToken({
+  label: 'While',
+  name: LexerTokenType.TknWhile,
+  pattern: 'while',
+  categories: keywordTokens,
+});
 export const TknElse = createToken({
   label: 'Else',
   name: LexerTokenType.ElseToken,
@@ -530,13 +536,6 @@ export const TknFor = createToken({
   group: LexerTokenType.Reserved,
   pattern: 'for',
 });
-export const TknWhile = createToken({
-  label: 'While',
-  name: LexerTokenType.TknWhile,
-  categories: reserved,
-  group: LexerTokenType.Reserved,
-  pattern: 'while',
-});
 export const TknAwait = createToken({
   label: 'Await',
   name: LexerTokenType.TknAwait,
@@ -599,6 +598,7 @@ export const Tokens = [
   TknConst,
   TknLet,
   TknIf,
+  TknWhile,
   TknElse,
   TknInterface,
   TknType,
@@ -642,7 +642,6 @@ export const Tokens = [
   TknImplements,
   TknExtends,
   TknFor,
-  TknWhile,
   TknAwait,
   TknAsync,
   // Flags

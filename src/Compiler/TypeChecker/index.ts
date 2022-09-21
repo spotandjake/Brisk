@@ -69,6 +69,21 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze Alternative
       if (node.alternative) node.alternative = _typeCheckNode(node.alternative);
       return node;
+    case NodeType.WhileStatement:
+      // Analyze Condition
+      node.condition = _typeCheckNode(node.condition);
+      // TypeCheck Condition
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
+        createPrimType(node.condition.position, 'Boolean')
+      );
+      // Analyze Body
+      node.body = _typeCheckNode(node.body);
+      return node;
     case NodeType.FlagStatement:
       // We only allow arguments on the operator flag, we dont need to analyze these because they are only used in the compiler
       if (node.value == 'operator') {

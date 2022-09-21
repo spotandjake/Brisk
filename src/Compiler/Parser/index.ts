@@ -97,6 +97,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.blockStatement) },
       { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
+      { ALT: () => this.SUBRULE(this.whileStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
@@ -218,6 +219,36 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
+  private whileStatement = this.RULE('WhileStatement', (): Nodes.WhileStatementNode => {
+    // Read The Position
+    const location = this.CONSUME(Tokens.TknWhile);
+    this.CONSUME(Tokens.TknLParen);
+    const condition = this.SUBRULE(this.expression);
+    this.CONSUME(Tokens.TknRParen);
+    const body = this.SUBRULE1(this._statement);
+    return this.ACTION((): Nodes.WhileStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.WhileStatement,
+        category: Nodes.NodeCategory.Statement,
+        condition: condition,
+        body: body,
+        data: {
+          pathReturns: false
+        },
+        position: {
+          offset: location.startOffset,
+          length: 
+            body?.position.offset +
+            body?.position.length -
+            location.startOffset,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      }
+    });
+  })
   private importStatement = this.RULE(
     'ImportStatement',
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {

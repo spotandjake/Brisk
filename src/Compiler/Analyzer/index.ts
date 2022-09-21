@@ -89,6 +89,32 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           node.alternative.data.pathReturns
         )
           node.data.pathReturns = true;
+      } else if (node.alternative == undefined)  {
+        if (
+          'data' in node.body &&
+          'pathReturns' in node.body.data &&
+          node.body.data.pathReturns
+        ) node.data.pathReturns = true;
+      }
+      return node;
+    case NodeType.WhileStatement:
+      // TODO: If the while loop doesnt break say it doesnt return
+      if (node.alternative?.nodeType == NodeType.DeclarationStatement)
+        BriskParseError(
+          rawProgram,
+          BriskErrorType.NoDeclarationInSingleLineStatement,
+          [],
+          node.position
+        );
+      node.condition = _analyzeNode(node.condition);
+      // Analyze Body And Alternative
+      node.body = _analyzeNode(node.body);
+      if (node.alternative == undefined)  {
+        if (
+          'data' in node.body &&
+          'pathReturns' in node.body.data &&
+          node.body.data.pathReturns
+        ) node.data.pathReturns = true;
       }
       return node;
     case NodeType.FlagStatement:

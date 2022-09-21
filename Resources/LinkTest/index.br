@@ -1,11 +1,15 @@
 import print32 from './print32.br';
-print32(0n);
+while (true) {
+  print32(0n);
+};
 print32(1n);
-print32(2n);
-print32(3n);
-print32(4n);
-print32(5n);
-print32(6n);
-print32(7n);
-print32(8n);
-print32(9n);
+// print32(0n);
+// print32(1n);
+// print32(2n);
+// print32(3n);
+// print32(4n);
+// print32(5n);
+// print32(6n);
+// print32(7n);
+// print32(8n);
+// print32(9n);
