@@ -1,4 +1,4 @@
 let test: i32 = 1n;
-while (true) {
-  test++;
+while (test == 2n) {
+  test = 1n;
 };

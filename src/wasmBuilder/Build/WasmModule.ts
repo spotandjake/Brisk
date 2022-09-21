@@ -320,6 +320,11 @@ export const compileModule = (
       localNameSection.push(...encodeString(name));
     }
   }
+  const globalNameSection: number[] = [wasmModule.globalMap.size];
+  for (const [name, index] of wasmModule.globalMap.entries()) {
+    globalNameSection.push(...unsignedLEB128(index));
+    globalNameSection.push(...encodeString(name));
+  }
   wasmModule.customSections.push([
     ...encodeString('name'),
     0x00, // The SubSection Id
@@ -330,6 +335,9 @@ export const compileModule = (
     0x02, // The SubSection Id
     ...unsignedLEB128(localNameSection.length),
     ...localNameSection,
+    0x07, // The SubSection Id
+    ...unsignedLEB128(globalNameSection.length),
+    ...globalNameSection,
   ]);
   // Return Compiled Module
   return Uint8Array.from([

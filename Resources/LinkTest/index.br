@@ -1,6 +1,11 @@
 import print32 from './print32.br';
+let index: i32 = 0n;
 while (true) {
-  print32(0n);
+  index++;
+  print32(index);
+  if (@wasm.i32.ge_s(index, 9n)) {
+    index = 0n;
+  };
 };
 print32(1n);
 // print32(0n);
