@@ -8,6 +8,8 @@ export const enum NodeType {
   // Statements
   IfStatement,
   WhileStatement,
+  BreakStatement,
+  BreakIfStatement,
   FlagStatement,
   BlockStatement,
   ImportStatement,
@@ -87,6 +89,8 @@ export type Statement =
   | FlagNode
   | IfStatementNode
   | WhileStatementNode
+  | BreakStatement
+  | BreakIfStatement
   | BlockStatementNode
   | ImportStatementNode
   | WasmImportStatementNode
@@ -118,6 +122,19 @@ export interface WhileStatementNode {
   data: {
     pathReturns: boolean;
   };
+  position: Position;
+}
+export interface BreakStatementNode {
+  nodeType: NodeType.BreakStatement;
+  category: NodeCategory.Statement;
+  depth: number;
+  position: Position;
+}
+export interface BreakIfStatementNode {
+  nodeType: NodeType.BreakIfStatement;
+  category: NodeCategory.Statement;
+  condition: Expression;
+  depth: number;
   position: Position;
 }
 export interface FlagNode {

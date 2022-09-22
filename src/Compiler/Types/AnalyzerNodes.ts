@@ -20,6 +20,8 @@ export interface AnalyzerProperties {
   _closure: VariableClosure;
   _varStack: VariableStack;
   _typeStack: TypeStack;
+  // Flags
+  loopDepth: undefined | 0;
 }
 
 export interface TypeData {

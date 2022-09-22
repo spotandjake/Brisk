@@ -4,6 +4,7 @@ export const enum BriskErrorType {
   CompilerError,
   FeatureNotYetImplemented,
   ImportNotSupported,
+  InvalidBreakDepth,
   // Syntax Error
   CannotUseReservedKeyword,
   ReturnStatementsOnlyValidInsideFunction,
@@ -41,6 +42,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.CompilerError]: 'A compiler bug has occurred',
   [BriskErrorType.FeatureNotYetImplemented]: 'Feature not yet implemented',
   [BriskErrorType.ImportNotSupported]: 'Your environment does not support imports',
+  [BriskErrorType.InvalidBreakDepth]: 'You Cannot Break Deeper Then The Current Loop, Current Depth %2, Break Depth %1',
   // Syntax Error
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot use reserved keyword %1',
   [BriskErrorType.ReturnStatementsOnlyValidInsideFunction]:

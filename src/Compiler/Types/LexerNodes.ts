@@ -20,6 +20,9 @@ export const enum LexerTokenType {
   ConstToken = 'ConstToken',
   LetToken = 'LetToken',
   IfToken = 'IfToken',
+  TknWhile = 'TknWhile',
+  TknBreak = 'TknBreak',
+  TknBreakIf = 'TknBreakIf',
   ElseToken = 'ElseToken',
   InterfaceToken = 'InterfaceToken',
   TypeToken = 'TypeToken',
@@ -78,7 +81,6 @@ export const enum LexerTokenType {
   TknImplements = 'TknImplements',
   TknExtends = 'TknExtends',
   TknFor = 'TknFor',
-  TknWhile = 'TknWhile',
   TknAwait = 'TknAwait',
   TknAsync = 'TknAsync',
   // Other

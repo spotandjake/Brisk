@@ -28,7 +28,7 @@
       "patterns": [
         {
           "name": "keyword.control.br",
-          "match": "\\b(if|else|while|for|return|interface|type|enum|let|const|import|wasm|from|export)\\b"
+          "match": "\\b(if|else|while|break|breakif|for|return|interface|type|enum|let|const|import|wasm|from|export)\\b"
         },
         {
           "name": "keyword.other.reserved.br",

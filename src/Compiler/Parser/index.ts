@@ -98,6 +98,8 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.whileStatement) },
+      { ALT: () => this.SUBRULE(this.breakStatement) },
+      { ALT: () => this.SUBRULE(this.breakIfStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
@@ -248,7 +250,48 @@ class Parser extends EmbeddedActionsParser {
         },
       }
     });
-  })
+  });
+  private breakStatement = this.RULE('BreakStatement', (): Nodes.BreakStatementNode => {
+    const location = this.CONSUME(Tokens.TknBreak);
+    return this.ACTION((): Nodes.BreakStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.BreakStatement,
+        category: Nodes.NodeCategory.Statement,
+        depth: 0, // TODO: Allow you to input a depth
+        position: {
+          offset: location.startOffset,
+          length: location.endOffset! - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
+  });
+  private breakIfStatement = this.RULE('BreakIfStatement', (): Nodes.BreakIfStatementNode => {
+    const location = this.CONSUME(Tokens.TknBreakIf);
+    this.CONSUME(Tokens.TknLParen);
+    const condition = this.SUBRULE(this.expression);
+    const close = this.CONSUME(Tokens.TknRParen);
+    return this.ACTION((): Nodes.BreakIfStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.BreakIfStatement,
+        category: Nodes.NodeCategory.Statement,
+        condition: condition,
+        depth: 0, // TODO: Allow you to input a depth
+        position: {
+          offset: location.startOffset,
+          length: close.endOffset! - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
+  });
+  // TODO: BreakIf Statement
   private importStatement = this.RULE(
     'ImportStatement',
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {

@@ -1,4 +1,11 @@
 let test: i32 = 1n;
-while (test == 2n) {
-  test = 1n;
+// const mem: Function = (): Void => {
+//   @wasm.memory.grow(1n);
+// };
+while (true) {
+  while (true) {
+    test = 1n;
+    // @wasm.memory.grow(1n);
+    breakif(false);
+  };
 };

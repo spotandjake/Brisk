@@ -55,6 +55,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     _closure,
     _varStack,
     _typeStack,
+    // Flags
+    loopDepth
   } = properties;
   const _analyzeNode = <_T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
@@ -100,7 +102,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.WhileStatement:
       // TODO: If the while loop doesnt break say it doesnt return
       if (node.alternative?.nodeType == NodeType.DeclarationStatement)
-        BriskParseError(
+        BriskError(
           rawProgram,
           BriskErrorType.NoDeclarationInSingleLineStatement,
           [],
@@ -108,7 +110,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         );
       node.condition = _analyzeNode(node.condition);
       // Analyze Body And Alternative
-      node.body = _analyzeNode(node.body);
+      node.body = _analyzeNode(node.body, { loopDepth: ((loopDepth ?? 0) + 1)});
       if (node.alternative == undefined)  {
         if (
           'data' in node.body &&
@@ -117,6 +119,26 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         ) node.data.pathReturns = true;
       }
       return node;
+    case NodeType.BreakStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
+          rawProgram,
+          BriskErrorType.InvalidBreakDepth,
+          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          node.position
+        ); 
+      return node;
+    case NodeType.BreakIfStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
+          rawProgram,
+          BriskErrorType.InvalidBreakDepth,
+          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          node.position
+        );
+      node.condition = _analyzeNode(node.condition);
+      return node;
+    // TODO: BreakIf Statement
     case NodeType.FlagStatement:
       if (node.args.length != 0) {
         if (node.value == 'operator') {
@@ -859,6 +881,8 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           _closure: new Set(),
           _varStack: varStack,
           _typeStack: typeStack,
+          // Flags
+          loopDepth: undefined,
         },
         program,
         child

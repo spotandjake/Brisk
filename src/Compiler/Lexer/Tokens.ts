@@ -196,16 +196,28 @@ export const TknIf = createToken({
   pattern: 'if',
   categories: keywordTokens,
 });
+export const TknElse = createToken({
+  label: 'Else',
+  name: LexerTokenType.ElseToken,
+  pattern: 'else',
+  categories: keywordTokens,
+});
 export const TknWhile = createToken({
   label: 'While',
   name: LexerTokenType.TknWhile,
   pattern: 'while',
   categories: keywordTokens,
 });
-export const TknElse = createToken({
-  label: 'Else',
-  name: LexerTokenType.ElseToken,
-  pattern: 'else',
+export const TknBreakIf = createToken({
+  label: 'BreakIf',
+  name: LexerTokenType.BreakIfToken,
+  pattern: 'breakif',
+  categories: keywordTokens,
+});
+export const TknBreak = createToken({
+  label: 'Break',
+  name: LexerTokenType.BreakToken,
+  pattern: 'break',
   categories: keywordTokens,
 });
 export const TknInterface = createToken({
@@ -598,8 +610,10 @@ export const Tokens = [
   TknConst,
   TknLet,
   TknIf,
-  TknWhile,
   TknElse,
+  TknWhile,
+  TknBreakIf,
+  TknBreak,
   TknInterface,
   TknType,
   TknReturn,

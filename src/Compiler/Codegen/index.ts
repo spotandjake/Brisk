@@ -90,12 +90,22 @@ const generateCode = (
       return Expressions.ifExpression(condition, body, alternative);
     }
     case NodeType.WhileStatement: {
-      // Compile Conditions
+      // Compile Condition
       const condition = _generateCode(node.condition);
       // Compile Body
       const body = _generateCode(node.body);
       // Assemble Function
       return Expressions.loopExpression(undefined, [body, Expressions.br_IfExpression(condition, 0)])
+    }
+    case NodeType.BreakStatement: {
+      // Assemble Function
+      return Expressions.brExpression(node.depth+1);
+    }
+    case NodeType.BreakIfStatement: {
+      // Compile Condition
+      const condition = _generateCode(node.condition);
+      // Assemble Function
+      return Expressions.br_IfExpression(condition, node.depth+1)
     }
     // TODO: Handle Flag Statement
     case NodeType.BlockStatement: {
@@ -588,7 +598,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   let wasmModule = createModule();
   // TODO: Handle Compiling Type Information For Exports
   // Module SetUp
-  wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
+  wasmModule = addMemory(wasmModule, Types.createMemoryType(64)); // The Module Memory
   // Create Function
   let func = createFunction('_start', Types.createFunctionType([], []), [], [], []);
   // Build The Body

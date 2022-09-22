@@ -344,7 +344,7 @@ export const i64_Store32Expression = (
 export const memory_SizeExpression = (): ResolvedBytes => [0x3f]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
-  0x40, // Wasm Memory.Size Instruction
+  0x40, // Wasm Memory.Grow Instruction
 ];
 export const i32_ConstExpression = (value: number): ResolvedBytes => [
   0x41, // Wasm i32.Const Instruction
