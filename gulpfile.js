@@ -3,6 +3,7 @@ import gulp from 'gulp';
 import * as rollup from 'rollup';
 import swc from './rollup-plugins/swc/index.js';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { wasm } from '@rollup/plugin-wasm';
 import fs from 'fs';
 import path from 'path';
 // Configs
@@ -12,8 +13,11 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
   // Compile
   const bundle = await rollup.rollup({
     input: input,
-    external: ['commander', 'chevrotain', 'fs', '@jest/globals'],
+    external: ['commander', 'chevrotain', 'fs', '@jest/globals', '@wasmer/wasi'],
     plugins: [
+      wasm({
+        targetEnv: 'auto-inline'
+      }),
       swc({
         jsc: {
           minify: {
@@ -71,7 +75,9 @@ gulp.task('build', async () => {
     comments: oldCode.split('\n').filter((n) => n.trim().startsWith('//')).length,
   };
   // Clean the original
-  await gulp.series('clean')();
+  const folder = './dist';
+  if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
+  await fs.promises.mkdir(folder);
   // Build the Compiler
   await compileTypeScriptFile('brisk', './src/cli/index.ts', './dist/brisk.js', true);
   // Get new size
@@ -108,11 +114,6 @@ gulp.task('build', async () => {
     },
   });
 });
-gulp.task('clean', async () => {
-  const folder = './dist';
-  if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
-  await fs.promises.mkdir(folder);
-});
 gulp.task('mock', async () => {
   // Clean the original
   const folder = './__tests__/dist';
@@ -126,24 +127,6 @@ gulp.task('mock', async () => {
     false
   );
 });
-gulp.task('buildExtension', async () => {
-  // Clean the original
-  const folder = './dist/extension/';
-  if (fs.existsSync(folder)) await fs.promises.rm(folder, { recursive: true });
-  await fs.promises.mkdir(folder);
-  await fs.promises.mkdir(`${folder}/syntaxes/`);
-  // Copy Extension Files
-  await fs.promises.copyFile('./src/extension/package.json', './dist/extension/package.json');
-  await fs.promises.copyFile('./src/extension/Brisk.png', './dist/extension/Brisk.png');
-  await fs.promises.copyFile(
-    './src/extension/language-configuration.json',
-    './dist/extension/language-configuration.json'
-  );
-  await fs.promises.copyFile(
-    './src/extension/syntaxes/br.tmLanguage.json',
-    './dist/extension/syntaxes/br.tmLanguage.json'
-  );
-});
 gulp.task('injectExtension', async () => {
   const extPath = path.join(
     process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'],
@@ -153,7 +136,7 @@ gulp.task('injectExtension', async () => {
   if (fs.existsSync(extPath)) {
     await fs.promises.rm(extPath, { recursive: true });
   }
-  await fs.promises.cp('./dist/extension/', extPath, {
+  await fs.promises.cp('./extension/', extPath, {
     recursive: true,
     force: true,
   });

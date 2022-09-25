@@ -1,0 +1,3 @@
+[submodule "BriskLinker"]
+	path = BriskLinker
+	url = https://github.com/spotandjake/BriskLinker

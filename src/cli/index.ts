@@ -5,7 +5,7 @@ import { Command } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
 import compile from '../Compiler/index';
-// import Link from '../Linker/index';
+import linkProgram from '../Linker/index';
 import Runner from '../Runner/index';
 import { BriskCustomError } from '../Compiler/Errors/Compiler';
 //@ts-ignore
@@ -37,8 +37,11 @@ const compileFile = async (
       `${path.basename(_filePath, path.extname(_filePath))}.br.wasm`
     )
   );
+  const outPath = path.resolve(basePath, compiledPath);
+  // Link The Program
+  const linked = await linkProgram(compiled.output, outPath);
   // Save File
-  await fs.writeFile(path.resolve(basePath, compiledPath), compiled.output);
+  await fs.writeFile(outPath, linked);
   // Return ExportList
   return {
     ...compiled,
@@ -61,8 +64,8 @@ program.argument('<file>', 'File to compile').action(async (filePath: string) =>
   // Compile
   const { output, compiledPath } = await compileFile(process.cwd(), filePath);
   // Log Output
-  console.log('================================================================');
-  console.dir(output, { depth: null });
+  // console.log('================================================================');
+  // console.dir(output, { depth: null });
   // Link
   // const linked = await Link(compiledPath);
   await fs.writeFile(compiledPath, output);

@@ -95,17 +95,20 @@ const generateCode = (
       // Compile Body
       const body = _generateCode(node.body);
       // Assemble Function
-      return Expressions.loopExpression(undefined, [body, Expressions.br_IfExpression(condition, 0)])
+      return Expressions.loopExpression(undefined, [
+        body,
+        Expressions.br_IfExpression(condition, 0),
+      ]);
     }
     case NodeType.BreakStatement: {
       // Assemble Function
-      return Expressions.brExpression(node.depth+1);
+      return Expressions.brExpression(node.depth + 1);
     }
     case NodeType.BreakIfStatement: {
       // Compile Condition
       const condition = _generateCode(node.condition);
       // Assemble Function
-      return Expressions.br_IfExpression(condition, node.depth+1)
+      return Expressions.br_IfExpression(condition, node.depth + 1);
     }
     // TODO: Handle Flag Statement
     case NodeType.BlockStatement: {
@@ -357,6 +360,34 @@ const generateCode = (
           else if (exprAType.name == 'f32') return Expressions.f32_SubExpression(lhs, rhs);
           else if (exprAType.name == 'f64') return Expressions.f64_SubExpression(lhs, rhs);
         } else {
+          // TODO: Handle Heap Types
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
+      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticDiv) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'i32' || exprAType.name == 'u32')
+            return Expressions.i32_Div_sExpression(lhs, rhs);
+          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+            return Expressions.i64_Div_sExpression(lhs, rhs);
+          else if (exprAType.name == 'f32') return Expressions.f32_DivExpression(lhs, rhs);
+          else if (exprAType.name == 'f64') return Expressions.f64_DivExpression(lhs, rhs);
+        } else {
+          // TODO: Handle Heap Types
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
+      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticMul) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'i32' || exprAType.name == 'u32')
+            return Expressions.i32_MulExpression(lhs, rhs);
+          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
+            return Expressions.i64_MulExpression(lhs, rhs);
+          else if (exprAType.name == 'f32') return Expressions.f32_MulExpression(lhs, rhs);
+          else if (exprAType.name == 'f64') return Expressions.f64_MulExpression(lhs, rhs);
+          else {
             // TODO: Handle Heap Types
             return BriskError(
               rawProgram,
@@ -365,45 +396,7 @@ const generateCode = (
               node.position
             );
           }
-        } else if (node.operator == ArithmeticExpressionOperator.ArithmeticDiv) {
-          // Comparison
-          if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-            // Handle Stack Types
-            if (exprAType.name == 'i32' || exprAType.name == 'u32')
-              return Expressions.i32_Div_sExpression(lhs, rhs);
-            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-              return Expressions.i64_Div_sExpression(lhs, rhs);
-            else if (exprAType.name == 'f32') return Expressions.f32_DivExpression(lhs, rhs);
-            else if (exprAType.name == 'f64') return Expressions.f64_DivExpression(lhs, rhs);
-          } else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else if (node.operator == ArithmeticExpressionOperator.ArithmeticMul) {
-          // Comparison
-          if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-            // Handle Stack Types
-            if (exprAType.name == 'i32' || exprAType.name == 'u32')
-              return Expressions.i32_MulExpression(lhs, rhs);
-            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-              return Expressions.i64_MulExpression(lhs, rhs);
-            else if (exprAType.name == 'f32') return Expressions.f32_MulExpression(lhs, rhs);
-            else if (exprAType.name == 'f64') return Expressions.f64_MulExpression(lhs, rhs);
-            else {
-              // TODO: Handle Heap Types
-              return BriskError(
-                rawProgram,
-                BriskErrorType.FeatureNotYetImplemented,
-                [],
-                node.position
-              );
-            }
-          } else {
+        } else {
           return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
         }
       } else {
