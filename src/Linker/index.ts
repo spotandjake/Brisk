@@ -1,7 +1,7 @@
 // Import Linker
 import fs from 'fs';
 import WASI from 'wasi';
-import linker from '../../BriskLinker/index.gr.wasm';
+import linker from '../../BriskLinker/dist/index.wasm';
 // Perform Linking
 export default async (source: Uint8Array, outPath: string): Uint8Array => {
   // Write The File Temporarly
