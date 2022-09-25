@@ -637,7 +637,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   func = setBody(func, body);
   // Add The Main Function
   wasmModule = addFunction(wasmModule, func);
-  wasmModule = setStart(wasmModule, '_start');
+  // wasmModule = setStart(wasmModule, '_start');
   // wasmModule = addExport(wasmModule, '_start', WasmExternalKind.function, '_start');
   wasmModule = addExport(wasmModule, 'memory', WasmExternalKind.memory, 0);
   const moduleFunctionOffset = addGlobal(

@@ -1,43 +1,25 @@
 // Import Linker
 import fs from 'fs';
-import path from 'path';
-import { init, WASI } from '@wasmer/wasi';
-// import nodeBindings from '@wasmer/wasi/lib/bindings/node';
+import WASI from 'wasi';
 import linker from '../../BriskLinker/index.gr.wasm';
 // Perform Linking
 export default async (source: Uint8Array, outPath: string): Uint8Array => {
-  // TODO: Make this not depend on the fileSystem
-  console.log(outPath)
-  // Initialize Wasi
-  await init();
-  // Write The File To A Temporary Directory
+  // Write The File Temporarly
   await fs.promises.writeFile(outPath, source);
   // Run The Linker
-  let wasi = new WASI({
-    preopenDirectories: {
-      '/': process.cwd(),
-    },
-    env: {},
+  const wasi = new WASI({
     args: [
-      'index.gr.wasm', outPath, outPath
-    ],
-    bindings: {
-      path: path,
-      fs: fs
-    }
+      'index.gr', outPath, outPath
+    ]
   });
-  // Instantiate the WASI module
-  await wasi.instantiate(await linker(), {});
-  try {
-    // Run the start function
-    wasi.start();
-  } catch (err) {
-    console.log(wasi.getStdoutString());
-    console.log(wasi.getStderrString());
-    process.exit();
-  }
-  // Read The File
+  const inst = new WebAssembly.Instance(await linker(), {
+    wasi_unstable: wasi.exports,
+    wasi_snapshot_preview1: wasi.exports
+  });
+  wasi.setMemory(inst.exports.memory);
+  await inst.exports._start();
+  // Read The Temporary File
   const outSource = await fs.promises.readFile(outPath);
-  // Return the source
-  return source;
+  // Return the out source
+  return outSource;
 };

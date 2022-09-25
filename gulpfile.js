@@ -13,7 +13,7 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
   // Compile
   const bundle = await rollup.rollup({
     input: input,
-    external: ['commander', 'chevrotain', 'fs', '@jest/globals', '@wasmer/wasi'],
+    external: ['commander', 'chevrotain', 'fs', '@jest/globals', 'wasi'],
     plugins: [
       wasm({
         targetEnv: 'auto-inline'

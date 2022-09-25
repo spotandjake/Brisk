@@ -2,7 +2,7 @@
 // Imports
 import { ExportMap } from '../Compiler/Types/AnalyzerNodes';
 import { Command } from 'commander';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import compile from '../Compiler/index';
 import linkProgram from '../Linker/index';
@@ -24,7 +24,7 @@ const compileFile = async (
   // Normalize File Path
   const _filePath = path.isAbsolute(filePath) ? filePath : path.resolve(basePath, filePath);
   // Read File
-  const fileContent = await fs.readFile(_filePath, 'utf8').catch(() => {
+  const fileContent = await fs.promises.readFile(_filePath, 'utf8').catch(() => {
     return BriskCustomError('', 'Error', `No Such File ${filePath} Could Be Found At ${_filePath}`);
   });
   // Compile File
@@ -39,7 +39,7 @@ const compileFile = async (
   );
   const outPath = path.resolve(basePath, compiledPath);
   // Save File
-  await fs.writeFile(outPath, compiled.output);
+  await fs.promises.writeFile(outPath, compiled.output);
   // Return ExportList
   return {
     ...compiled,
@@ -63,10 +63,9 @@ program.argument('<file>', 'File to compile').action(async (filePath: string) =>
   const { output, compiledPath } = await compileFile(process.cwd(), filePath);
   // Link The Program
   const linked = await linkProgram(output, compiledPath);
-  // const linked = await Link(compiledPath);
-  await fs.writeFile(compiledPath, linked);
+  await fs.promises.writeFile(compiledPath, linked);
   // Run
-  Runner(output);
+  Runner(linked);
 });
 // Start
 program.parse(process.argv);
