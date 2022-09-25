@@ -65,6 +65,7 @@ jobs:
 
       - name: Build
         run: |
+          git submodule update --init --recursive
           yarn
           yarn build
   test:
@@ -85,5 +86,6 @@ jobs:
 
       - name: Test
         run: |
+          git submodule update --init --recursive
           yarn
           yarn test
