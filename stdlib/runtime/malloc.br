@@ -1,0 +1,12 @@
+// TODO: Support 64 bit memory
+export const malloc: Function = (size: u32): u32 => {
+  // TODO: Throw an exception if this fails
+  // Search The Memory For A Free Block Of The Correct Size
+  // Allocate The block If We Find One
+  // If we hit the end of the memory resize
+  return(1n);
+}
+export const free: Function = (ptr: u32): Void => {
+  // TODO: Throw an exception if this fails
+  return();
+}

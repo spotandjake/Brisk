@@ -5,5 +5,6 @@ dist/
 brisk.exe
 stats.html
 .DS_Store
-.wasm
-.wat
+*.wasm
+*.wat
+yarn-error.lock
