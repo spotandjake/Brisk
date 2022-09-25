@@ -3,6 +3,7 @@ import { expect, test } from '@jest/globals';
 // Test Components
 import * as Expressions from '../../../src/wasmBuilder/Build/Expression';
 import { ieee754, signedLEB128, unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
+import { typeRefIdentifier, funcRefIdentifier, globalRefIdentifier } from '../../../src/wasmBuilder/Types/Nodes'
 // WasmBuilder Expressions Tests
 test('WasmBuilder-Expressions: unreachableExpression', () => {
   expect(Expressions.unreachableExpression()).toEqual([0x00]);
@@ -72,6 +73,7 @@ test('WasmBuilder-Expressions: callExpression', () => {
     ...Expressions.nopExpression(),
     ...Expressions.nopExpression(),
     0x10,
+    funcRefIdentifier,
     ...unsignedLEB128(0),
   ]);
 });
@@ -88,6 +90,7 @@ test('WasmBuilder-Expressions: call_indirect', () => {
     ...Expressions.nopExpression(),
     ...Expressions.i32_ConstExpression(0),
     0x11,
+    typeRefIdentifier,
     ...unsignedLEB128(0),
     0x00,
   ]);
@@ -117,12 +120,13 @@ test('WasmBuilder-Expressions: local_TeeExpression', () => {
   ]);
 });
 test('WasmBuilder-Expressions: global_GetExpression', () => {
-  expect(Expressions.global_GetExpression('test')).toEqual([0x23, 'test']);
+  expect(Expressions.global_GetExpression('test')).toEqual([0x23, globalRefIdentifier, 'test']);
 });
 test('WasmBuilder-Expressions: global_SetExpression', () => {
   expect(Expressions.global_SetExpression('test', Expressions.nopExpression())).toEqual([
     ...Expressions.nopExpression(),
     0x24,
+    globalRefIdentifier,
     'test',
   ]);
 });
@@ -572,7 +576,7 @@ test('WasmBuilder-Expressions: br_IfExpression-label', () => {
 test('WasmBuilder-Expressions: callExpression-label', () => {
   expect(
     Expressions.callExpression('test', [Expressions.nopExpression(), Expressions.nopExpression()])
-  ).toEqual([...Expressions.nopExpression(), ...Expressions.nopExpression(), 0x10, 'test']);
+  ).toEqual([...Expressions.nopExpression(), ...Expressions.nopExpression(), 0x10, funcRefIdentifier, 'test']);
 });
 test('WasmBuilder-Expressions: local_GetExpression-label', () => {
   expect(Expressions.local_GetExpression('test')).toEqual([0x20, 'test']);
@@ -592,12 +596,13 @@ test('WasmBuilder-Expressions: local_TeeExpression-label', () => {
   ]);
 });
 test('WasmBuilder-Expressions: global_GetExpression-label', () => {
-  expect(Expressions.global_GetExpression('test')).toEqual([0x23, 'test']);
+  expect(Expressions.global_GetExpression('test')).toEqual([0x23, globalRefIdentifier, 'test']);
 });
 test('WasmBuilder-Expressions: global_SetExpression-label', () => {
   expect(Expressions.global_SetExpression('test', Expressions.nopExpression())).toEqual([
     ...Expressions.nopExpression(),
     0x24,
+    globalRefIdentifier,
     'test',
   ]);
 });

@@ -40,6 +40,7 @@ test('WasmBuilder-WasmTypes: createEmptyModule', () => {
     functionMap: new Map(),
     globalMap: new Map(),
     localData: new Map(),
+    codeReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
@@ -65,6 +66,7 @@ test('WasmBuilder-WasmTypes: addMemory', () => {
     functionMap: new Map(),
     globalMap: new Map(),
     localData: new Map(),
+    codeReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
@@ -95,6 +97,7 @@ test('WasmBuilder-WasmTypes: addGlobal', () => {
     functionMap: new Map(),
     globalMap: new Map([['test', 0]]),
     localData: new Map(),
+    codeReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
@@ -127,6 +130,7 @@ test('WasmBuilder-WasmTypes: addData', () => {
     functionMap: new Map(),
     globalMap: new Map(),
     localData: new Map(),
+    codeReferences: [],
     // Sections
     customSections: [],
     typeSection: [],
