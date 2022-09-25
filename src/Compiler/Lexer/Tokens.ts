@@ -210,13 +210,13 @@ export const TknWhile = createToken({
 });
 export const TknBreakIf = createToken({
   label: 'BreakIf',
-  name: LexerTokenType.BreakIfToken,
+  name: LexerTokenType.TknBreakIf,
   pattern: 'breakif',
   categories: keywordTokens,
 });
 export const TknBreak = createToken({
   label: 'Break',
-  name: LexerTokenType.BreakToken,
+  name: LexerTokenType.TknBreak,
   pattern: 'break',
   categories: keywordTokens,
 });

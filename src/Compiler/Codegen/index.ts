@@ -611,7 +611,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
           _closure: new Set(),
           _varStack: program.data._varStack,
           _typeStack: program.data._typeStack,
-
+          loopDepth: program.data.loopDepth,
           wasmFunction: func,
         },
         node

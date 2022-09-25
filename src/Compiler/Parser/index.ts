@@ -38,6 +38,8 @@ class Parser extends EmbeddedActionsParser {
         // Stacks
         _varStack: new Map(),
         _typeStack: new Map(),
+        // Flags
+        loopDepth: undefined
       },
       position: {
         offset: 0,

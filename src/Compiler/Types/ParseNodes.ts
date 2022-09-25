@@ -89,8 +89,8 @@ export type Statement =
   | FlagNode
   | IfStatementNode
   | WhileStatementNode
-  | BreakStatement
-  | BreakIfStatement
+  | BreakStatementNode
+  | BreakIfStatementNode
   | BlockStatementNode
   | ImportStatementNode
   | WasmImportStatementNode

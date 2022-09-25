@@ -21,7 +21,7 @@ export interface AnalyzerProperties {
   _varStack: VariableStack;
   _typeStack: TypeStack;
   // Flags
-  loopDepth: undefined | 0;
+  loopDepth: undefined | number;
 }
 
 export interface TypeData {

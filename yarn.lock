@@ -913,11 +913,6 @@
     "@typescript-eslint/types" "5.27.0"
     eslint-visitor-keys "^3.3.0"
 
-"@wasmer/wasi@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@wasmer/wasi/-/wasi-1.1.2.tgz#c99faf45bfc7ff464dfd4bec661320c4073c268b"
-  integrity sha512-c1h7L2qPviV6n+ny2fYboFPFL4RbvCqYckDPfpWMUOqX+QIt83EnMnYfeWNwWbUAIku087qj3cBJzcqY+HbHxw==
-
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"

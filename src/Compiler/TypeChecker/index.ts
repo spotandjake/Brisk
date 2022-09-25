@@ -960,6 +960,7 @@ const typeCheckProgram = (
           _closure: new Set(),
           _varStack: program.data._varStack,
           _typeStack: program.data._typeStack,
+          loopDepth: program.data.loopDepth,
           // TypeChecking Information
           _returnType: undefined,
         },

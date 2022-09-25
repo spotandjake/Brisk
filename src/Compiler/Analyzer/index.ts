@@ -101,23 +101,14 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       return node;
     case NodeType.WhileStatement:
       // TODO: If the while loop doesnt break say it doesnt return
-      if (node.alternative?.nodeType == NodeType.DeclarationStatement)
-        BriskError(
-          rawProgram,
-          BriskErrorType.NoDeclarationInSingleLineStatement,
-          [],
-          node.position
-        );
       node.condition = _analyzeNode(node.condition);
       // Analyze Body And Alternative
       node.body = _analyzeNode(node.body, { loopDepth: ((loopDepth ?? 0) + 1)});
-      if (node.alternative == undefined)  {
-        if (
-          'data' in node.body &&
-          'pathReturns' in node.body.data &&
-          node.body.data.pathReturns
-        ) node.data.pathReturns = true;
-      }
+      if (
+        'data' in node.body &&
+        'pathReturns' in node.body.data &&
+        node.body.data.pathReturns
+      ) node.data.pathReturns = true;
       return node;
     case NodeType.BreakStatement:
       if (loopDepth == undefined || loopDepth < node.depth)
@@ -896,6 +887,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
       _types: types,
       _varStack: varStack,
       _typeStack: typeStack,
+      loopDepth: undefined
     },
   };
 };
