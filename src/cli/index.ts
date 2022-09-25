@@ -38,10 +38,8 @@ const compileFile = async (
     )
   );
   const outPath = path.resolve(basePath, compiledPath);
-  // Link The Program
-  const linked = await linkProgram(compiled.output, outPath);
   // Save File
-  await fs.writeFile(outPath, linked);
+  await fs.writeFile(outPath, compiled.output);
   // Return ExportList
   return {
     ...compiled,
@@ -63,12 +61,10 @@ program
 program.argument('<file>', 'File to compile').action(async (filePath: string) => {
   // Compile
   const { output, compiledPath } = await compileFile(process.cwd(), filePath);
-  // Log Output
-  // console.log('================================================================');
-  // console.dir(output, { depth: null });
-  // Link
+  // Link The Program
+  const linked = await linkProgram(output, compiledPath);
   // const linked = await Link(compiledPath);
-  await fs.writeFile(compiledPath, output);
+  await fs.writeFile(compiledPath, linked);
   // Run
   Runner(output);
 });

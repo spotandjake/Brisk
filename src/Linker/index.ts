@@ -7,17 +7,15 @@ import linker from '../../BriskLinker/index.gr.wasm';
 // Perform Linking
 export default async (source: Uint8Array, outPath: string): Uint8Array => {
   // TODO: Make this not depend on the fileSystem
+  console.log(outPath)
   // Initialize Wasi
   await init();
   // Write The File To A Temporary Directory
   await fs.promises.writeFile(outPath, source);
-  console.log(outPath);
   // Run The Linker
   let wasi = new WASI({
     preopenDirectories: {
-      [outPath]: outPath,
-      '/': '/',
-      '.': process.cwd(),
+      '/': process.cwd(),
     },
     env: {},
     args: [
