@@ -40,51 +40,87 @@ export const mapExpression = (
         _generateCode(args[1])
       );
     case 'i32.load':
-      return Expressions.i32_LoadExpression(_generateCode(args[0]));
+      return Expressions.i32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load':
-      return Expressions.i32_LoadExpression(_generateCode(args[0]));
+      return Expressions.i32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'f32.load':
-      return Expressions.f32_LoadExpression(_generateCode(args[0]));
+      return Expressions.f32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'f64.load':
-      return Expressions.f64_LoadExpression(_generateCode(args[0]));
+      return Expressions.f64_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i32.load8_s':
-      return Expressions.i32_Load8_sExpression(_generateCode(args[0]));
+      return Expressions.i32_Load8_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i32.load8_u':
-      return Expressions.i32_Load8_uExpression(_generateCode(args[0]));
+      return Expressions.i32_Load8_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i32.load16_s':
-      return Expressions.i32_Load16_sExpression(_generateCode(args[0]));
+      return Expressions.i32_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i32.load16_u':
-      return Expressions.i32_Load16_uExpression(_generateCode(args[0]));
+      return Expressions.i32_Load16_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load8_s':
-      return Expressions.i64_Load8_sExpression(_generateCode(args[0]));
+      return Expressions.i64_Load8_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load8_u':
-      return Expressions.i64_Load8_uExpression(_generateCode(args[0]));
+      return Expressions.i64_Load8_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load16_s':
-      return Expressions.i64_Load16_sExpression(_generateCode(args[0]));
+      return Expressions.i64_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load16_u':
-      return Expressions.i64_Load16_sExpression(_generateCode(args[0]));
+      return Expressions.i64_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load32_s':
-      return Expressions.i64_Load32_sExpression(_generateCode(args[0]));
+      return Expressions.i64_Load32_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i64.load32_u':
-      return Expressions.i64_Load32_sExpression(_generateCode(args[0]));
+      return Expressions.i64_Load32_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
     case 'i32.store':
-      return Expressions.i32_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i32_StoreExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i64.store':
-      return Expressions.i64_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i64_StoreExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'f32.store':
-      return Expressions.f32_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.f32_StoreExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'f64.store':
-      return Expressions.f64_StoreExpression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.f64_StoreExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i32.store8':
-      return Expressions.i32_Store8Expression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i32_Store8Expression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i32.store16':
-      return Expressions.i32_Store16Expression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i32_Store16Expression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i64.store8':
-      return Expressions.i64_Store8Expression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i64_Store8Expression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i64.store16':
-      return Expressions.i64_Store16Expression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i64_Store16Expression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'i64.store32':
-      return Expressions.i64_Store32Expression(_generateCode(args[0]), _generateCode(args[1]));
+      return Expressions.i64_Store32Expression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0,
+        _generateCode(args[2])
+      );
     case 'memory.size':
       return Expressions.memory_SizeExpression();
     case 'memory.grow':

@@ -1,12 +1,88 @@
+import wasm fd_write: (i32, i32, i32, i32) => i32 from 'wasi_snapshot_preview1';
 // TODO: Support 64 bit memory
-export const malloc: Function = (size: u32): u32 => {
-  // TODO: Throw an exception if this fails
+// Block Layout
+// [
+//   nextPtr: u32;
+//   free: 0x00 || 0x01; // marks the block as free or used
+//   size: u32; // pointer points here
+//   data: ....x;
+// ]
+// TODO: convert all the i32s to u32s
+// TODO: Create a Pointer Type
+const malloc: Function = (size: i32): i32 => {
+  // // Handle Empty Malloc
+  if (@wasm.i32.le_u(size, 0n)) return(0n);
+  // // Value
+  // const memorySize: i32 = @wasm.memory.size();
   // Search The Memory For A Free Block Of The Correct Size
-  // Allocate The block If We Find One
-  // If we hit the end of the memory resize
-  return(1n);
-}
-export const free: Function = (ptr: u32): Void => {
+  let basePtr: i32 = 0n;
+  let nextPtr: i32 = 0n;
+  let foundBlock: Boolean = false;
+  // while (@wasm.i32.lt_u(basePtr, memorySize)) {
+  while(true) {
+    // Search For Free Block
+    const nextPtr: i32 = @wasm.i32.load(basePtr, -2n);
+    const blockFree: i32 = @wasm.i32.load(basePtr, -1n);
+    const blockSize: i32 = @wasm.i32.load(basePtr, 0n);
+    if (blockFree == 0n && @wasm.i32.le_u(size, blockSize)) {
+      // If Needed Split The Block
+      if (@wasm.i32.lt_u(size, blockSize)) {
+        // Find The Size Alightned To 8
+        const desiredSize: i32 = blockSize / 8n + 8n;
+        // Allocate The Desired Space
+      };
+      // TODO: Clear The Block
+      foundBlock = true;
+      // Break If We Find A Suitable Block
+      break;
+    };
+    // Increment Pointer
+    basePtr = nextPtr;
+  };
+  // // If we hit the end of the memory resize
+  if (!foundBlock) {
+    // @wasm.memory.grow(1n); // Grow The Memory By A Page
+    // Allocate A Block
+    @wasm.i32.store(basePtr, -16n, nextPtr);
+    @wasm.i32.store(basePtr, -8n, 1n);
+    @wasm.i32.store(basePtr, 0n, size);
+    foundBlock = true;
+  };
+  // Return The Pointer
+  // if (foundBlock) return(basePtr);
+  // else return(-1n);
+  return(-1n);
+};
+const free: Function = (ptr: i32): i32 => {
   // TODO: Throw an exception if this fails
-  return();
-}
+  return(-1n);
+};
+const print32: Function = (value: i32): Void => {
+  // Helper
+  let writeCharacterCode: Function = (let pointer: i32, character: i32): i32 => {
+    // Store Character
+    @wasm.i32.store(pointer, 0n, character);
+    // Add To The Index
+    pointer++;
+    // Return Pointer
+    return(pointer);
+  };
+  // Create String
+  const basePointer: i32 = 0n;
+  let pointer: i32 = @wasm.i32.add(basePointer, 8n);
+  let length: i32 = 0n;
+  // Handle String Conversion In toString
+  if (@wasm.i32.lt_s(value, 10n)) {
+    pointer = writeCharacterCode(pointer, 48n + value);
+    length++;
+  };
+  // Write New Line
+  pointer = writeCharacterCode(pointer, 10n);
+  length++;
+  // Store Iov Info
+  @wasm.i32.store(basePointer, 0n, 8n);
+  @wasm.i32.store(basePointer, 4n, length);
+  // Write String
+  fd_write(1n, 0n, 1n, 40n);
+};
+print32(malloc(2n));

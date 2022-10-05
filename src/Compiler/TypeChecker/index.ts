@@ -6,6 +6,7 @@ import Node, {
   ProgramNode,
   TypeLiteral,
   UnaryExpressionOperator,
+  ComparisonExpressionOperator,
 } from '../Types/ParseNodes';
 import { ExportMap, VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
@@ -485,6 +486,16 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
       );
+      // Check Individual
+      if (node.opeartor == ComparisonExpressionOperator.ComparisonAnd || node.opeartor == ComparisonExpressionOperator.ComparisonOr)
+        typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
+          createPrimType(node.position, 'Boolean')
+        );
       // Return Node
       return node;
     case NodeType.TypeCastExpression:

@@ -597,35 +597,98 @@ class Parser extends EmbeddedActionsParser {
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
       const operators: Nodes.ComparisonExpressionOperator[] = [];
       const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this._comparisonExpression);
+      this.MANY(() => {
+        const operator = this.OR([
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonAnd);
+              return Nodes.ComparisonExpressionOperator.ComparisonAnd;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonOr);
+              return Nodes.ComparisonExpressionOperator.ComparisonOr;
+            },
+          },
+        ])
+        operators.push(operator);
+        expressions.push(this.SUBRULE1(this._comparisonExpression));
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return this.ACTION(() => {
+          return expressions.reduce(
+            (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
+              return {
+                nodeType: Nodes.NodeType.ComparisonExpression,
+                category: Nodes.NodeCategory.Expression,
+                lhs: prevValue,
+                operator: operators[index],
+                rhs: currentValue,
+                position: {
+                  ...prevValue.position,
+                  length:
+                    currentValue.position.offset +
+                    currentValue.position.length -
+                    prevValue.position.offset,
+                },
+              };
+            },
+            lhs
+          );
+        });
+      }
+    }
+  );
+  private _comparisonExpression = this.RULE(
+    '_ComparisonExpression',
+    (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
+      const operators: Nodes.ComparisonExpressionOperator[] = [];
+      const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticShiftingExpression);
       this.MANY(() => {
-        const operator = this.CONSUME(Tokens.comparisonOperators);
-        switch (operator.tokenType.name) {
-          case LexerTokenType.TknComparisonEqual:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonEqual);
-            break;
-          case LexerTokenType.TknComparisonNotEqual:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonNotEqual);
-            break;
-          case LexerTokenType.TknComparisonLessThan:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThan);
-            break;
-          case LexerTokenType.TknComparisonGreaterThan:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThan);
-            break;
-          case LexerTokenType.TknComparisonLessThanOrEqual:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual);
-            break;
-          case LexerTokenType.TknComparisonGreaterThanOrEqual:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual);
-            break;
-          case LexerTokenType.TknComparisonAnd:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonAnd);
-            break;
-          case LexerTokenType.TknComparisonOr:
-            operators.push(Nodes.ComparisonExpressionOperator.ComparisonOr);
-            break;
-        }
+        const operator = this.OR([
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonEqual);
+              return Nodes.ComparisonExpressionOperator.ComparisonEqual;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonNotEqual);
+              return Nodes.ComparisonExpressionOperator.ComparisonNotEqual;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonLessThan);
+              return Nodes.ComparisonExpressionOperator.ComparisonLessThan;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonGreaterThan);
+              return Nodes.ComparisonExpressionOperator.ComparisonGreaterThan;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonLessThanEqual);
+              return Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual;
+            },
+          },
+          {
+            ALT: () => {
+              this.CONSUME(Tokens.TknComparisonGreaterThanEqual);
+              return Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual;
+            },
+          },
+        ])
+        operators.push(operator);
         expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
       });
       if (expressions.length == 0) {

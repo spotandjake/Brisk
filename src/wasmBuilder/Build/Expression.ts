@@ -163,183 +163,192 @@ export const global_SetExpression = (global: string, body: UnresolvedBytes): Unr
 ];
 // TODO: table_get
 // TODO: table_set
-export const i32_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i32_LoadExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x28, // Wasm i32.load Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_LoadExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x29, // Wasm i64.load Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const f32_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const f32_LoadExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2a, // Wasm f32.load Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const f64_LoadExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const f64_LoadExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2b, // Wasm f64.load Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load8_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i32_Load8_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2c, // Wasm i32.load8_s Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load8_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i32_Load8_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2d, // Wasm i32.load8_u Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load16_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i32_Load16_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2e, // Wasm i32.load16_s Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load16_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i32_Load16_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2f, // Wasm i32.load16_u Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 // TODO: i64_load8_sExpr,
 // TODO: i64_load8_uExpr,
 // TODO: i64_load16_sExpr,
 // TODO: i64_load16_uExpr,
-export const i64_Load8_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load8_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x30, // Wasm i64.load8_s Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load8_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load8_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x31, // Wasm i64.load8_u Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load16_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load16_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x32, // Wasm i64.load16_s Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load16_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load16_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x33, // Wasm i64.load16_u Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load32_sExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load32_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x34, // Wasm i64.load32_s Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load32_uExpression = (position: UnresolvedBytes): UnresolvedBytes => [
+export const i64_Load32_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
   ...position, // ValueA Content
   0x35, // Wasm i64.load32_u Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i32_StoreExpression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x36, // Wasm i32.store Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i64_StoreExpression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x37, // Wasm i64.store Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const f32_StoreExpression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x38, // Wasm f32.store Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const f64_StoreExpression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x39, // Wasm f64.store Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i32_Store8Expression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x3a, // Wasm i32.store8 Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i32_Store16Expression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x3b, // Wasm i32.store16 Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i64_Store8Expression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x3c, // Wasm i64.store8 Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i64_Store16Expression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x3d, // Wasm i64.store16 Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const i64_Store32Expression = (
   position: UnresolvedBytes,
+  offset: number,
   valueB: UnresolvedBytes
 ): UnresolvedBytes => [
   ...position, // ValueA Content
   ...valueB, // ValueB Content
   0x3e, // Wasm i64.store32 Instruction
   0, // Don't Align
-  ...unsignedLEB128(0), // Don't Offset
+  ...unsignedLEB128(offset), // The Offset
 ];
 export const memory_SizeExpression = (): ResolvedBytes => [0x3f]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [

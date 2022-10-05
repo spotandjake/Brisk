@@ -65,51 +65,51 @@ export const mapExpression = (
     case 'global.set':
       return createFunctionType(pos, [strType(pos), stackType(pos)], voidType(pos));
     case 'i32.load':
-      return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i32Type(pos));
     case 'i64.load':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'f32.load':
-      return createFunctionType(pos, [ptrType(pos)], f32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], f32Type(pos));
     case 'f64.load':
-      return createFunctionType(pos, [ptrType(pos)], f64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], f64Type(pos));
     case 'i32.load8_s':
-      return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i32Type(pos));
     case 'i32.load8_u':
-      return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i32Type(pos));
     case 'i32.load16_s':
-      return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i32Type(pos));
     case 'i32.load16_u':
-      return createFunctionType(pos, [ptrType(pos)], i32Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i32Type(pos));
     case 'i64.load8_s':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i64.load8_u':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i64.load16_s':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i64.load16_u':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i64.load32_s':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i64.load32_u':
-      return createFunctionType(pos, [ptrType(pos)], i64Type(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], i64Type(pos));
     case 'i32.store':
-      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i32Type(pos)], voidType(pos));
     case 'i64.store':
-      return createFunctionType(pos, [ptrType(pos), i64Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i64Type(pos)], voidType(pos));
     case 'f32.store':
-      return createFunctionType(pos, [ptrType(pos), f32Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), f32Type(pos)], voidType(pos));
     case 'f64.store':
-      return createFunctionType(pos, [ptrType(pos), f64Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), f64Type(pos)], voidType(pos));
     case 'i32.store8':
-      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i32Type(pos)], voidType(pos));
     case 'i32.store16':
-      return createFunctionType(pos, [ptrType(pos), i32Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i32Type(pos)], voidType(pos));
     case 'i64.store8':
-      return createFunctionType(pos, [ptrType(pos), i64Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i64Type(pos)], voidType(pos));
     case 'i64.store16':
-      return createFunctionType(pos, [ptrType(pos), i64Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i64Type(pos)], voidType(pos));
     case 'i64.store32':
-      return createFunctionType(pos, [ptrType(pos), i64Type(pos)], voidType(pos));
+      return createFunctionType(pos, [ptrType(pos), i32Type(pos), i64Type(pos)], voidType(pos));
     case 'memory.size':
       return createFunctionType(pos, [], ptrType(pos));
     case 'memory.grow':
@@ -571,5 +571,5 @@ export const mapExpression = (
       return createFunctionType(pos, [f64Type(pos)], f32Type(pos));
     // TODO: V128
   }
-  return BriskError(rawProgram, BriskErrorType.WasmExpressionUnknown, [], node.position);
+  return BriskError(rawProgram, BriskErrorType.WasmExpressionUnknown, [node.name], node.position);
 };

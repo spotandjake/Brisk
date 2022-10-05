@@ -91,12 +91,6 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           node.alternative.data.pathReturns
         )
           node.data.pathReturns = true;
-      } else if (node.alternative == undefined)  {
-        if (
-          'data' in node.body &&
-          'pathReturns' in node.body.data &&
-          node.body.data.pathReturns
-        ) node.data.pathReturns = true;
       }
       return node;
     case NodeType.WhileStatement:
