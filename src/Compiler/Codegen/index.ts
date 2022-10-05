@@ -11,6 +11,7 @@ import {
   ComparisonExpressionOperator,
   FunctionSignatureLiteralNode,
   NodeType,
+  UnaryExpressionOperator,
   PostFixOperator,
   ProgramNode,
 } from '../Types/ParseNodes';
@@ -80,6 +81,7 @@ const generateCode = (
   switch (node.nodeType) {
     // Statements
     case NodeType.IfStatement: {
+      // TODO: Returns from if statements dont seem to work
       // Compile Conditions
       const condition = _generateCode(node.condition);
       // Compile Paths
@@ -441,11 +443,98 @@ const generateCode = (
         } else {
           return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
         }
+      } else if (node.operator == ComparisonExpressionOperator.ComparisonAnd) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'Boolean')
+            return Expressions.i32_AndExpression(lhs, rhs);
+          else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else {
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
+      } else if (node.operator == ComparisonExpressionOperator.ComparisonOr) {
+        // Comparison
+        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
+          // Handle Stack Types
+          if (exprAType.name == 'Boolean')
+            return Expressions.i32_orExpression(lhs, rhs);
+          else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        } else {
+          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
+        }
       } else {
         return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
       }
     }
     // TODO: Handle UnaryExpression
+    case NodeType.UnaryExpression: {
+      const valueType = getExpressionType(
+        rawProgram,
+        _variables,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node.value
+      );
+      switch (node.operator) {
+        case UnaryExpressionOperator.UnaryNot:
+          // TODO: Verify this works
+          return Expressions.i32_xorExpression(
+            _generateCode(node.value),
+            Expressions.i32_ConstExpression(-1)
+          );
+        case UnaryExpressionOperator.UnaryNegative:
+          // Handle Stack Types
+          if (valueType.name == 'i32')
+            return Expressions.i32_MulExpression(
+              _generateCode(node.value),
+              Expressions.i32_ConstExpression(-1)
+            );
+          else if (valueType.name == 'i64')
+            return Expressions.i64_MulExpression(
+              _generateCode(node.value),
+              Expressions.i64_ConstExpression(-1)
+            );
+          else if (valueType.name == 'f32')
+            return Expressions.f32_MulExpression(
+              _generateCode(node.value),
+              Expressions.f32_ConstExpression(-1)
+            );
+          else if (valueType.name == 'f64')
+            return Expressions.f64_MulExpression(
+              _generateCode(node.value),
+              Expressions.f64_ConstExpression(-1)
+            );
+          else {
+            // TODO: Handle Heap Types
+            return BriskError(
+              rawProgram,
+              BriskErrorType.FeatureNotYetImplemented,
+              [],
+              node.position
+            );
+          }
+        case UnaryExpressionOperator.UnaryPositive:
+          return _generateCode(node.value);
+      }
+    }
     case NodeType.ParenthesisExpression:
       return _generateCode(node.value);
     // TODO: Handle TypeCastExpression

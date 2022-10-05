@@ -52,11 +52,10 @@ program
   .description('Compile A Given Brisk File')
   .action(async (filePath: string) => {
     // Compile
-    const { output } = await compileFile(process.cwd(), filePath);
-    // Log Output
-    console.log('================================================================');
-    console.dir(output, { depth: null });
-    // Link
+    const { output, compiledPath } = await compileFile(process.cwd(), filePath);
+    // Link The Program
+    const linked = await linkProgram(output, compiledPath);
+    await fs.promises.writeFile(compiledPath, linked);
   });
 program.argument('<file>', 'File to compile').action(async (filePath: string) => {
   // Compile
