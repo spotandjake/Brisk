@@ -10,6 +10,8 @@ export const enum NodeType {
   WhileStatement,
   BreakStatement,
   BreakIfStatement,
+  ContinueStatement,
+  ContinueIfStatement,
   FlagStatement,
   BlockStatement,
   ImportStatement,
@@ -91,6 +93,8 @@ export type Statement =
   | WhileStatementNode
   | BreakStatementNode
   | BreakIfStatementNode
+  | ContinueStatementNode
+  | ContinueIfStatementNode
   | BlockStatementNode
   | ImportStatementNode
   | WasmImportStatementNode
@@ -101,7 +105,9 @@ export type Statement =
   | ReturnStatementNode
   | EnumDefinitionStatementNode
   | EnumVariantNode
-  | PostFixStatementNode;
+  | PostFixStatementNode
+  | CallExpressionNode
+  | WasmCallExpressionNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -132,6 +138,19 @@ export interface BreakStatementNode {
 }
 export interface BreakIfStatementNode {
   nodeType: NodeType.BreakIfStatement;
+  category: NodeCategory.Statement;
+  condition: Expression;
+  depth: number;
+  position: Position;
+}
+export interface ContinueStatementNode {
+  nodeType: NodeType.ContinueStatement;
+  category: NodeCategory.Statement;
+  depth: number;
+  position: Position;
+}
+export interface ContinueIfStatementNode {
+  nodeType: NodeType.ContinueIfStatement;
   category: NodeCategory.Statement;
   condition: Expression;
   depth: number;
