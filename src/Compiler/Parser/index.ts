@@ -2,7 +2,6 @@
 import { EmbeddedActionsParser, ILexingResult, TokenType } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
-import { LexerTokenType } from '../Types/LexerNodes';
 import * as Nodes from '../Types/ParseNodes';
 import { BriskCustomError } from '../Errors/Compiler';
 //@ts-ignore
@@ -100,8 +99,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.whileStatement) },
-      { ALT: () => this.SUBRULE(this.breakStatement) },
-      { ALT: () => this.SUBRULE(this.breakIfStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
@@ -168,6 +165,10 @@ class Parser extends EmbeddedActionsParser {
         GATE: this.BACKTRACK(this.postFixStatement),
         ALT: () => this.SUBRULE(this.postFixStatement),
       },
+      { ALT: () => this.SUBRULE(this.breakStatement) },
+      { ALT: () => this.SUBRULE(this.breakIfStatement) },
+      { ALT: () => this.SUBRULE(this.continueStatement) },
+      { ALT: () => this.SUBRULE(this.continueIfStatement) },
     ]);
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
@@ -250,7 +251,7 @@ class Parser extends EmbeddedActionsParser {
           basePath: this.basePath,
           file: this.file,
         },
-      }
+      };
     });
   });
   private breakStatement = this.RULE('BreakStatement', (): Nodes.BreakStatementNode => {
@@ -293,7 +294,46 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  // TODO: BreakIf Statement
+  private continueStatement = this.RULE('ContinueStatement', (): Nodes.ContinueStatementNode => {
+    const location = this.CONSUME(Tokens.TknContinue);
+    return this.ACTION((): Nodes.ContinueStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.ContinueStatement,
+        category: Nodes.NodeCategory.Statement,
+        depth: 0, // TODO: Allow you to input a depth
+        position: {
+          offset: location.startOffset,
+          length: location.endOffset! - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
+  });
+  private continueIfStatement = this.RULE('ContinueIfStatement', (): Nodes.ContinueIfStatementNode => {
+    const location = this.CONSUME(Tokens.TknContinueIf);
+    this.CONSUME(Tokens.TknLParen);
+    const condition = this.SUBRULE(this.expression);
+    const close = this.CONSUME(Tokens.TknRParen);
+    return this.ACTION((): Nodes.ContinueIfStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.ContinueIfStatement,
+        category: Nodes.NodeCategory.Statement,
+        condition: condition,
+        depth: 0, // TODO: Allow you to input a depth
+        position: {
+          offset: location.startOffset,
+          length: close.endOffset! - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
+  });
   private importStatement = this.RULE(
     'ImportStatement',
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
@@ -612,7 +652,7 @@ class Parser extends EmbeddedActionsParser {
               return Nodes.ComparisonExpressionOperator.ComparisonOr;
             },
           },
-        ])
+        ]);
         operators.push(operator);
         expressions.push(this.SUBRULE1(this._comparisonExpression));
       });
@@ -687,7 +727,7 @@ class Parser extends EmbeddedActionsParser {
               return Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual;
             },
           },
-        ])
+        ]);
         operators.push(operator);
         expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
       });

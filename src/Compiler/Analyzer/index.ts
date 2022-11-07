@@ -123,7 +123,25 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         );
       node.condition = _analyzeNode(node.condition);
       return node;
-    // TODO: BreakIf Statement
+    case NodeType.ContinueStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
+          rawProgram,
+          BriskErrorType.InvalidBreakDepth,
+          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          node.position
+        ); 
+      return node;
+    case NodeType.ContinueIfStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
+          rawProgram,
+          BriskErrorType.InvalidBreakDepth,
+          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          node.position
+        );
+      node.condition = _analyzeNode(node.condition);
+      return node;
     case NodeType.FlagStatement:
       if (node.args.length != 0) {
         if (node.value == 'operator') {
@@ -167,7 +185,20 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
             // Disallow Dead Code
             if (i != node.body.length - 1) {
-              BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[i + 1].position);
+              for (let j = i + 1; j < node.body.length; j++) {
+                // TODO: Remove Return Statement Exception Once We Fix If Statement Returns
+                if (
+                  node.body[j].nodeType != NodeType.WasmCallExpression &&
+                  node.body[j].nodeType != NodeType.ReturnStatement
+                ) {
+                  BriskTypeError(
+                    rawProgram,
+                    BriskErrorType.DeadCode,
+                    [],
+                    node.body[i + 1].position
+                  );
+                }
+              }
             }
             // Set Block Data To Include Info That This Block Returns
             pathReturns = true;

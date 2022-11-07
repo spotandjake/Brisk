@@ -220,6 +220,18 @@ export const TknBreak = createToken({
   pattern: 'break',
   categories: keywordTokens,
 });
+export const TknContinueIf = createToken({
+  label: 'ContinueIf',
+  name: LexerTokenType.TknContinueIf,
+  pattern: 'continueif',
+  categories: keywordTokens,
+});
+export const TknContinue = createToken({
+  label: 'Continue',
+  name: LexerTokenType.TknContinue,
+  pattern: 'continue',
+  categories: keywordTokens,
+});
 export const TknInterface = createToken({
   label: 'Interface',
   name: LexerTokenType.InterfaceToken,
@@ -614,6 +626,8 @@ export const Tokens = [
   TknWhile,
   TknBreakIf,
   TknBreak,
+  TknContinueIf,
+  TknContinue,
   TknInterface,
   TknType,
   TknReturn,

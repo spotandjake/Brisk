@@ -40,33 +40,75 @@ export const mapExpression = (
         _generateCode(args[1])
       );
     case 'i32.load':
-      return Expressions.i32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_LoadExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load':
-      return Expressions.i32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_LoadExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'f32.load':
-      return Expressions.f32_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.f32_LoadExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'f64.load':
-      return Expressions.f64_LoadExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.f64_LoadExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i32.load8_s':
-      return Expressions.i32_Load8_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_Load8_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i32.load8_u':
-      return Expressions.i32_Load8_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_Load8_uExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i32.load16_s':
-      return Expressions.i32_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_Load16_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i32.load16_u':
-      return Expressions.i32_Load16_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i32_Load16_uExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load8_s':
-      return Expressions.i64_Load8_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load8_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load8_u':
-      return Expressions.i64_Load8_uExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load8_uExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load16_s':
-      return Expressions.i64_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load16_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load16_u':
-      return Expressions.i64_Load16_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load16_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load32_s':
-      return Expressions.i64_Load32_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load32_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i64.load32_u':
-      return Expressions.i64_Load32_sExpression(Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])), 0);
+      return Expressions.i64_Load32_sExpression(
+        Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),
+        0
+      );
     case 'i32.store':
       return Expressions.i32_StoreExpression(
         Expressions.i32_AddExpression(_generateCode(args[0]), _generateCode(args[1])),

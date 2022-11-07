@@ -1,4 +1,5 @@
 import Node, {
+  ComparisonExpressionOperator,
   EnumVariantNode,
   GenericTypeNode,
   NodeCategory,
@@ -6,7 +7,6 @@ import Node, {
   ProgramNode,
   TypeLiteral,
   UnaryExpressionOperator,
-  ComparisonExpressionOperator,
 } from '../Types/ParseNodes';
 import { ExportMap, VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
@@ -88,6 +88,21 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.BreakStatement:
       return node;
     case NodeType.BreakIfStatement:
+      // Analyze Condition
+      node.condition = _typeCheckNode(node.condition);
+      // TypeCheck Condition
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
+        createPrimType(node.condition.position, 'Boolean')
+      );
+      return node;
+    case NodeType.ContinueStatement:
+      return node;
+    case NodeType.ContinueIfStatement:
       // Analyze Condition
       node.condition = _typeCheckNode(node.condition);
       // TypeCheck Condition
@@ -487,7 +502,10 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
       );
       // Check Individual
-      if (node.opeartor == ComparisonExpressionOperator.ComparisonAnd || node.opeartor == ComparisonExpressionOperator.ComparisonOr)
+      if (
+        node.operator == ComparisonExpressionOperator.ComparisonAnd ||
+        node.operator == ComparisonExpressionOperator.ComparisonOr
+      )
         typeEqual(
           rawProgram,
           _types,

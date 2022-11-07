@@ -187,25 +187,37 @@ export const f64_LoadExpression = (position: UnresolvedBytes, offset: number): U
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load8_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i32_Load8_sExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2c, // Wasm i32.load8_s Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load8_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i32_Load8_uExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2d, // Wasm i32.load8_u Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load16_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i32_Load16_sExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2e, // Wasm i32.load16_s Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i32_Load16_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i32_Load16_uExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x2f, // Wasm i32.load16_u Instruction
   0, // Don't Align
@@ -215,37 +227,55 @@ export const i32_Load16_uExpression = (position: UnresolvedBytes, offset: number
 // TODO: i64_load8_uExpr,
 // TODO: i64_load16_sExpr,
 // TODO: i64_load16_uExpr,
-export const i64_Load8_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load8_sExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x30, // Wasm i64.load8_s Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load8_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load8_uExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x31, // Wasm i64.load8_u Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load16_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load16_sExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x32, // Wasm i64.load16_s Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load16_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load16_uExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x33, // Wasm i64.load16_u Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load32_sExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load32_sExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x34, // Wasm i64.load32_s Instruction
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const i64_Load32_uExpression = (position: UnresolvedBytes, offset: number): UnresolvedBytes => [
+export const i64_Load32_uExpression = (
+  position: UnresolvedBytes,
+  offset: number
+): UnresolvedBytes => [
   ...position, // ValueA Content
   0x35, // Wasm i64.load32_u Instruction
   0, // Don't Align
@@ -350,10 +380,11 @@ export const i64_Store32Expression = (
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const memory_SizeExpression = (): ResolvedBytes => [0x3f]; // Wasm memory.size Instruction
+export const memory_SizeExpression = (): ResolvedBytes => [0x3f,0x00]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x40, // Wasm Memory.Grow Instruction
+  0x00,
 ];
 export const i32_ConstExpression = (value: number): ResolvedBytes => [
   0x41, // Wasm i32.Const Instruction
