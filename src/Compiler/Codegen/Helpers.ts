@@ -16,7 +16,7 @@ export const brisk_Void_Value = 0x03;
 // Helpers
 export const encodeBriskType = (
   rawProgram: string,
-  properties: AnalyzerProperties,
+  properties: Omit<AnalyzerProperties, 'operatorScope'>,
   expr: TypeLiteral,
   returnFunctionSignature = false
 ): ResolvedBytes => {
@@ -79,7 +79,7 @@ export const encodeBriskType = (
 };
 export const initializeBriskType = (
   rawProgram: string,
-  properties: AnalyzerProperties,
+  properties: Omit<AnalyzerProperties, 'operatorScope'>,
   expr: TypeLiteral,
   returnFunctionSignature = false
 ): ResolvedBytes => {

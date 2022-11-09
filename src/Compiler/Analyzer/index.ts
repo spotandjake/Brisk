@@ -1,4 +1,5 @@
 import Node, {
+  CallExpressionNode,
   DeclarationTypes,
   Expression,
   NodeCategory,
@@ -58,6 +59,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     _closure,
     _varStack,
     _typeStack,
+    // Misc
+    operatorScope,
     // Flags
     loopDepth,
   } = properties;
@@ -106,7 +109,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     case NodeType.WhileStatement:
-      // TODO: If the while loop doesnt break say it doesnt return
+      // TODO: If the while loop doesn't break say it doesn't return
       node.condition = _analyzeNode(node.condition, 0);
       // Analyze Body And Alternative
       node.body = _analyzeNode(node.body, 0, { loopDepth: (loopDepth ?? 0) + 1 });
@@ -232,20 +235,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           if ('data' in child && 'pathReturns' in child.data && child.data.pathReturns) {
             // Disallow Dead Code
             if (i != node.body.length - 1) {
-              for (let j = i + 1; j < node.body.length; j++) {
-                // TODO: Remove Return Statement Exception Once We Fix If Statement Returns
-                if (
-                  node.body[j].nodeType != NodeType.WasmCallExpression &&
-                  node.body[j].nodeType != NodeType.ReturnStatement
-                ) {
-                  BriskTypeError(
-                    rawProgram,
-                    BriskErrorType.DeadCode,
-                    [],
-                    node.body[i + 1].position
-                  );
-                }
-              }
+              BriskTypeError(rawProgram, BriskErrorType.DeadCode, [], node.body[i + 1].position);
             }
             // Set Block Data To Include Info That This Block Returns
             pathReturns = true;
@@ -262,6 +252,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       };
     }
     case NodeType.ImportStatement: {
+      // TODO: Handle Operator Imports
       // Add Import
       _imports.set(node.variable.name, {
         name: node.variable.name,
@@ -457,6 +448,26 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       );
       // Analyze The Value
       node.value = _analyzeNode(node.value, 0);
+      // Add Operator To List
+      if (node.flags.findIndex((flag) => flag.value == 'operator') != -1) {
+        node.flags
+          .filter((flag) => flag.value == 'operator')
+          .forEach((flag) => {
+            if (
+              flag.args.length == 2 &&
+              flag.args[0].nodeType == NodeType.StringLiteral &&
+              flag.args[1].nodeType == NodeType.StringLiteral
+            ) {
+              if (flag.args[1].value == 'PREFIX')
+                operatorScope.PREFIX.set(flag.args[0].value, node.name.name);
+              else if (flag.args[1].value == 'INFIX')
+                operatorScope.INFIX.set(flag.args[0].value, node.name.name);
+              else if (flag.args[1].value == 'POSTFIX')
+                operatorScope.POSTFIX.set(flag.args[0].value, node.name.name);
+            }
+          });
+      }
+      // Return Node
       return node;
     }
     case NodeType.AssignmentStatement:
@@ -565,11 +576,38 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
+    // TODO: Make A Generic INFIX Expression
     case NodeType.ComparisonExpression:
-    case NodeType.ArithmeticExpression:
+    case NodeType.ArithmeticExpression: {
+      // Get Operator Function
+      const opFunc = operatorScope.INFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
       node.lhs = _analyzeNode(node.lhs, 0);
       node.rhs = _analyzeNode(node.rhs, 0);
-      return node;
+      // Build A Function Call
+      const funcCall: CallExpressionNode = {
+        nodeType: NodeType.CallExpression,
+        category: NodeCategory.Expression,
+        callee: {
+          nodeType: NodeType.VariableUsage,
+          category: NodeCategory.Variable,
+          name: opFunc,
+          position: node.position,
+        },
+        args: [node.rhs, node.lhs],
+        statement: false,
+        position: node.position,
+      };
+      // @ts-ignore
+      return _analyzeNode(funcCall, nodePosition);
+    }
     case NodeType.TypeCastExpression:
       node.typeLiteral = _analyzeNode(node.typeLiteral, 0);
     case NodeType.UnaryExpression:
@@ -911,6 +949,11 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
   const types: TypeMap = new Map();
   const varStack: VariableStack = new Map();
   const typeStack: TypeStack = new Map();
+  const operatorScope = {
+    PREFIX: new Map(),
+    INFIX: new Map(),
+    POSTFIX: new Map(),
+  };
   // Return Our Node
   return {
     ...program,
@@ -946,6 +989,8 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           _closure: new Set(),
           _varStack: varStack,
           _typeStack: typeStack,
+          // Misc
+          operatorScope: operatorScope,
           // Flags
           loopDepth: undefined,
         },

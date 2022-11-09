@@ -83,7 +83,7 @@ export interface ProgramNode {
   category: NodeCategory.General;
   name: string;
   body: Statement[];
-  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
+  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks' | 'operatorScope'>;
   position: Position;
 }
 // Statements
@@ -304,6 +304,7 @@ export interface ComparisonExpressionNode {
   category: NodeCategory.Expression;
   lhs: Expression;
   operator: ComparisonExpressionOperator;
+  operatorImage: string;
   rhs: Expression;
   position: Position;
 }
@@ -312,6 +313,7 @@ export interface ArithmeticExpressionNode {
   category: NodeCategory.Expression;
   lhs: Expression;
   operator: ArithmeticExpressionOperator;
+  operatorImage: string;
   rhs: Expression;
   position: Position;
 }
