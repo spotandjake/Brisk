@@ -38,7 +38,7 @@ class Parser extends EmbeddedActionsParser {
         _varStack: new Map(),
         _typeStack: new Map(),
         // Flags
-        loopDepth: undefined
+        loopDepth: undefined,
       },
       position: {
         offset: 0,
@@ -89,8 +89,24 @@ class Parser extends EmbeddedActionsParser {
   });
   private semiStatement = this.RULE('SemiStatement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
-    this.CONSUME(Tokens.TknSemiColon);
-    this.ACTION(() => (statement.position.length += 1));
+    this.OR([
+      {
+        // @ts-ignore
+        GATE: () => this.input[this.currIdx]?.image != '}',
+        ALT: () => {
+          this.CONSUME(Tokens.TknSemiColon);
+          this.ACTION(() => (statement.position.length += 1));
+        },
+      },
+      {
+        ALT: () => {
+          this.OPTION(() => {
+            this.CONSUME1(Tokens.TknSemiColon);
+            this.ACTION(() => (statement.position.length += 1));
+          });
+        },
+      },
+    ]);
     return statement;
   });
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
@@ -107,20 +123,22 @@ class Parser extends EmbeddedActionsParser {
   private flag = this.RULE('Flag', (): Nodes.FlagNode => {
     const flag = this.CONSUME(Tokens.TknFlag);
     const args = this.SUBRULE(this.arguments);
-    return {
-      nodeType: Nodes.NodeType.FlagStatement,
-      category: Nodes.NodeCategory.Statement,
-      value: flag.image.slice(1),
-      args: args,
-      position: {
-        offset: flag.startOffset,
-        length: flag.endOffset! - flag.startOffset + 1,
-        line: flag.startLine || 0,
-        col: flag.startColumn || 0,
-        basePath: this.basePath,
-        file: this.file,
-      },
-    };
+    return this.ACTION((): Nodes.FlagNode => {
+      return {
+        nodeType: Nodes.NodeType.FlagStatement,
+        category: Nodes.NodeCategory.Statement,
+        value: flag.image.slice(1),
+        args: args.args,
+        position: {
+          offset: flag.startOffset,
+          length: args?.position.offset + args?.position.length - flag.startOffset,
+          line: flag.startLine || 0,
+          col: flag.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
   });
   // Statements
   private blockStatement = this.RULE('BlockStatement', (): Nodes.BlockStatementNode => {
@@ -238,14 +256,11 @@ class Parser extends EmbeddedActionsParser {
         condition: condition,
         body: body,
         data: {
-          pathReturns: false
+          pathReturns: false,
         },
         position: {
           offset: location.startOffset,
-          length: 
-            body?.position.offset +
-            body?.position.length -
-            location.startOffset,
+          length: body?.position.offset + body?.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           basePath: this.basePath,
@@ -312,28 +327,31 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private continueIfStatement = this.RULE('ContinueIfStatement', (): Nodes.ContinueIfStatementNode => {
-    const location = this.CONSUME(Tokens.TknContinueIf);
-    this.CONSUME(Tokens.TknLParen);
-    const condition = this.SUBRULE(this.expression);
-    const close = this.CONSUME(Tokens.TknRParen);
-    return this.ACTION((): Nodes.ContinueIfStatementNode => {
-      return {
-        nodeType: Nodes.NodeType.ContinueIfStatement,
-        category: Nodes.NodeCategory.Statement,
-        condition: condition,
-        depth: 0, // TODO: Allow you to input a depth
-        position: {
-          offset: location.startOffset,
-          length: close.endOffset! - location.startOffset + 1,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          basePath: this.basePath,
-          file: this.file,
-        },
-      };
-    });
-  });
+  private continueIfStatement = this.RULE(
+    'ContinueIfStatement',
+    (): Nodes.ContinueIfStatementNode => {
+      const location = this.CONSUME(Tokens.TknContinueIf);
+      this.CONSUME(Tokens.TknLParen);
+      const condition = this.SUBRULE(this.expression);
+      const close = this.CONSUME(Tokens.TknRParen);
+      return this.ACTION((): Nodes.ContinueIfStatementNode => {
+        return {
+          nodeType: Nodes.NodeType.ContinueIfStatement,
+          category: Nodes.NodeCategory.Statement,
+          condition: condition,
+          depth: 0, // TODO: Allow you to input a depth
+          position: {
+            offset: location.startOffset,
+            length: close.endOffset! - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            basePath: this.basePath,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
   private importStatement = this.RULE(
     'ImportStatement',
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
@@ -452,6 +470,7 @@ class Parser extends EmbeddedActionsParser {
         name: name,
         varType: varType,
         value: value,
+        flags: [],
         position: {
           offset: location.startOffset,
           length: value.position.offset + value.position.length - location.startOffset,

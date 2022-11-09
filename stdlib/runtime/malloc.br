@@ -67,7 +67,6 @@ const free: Function = (ptr: i32): i32 => {
     @wasm.i32.store(ptr, -ptrSize, 0n);
     return(1n);
   };
-  return(0n);
 };
 // const ptr1: i32 = malloc(8n);
 // const ptr2: i32 = malloc(16n);

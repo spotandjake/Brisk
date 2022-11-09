@@ -90,10 +90,7 @@ const generateCode = (
         node.alternative != undefined ? _generateCode(node.alternative) : undefined;
       // Return Expression
       return Expressions.ifExpression(
-        Expressions.i32_eqExpression(
-          condition,
-          Expressions.i32_ConstExpression(1)
-        ),
+        Expressions.i32_eqExpression(condition, Expressions.i32_ConstExpression(1)),
         body,
         alternative
       );
@@ -108,8 +105,8 @@ const generateCode = (
         Expressions.loopExpression(undefined, [
           Expressions.br_IfExpression(Expressions.i32_eqzExpression(condition), 1),
           body,
-          Expressions.brExpression(0)
-        ])
+          Expressions.brExpression(0),
+        ]),
       ]);
     }
     case NodeType.BreakStatement: {
@@ -132,7 +129,8 @@ const generateCode = (
       // Assemble Function
       return Expressions.br_IfExpression(condition, node.depth + 1);
     }
-    // TODO: Handle Flag Statement
+    case NodeType.FlagStatement:
+      return [];
     case NodeType.BlockStatement: {
       // Compile Body
       const body = node.body.map((_node) => {
@@ -601,7 +599,8 @@ const generateCode = (
           createPrimType(node.position, 'Void'),
           false
         )
-      ) return Expressions.dropExpression(expr);
+      )
+        return Expressions.dropExpression(expr);
       else return expr;
     }
     // TODO: Handle StringLiteral
@@ -675,8 +674,10 @@ const generateCode = (
         body.push(compiledBody);
         body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));
       } else {
-        if (node.body.nodeType == NodeType.BlockStatement) body.push(compiledBody);
-        else body.push(Expressions.returnExpression(compiledBody));
+        if (node.body.nodeType == NodeType.BlockStatement) {
+          body.push(compiledBody);
+          body.push(Expressions.unreachableExpression());
+        } else body.push(Expressions.returnExpression(compiledBody));
       }
       func = setBody(func, body);
       // Add The Function To The Module
