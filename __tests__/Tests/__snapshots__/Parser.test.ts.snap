@@ -1565,6 +1565,7 @@ Object {
           },
           "nodeType": 18,
           "operator": 0,
+          "operatorImage": "==",
           "position": Object {
             "basePath": "",
             "col": 12,
@@ -1678,6 +1679,7 @@ Object {
         },
         "nodeType": 18,
         "operator": 0,
+        "operatorImage": "==",
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -1814,6 +1816,7 @@ Object {
         },
         "nodeType": 18,
         "operator": 0,
+        "operatorImage": "==",
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2879,6 +2882,7 @@ Object {
               },
               "nodeType": 19,
               "operator": 0,
+              "operatorImage": "+",
               "position": Object {
                 "basePath": "",
                 "col": 17,
@@ -2915,6 +2919,7 @@ Object {
                   },
                   "nodeType": 19,
                   "operator": 0,
+                  "operatorImage": "+",
                   "position": Object {
                     "basePath": "",
                     "col": 22,
@@ -2941,6 +2946,7 @@ Object {
             },
             "nodeType": 19,
             "operator": 0,
+            "operatorImage": "+",
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -2965,6 +2971,7 @@ Object {
           },
           "nodeType": 19,
           "operator": 0,
+          "operatorImage": "+",
           "position": Object {
             "basePath": "",
             "col": 17,
@@ -2989,6 +2996,7 @@ Object {
         },
         "nodeType": 19,
         "operator": 0,
+        "operatorImage": "+",
         "position": Object {
           "basePath": "",
           "col": 17,
@@ -5814,6 +5822,7 @@ Object {
           },
           "nodeType": 18,
           "operator": 0,
+          "operatorImage": "==",
           "position": Object {
             "basePath": "",
             "col": 12,
@@ -5927,6 +5936,7 @@ Object {
         },
         "nodeType": 18,
         "operator": 0,
+        "operatorImage": "==",
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6063,6 +6073,7 @@ Object {
         },
         "nodeType": 18,
         "operator": 0,
+        "operatorImage": "==",
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7128,6 +7139,7 @@ Object {
               },
               "nodeType": 19,
               "operator": 0,
+              "operatorImage": "+",
               "position": Object {
                 "basePath": "",
                 "col": 17,
@@ -7164,6 +7176,7 @@ Object {
                   },
                   "nodeType": 19,
                   "operator": 0,
+                  "operatorImage": "+",
                   "position": Object {
                     "basePath": "",
                     "col": 22,
@@ -7190,6 +7203,7 @@ Object {
             },
             "nodeType": 19,
             "operator": 0,
+            "operatorImage": "+",
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -7214,6 +7228,7 @@ Object {
           },
           "nodeType": 19,
           "operator": 0,
+          "operatorImage": "+",
           "position": Object {
             "basePath": "",
             "col": 17,
@@ -7238,6 +7253,7 @@ Object {
         },
         "nodeType": 19,
         "operator": 0,
+        "operatorImage": "+",
         "position": Object {
           "basePath": "",
           "col": 17,
