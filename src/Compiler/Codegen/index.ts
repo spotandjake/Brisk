@@ -11,9 +11,9 @@ import {
   ComparisonExpressionOperator,
   FunctionSignatureLiteralNode,
   NodeType,
-  UnaryExpressionOperator,
   PostFixOperator,
   ProgramNode,
+  UnaryExpressionOperator,
 } from '../Types/ParseNodes';
 import { UnresolvedBytes, WasmModule } from '../../wasmBuilder/Types/Nodes';
 import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
@@ -89,7 +89,11 @@ const generateCode = (
       const alternative =
         node.alternative != undefined ? _generateCode(node.alternative) : undefined;
       // Return Expression
-      return Expressions.ifExpression(condition, body, alternative);
+      return Expressions.ifExpression(
+        Expressions.i32_eqExpression(condition, Expressions.i32_ConstExpression(1)),
+        body,
+        alternative
+      );
     }
     case NodeType.WhileStatement: {
       // Compile Condition
@@ -97,22 +101,36 @@ const generateCode = (
       // Compile Body
       const body = _generateCode(node.body);
       // Assemble Function
-      return Expressions.loopExpression(undefined, [
-        body,
-        Expressions.br_IfExpression(condition, 0),
+      return Expressions.blockExpression(undefined, [
+        Expressions.loopExpression(undefined, [
+          Expressions.br_IfExpression(Expressions.i32_eqzExpression(condition), 1),
+          body,
+          Expressions.brExpression(0),
+        ]),
       ]);
     }
     case NodeType.BreakStatement: {
       // Assemble Function
-      return Expressions.brExpression(node.depth + 1);
+      return Expressions.brExpression(node.depth + 2);
     }
     case NodeType.BreakIfStatement: {
       // Compile Condition
       const condition = _generateCode(node.condition);
       // Assemble Function
+      return Expressions.br_IfExpression(condition, node.depth + 2);
+    }
+    case NodeType.ContinueStatement: {
+      // Assemble Function
+      return Expressions.brExpression(node.depth + 1);
+    }
+    case NodeType.ContinueIfStatement: {
+      // Compile Condition
+      const condition = _generateCode(node.condition);
+      // Assemble Function
       return Expressions.br_IfExpression(condition, node.depth + 1);
     }
-    // TODO: Handle Flag Statement
+    case NodeType.FlagStatement:
+      return [];
     case NodeType.BlockStatement: {
       // Compile Body
       const body = node.body.map((_node) => {
@@ -447,8 +465,7 @@ const generateCode = (
         // Comparison
         if (exprAType.nodeType == NodeType.TypePrimLiteral) {
           // Handle Stack Types
-          if (exprAType.name == 'Boolean')
-            return Expressions.i32_AndExpression(lhs, rhs);
+          if (exprAType.name == 'Boolean') return Expressions.i32_AndExpression(lhs, rhs);
           else {
             // TODO: Handle Heap Types
             return BriskError(
@@ -465,8 +482,7 @@ const generateCode = (
         // Comparison
         if (exprAType.nodeType == NodeType.TypePrimLiteral) {
           // Handle Stack Types
-          if (exprAType.name == 'Boolean')
-            return Expressions.i32_orExpression(lhs, rhs);
+          if (exprAType.name == 'Boolean') return Expressions.i32_orExpression(lhs, rhs);
           else {
             // TODO: Handle Heap Types
             return BriskError(
@@ -502,27 +518,37 @@ const generateCode = (
           );
         case UnaryExpressionOperator.UnaryNegative:
           // Handle Stack Types
-          if (valueType.name == 'i32')
-            return Expressions.i32_MulExpression(
-              _generateCode(node.value),
-              Expressions.i32_ConstExpression(-1)
-            );
-          else if (valueType.name == 'i64')
-            return Expressions.i64_MulExpression(
-              _generateCode(node.value),
-              Expressions.i64_ConstExpression(-1)
-            );
-          else if (valueType.name == 'f32')
-            return Expressions.f32_MulExpression(
-              _generateCode(node.value),
-              Expressions.f32_ConstExpression(-1)
-            );
-          else if (valueType.name == 'f64')
-            return Expressions.f64_MulExpression(
-              _generateCode(node.value),
-              Expressions.f64_ConstExpression(-1)
-            );
-          else {
+          if (valueType.nodeType == NodeType.TypePrimLiteral) {
+            if (valueType.name == 'i32')
+              return Expressions.i32_MulExpression(
+                _generateCode(node.value),
+                Expressions.i32_ConstExpression(-1)
+              );
+            else if (valueType?.name == 'i64')
+              return Expressions.i64_MulExpression(
+                _generateCode(node.value),
+                Expressions.i64_ConstExpression(-1)
+              );
+            else if (valueType?.name == 'f32')
+              return Expressions.f32_MulExpression(
+                _generateCode(node.value),
+                Expressions.f32_ConstExpression(-1)
+              );
+            else if (valueType?.name == 'f64')
+              return Expressions.f64_MulExpression(
+                _generateCode(node.value),
+                Expressions.f64_ConstExpression(-1)
+              );
+            else {
+              // TODO: Handle Heap Types
+              return BriskError(
+                rawProgram,
+                BriskErrorType.FeatureNotYetImplemented,
+                [],
+                node.position
+              );
+            }
+          } else {
             // TODO: Handle Heap Types
             return BriskError(
               rawProgram,
@@ -553,7 +579,29 @@ const generateCode = (
       else return funcCall;
     }
     case NodeType.WasmCallExpression: {
-      return mapExpression(rawProgram, node, _generateCode);
+      const outType = getExpressionType(
+        rawProgram,
+        _variables,
+        _types,
+        _typeStack,
+        _typeStacks,
+        node
+      );
+      const expr = mapExpression(rawProgram, node, _generateCode);
+      if (
+        node.statement &&
+        !typeEqual(
+          rawProgram,
+          _types,
+          _typeStack,
+          _typeStacks,
+          outType,
+          createPrimType(node.position, 'Void'),
+          false
+        )
+      )
+        return Expressions.dropExpression(expr);
+      else return expr;
     }
     // TODO: Handle StringLiteral
     case NodeType.I32Literal:
@@ -626,8 +674,10 @@ const generateCode = (
         body.push(compiledBody);
         body.push(Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value)));
       } else {
-        if (node.body.nodeType == NodeType.BlockStatement) body.push(compiledBody);
-        else body.push(Expressions.returnExpression(compiledBody));
+        if (node.body.nodeType == NodeType.BlockStatement) {
+          body.push(compiledBody);
+          body.push(Expressions.unreachableExpression());
+        } else body.push(Expressions.returnExpression(compiledBody));
       }
       func = setBody(func, body);
       // Add The Function To The Module
@@ -680,7 +730,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
   let wasmModule = createModule();
   // TODO: Handle Compiling Type Information For Exports
   // Module SetUp
-  wasmModule = addMemory(wasmModule, Types.createMemoryType(64)); // The Module Memory
+  wasmModule = addMemory(wasmModule, Types.createMemoryType(1)); // The Module Memory
   // Create Function
   let func = createFunction('_start', Types.createFunctionType([], []), [], [], []);
   // Build The Body

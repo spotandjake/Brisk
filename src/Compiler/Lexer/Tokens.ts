@@ -220,6 +220,18 @@ export const TknBreak = createToken({
   pattern: 'break',
   categories: keywordTokens,
 });
+export const TknContinueIf = createToken({
+  label: 'ContinueIf',
+  name: LexerTokenType.TknContinueIf,
+  pattern: 'continueif',
+  categories: keywordTokens,
+});
+export const TknContinue = createToken({
+  label: 'Continue',
+  name: LexerTokenType.TknContinue,
+  pattern: 'continue',
+  categories: keywordTokens,
+});
 export const TknInterface = createToken({
   label: 'Interface',
   name: LexerTokenType.InterfaceToken,
@@ -489,17 +501,17 @@ export const TknDiv = createToken({
   pattern: '/',
   longer_alt: TknComment,
 });
+export const TknPow = createToken({
+  label: 'Power Of',
+  name: LexerTokenType.TknPower,
+  categories: arithmeticOperators,
+  pattern: '**',
+});
 export const TknMul = createToken({
   label: 'Multiplication',
   name: LexerTokenType.TknMultiply,
   categories: arithmeticOperators,
   pattern: '*',
-});
-export const TknPow = createToken({
-  label: 'Power Of',
-  name: LexerTokenType.TknPower,
-  categories: arithmeticOperators,
-  pattern: '^',
 });
 export const TknUnion = createToken({
   label: 'Tkn Type Union',
@@ -614,6 +626,8 @@ export const Tokens = [
   TknWhile,
   TknBreakIf,
   TknBreak,
+  TknContinueIf,
+  TknContinue,
   TknInterface,
   TknType,
   TknReturn,
@@ -646,8 +660,8 @@ export const Tokens = [
   TknAdd,
   TknSub,
   TknDiv,
-  TknMul,
   TknPow,
+  TknMul,
   TknUnion,
   TknQuestionMark,
   // Reserved Tokens

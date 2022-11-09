@@ -23,6 +23,8 @@ export const enum LexerTokenType {
   TknWhile = 'TknWhile',
   TknBreak = 'TknBreak',
   TknBreakIf = 'TknBreakIf',
+  TknContinue = 'TknContinue',
+  TknContinueIf = 'TknContinueIf',
   ElseToken = 'ElseToken',
   InterfaceToken = 'InterfaceToken',
   TypeToken = 'TypeToken',

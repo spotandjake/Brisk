@@ -34,15 +34,14 @@
     + [x] Implement Generics
     + [ ] Implement Match Syntax
     + [x] Allow you to access members on general expressions
-    + [ ] Allow u to define multiple variables off one `let` or `const` using `,`
     + [ ] Implement Destructuring
     + [ ] Implement Array Literals
       + [ ] Implement Array Spread
       + [x] Implement Array Literal Syntax
       + [ ] Implement Array Index Syntax
     + [ ] Document Language Grammar
-  + [ ] Start Writing Our Wasm Builder
-    + [ ] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
+  + [x] Start Writing Our Wasm Builder
+    + [x] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2
   + [ ] Write New Tests Based On The Improvements To The Compiler
     + [ ] Unary Operators

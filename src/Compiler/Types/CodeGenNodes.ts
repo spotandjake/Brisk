@@ -1,7 +1,7 @@
 import { AnalyzerProperties } from './AnalyzerNodes';
 import { WasmFunction } from '../../wasmBuilder/Types/Nodes';
 import Node, * as Nodes from '../Types/ParseNodes';
-export interface CodeGenProperties extends AnalyzerProperties {
+export interface CodeGenProperties extends Omit<AnalyzerProperties, 'operatorScope'> {
   wasmFunction: WasmFunction;
   selfReference?: number;
 }

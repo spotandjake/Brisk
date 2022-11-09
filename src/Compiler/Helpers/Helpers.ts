@@ -12,6 +12,8 @@ import {
   EnumDefinitionStatementNode,
   GenericTypeNode,
   InterfaceDefinitionNode,
+  NodeType,
+  Statement,
   TypeAliasDefinitionNode,
   TypeUsageNode,
   VariableDefinitionNode,
@@ -41,6 +43,28 @@ interface TypeContainer {
   stack: TypeStack;
   stacks: TypeStack[];
 }
+// Ast Helpers
+/**
+ * Gets The Next Unique Element In The Body
+ *
+ * @param  {Statement[]} body The Body To Search
+ * @param  {number} index Index of the current element
+ * @param  {NodeType[]} nodeTypes Node Types To Ignore
+ *
+ * @returns The Next Unique Element or undefined
+ */
+export const getNextUniqueElement = (
+  body: Statement[],
+  index: number,
+  nodeTypes: NodeType[]
+): Statement | undefined => {
+  for (let i = index + 1; i < body.length; i++) {
+    if (!nodeTypes.includes(body[i].nodeType)) {
+      return body[i];
+    }
+  }
+  return undefined;
+};
 // Variables
 /**
  * Creates A new Variable And Puts It On The Stack

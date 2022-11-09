@@ -1,4 +1,5 @@
 import Node, {
+  CallExpressionNode,
   DeclarationTypes,
   Expression,
   NodeCategory,
@@ -26,12 +27,14 @@ import { BriskErrorType } from '../Errors/Errors';
 import {
   createType,
   createVariable,
+  getNextUniqueElement,
   getTypeReference,
   getVariable,
   getVariableReference,
   setType,
   setVariable,
 } from '../Helpers/Helpers';
+import { operators } from '../Helpers/Operators';
 // Analyze Node
 const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
   // Code
@@ -40,6 +43,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
   properties: AnalyzerProperties,
   // Nodes
   parentNode: Node,
+  nodePosition: number,
   node: T
 ): T => {
   const {
@@ -55,14 +59,25 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     _closure,
     _varStack,
     _typeStack,
+    // Misc
+    operatorScope,
     // Flags
-    loopDepth
+    loopDepth,
   } = properties;
   const _analyzeNode = <_T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
+    nodePosition: number,
     props: Partial<AnalyzerProperties> = properties,
     parentNode: Node = node
-  ): _T => analyzeNode(rawProgram, { ...properties, ...props }, parentNode, childNode);
+  ): _T => {
+    return analyzeNode(
+      rawProgram,
+      { ...properties, ...props },
+      parentNode,
+      nodePosition,
+      childNode
+    );
+  };
   // Match The Node For Analysis
   switch (node.nodeType) {
     // Statements
@@ -75,12 +90,12 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           [],
           node.position
         );
-      node.condition = _analyzeNode(node.condition);
+      node.condition = _analyzeNode(node.condition, 0);
       // Analyze Body And Alternative
-      node.body = _analyzeNode(node.body);
+      node.body = _analyzeNode(node.body, 0);
       if (node.alternative != undefined) {
         // Analyze The Alternative Path
-        node.alternative = _analyzeNode(node.alternative);
+        node.alternative = _analyzeNode(node.alternative, 0);
         // Check If Both Paths Return
         if (
           'data' in node.body &&
@@ -94,56 +109,109 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     case NodeType.WhileStatement:
-      // TODO: If the while loop doesnt break say it doesnt return
-      node.condition = _analyzeNode(node.condition);
+      // TODO: If the while loop doesn't break say it doesn't return
+      node.condition = _analyzeNode(node.condition, 0);
       // Analyze Body And Alternative
-      node.body = _analyzeNode(node.body, { loopDepth: ((loopDepth ?? 0) + 1)});
-      if (
-        'data' in node.body &&
-        'pathReturns' in node.body.data &&
-        node.body.data.pathReturns
-      ) node.data.pathReturns = true;
+      node.body = _analyzeNode(node.body, 0, { loopDepth: (loopDepth ?? 0) + 1 });
+      if ('data' in node.body && 'pathReturns' in node.body.data && node.body.data.pathReturns)
+        node.data.pathReturns = true;
       return node;
     case NodeType.BreakStatement:
       if (loopDepth == undefined || loopDepth < node.depth)
         BriskError(
           rawProgram,
           BriskErrorType.InvalidBreakDepth,
-          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          [`${node.depth}`, `${loopDepth ?? 'Not In Loop'}`],
           node.position
-        ); 
+        );
       return node;
     case NodeType.BreakIfStatement:
       if (loopDepth == undefined || loopDepth < node.depth)
         BriskError(
           rawProgram,
           BriskErrorType.InvalidBreakDepth,
-          [ `${node.depth}`, `${(loopDepth ?? 'Not In Loop')}` ],
+          [`${node.depth}`, `${loopDepth ?? 'Not In Loop'}`],
           node.position
         );
-      node.condition = _analyzeNode(node.condition);
+      node.condition = _analyzeNode(node.condition, 0);
       return node;
-    // TODO: BreakIf Statement
-    case NodeType.FlagStatement:
-      if (node.args.length != 0) {
-        if (node.value == 'operator') {
-          if (node.args.length != 2)
-            BriskTypeError(
-              rawProgram,
-              BriskErrorType.FlagExpectedArguments,
-              [node.value, '2', `${node.args.length}`],
-              node.args.position
-            );
-          return node;
-        }
-        BriskTypeError(
+    case NodeType.ContinueStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
           rawProgram,
-          BriskErrorType.FlagExpectedArguments,
-          [node.value, '0', `${node.args.length}`],
-          node.args.position
+          BriskErrorType.InvalidBreakDepth,
+          [`${node.depth}`, `${loopDepth ?? 'Not In Loop'}`],
+          node.position
+        );
+      return node;
+    case NodeType.ContinueIfStatement:
+      if (loopDepth == undefined || loopDepth < node.depth)
+        BriskError(
+          rawProgram,
+          BriskErrorType.InvalidBreakDepth,
+          [`${node.depth}`, `${loopDepth ?? 'Not In Loop'}`],
+          node.position
+        );
+      node.condition = _analyzeNode(node.condition, 0);
+      return node;
+    case NodeType.FlagStatement: {
+      // Ensure That The Operator Flag uses a valid operator
+      if (
+        node.value == 'operator' &&
+        node.args.length == 2 &&
+        node.args[0].nodeType == NodeType.StringLiteral &&
+        node.args[1].nodeType == NodeType.StringLiteral
+      ) {
+        if (!operators.includes(node.args[0].value)) {
+          return BriskError(
+            rawProgram,
+            BriskErrorType.InvalidOperator,
+            [node.args[0].value],
+            node.position
+          );
+        }
+        if (!['PREFIX', 'INFIX', 'POSTFIX'].includes(node.args[1].value)) {
+          return BriskError(
+            rawProgram,
+            BriskErrorType.InvalidOperator,
+            [node.args[1].value],
+            node.position
+          );
+        }
+      }
+      // Ensure parent is a block statement or program node
+      if (
+        parentNode.nodeType != NodeType.BlockStatement &&
+        parentNode.nodeType != NodeType.Program
+      ) {
+        return BriskParseError(
+          rawProgram,
+          BriskErrorType.FlagStatementExpectedInBlockStatement,
+          [],
+          node.position
         );
       }
+      // Ensure that the next line is a declaration statement, declaring a function
+      const nextElement = getNextUniqueElement(parentNode.body, nodePosition, [
+        NodeType.FlagStatement,
+      ]);
+      if (
+        nextElement == undefined ||
+        nextElement.nodeType != NodeType.DeclarationStatement ||
+        nextElement.value.nodeType != NodeType.FunctionLiteral
+      ) {
+        return BriskParseError(
+          rawProgram,
+          BriskErrorType.FlagStatementExpectsFollowingDefinition,
+          [],
+          node.position
+        );
+      }
+      // Attach The Flag
+      nextElement.flags.push(node);
+      // Return The Node
       return node;
+    }
     case NodeType.BlockStatement: {
       // Create Our New Stacks
       const varStack: VariableStack = new Map();
@@ -154,7 +222,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         ...node,
         body: node.body.map((child, i) => {
           // Analyze Body
-          const analyzedChild = _analyzeNode(child, {
+          const analyzedChild = _analyzeNode(child, i, {
             // Stacks
             _closure: _closure,
             _varStack: varStack,
@@ -184,6 +252,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       };
     }
     case NodeType.ImportStatement: {
+      // TODO: Handle Operator Imports
       // Add Import
       _imports.set(node.variable.name, {
         name: node.variable.name,
@@ -209,7 +278,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     }
     case NodeType.WasmImportStatement: {
       // Analyze Type
-      node.typeSignature = _analyzeNode(node.typeSignature);
+      node.typeSignature = _analyzeNode(node.typeSignature, 0);
       // Add Variable
       node.variable.reference = createVariable(
         rawProgram,
@@ -231,7 +300,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     }
     case NodeType.ExportStatement: {
       // Analyze Node
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
       // Add Export
       const addExport = (exportName: string, exportValue: VariableData): void => {
         // Ensure That The Export Does Not Exist
@@ -362,7 +431,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.DeclarationStatement: {
       // TODO: Handle Destructuring
       // Analyze Type Variable
-      node.varType = _analyzeNode(node.varType);
+      node.varType = _analyzeNode(node.varType, 0);
       // Add Variable To Stack
       node.name.reference = createVariable(
         rawProgram,
@@ -378,15 +447,35 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         node.position
       );
       // Analyze The Value
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
+      // Add Operator To List
+      if (node.flags.findIndex((flag) => flag.value == 'operator') != -1) {
+        node.flags
+          .filter((flag) => flag.value == 'operator')
+          .forEach((flag) => {
+            if (
+              flag.args.length == 2 &&
+              flag.args[0].nodeType == NodeType.StringLiteral &&
+              flag.args[1].nodeType == NodeType.StringLiteral
+            ) {
+              if (flag.args[1].value == 'PREFIX')
+                operatorScope.PREFIX.set(flag.args[0].value, node.name.name);
+              else if (flag.args[1].value == 'INFIX')
+                operatorScope.INFIX.set(flag.args[0].value, node.name.name);
+              else if (flag.args[1].value == 'POSTFIX')
+                operatorScope.POSTFIX.set(flag.args[0].value, node.name.name);
+            }
+          });
+      }
+      // Return Node
       return node;
     }
     case NodeType.AssignmentStatement:
       // Analyze Value
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
     case NodeType.PostFixStatement: {
       // Analyze Variable
-      node.name = _analyzeNode(node.name);
+      node.name = _analyzeNode(node.name, 0);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
       // Verify That Var Exists And Is mutable
       const variableData = getVariable(_variables, node.name);
@@ -400,7 +489,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       return node;
     }
     case NodeType.ReturnStatement:
-      if (node.returnValue) node.returnValue = _analyzeNode(node.returnValue);
+      if (node.returnValue) node.returnValue = _analyzeNode(node.returnValue, 0);
       return node;
     case NodeType.EnumDefinitionStatement: {
       // TODO: Add To Variable List As An Object Maybe
@@ -408,8 +497,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       const typeStack: TypeStack = new Map();
       // Analyze Generic Types
       if (node.genericTypes) {
-        node.genericTypes = node.genericTypes.map((genericType) => {
-          return _analyzeNode(genericType, {
+        node.genericTypes = node.genericTypes.map((genericType, i) => {
+          return _analyzeNode(genericType, i, {
             // Stacks
             _typeStack: typeStack,
             // Stack Pool
@@ -430,8 +519,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         variants.add(variant.identifier);
       }
       // Analyze Variants
-      node.variants = node.variants.map((variant) => {
-        return _analyzeNode(variant, {
+      node.variants = node.variants.map((variant, i) => {
+        return _analyzeNode(variant, i, {
           // Stacks
           _typeStack: typeStack,
           // Stack Pool
@@ -481,31 +570,58 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze Value
       if (node.value) {
         if (Array.isArray(node.value))
-          node.value = node.value.map((typeLiteral) => _analyzeNode(typeLiteral));
+          node.value = node.value.map((typeLiteral, i) => _analyzeNode(typeLiteral, i));
         else if (node.value.category == NodeCategory.Expression)
-          node.value = _analyzeNode(node.value);
+          node.value = _analyzeNode(node.value, 0);
       }
       return node;
     // Expressions
+    // TODO: Make A Generic INFIX Expression
     case NodeType.ComparisonExpression:
-    case NodeType.ArithmeticExpression:
-      node.lhs = _analyzeNode(node.lhs);
-      node.rhs = _analyzeNode(node.rhs);
-      return node;
+    case NodeType.ArithmeticExpression: {
+      // Get Operator Function
+      const opFunc = operatorScope.INFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      node.lhs = _analyzeNode(node.lhs, 0);
+      node.rhs = _analyzeNode(node.rhs, 0);
+      // Build A Function Call
+      const funcCall: CallExpressionNode = {
+        nodeType: NodeType.CallExpression,
+        category: NodeCategory.Expression,
+        callee: {
+          nodeType: NodeType.VariableUsage,
+          category: NodeCategory.Variable,
+          name: opFunc,
+          position: node.position,
+        },
+        args: [node.rhs, node.lhs],
+        statement: false,
+        position: node.position,
+      };
+      // @ts-ignore
+      return _analyzeNode(funcCall, nodePosition);
+    }
     case NodeType.TypeCastExpression:
-      node.typeLiteral = _analyzeNode(node.typeLiteral);
+      node.typeLiteral = _analyzeNode(node.typeLiteral, 0);
     case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
       return node;
     case NodeType.CallExpression:
       // Analyze Callee
-      node.callee = _analyzeNode(node.callee);
+      node.callee = _analyzeNode(node.callee, 0);
       // Analyze Arguments
-      node.args = node.args.map((arg: Expression) => _analyzeNode(arg));
+      node.args = node.args.map((arg: Expression, i) => _analyzeNode(arg, i));
       return node;
     case NodeType.WasmCallExpression:
-      node.args = node.args.map((arg) => _analyzeNode(arg));
+      node.args = node.args.map((arg, i) => _analyzeNode(arg, i));
       return node;
     // Literals
     case NodeType.StringLiteral:
@@ -535,8 +651,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       });
       // Analyze Generic Types
       if (node.genericTypes) {
-        node.genericTypes = node.genericTypes.map((genericType) => {
-          return _analyzeNode(genericType, {
+        node.genericTypes = node.genericTypes.map((genericType, i) => {
+          return _analyzeNode(genericType, i, {
             // Parent Stacks
             _varStacks: [..._varStacks, _varStack],
             _typeStacks: [..._typeStacks, _typeStack],
@@ -548,7 +664,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         });
       }
       // Analyze ReturnType
-      node.returnType = _analyzeNode(node.returnType, {
+      node.returnType = _analyzeNode(node.returnType, 0, {
         // Parent Stacks
         _varStacks: [..._varStacks, _varStack],
         _typeStacks: [..._typeStacks, _typeStack],
@@ -558,8 +674,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack: typeStack,
       });
       // Analyze Params
-      node.params = node.params.map((param) => {
-        return _analyzeNode(param, {
+      node.params = node.params.map((param, i) => {
+        return _analyzeNode(param, i, {
           // Parent Stacks
           _varStacks: [..._varStacks, _varStack],
           _typeStacks: [..._typeStacks, _typeStack],
@@ -570,7 +686,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         });
       });
       // Analyze Body
-      node.body = _analyzeNode(node.body, {
+      node.body = _analyzeNode(node.body, 0, {
         // Parent Stacks
         _varStacks: [..._varStacks, _varStack],
         _typeStacks: [..._typeStacks, _typeStack],
@@ -609,9 +725,9 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     }
     case NodeType.ArrayLiteral: {
       // Analyze Elements
-      node.elements = node.elements.map((element) => {
-        if (element.nodeType == NodeType.ValueSpread) return _analyzeNode(element.value);
-        else return _analyzeNode(element);
+      node.elements = node.elements.map((element, i) => {
+        if (element.nodeType == NodeType.ValueSpread) return _analyzeNode(element.value, i);
+        else return _analyzeNode(element, i);
       });
       // Return Node
       return node;
@@ -619,10 +735,11 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.ObjectLiteral: {
       // Analyze Fields
       const fields: (ObjectFieldNode | ValueSpreadNode)[] = [];
+      let i = 0;
       for (const field of node.fields) {
         // field
-        if (field.nodeType == NodeType.ValueSpread) field.value = _analyzeNode(field.value);
-        else field.fieldValue = _analyzeNode(field.fieldValue);
+        if (field.nodeType == NodeType.ValueSpread) field.value = _analyzeNode(field.value, i);
+        else field.fieldValue = _analyzeNode(field.fieldValue, i);
         // Check if field exists
         if (
           field.nodeType == NodeType.ObjectField &&
@@ -630,6 +747,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         )
           BriskTypeError(rawProgram, BriskErrorType.DuplicateField, [field.name], field.position);
         fields.push(field);
+        i++;
       }
       node.fields = fields;
       return node;
@@ -653,8 +771,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       );
       // Analyze Generic Types
       if (node.genericTypes) {
-        node.genericTypes = node.genericTypes.map((genericType) => {
-          return _analyzeNode(genericType, {
+        node.genericTypes = node.genericTypes.map((genericType, i) => {
+          return _analyzeNode(genericType, i, {
             // Stacks
             _typeStack: typeStack,
             // Stack Pool
@@ -663,7 +781,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         });
       }
       // Analyze Interface
-      node.typeLiteral = _analyzeNode(node.typeLiteral, {
+      node.typeLiteral = _analyzeNode(node.typeLiteral, 0, {
         // Stacks
         _typeStack: typeStack,
         // Stack Pool
@@ -681,24 +799,24 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       return node;
     case NodeType.TypeUnionLiteral:
       // Analyze Types
-      node.types = node.types.map((type) => _analyzeNode(type));
+      node.types = node.types.map((type, i) => _analyzeNode(type, i));
       return node;
     case NodeType.ArrayTypeLiteral:
       // Analyze Length
-      if (node.length) node.length = _analyzeNode(node.length);
+      if (node.length) node.length = _analyzeNode(node.length, 0);
       // Analyze Value
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
       return node;
     case NodeType.ParenthesisTypeLiteral:
-      node.value = _analyzeNode(node.value);
+      node.value = _analyzeNode(node.value, 0);
       return node;
     case NodeType.FunctionSignatureLiteral: {
       // Create New Type Stack
       const typeStack: TypeStack = new Map();
       // Analyze Generic Types
       if (node.genericTypes) {
-        node.genericTypes = node.genericTypes.map((genericType) => {
-          return _analyzeNode(genericType, {
+        node.genericTypes = node.genericTypes.map((genericType, i) => {
+          return _analyzeNode(genericType, i, {
             // Stacks
             _typeStack: typeStack,
             // Stack Pool
@@ -707,8 +825,8 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         });
       }
       // Analyze Parameter Types
-      node.params = node.params.map((param) =>
-        _analyzeNode(param, {
+      node.params = node.params.map((param, i) =>
+        _analyzeNode(param, i, {
           // Stacks
           _typeStack: typeStack,
           // Stack Pool
@@ -716,7 +834,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         })
       );
       // Analyze Return Types
-      node.returnType = _analyzeNode(node.returnType, {
+      node.returnType = _analyzeNode(node.returnType, 0, {
         // Stacks
         _typeStack: typeStack,
         // Stack Pool
@@ -732,10 +850,10 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.InterfaceLiteral: {
       // Analyze Fields
       const fields: Set<string> = new Set();
-      node.fields = node.fields.map((field) => {
+      node.fields = node.fields.map((field, i) => {
         if (fields.has(field.name))
           BriskTypeError(rawProgram, BriskErrorType.DuplicateField, [field.name], field.position);
-        field.fieldType = _analyzeNode(field.fieldType);
+        field.fieldType = _analyzeNode(field.fieldType, i);
         fields.add(field.name);
         return field;
       });
@@ -750,7 +868,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       return node;
     case NodeType.GenericType:
       // Analyze Constraints
-      if (node.constraints) node.constraints = _analyzeNode(node.constraints);
+      if (node.constraints) node.constraints = _analyzeNode(node.constraints, 0);
       // Create Type
       node.reference = createType(
         rawProgram,
@@ -785,12 +903,12 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     }
     case NodeType.MemberAccess:
       // Analyze Parent
-      node.parent = _analyzeNode(node.parent);
+      node.parent = _analyzeNode(node.parent, 0);
       // Analyze Child
-      node.property = _analyzeNode(node.property);
+      node.property = _analyzeNode(node.property, 0);
     case NodeType.PropertyUsage:
       // Analyze Node Property
-      if (node.property) node.property = _analyzeNode(node.property);
+      if (node.property) node.property = _analyzeNode(node.property, 0);
       // Return node
       return node;
     case NodeType.Parameter: {
@@ -802,7 +920,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         );
       }
       // Change Type To Include Void
-      node.paramType = _analyzeNode(node.paramType);
+      node.paramType = _analyzeNode(node.paramType, 0);
       // Add Variable To Stack
       // TODO: Support Rest Syntax
       node.name.reference = createVariable(
@@ -831,6 +949,11 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
   const types: TypeMap = new Map();
   const varStack: VariableStack = new Map();
   const typeStack: TypeStack = new Map();
+  const operatorScope = {
+    PREFIX: new Map(),
+    INFIX: new Map(),
+    POSTFIX: new Map(),
+  };
   // Return Our Node
   return {
     ...program,
@@ -866,10 +989,13 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           _closure: new Set(),
           _varStack: varStack,
           _typeStack: typeStack,
+          // Misc
+          operatorScope: operatorScope,
           // Flags
           loopDepth: undefined,
         },
         program,
+        0,
         child
       );
     }),
@@ -881,7 +1007,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
       _types: types,
       _varStack: varStack,
       _typeStack: typeStack,
-      loopDepth: undefined
+      loopDepth: undefined,
     },
   };
 };

@@ -156,12 +156,13 @@ test('WasmBuilder-Expressions: global_SetExpression', () => {
 // TODO: i64_store16Expr,
 // TODO: i64_store32Expr,
 test('WasmBuilder-Expressions: memory_SizeExpression', () => {
-  expect(Expressions.memory_SizeExpression()).toEqual([0x3f]);
+  expect(Expressions.memory_SizeExpression()).toEqual([0x3f,0x00]);
 });
 test('WasmBuilder-Expressions: memory_GrowExpression', () => {
   expect(Expressions.memory_GrowExpression(Expressions.nopExpression())).toEqual([
     ...Expressions.nopExpression(),
     0x40,
+    0x00,
   ]);
 });
 test('WasmBuilder-Expressions: i32_ConstExpression', () => {

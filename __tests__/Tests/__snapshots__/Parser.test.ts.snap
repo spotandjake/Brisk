@@ -5,7 +5,7 @@ Object {
   "body": Array [
     Object {
       "category": 1,
-      "nodeType": 7,
+      "nodeType": 9,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -16,7 +16,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 15,
@@ -30,7 +30,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "a",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -43,7 +43,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -54,7 +54,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 42,
@@ -71,12 +71,12 @@ Object {
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 43,
+        "nodeType": 45,
         "params": Array [
           Object {
             "category": 5,
             "name": "String",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 21,
@@ -98,7 +98,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 32,
@@ -112,7 +112,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "print",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -125,7 +125,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -136,7 +136,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 32,
@@ -153,7 +153,7 @@ Object {
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 43,
+        "nodeType": 45,
         "params": Array [],
         "position": Object {
           "basePath": "",
@@ -166,7 +166,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -180,7 +180,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "f",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -193,7 +193,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -204,7 +204,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 25,
@@ -218,7 +218,7 @@ Object {
       "typeSignature": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 16,
@@ -231,7 +231,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "b",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -249,7 +249,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "A",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -261,7 +261,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -279,7 +279,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "B",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -290,7 +290,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -303,7 +303,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -316,7 +316,7 @@ Object {
           Object {
             "category": 5,
             "name": "i64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 16,
@@ -329,7 +329,7 @@ Object {
           Object {
             "category": 5,
             "name": "u32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 22,
@@ -342,7 +342,7 @@ Object {
           Object {
             "category": 5,
             "name": "u64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 28,
@@ -355,7 +355,7 @@ Object {
           Object {
             "category": 5,
             "name": "f32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 34,
@@ -368,7 +368,7 @@ Object {
           Object {
             "category": 5,
             "name": "f64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 40,
@@ -388,7 +388,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "C",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -399,7 +399,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -412,7 +412,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -428,12 +428,12 @@ Object {
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 43,
+            "nodeType": 45,
             "params": Array [
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 39,
+                "nodeType": 41,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -445,7 +445,7 @@ Object {
               },
               Object {
                 "category": 5,
-                "nodeType": 40,
+                "nodeType": 42,
                 "position": Object {
                   "basePath": "",
                   "col": 22,
@@ -458,7 +458,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -471,7 +471,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 28,
@@ -494,7 +494,7 @@ Object {
             },
             "returnType": Object {
               "category": 5,
-              "nodeType": 40,
+              "nodeType": 42,
               "position": Object {
                 "basePath": "",
                 "col": 36,
@@ -507,7 +507,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 36,
@@ -520,7 +520,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 42,
@@ -543,7 +543,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "D",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -554,7 +554,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -567,7 +567,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -583,12 +583,12 @@ Object {
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 43,
+            "nodeType": 45,
             "params": Array [
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 39,
+                "nodeType": 41,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -600,7 +600,7 @@ Object {
               },
               Object {
                 "category": 5,
-                "nodeType": 40,
+                "nodeType": 42,
                 "position": Object {
                   "basePath": "",
                   "col": 22,
@@ -613,7 +613,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -626,7 +626,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 28,
@@ -649,7 +649,7 @@ Object {
             },
             "returnType": Object {
               "category": 5,
-              "nodeType": 40,
+              "nodeType": 42,
               "position": Object {
                 "basePath": "",
                 "col": 36,
@@ -661,7 +661,7 @@ Object {
               "types": Array [
                 Object {
                   "category": 5,
-                  "nodeType": 42,
+                  "nodeType": 44,
                   "position": Object {
                     "basePath": "",
                     "col": 36,
@@ -672,7 +672,7 @@ Object {
                   },
                   "value": Object {
                     "category": 5,
-                    "nodeType": 40,
+                    "nodeType": 42,
                     "position": Object {
                       "basePath": "",
                       "col": 37,
@@ -685,7 +685,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 39,
+                        "nodeType": 41,
                         "position": Object {
                           "basePath": "",
                           "col": 37,
@@ -698,7 +698,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 39,
+                        "nodeType": 41,
                         "position": Object {
                           "basePath": "",
                           "col": 43,
@@ -714,7 +714,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 50,
@@ -737,7 +737,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "E",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -754,7 +754,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -766,7 +766,7 @@ Object {
             },
             "mutable": false,
             "name": "field1",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -782,7 +782,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 15,
@@ -794,7 +794,7 @@ Object {
             },
             "mutable": true,
             "name": "field2",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -810,7 +810,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 12,
@@ -822,7 +822,7 @@ Object {
             },
             "mutable": false,
             "name": "field3",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": true,
             "position": Object {
               "basePath": "",
@@ -843,7 +843,7 @@ Object {
                   "fieldType": Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -855,7 +855,7 @@ Object {
                   },
                   "mutable": false,
                   "name": "field1",
-                  "nodeType": 45,
+                  "nodeType": 47,
                   "optional": false,
                   "position": Object {
                     "basePath": "",
@@ -867,7 +867,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 44,
+              "nodeType": 46,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -879,7 +879,7 @@ Object {
             },
             "mutable": false,
             "name": "field4",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -891,7 +891,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -905,10 +905,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -918,7 +919,7 @@ Object {
           "offset": 487,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -935,7 +936,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -947,7 +948,7 @@ Object {
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -962,7 +963,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -974,7 +975,7 @@ Object {
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -989,7 +990,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1001,7 +1002,7 @@ Object {
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1022,7 +1023,7 @@ Object {
                   "fieldMutable": false,
                   "fieldValue": Object {
                     "category": 4,
-                    "nodeType": 24,
+                    "nodeType": 26,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -1034,7 +1035,7 @@ Object {
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 35,
+                  "nodeType": 37,
                   "position": Object {
                     "basePath": "",
                     "col": 5,
@@ -1045,7 +1046,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 34,
+              "nodeType": 36,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1056,7 +1057,7 @@ Object {
               },
             },
             "name": "field4",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1067,7 +1068,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 21,
@@ -1080,7 +1081,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 17,
@@ -1094,10 +1095,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest2",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -1107,7 +1109,7 @@ Object {
           "offset": 585,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -1124,7 +1126,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1136,7 +1138,7 @@ Object {
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1151,7 +1153,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1163,7 +1165,7 @@ Object {
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1184,7 +1186,7 @@ Object {
                   "fieldMutable": false,
                   "fieldValue": Object {
                     "category": 4,
-                    "nodeType": 24,
+                    "nodeType": 26,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -1196,7 +1198,7 @@ Object {
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 35,
+                  "nodeType": 37,
                   "position": Object {
                     "basePath": "",
                     "col": 5,
@@ -1207,7 +1209,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 34,
+              "nodeType": 36,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1218,7 +1220,7 @@ Object {
               },
             },
             "name": "field4",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1229,7 +1231,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 22,
@@ -1242,7 +1244,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 18,
@@ -1256,10 +1258,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest3",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -1269,7 +1272,7 @@ Object {
           "offset": 670,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -1283,7 +1286,7 @@ Object {
         "fields": Array [
           Object {
             "category": 4,
-            "nodeType": 36,
+            "nodeType": 38,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1295,7 +1298,7 @@ Object {
             "value": Object {
               "category": 6,
               "name": "objectTest2",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 6,
@@ -1311,7 +1314,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -1323,7 +1326,7 @@ Object {
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1334,7 +1337,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 22,
@@ -1347,7 +1350,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 18,
@@ -1362,11 +1365,11 @@ Object {
       "category": 1,
       "name": Object {
         "category": 6,
-        "nodeType": 51,
+        "nodeType": 53,
         "parent": Object {
           "category": 6,
           "name": "objectTest",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 1,
@@ -1387,7 +1390,7 @@ Object {
         "property": Object {
           "category": 6,
           "name": "field2",
-          "nodeType": 52,
+          "nodeType": 54,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -1399,7 +1402,7 @@ Object {
           "property": undefined,
         },
       },
-      "nodeType": 11,
+      "nodeType": 13,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -1410,7 +1413,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 24,
+        "nodeType": 26,
         "position": Object {
           "basePath": "",
           "col": 21,
@@ -1430,7 +1433,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -1445,7 +1448,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -1456,7 +1459,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -1474,7 +1477,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -1490,7 +1493,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -1505,7 +1508,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -1516,7 +1519,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -1534,7 +1537,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 30,
@@ -1549,7 +1552,7 @@ Object {
           "category": 3,
           "lhs": Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -1560,7 +1563,7 @@ Object {
             },
             "value": "test",
           },
-          "nodeType": 16,
+          "nodeType": 18,
           "operator": 0,
           "position": Object {
             "basePath": "",
@@ -1572,7 +1575,7 @@ Object {
           },
           "rhs": Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 22,
@@ -1603,7 +1606,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -1618,7 +1621,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -1629,7 +1632,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1647,7 +1650,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -1662,7 +1665,7 @@ Object {
         "category": 3,
         "lhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 5,
@@ -1673,7 +1676,7 @@ Object {
           },
           "value": 1,
         },
-        "nodeType": 16,
+        "nodeType": 18,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -1685,7 +1688,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 10,
@@ -1715,7 +1718,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -1730,7 +1733,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 6,
@@ -1741,7 +1744,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 6,
@@ -1756,7 +1759,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 19,
@@ -1771,7 +1774,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 13,
@@ -1782,7 +1785,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -1798,7 +1801,7 @@ Object {
         "category": 3,
         "lhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 5,
@@ -1809,7 +1812,7 @@ Object {
           },
           "value": 1,
         },
-        "nodeType": 16,
+        "nodeType": 18,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -1821,7 +1824,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 10,
@@ -1854,7 +1857,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -1869,7 +1872,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -1880,7 +1883,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -1898,7 +1901,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -1911,7 +1914,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -1941,7 +1944,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -1956,7 +1959,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -1967,7 +1970,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -1981,7 +1984,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2010,7 +2013,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -2025,7 +2028,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 6,
@@ -2036,7 +2039,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 6,
@@ -2051,7 +2054,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -2066,7 +2069,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -2077,7 +2080,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -2091,7 +2094,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2122,7 +2125,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -2137,7 +2140,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2148,7 +2151,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -2166,7 +2169,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -2182,7 +2185,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -2197,7 +2200,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2208,7 +2211,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -2226,7 +2229,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -2239,7 +2242,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2271,7 +2274,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -2286,7 +2289,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -2297,7 +2300,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2315,7 +2318,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -2331,7 +2334,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -2346,7 +2349,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -2357,7 +2360,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2375,7 +2378,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 18,
@@ -2388,7 +2391,7 @@ Object {
         "category": 1,
         "condition": Object {
           "category": 4,
-          "nodeType": 31,
+          "nodeType": 33,
           "position": Object {
             "basePath": "",
             "col": 12,
@@ -2418,7 +2421,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -2433,7 +2436,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2444,7 +2447,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -2462,7 +2465,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -2475,7 +2478,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2504,7 +2507,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 14,
@@ -2519,7 +2522,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -2530,7 +2533,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -2547,7 +2550,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -2562,7 +2565,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2573,7 +2576,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -2591,7 +2594,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -2604,7 +2607,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2636,7 +2639,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -2651,7 +2654,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -2662,7 +2665,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -2680,7 +2683,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -2693,7 +2696,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2721,7 +2724,7 @@ Object {
       "args": Array [
         Object {
           "category": 4,
-          "nodeType": 23,
+          "nodeType": 25,
           "position": Object {
             "basePath": "",
             "col": 7,
@@ -2736,7 +2739,7 @@ Object {
       "callee": Object {
         "category": 6,
         "name": "print",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -2747,7 +2750,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -2763,7 +2766,7 @@ Object {
       "callee": Object {
         "category": 6,
         "name": "f",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -2774,7 +2777,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -2789,7 +2792,7 @@ Object {
       "args": Array [
         Object {
           "category": 4,
-          "nodeType": 24,
+          "nodeType": 26,
           "position": Object {
             "basePath": "",
             "col": 15,
@@ -2802,7 +2805,7 @@ Object {
         },
         Object {
           "category": 4,
-          "nodeType": 24,
+          "nodeType": 26,
           "position": Object {
             "basePath": "",
             "col": 19,
@@ -2816,7 +2819,7 @@ Object {
       ],
       "category": 3,
       "name": "@wasm.i32.add",
-      "nodeType": 22,
+      "nodeType": 24,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -2830,10 +2833,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "c",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -2843,7 +2847,7 @@ Object {
           "offset": 1386,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -2862,7 +2866,7 @@ Object {
               "category": 3,
               "lhs": Object {
                 "category": 4,
-                "nodeType": 30,
+                "nodeType": 32,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -2873,7 +2877,7 @@ Object {
                 },
                 "value": 1,
               },
-              "nodeType": 17,
+              "nodeType": 19,
               "operator": 0,
               "position": Object {
                 "basePath": "",
@@ -2885,7 +2889,7 @@ Object {
               },
               "rhs": Object {
                 "category": 3,
-                "nodeType": 19,
+                "nodeType": 21,
                 "position": Object {
                   "basePath": "",
                   "col": 21,
@@ -2898,7 +2902,7 @@ Object {
                   "category": 3,
                   "lhs": Object {
                     "category": 4,
-                    "nodeType": 30,
+                    "nodeType": 32,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -2909,7 +2913,7 @@ Object {
                     },
                     "value": 1,
                   },
-                  "nodeType": 17,
+                  "nodeType": 19,
                   "operator": 0,
                   "position": Object {
                     "basePath": "",
@@ -2921,7 +2925,7 @@ Object {
                   },
                   "rhs": Object {
                     "category": 4,
-                    "nodeType": 30,
+                    "nodeType": 32,
                     "position": Object {
                       "basePath": "",
                       "col": 26,
@@ -2935,7 +2939,7 @@ Object {
                 },
               },
             },
-            "nodeType": 17,
+            "nodeType": 19,
             "operator": 0,
             "position": Object {
               "basePath": "",
@@ -2947,7 +2951,7 @@ Object {
             },
             "rhs": Object {
               "category": 4,
-              "nodeType": 30,
+              "nodeType": 32,
               "position": Object {
                 "basePath": "",
                 "col": 31,
@@ -2959,7 +2963,7 @@ Object {
               "value": 1,
             },
           },
-          "nodeType": 17,
+          "nodeType": 19,
           "operator": 0,
           "position": Object {
             "basePath": "",
@@ -2971,7 +2975,7 @@ Object {
           },
           "rhs": Object {
             "category": 4,
-            "nodeType": 30,
+            "nodeType": 32,
             "position": Object {
               "basePath": "",
               "col": 35,
@@ -2983,7 +2987,7 @@ Object {
             "value": 1,
           },
         },
-        "nodeType": 17,
+        "nodeType": 19,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -2995,7 +2999,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 39,
@@ -3010,7 +3014,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -3026,7 +3030,7 @@ Object {
       "name": Object {
         "category": 6,
         "name": "c",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -3036,7 +3040,7 @@ Object {
           "offset": 1423,
         },
       },
-      "nodeType": 11,
+      "nodeType": 13,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3047,7 +3051,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 30,
+        "nodeType": 32,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -3062,10 +3066,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "d",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -3075,7 +3080,7 @@ Object {
           "offset": 1434,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3087,7 +3092,7 @@ Object {
       "value": Object {
         "category": 6,
         "name": "a",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 17,
@@ -3100,7 +3105,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -3114,10 +3119,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "e",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -3127,7 +3133,7 @@ Object {
           "offset": 1453,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3138,11 +3144,11 @@ Object {
       },
       "value": Object {
         "category": 6,
-        "nodeType": 51,
+        "nodeType": 53,
         "parent": Object {
           "category": 6,
           "name": "objectTest3",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 14,
@@ -3163,7 +3169,7 @@ Object {
         "property": Object {
           "category": 6,
           "name": "field3",
-          "nodeType": 52,
+          "nodeType": 54,
           "position": Object {
             "basePath": "",
             "col": 25,
@@ -3178,7 +3184,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -3192,10 +3198,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "z",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -3205,7 +3212,7 @@ Object {
           "offset": 1486,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3222,7 +3229,7 @@ Object {
               "data": Object {
                 "pathReturns": true,
               },
-              "nodeType": 12,
+              "nodeType": 14,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -3234,7 +3241,7 @@ Object {
               "returnValue": Object {
                 "category": 6,
                 "name": "g",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 10,
@@ -3252,7 +3259,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 36,
@@ -3270,7 +3277,7 @@ Object {
           "pathReturns": false,
         },
         "genericTypes": undefined,
-        "nodeType": 32,
+        "nodeType": 34,
         "params": Array [
           Object {
             "category": 6,
@@ -3278,7 +3285,7 @@ Object {
             "name": Object {
               "category": 6,
               "name": "g",
-              "nodeType": 49,
+              "nodeType": 51,
               "position": Object {
                 "basePath": "",
                 "col": 20,
@@ -3288,12 +3295,12 @@ Object {
                 "offset": 1501,
               },
             },
-            "nodeType": 53,
+            "nodeType": 55,
             "optional": false,
             "paramType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 23,
@@ -3324,7 +3331,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "i32",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 29,
@@ -3338,7 +3345,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Function",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -3352,10 +3359,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 0,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "h",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 7,
@@ -3365,7 +3373,7 @@ Object {
           "offset": 1541,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3376,7 +3384,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 30,
+        "nodeType": 32,
         "position": Object {
           "basePath": "",
           "col": 19,
@@ -3390,7 +3398,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -3405,7 +3413,7 @@ Object {
       "args": Array [],
       "callee": Object {
         "category": 3,
-        "nodeType": 19,
+        "nodeType": 21,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -3421,7 +3429,7 @@ Object {
                 "args": Array [
                   Object {
                     "category": 4,
-                    "nodeType": 23,
+                    "nodeType": 25,
                     "position": Object {
                       "basePath": "",
                       "col": 9,
@@ -3436,7 +3444,7 @@ Object {
                 "callee": Object {
                   "category": 6,
                   "name": "print",
-                  "nodeType": 50,
+                  "nodeType": 52,
                   "position": Object {
                     "basePath": "",
                     "col": 3,
@@ -3447,7 +3455,7 @@ Object {
                   },
                 },
                 "category": 3,
-                "nodeType": 21,
+                "nodeType": 23,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -3463,7 +3471,7 @@ Object {
                 "data": Object {
                   "pathReturns": true,
                 },
-                "nodeType": 12,
+                "nodeType": 14,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -3474,7 +3482,7 @@ Object {
                 },
                 "returnValue": Object {
                   "category": 4,
-                  "nodeType": 24,
+                  "nodeType": 26,
                   "position": Object {
                     "basePath": "",
                     "col": 10,
@@ -3493,7 +3501,7 @@ Object {
               "_varStack": Map {},
               "pathReturns": false,
             },
-            "nodeType": 6,
+            "nodeType": 8,
             "position": Object {
               "basePath": "",
               "col": 13,
@@ -3511,7 +3519,7 @@ Object {
             "pathReturns": false,
           },
           "genericTypes": undefined,
-          "nodeType": 32,
+          "nodeType": 34,
           "params": Array [],
           "position": Object {
             "basePath": "",
@@ -3524,7 +3532,7 @@ Object {
           "returnType": Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 6,
@@ -3537,7 +3545,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3558,7 +3566,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 41,
@@ -3571,7 +3579,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3588,7 +3596,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -3600,7 +3608,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -3612,7 +3620,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 55,
@@ -3633,7 +3641,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 31,
@@ -3646,7 +3654,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3659,7 +3667,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -3672,7 +3680,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -3696,7 +3704,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 37,
@@ -3709,7 +3717,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3726,7 +3734,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -3738,7 +3746,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -3750,7 +3758,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 51,
@@ -3771,7 +3779,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 27,
@@ -3784,7 +3792,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3797,7 +3805,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -3810,7 +3818,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -3834,7 +3842,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -3849,7 +3857,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest1",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -3862,7 +3870,7 @@ Object {
         },
       ],
       "name": "Generic_TypeTest",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3874,7 +3882,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "String",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 52,
@@ -3895,7 +3903,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 32,
@@ -3908,7 +3916,7 @@ Object {
         },
       ],
       "name": "Generic_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3925,7 +3933,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -3937,7 +3945,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -3949,7 +3957,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 46,
@@ -3970,7 +3978,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -3983,7 +3991,7 @@ Object {
         },
       ],
       "name": "Generic_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -3996,7 +4004,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -4009,7 +4017,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -4025,7 +4033,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4037,10 +4045,11 @@ Object {
       "value": Object {
         "category": 1,
         "declarationType": 0,
+        "flags": Array [],
         "name": Object {
           "category": 6,
           "name": "y",
-          "nodeType": 49,
+          "nodeType": 51,
           "position": Object {
             "basePath": "",
             "col": 14,
@@ -4050,7 +4059,7 @@ Object {
             "offset": 2148,
           },
         },
-        "nodeType": 10,
+        "nodeType": 12,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -4061,7 +4070,7 @@ Object {
         },
         "value": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 26,
@@ -4075,7 +4084,7 @@ Object {
         "varType": Object {
           "category": 5,
           "name": "Number",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 17,
@@ -4089,7 +4098,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4101,7 +4110,7 @@ Object {
       "value": Object {
         "category": 6,
         "name": "h",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -4114,7 +4123,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4131,7 +4140,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "c",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -4142,7 +4151,7 @@ Object {
               },
             },
             "name": "c",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -4157,7 +4166,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "d",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -4168,7 +4177,7 @@ Object {
               },
             },
             "name": "d",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -4183,7 +4192,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "z",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -4194,7 +4203,7 @@ Object {
               },
             },
             "name": "z",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -4205,7 +4214,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -4245,7 +4254,7 @@ Object {
   "body": Array [
     Object {
       "category": 1,
-      "nodeType": 7,
+      "nodeType": 9,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4256,7 +4265,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 15,
@@ -4270,7 +4279,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "a",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -4283,7 +4292,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4294,7 +4303,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 42,
@@ -4311,12 +4320,12 @@ Object {
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 43,
+        "nodeType": 45,
         "params": Array [
           Object {
             "category": 5,
             "name": "String",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 21,
@@ -4338,7 +4347,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 32,
@@ -4352,7 +4361,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "print",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -4365,7 +4374,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4376,7 +4385,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 32,
@@ -4393,7 +4402,7 @@ Object {
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 43,
+        "nodeType": 45,
         "params": Array [],
         "position": Object {
           "basePath": "",
@@ -4406,7 +4415,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "Void",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -4420,7 +4429,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "f",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -4433,7 +4442,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 8,
+      "nodeType": 10,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4444,7 +4453,7 @@ Object {
       },
       "source": Object {
         "category": 4,
-        "nodeType": 23,
+        "nodeType": 25,
         "position": Object {
           "basePath": "",
           "col": 25,
@@ -4458,7 +4467,7 @@ Object {
       "typeSignature": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 16,
@@ -4471,7 +4480,7 @@ Object {
       "variable": Object {
         "category": 6,
         "name": "b",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -4489,7 +4498,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "A",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4501,7 +4510,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -4519,7 +4528,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "B",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4530,7 +4539,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -4543,7 +4552,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -4556,7 +4565,7 @@ Object {
           Object {
             "category": 5,
             "name": "i64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 16,
@@ -4569,7 +4578,7 @@ Object {
           Object {
             "category": 5,
             "name": "u32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 22,
@@ -4582,7 +4591,7 @@ Object {
           Object {
             "category": 5,
             "name": "u64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 28,
@@ -4595,7 +4604,7 @@ Object {
           Object {
             "category": 5,
             "name": "f32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 34,
@@ -4608,7 +4617,7 @@ Object {
           Object {
             "category": 5,
             "name": "f64",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 40,
@@ -4628,7 +4637,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "C",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4639,7 +4648,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -4652,7 +4661,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -4668,12 +4677,12 @@ Object {
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 43,
+            "nodeType": 45,
             "params": Array [
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 39,
+                "nodeType": 41,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -4685,7 +4694,7 @@ Object {
               },
               Object {
                 "category": 5,
-                "nodeType": 40,
+                "nodeType": 42,
                 "position": Object {
                   "basePath": "",
                   "col": 22,
@@ -4698,7 +4707,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -4711,7 +4720,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 28,
@@ -4734,7 +4743,7 @@ Object {
             },
             "returnType": Object {
               "category": 5,
-              "nodeType": 40,
+              "nodeType": 42,
               "position": Object {
                 "basePath": "",
                 "col": 36,
@@ -4747,7 +4756,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 36,
@@ -4760,7 +4769,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 42,
@@ -4783,7 +4792,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "D",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4794,7 +4803,7 @@ Object {
       },
       "typeLiteral": Object {
         "category": 5,
-        "nodeType": 40,
+        "nodeType": 42,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -4807,7 +4816,7 @@ Object {
           Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 10,
@@ -4823,12 +4832,12 @@ Object {
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 43,
+            "nodeType": 45,
             "params": Array [
               Object {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 39,
+                "nodeType": 41,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -4840,7 +4849,7 @@ Object {
               },
               Object {
                 "category": 5,
-                "nodeType": 40,
+                "nodeType": 42,
                 "position": Object {
                   "basePath": "",
                   "col": 22,
@@ -4853,7 +4862,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -4866,7 +4875,7 @@ Object {
                   Object {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 28,
@@ -4889,7 +4898,7 @@ Object {
             },
             "returnType": Object {
               "category": 5,
-              "nodeType": 40,
+              "nodeType": 42,
               "position": Object {
                 "basePath": "",
                 "col": 36,
@@ -4901,7 +4910,7 @@ Object {
               "types": Array [
                 Object {
                   "category": 5,
-                  "nodeType": 42,
+                  "nodeType": 44,
                   "position": Object {
                     "basePath": "",
                     "col": 36,
@@ -4912,7 +4921,7 @@ Object {
                   },
                   "value": Object {
                     "category": 5,
-                    "nodeType": 40,
+                    "nodeType": 42,
                     "position": Object {
                       "basePath": "",
                       "col": 37,
@@ -4925,7 +4934,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 39,
+                        "nodeType": 41,
                         "position": Object {
                           "basePath": "",
                           "col": 37,
@@ -4938,7 +4947,7 @@ Object {
                       Object {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 39,
+                        "nodeType": 41,
                         "position": Object {
                           "basePath": "",
                           "col": 43,
@@ -4954,7 +4963,7 @@ Object {
                 Object {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 39,
+                  "nodeType": 41,
                   "position": Object {
                     "basePath": "",
                     "col": 50,
@@ -4977,7 +4986,7 @@ Object {
       },
       "genericTypes": undefined,
       "name": "E",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -4994,7 +5003,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5006,7 +5015,7 @@ Object {
             },
             "mutable": false,
             "name": "field1",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -5022,7 +5031,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 15,
@@ -5034,7 +5043,7 @@ Object {
             },
             "mutable": true,
             "name": "field2",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -5050,7 +5059,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 12,
@@ -5062,7 +5071,7 @@ Object {
             },
             "mutable": false,
             "name": "field3",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": true,
             "position": Object {
               "basePath": "",
@@ -5083,7 +5092,7 @@ Object {
                   "fieldType": Object {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 39,
+                    "nodeType": 41,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -5095,7 +5104,7 @@ Object {
                   },
                   "mutable": false,
                   "name": "field1",
-                  "nodeType": 45,
+                  "nodeType": 47,
                   "optional": false,
                   "position": Object {
                     "basePath": "",
@@ -5107,7 +5116,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 44,
+              "nodeType": 46,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5119,7 +5128,7 @@ Object {
             },
             "mutable": false,
             "name": "field4",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -5131,7 +5140,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -5145,10 +5154,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -5158,7 +5168,7 @@ Object {
           "offset": 487,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -5175,7 +5185,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5187,7 +5197,7 @@ Object {
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5202,7 +5212,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5214,7 +5224,7 @@ Object {
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5229,7 +5239,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5241,7 +5251,7 @@ Object {
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5262,7 +5272,7 @@ Object {
                   "fieldMutable": false,
                   "fieldValue": Object {
                     "category": 4,
-                    "nodeType": 24,
+                    "nodeType": 26,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -5274,7 +5284,7 @@ Object {
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 35,
+                  "nodeType": 37,
                   "position": Object {
                     "basePath": "",
                     "col": 5,
@@ -5285,7 +5295,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 34,
+              "nodeType": 36,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5296,7 +5306,7 @@ Object {
               },
             },
             "name": "field4",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5307,7 +5317,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 21,
@@ -5320,7 +5330,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 17,
@@ -5334,10 +5344,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest2",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -5347,7 +5358,7 @@ Object {
           "offset": 585,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -5364,7 +5375,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5376,7 +5387,7 @@ Object {
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5391,7 +5402,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5403,7 +5414,7 @@ Object {
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5424,7 +5435,7 @@ Object {
                   "fieldMutable": false,
                   "fieldValue": Object {
                     "category": 4,
-                    "nodeType": 24,
+                    "nodeType": 26,
                     "position": Object {
                       "basePath": "",
                       "col": 13,
@@ -5436,7 +5447,7 @@ Object {
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 35,
+                  "nodeType": 37,
                   "position": Object {
                     "basePath": "",
                     "col": 5,
@@ -5447,7 +5458,7 @@ Object {
                   },
                 },
               ],
-              "nodeType": 34,
+              "nodeType": 36,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5458,7 +5469,7 @@ Object {
               },
             },
             "name": "field4",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5469,7 +5480,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 22,
@@ -5482,7 +5493,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 18,
@@ -5496,10 +5507,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "objectTest3",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -5509,7 +5521,7 @@ Object {
           "offset": 670,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -5523,7 +5535,7 @@ Object {
         "fields": Array [
           Object {
             "category": 4,
-            "nodeType": 36,
+            "nodeType": 38,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5535,7 +5547,7 @@ Object {
             "value": Object {
               "category": 6,
               "name": "objectTest2",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 6,
@@ -5551,7 +5563,7 @@ Object {
             "fieldMutable": false,
             "fieldValue": Object {
               "category": 4,
-              "nodeType": 24,
+              "nodeType": 26,
               "position": Object {
                 "basePath": "",
                 "col": 11,
@@ -5563,7 +5575,7 @@ Object {
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5574,7 +5586,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 22,
@@ -5587,7 +5599,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "E",
-        "nodeType": 46,
+        "nodeType": 48,
         "position": Object {
           "basePath": "",
           "col": 18,
@@ -5602,11 +5614,11 @@ Object {
       "category": 1,
       "name": Object {
         "category": 6,
-        "nodeType": 51,
+        "nodeType": 53,
         "parent": Object {
           "category": 6,
           "name": "objectTest",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 1,
@@ -5627,7 +5639,7 @@ Object {
         "property": Object {
           "category": 6,
           "name": "field2",
-          "nodeType": 52,
+          "nodeType": 54,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -5639,7 +5651,7 @@ Object {
           "property": undefined,
         },
       },
-      "nodeType": 11,
+      "nodeType": 13,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -5650,7 +5662,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 24,
+        "nodeType": 26,
         "position": Object {
           "basePath": "",
           "col": 21,
@@ -5670,7 +5682,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -5685,7 +5697,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -5696,7 +5708,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -5714,7 +5726,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -5730,7 +5742,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -5745,7 +5757,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -5756,7 +5768,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -5774,7 +5786,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 30,
@@ -5789,7 +5801,7 @@ Object {
           "category": 3,
           "lhs": Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -5800,7 +5812,7 @@ Object {
             },
             "value": "test",
           },
-          "nodeType": 16,
+          "nodeType": 18,
           "operator": 0,
           "position": Object {
             "basePath": "",
@@ -5812,7 +5824,7 @@ Object {
           },
           "rhs": Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 22,
@@ -5843,7 +5855,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -5858,7 +5870,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -5869,7 +5881,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -5887,7 +5899,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -5902,7 +5914,7 @@ Object {
         "category": 3,
         "lhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 5,
@@ -5913,7 +5925,7 @@ Object {
           },
           "value": 1,
         },
-        "nodeType": 16,
+        "nodeType": 18,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -5925,7 +5937,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 10,
@@ -5955,7 +5967,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -5970,7 +5982,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 6,
@@ -5981,7 +5993,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 6,
@@ -5996,7 +6008,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 19,
@@ -6011,7 +6023,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 13,
@@ -6022,7 +6034,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 13,
@@ -6038,7 +6050,7 @@ Object {
         "category": 3,
         "lhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 5,
@@ -6049,7 +6061,7 @@ Object {
           },
           "value": 1,
         },
-        "nodeType": 16,
+        "nodeType": 18,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -6061,7 +6073,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 10,
@@ -6094,7 +6106,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6109,7 +6121,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6120,7 +6132,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6138,7 +6150,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6151,7 +6163,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6181,7 +6193,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -6196,7 +6208,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -6207,7 +6219,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6221,7 +6233,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6250,7 +6262,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 12,
@@ -6265,7 +6277,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 6,
@@ -6276,7 +6288,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 6,
@@ -6291,7 +6303,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 17,
@@ -6306,7 +6318,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 11,
@@ -6317,7 +6329,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6331,7 +6343,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6362,7 +6374,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6377,7 +6389,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6388,7 +6400,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6406,7 +6418,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -6422,7 +6434,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6437,7 +6449,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6448,7 +6460,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6466,7 +6478,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6479,7 +6491,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6511,7 +6523,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -6526,7 +6538,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -6537,7 +6549,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6555,7 +6567,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -6571,7 +6583,7 @@ Object {
               "args": Array [
                 Object {
                   "category": 4,
-                  "nodeType": 23,
+                  "nodeType": 25,
                   "position": Object {
                     "basePath": "",
                     "col": 9,
@@ -6586,7 +6598,7 @@ Object {
               "callee": Object {
                 "category": 6,
                 "name": "print",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -6597,7 +6609,7 @@ Object {
                 },
               },
               "category": 3,
-              "nodeType": 21,
+              "nodeType": 23,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6615,7 +6627,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 18,
@@ -6628,7 +6640,7 @@ Object {
         "category": 1,
         "condition": Object {
           "category": 4,
-          "nodeType": 31,
+          "nodeType": 33,
           "position": Object {
             "basePath": "",
             "col": 12,
@@ -6658,7 +6670,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6673,7 +6685,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6684,7 +6696,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6702,7 +6714,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6715,7 +6727,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6744,7 +6756,7 @@ Object {
         "args": Array [
           Object {
             "category": 4,
-            "nodeType": 23,
+            "nodeType": 25,
             "position": Object {
               "basePath": "",
               "col": 14,
@@ -6759,7 +6771,7 @@ Object {
         "callee": Object {
           "category": 6,
           "name": "print",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 8,
@@ -6770,7 +6782,7 @@ Object {
           },
         },
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 23,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -6787,7 +6799,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6802,7 +6814,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6813,7 +6825,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6831,7 +6843,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6844,7 +6856,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6876,7 +6888,7 @@ Object {
             "args": Array [
               Object {
                 "category": 4,
-                "nodeType": 23,
+                "nodeType": 25,
                 "position": Object {
                   "basePath": "",
                   "col": 9,
@@ -6891,7 +6903,7 @@ Object {
             "callee": Object {
               "category": 6,
               "name": "print",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -6902,7 +6914,7 @@ Object {
               },
             },
             "category": 3,
-            "nodeType": 21,
+            "nodeType": 23,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -6920,7 +6932,7 @@ Object {
           "_varStack": Map {},
           "pathReturns": false,
         },
-        "nodeType": 6,
+        "nodeType": 8,
         "position": Object {
           "basePath": "",
           "col": 11,
@@ -6933,7 +6945,7 @@ Object {
       "category": 1,
       "condition": Object {
         "category": 4,
-        "nodeType": 31,
+        "nodeType": 33,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -6961,7 +6973,7 @@ Object {
       "args": Array [
         Object {
           "category": 4,
-          "nodeType": 23,
+          "nodeType": 25,
           "position": Object {
             "basePath": "",
             "col": 7,
@@ -6976,7 +6988,7 @@ Object {
       "callee": Object {
         "category": 6,
         "name": "print",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -6987,7 +6999,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7003,7 +7015,7 @@ Object {
       "callee": Object {
         "category": 6,
         "name": "f",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -7014,7 +7026,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7029,7 +7041,7 @@ Object {
       "args": Array [
         Object {
           "category": 4,
-          "nodeType": 24,
+          "nodeType": 26,
           "position": Object {
             "basePath": "",
             "col": 15,
@@ -7042,7 +7054,7 @@ Object {
         },
         Object {
           "category": 4,
-          "nodeType": 24,
+          "nodeType": 26,
           "position": Object {
             "basePath": "",
             "col": 19,
@@ -7056,7 +7068,7 @@ Object {
       ],
       "category": 3,
       "name": "@wasm.i32.add",
-      "nodeType": 22,
+      "nodeType": 24,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7070,10 +7082,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "c",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7083,7 +7096,7 @@ Object {
           "offset": 1386,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7102,7 +7115,7 @@ Object {
               "category": 3,
               "lhs": Object {
                 "category": 4,
-                "nodeType": 30,
+                "nodeType": 32,
                 "position": Object {
                   "basePath": "",
                   "col": 17,
@@ -7113,7 +7126,7 @@ Object {
                 },
                 "value": 1,
               },
-              "nodeType": 17,
+              "nodeType": 19,
               "operator": 0,
               "position": Object {
                 "basePath": "",
@@ -7125,7 +7138,7 @@ Object {
               },
               "rhs": Object {
                 "category": 3,
-                "nodeType": 19,
+                "nodeType": 21,
                 "position": Object {
                   "basePath": "",
                   "col": 21,
@@ -7138,7 +7151,7 @@ Object {
                   "category": 3,
                   "lhs": Object {
                     "category": 4,
-                    "nodeType": 30,
+                    "nodeType": 32,
                     "position": Object {
                       "basePath": "",
                       "col": 22,
@@ -7149,7 +7162,7 @@ Object {
                     },
                     "value": 1,
                   },
-                  "nodeType": 17,
+                  "nodeType": 19,
                   "operator": 0,
                   "position": Object {
                     "basePath": "",
@@ -7161,7 +7174,7 @@ Object {
                   },
                   "rhs": Object {
                     "category": 4,
-                    "nodeType": 30,
+                    "nodeType": 32,
                     "position": Object {
                       "basePath": "",
                       "col": 26,
@@ -7175,7 +7188,7 @@ Object {
                 },
               },
             },
-            "nodeType": 17,
+            "nodeType": 19,
             "operator": 0,
             "position": Object {
               "basePath": "",
@@ -7187,7 +7200,7 @@ Object {
             },
             "rhs": Object {
               "category": 4,
-              "nodeType": 30,
+              "nodeType": 32,
               "position": Object {
                 "basePath": "",
                 "col": 31,
@@ -7199,7 +7212,7 @@ Object {
               "value": 1,
             },
           },
-          "nodeType": 17,
+          "nodeType": 19,
           "operator": 0,
           "position": Object {
             "basePath": "",
@@ -7211,7 +7224,7 @@ Object {
           },
           "rhs": Object {
             "category": 4,
-            "nodeType": 30,
+            "nodeType": 32,
             "position": Object {
               "basePath": "",
               "col": 35,
@@ -7223,7 +7236,7 @@ Object {
             "value": 1,
           },
         },
-        "nodeType": 17,
+        "nodeType": 19,
         "operator": 0,
         "position": Object {
           "basePath": "",
@@ -7235,7 +7248,7 @@ Object {
         },
         "rhs": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 39,
@@ -7250,7 +7263,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -7266,7 +7279,7 @@ Object {
       "name": Object {
         "category": 6,
         "name": "c",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -7276,7 +7289,7 @@ Object {
           "offset": 1423,
         },
       },
-      "nodeType": 11,
+      "nodeType": 13,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7287,7 +7300,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 30,
+        "nodeType": 32,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7302,10 +7315,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "d",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7315,7 +7329,7 @@ Object {
           "offset": 1434,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7327,7 +7341,7 @@ Object {
       "value": Object {
         "category": 6,
         "name": "a",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 17,
@@ -7340,7 +7354,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -7354,10 +7368,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "e",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7367,7 +7382,7 @@ Object {
           "offset": 1453,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7378,11 +7393,11 @@ Object {
       },
       "value": Object {
         "category": 6,
-        "nodeType": 51,
+        "nodeType": 53,
         "parent": Object {
           "category": 6,
           "name": "objectTest3",
-          "nodeType": 50,
+          "nodeType": 52,
           "position": Object {
             "basePath": "",
             "col": 14,
@@ -7403,7 +7418,7 @@ Object {
         "property": Object {
           "category": 6,
           "name": "field3",
-          "nodeType": 52,
+          "nodeType": 54,
           "position": Object {
             "basePath": "",
             "col": 25,
@@ -7418,7 +7433,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "i32",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -7432,10 +7447,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 1,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "z",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 5,
@@ -7445,7 +7461,7 @@ Object {
           "offset": 1486,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7462,7 +7478,7 @@ Object {
               "data": Object {
                 "pathReturns": true,
               },
-              "nodeType": 12,
+              "nodeType": 14,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -7474,7 +7490,7 @@ Object {
               "returnValue": Object {
                 "category": 6,
                 "name": "g",
-                "nodeType": 50,
+                "nodeType": 52,
                 "position": Object {
                   "basePath": "",
                   "col": 10,
@@ -7492,7 +7508,7 @@ Object {
             "_varStack": Map {},
             "pathReturns": false,
           },
-          "nodeType": 6,
+          "nodeType": 8,
           "position": Object {
             "basePath": "",
             "col": 36,
@@ -7510,7 +7526,7 @@ Object {
           "pathReturns": false,
         },
         "genericTypes": undefined,
-        "nodeType": 32,
+        "nodeType": 34,
         "params": Array [
           Object {
             "category": 6,
@@ -7518,7 +7534,7 @@ Object {
             "name": Object {
               "category": 6,
               "name": "g",
-              "nodeType": 49,
+              "nodeType": 51,
               "position": Object {
                 "basePath": "",
                 "col": 20,
@@ -7528,12 +7544,12 @@ Object {
                 "offset": 1501,
               },
             },
-            "nodeType": 53,
+            "nodeType": 55,
             "optional": false,
             "paramType": Object {
               "category": 5,
               "name": "i32",
-              "nodeType": 39,
+              "nodeType": 41,
               "position": Object {
                 "basePath": "",
                 "col": 23,
@@ -7564,7 +7580,7 @@ Object {
         "returnType": Object {
           "category": 5,
           "name": "i32",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 29,
@@ -7578,7 +7594,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Function",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -7592,10 +7608,11 @@ Object {
     Object {
       "category": 1,
       "declarationType": 0,
+      "flags": Array [],
       "name": Object {
         "category": 6,
         "name": "h",
-        "nodeType": 49,
+        "nodeType": 51,
         "position": Object {
           "basePath": "",
           "col": 7,
@@ -7605,7 +7622,7 @@ Object {
           "offset": 1541,
         },
       },
-      "nodeType": 10,
+      "nodeType": 12,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7616,7 +7633,7 @@ Object {
       },
       "value": Object {
         "category": 4,
-        "nodeType": 30,
+        "nodeType": 32,
         "position": Object {
           "basePath": "",
           "col": 19,
@@ -7630,7 +7647,7 @@ Object {
       "varType": Object {
         "category": 5,
         "name": "Number",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 10,
@@ -7645,7 +7662,7 @@ Object {
       "args": Array [],
       "callee": Object {
         "category": 3,
-        "nodeType": 19,
+        "nodeType": 21,
         "position": Object {
           "basePath": "",
           "col": 1,
@@ -7661,7 +7678,7 @@ Object {
                 "args": Array [
                   Object {
                     "category": 4,
-                    "nodeType": 23,
+                    "nodeType": 25,
                     "position": Object {
                       "basePath": "",
                       "col": 9,
@@ -7676,7 +7693,7 @@ Object {
                 "callee": Object {
                   "category": 6,
                   "name": "print",
-                  "nodeType": 50,
+                  "nodeType": 52,
                   "position": Object {
                     "basePath": "",
                     "col": 3,
@@ -7687,7 +7704,7 @@ Object {
                   },
                 },
                 "category": 3,
-                "nodeType": 21,
+                "nodeType": 23,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -7703,7 +7720,7 @@ Object {
                 "data": Object {
                   "pathReturns": true,
                 },
-                "nodeType": 12,
+                "nodeType": 14,
                 "position": Object {
                   "basePath": "",
                   "col": 3,
@@ -7714,7 +7731,7 @@ Object {
                 },
                 "returnValue": Object {
                   "category": 4,
-                  "nodeType": 24,
+                  "nodeType": 26,
                   "position": Object {
                     "basePath": "",
                     "col": 10,
@@ -7733,7 +7750,7 @@ Object {
               "_varStack": Map {},
               "pathReturns": false,
             },
-            "nodeType": 6,
+            "nodeType": 8,
             "position": Object {
               "basePath": "",
               "col": 13,
@@ -7751,7 +7768,7 @@ Object {
             "pathReturns": false,
           },
           "genericTypes": undefined,
-          "nodeType": 32,
+          "nodeType": 34,
           "params": Array [],
           "position": Object {
             "basePath": "",
@@ -7764,7 +7781,7 @@ Object {
           "returnType": Object {
             "category": 5,
             "name": "i32",
-            "nodeType": 39,
+            "nodeType": 41,
             "position": Object {
               "basePath": "",
               "col": 6,
@@ -7777,7 +7794,7 @@ Object {
         },
       },
       "category": 3,
-      "nodeType": 21,
+      "nodeType": 23,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7798,7 +7815,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 41,
@@ -7811,7 +7828,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7828,7 +7845,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -7840,7 +7857,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -7852,7 +7869,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 55,
@@ -7873,7 +7890,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 31,
@@ -7886,7 +7903,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7899,7 +7916,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -7912,7 +7929,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -7936,7 +7953,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 37,
@@ -7949,7 +7966,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -7966,7 +7983,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -7978,7 +7995,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -7990,7 +8007,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 51,
@@ -8011,7 +8028,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 27,
@@ -8024,7 +8041,7 @@ Object {
         },
       ],
       "name": "OptionalSemi_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8037,7 +8054,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -8050,7 +8067,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -8074,7 +8091,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -8089,7 +8106,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest1",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -8102,7 +8119,7 @@ Object {
         },
       ],
       "name": "Generic_TypeTest",
-      "nodeType": 37,
+      "nodeType": 39,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8114,7 +8131,7 @@ Object {
       "typeLiteral": Object {
         "category": 5,
         "name": "String",
-        "nodeType": 39,
+        "nodeType": 41,
         "position": Object {
           "basePath": "",
           "col": 52,
@@ -8135,7 +8152,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 32,
@@ -8148,7 +8165,7 @@ Object {
         },
       ],
       "name": "Generic_TestInterface",
-      "nodeType": 38,
+      "nodeType": 40,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8165,7 +8182,7 @@ Object {
             "fieldType": Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 9,
@@ -8177,7 +8194,7 @@ Object {
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 45,
+            "nodeType": 47,
             "optional": false,
             "position": Object {
               "basePath": "",
@@ -8189,7 +8206,7 @@ Object {
             },
           },
         ],
-        "nodeType": 44,
+        "nodeType": 46,
         "position": Object {
           "basePath": "",
           "col": 46,
@@ -8210,7 +8227,7 @@ Object {
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 47,
+          "nodeType": 49,
           "position": Object {
             "basePath": "",
             "col": 22,
@@ -8223,7 +8240,7 @@ Object {
         },
       ],
       "name": "Generic_EnumTest",
-      "nodeType": 14,
+      "nodeType": 16,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8236,7 +8253,7 @@ Object {
         Object {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 15,
+          "nodeType": 17,
           "position": Object {
             "basePath": "",
             "col": 3,
@@ -8249,7 +8266,7 @@ Object {
             Object {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 46,
+              "nodeType": 48,
               "position": Object {
                 "basePath": "",
                 "col": 8,
@@ -8265,7 +8282,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8277,10 +8294,11 @@ Object {
       "value": Object {
         "category": 1,
         "declarationType": 0,
+        "flags": Array [],
         "name": Object {
           "category": 6,
           "name": "y",
-          "nodeType": 49,
+          "nodeType": 51,
           "position": Object {
             "basePath": "",
             "col": 14,
@@ -8290,7 +8308,7 @@ Object {
             "offset": 2148,
           },
         },
-        "nodeType": 10,
+        "nodeType": 12,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -8301,7 +8319,7 @@ Object {
         },
         "value": Object {
           "category": 4,
-          "nodeType": 30,
+          "nodeType": 32,
           "position": Object {
             "basePath": "",
             "col": 26,
@@ -8315,7 +8333,7 @@ Object {
         "varType": Object {
           "category": 5,
           "name": "Number",
-          "nodeType": 39,
+          "nodeType": 41,
           "position": Object {
             "basePath": "",
             "col": 17,
@@ -8329,7 +8347,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8341,7 +8359,7 @@ Object {
       "value": Object {
         "category": 6,
         "name": "h",
-        "nodeType": 50,
+        "nodeType": 52,
         "position": Object {
           "basePath": "",
           "col": 8,
@@ -8354,7 +8372,7 @@ Object {
     },
     Object {
       "category": 1,
-      "nodeType": 9,
+      "nodeType": 11,
       "position": Object {
         "basePath": "",
         "col": 1,
@@ -8371,7 +8389,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "c",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -8382,7 +8400,7 @@ Object {
               },
             },
             "name": "c",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -8397,7 +8415,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "d",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -8408,7 +8426,7 @@ Object {
               },
             },
             "name": "d",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -8423,7 +8441,7 @@ Object {
             "fieldValue": Object {
               "category": 6,
               "name": "z",
-              "nodeType": 50,
+              "nodeType": 52,
               "position": Object {
                 "basePath": "",
                 "col": 3,
@@ -8434,7 +8452,7 @@ Object {
               },
             },
             "name": "z",
-            "nodeType": 35,
+            "nodeType": 37,
             "position": Object {
               "basePath": "",
               "col": 3,
@@ -8445,7 +8463,7 @@ Object {
             },
           },
         ],
-        "nodeType": 34,
+        "nodeType": 36,
         "position": Object {
           "basePath": "",
           "col": 8,

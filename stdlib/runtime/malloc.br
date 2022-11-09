@@ -1,88 +1,119 @@
 import wasm fd_write: (i32, i32, i32, i32) => i32 from 'wasi_snapshot_preview1';
+import wasm printI32: (i32) => Void from 'briskDebugEnv';
+import wasm printBool: (Boolean) => Void from 'briskDebugEnv';
+import wasm printSpace: () => Void from 'briskDebugEnv';
 // TODO: Support 64 bit memory
 // Block Layout
 // [
 //   nextPtr: u32;
 //   free: 0x00 || 0x01; // marks the block as free or used
 //   size: u32; // pointer points here
+//   actualSize: u32;
 //   data: ....x;
 // ]
 // TODO: convert all the i32s to u32s
 // TODO: Create a Pointer Type
+const ptrSize: i32 = 4n;
 const malloc: Function = (size: i32): i32 => {
-  // // Handle Empty Malloc
-  if (@wasm.i32.le_u(size, 0n)) return(0n);
-  // // Value
-  // const memorySize: i32 = @wasm.memory.size();
-  // Search The Memory For A Free Block Of The Correct Size
-  let basePtr: i32 = 0n;
+  // Initialize Are Variables
+  let memorySize: i32 = @wasm.memory.size();
+  let basePtr: i32 = ptrSize * 2n;
   let nextPtr: i32 = 0n;
-  let foundBlock: Boolean = false;
-  // while (@wasm.i32.lt_u(basePtr, memorySize)) {
-  while(true) {
-    // Search For Free Block
-    const nextPtr: i32 = @wasm.i32.load(basePtr, -2n);
-    const blockFree: i32 = @wasm.i32.load(basePtr, -1n);
-    const blockSize: i32 = @wasm.i32.load(basePtr, 0n);
-    if (blockFree == 0n && @wasm.i32.le_u(size, blockSize)) {
-      // If Needed Split The Block
-      if (@wasm.i32.lt_u(size, blockSize)) {
-        // Find The Size Alightned To 8
-        const desiredSize: i32 = blockSize / 8n + 8n;
-        // Allocate The Desired Space
-      };
-      // TODO: Clear The Block
-      foundBlock = true;
-      // Break If We Find A Suitable Block
-      break;
+  const endPtrOffset: i32 = size + ptrSize;
+  // Handle Creating Initial Memory
+  if (memorySize == 0n) @wasm.memory.grow(1n);
+  // Find A Free Block
+  while (true) {
+    memorySize = @wasm.memory.size() * 65536n;
+    // Grow Memory
+    if (@wasm.i32.ge_u(basePtr + endPtrOffset, memorySize)) {
+      // Determine How Much We Need To Grow
+      @wasm.memory.grow((basePtr + endPtrOffset)/65536n);
     };
-    // Increment Pointer
+    // Read The Information
+    nextPtr = @wasm.i32.load(basePtr, ptrSize * -2n);
+    const blockFree: i32 = @wasm.i32.load(basePtr, -ptrSize);
+    const blockSize: i32 = @wasm.i32.load(basePtr, 0n);
+    // We hit the end of pointers if nextPtr is 0
+    if (nextPtr == 0n) {
+      // TODO: Compress this equaltion
+      nextPtr = (ptrSize * 2n) + basePtr + endPtrOffset;
+      break;
+    } else if (blockFree == 0n) {
+      printI32(1n);
+      // We Found A General Block
+      if (blockSize == size) break;
+      else if (@wasm.i32.gt_u(blockSize, size)) {
+        // TODO: Split The Block
+      } else if (@wasm.i32.lt_u(blockSize, size)) {
+        // TODOO: Try and collect Blocks Next To us
+      };
+    };
+    // Move Base Ptr
     basePtr = nextPtr;
   };
-  // // If we hit the end of the memory resize
-  if (!foundBlock) {
-    // @wasm.memory.grow(1n); // Grow The Memory By A Page
-    // Allocate A Block
-    @wasm.i32.store(basePtr, -16n, nextPtr);
-    @wasm.i32.store(basePtr, -8n, 1n);
-    @wasm.i32.store(basePtr, 0n, size);
-    foundBlock = true;
-  };
-  // Return The Pointer
-  // if (foundBlock) return(basePtr);
-  // else return(-1n);
-  return(-1n);
+  // At this point we have found a block
+  @wasm.i32.store(basePtr, ptrSize * -2n, nextPtr);
+  @wasm.i32.store(basePtr, -ptrSize, 1n);
+  @wasm.i32.store(basePtr, 0n, size);
+  // Return Ptr
+  return(basePtr);
 };
 const free: Function = (ptr: i32): i32 => {
-  // TODO: Throw an exception if this fails
-  return(-1n);
-};
-const print32: Function = (value: i32): Void => {
-  // Helper
-  let writeCharacterCode: Function = (let pointer: i32, character: i32): i32 => {
-    // Store Character
-    @wasm.i32.store(pointer, 0n, character);
-    // Add To The Index
-    pointer++;
-    // Return Pointer
-    return(pointer);
+  const memorySize: i32 = @wasm.memory.size() * 65536n;
+  if (@wasm.i32.ge_u(ptr, memorySize)) return(-1n);
+  else if (@wasm.i32.load(ptr, -ptrSize) == 0n) return(-1n);
+  else {
+    @wasm.i32.store(ptr, -ptrSize, 0n);
+    return(1n);
   };
-  // Create String
-  const basePointer: i32 = 0n;
-  let pointer: i32 = @wasm.i32.add(basePointer, 8n);
-  let length: i32 = 0n;
-  // Handle String Conversion In toString
-  if (@wasm.i32.lt_s(value, 10n)) {
-    pointer = writeCharacterCode(pointer, 48n + value);
-    length++;
-  };
-  // Write New Line
-  pointer = writeCharacterCode(pointer, 10n);
-  length++;
-  // Store Iov Info
-  @wasm.i32.store(basePointer, 0n, 8n);
-  @wasm.i32.store(basePointer, 4n, length);
-  // Write String
-  fd_write(1n, 0n, 1n, 40n);
 };
-print32(malloc(2n));
+// const ptr1: i32 = malloc(8n);
+// const ptr2: i32 = malloc(16n);
+// const ptr3: i32 = malloc(32n);
+// const ptr4: i32 = malloc(64n);
+// const ptr5: i32 = malloc(128n);
+// const ptr6: i32 = malloc(512n);
+// const ptr1: i32 = malloc(65536n);
+// malloc(65536n);
+// const ptr2: i32 = malloc(65536n);
+// @wasm.i32.store(ptr2+65536n-12n, 0n, 1n);
+// malloc(8n);
+while (true) {
+  const ptr: i32 = malloc(64530n);
+  const success: i32 = free(ptr);
+  if (success == -1n) {
+    printI32(success);
+    break;
+  };
+};
+// const print32: Function = (value: i32): Void => {
+//   // Helper
+//   let writeCharacterCode: Function = (let pointer: i32, character: i32): i32 => {
+//     // Store Character
+//     @wasm.i32.store(pointer, 0n, character);
+//     // Add To The Index
+//     pointer++;
+//     // Return Pointer
+//     return(pointer);
+//   };
+//   // Create String
+//   const basePointer: i32 = 0n;
+//   let pointer: i32 = @wasm.i32.add(basePointer, 8n);
+//   let length: i32 = 0n;
+//   // Handle String Conversion In toString
+//   if (@wasm.i32.lt_s(value, 10n)) {
+//     pointer = writeCharacterCode(pointer, 48n + value);
+//     length++;
+//   };
+//   // Write New Line
+//   pointer = writeCharacterCode(pointer, 10n);
+//   length++;
+//   // Store Iov Info
+//   @wasm.i32.store(basePointer, 0n, 8n);
+//   @wasm.i32.store(basePointer, 4n, length);
+//   // Write String
+//   fd_write(1n, 0n, 1n, 40n);
+// };
+// print32(malloc(2n));
+// print32(malloc(4n));

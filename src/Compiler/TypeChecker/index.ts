@@ -1,4 +1,5 @@
 import Node, {
+  ComparisonExpressionOperator,
   EnumVariantNode,
   GenericTypeNode,
   NodeCategory,
@@ -6,7 +7,6 @@ import Node, {
   ProgramNode,
   TypeLiteral,
   UnaryExpressionOperator,
-  ComparisonExpressionOperator,
 } from '../Types/ParseNodes';
 import { ExportMap, VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
@@ -100,38 +100,54 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         createPrimType(node.condition.position, 'Boolean')
       );
       return node;
+    case NodeType.ContinueStatement:
+      return node;
+    case NodeType.ContinueIfStatement:
+      // Analyze Condition
+      node.condition = _typeCheckNode(node.condition);
+      // TypeCheck Condition
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
+        createPrimType(node.condition.position, 'Boolean')
+      );
+      return node;
     case NodeType.FlagStatement:
       // We only allow arguments on the operator flag, we dont need to analyze these because they are only used in the compiler
       if (node.value == 'operator') {
+        if (node.args.length != 2) {
+          BriskTypeError(
+            rawProgram,
+            BriskErrorType.FlagExpectedArguments,
+            [node.value, '2', `${node.args.length}`],
+            node.position
+          );
+        }
         typeEqual(
           rawProgram,
           _types,
           _typeStack,
           _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[0]
-          ),
-          createPrimType(node.args.args[0].position, 'String')
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[0]),
+          createPrimType(node.args[0].position, 'String')
         );
         typeEqual(
           rawProgram,
           _types,
           _typeStack,
           _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[1]
-          ),
-          createPrimType(node.args.args[1].position, 'Number')
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[1]),
+          createPrimType(node.args[1].position, 'String')
+        );
+      } else if (node.args.length != 0) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.FlagExpectedArguments,
+          [node.value, '0', `${node.args.length}`],
+          node.position
         );
       }
       return node;
@@ -457,47 +473,53 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
+    // TODO: Remove Operator TypeChecking
     case NodeType.ArithmeticExpression:
-      // Check That Types Are Numeric
-      typeEqual(
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-        createUnionType(
-          node.lhs.position,
-          createPrimType(node.lhs.position, 'f32'),
-          createPrimType(node.lhs.position, 'f64'),
-          createPrimType(node.lhs.position, 'i32'),
-          createPrimType(node.lhs.position, 'i64'),
-          createPrimType(node.lhs.position, 'u32'),
-          createPrimType(node.lhs.position, 'u64'),
-          createPrimType(node.lhs.position, 'Number')
-        )
-      );
+      throw 'Unreachable';
+    // // Check That Types Are Numeric
+    // typeEqual(
+    //   rawProgram,
+    //   _types,
+    //   _typeStack,
+    //   _typeStacks,
+    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
+    //   createUnionType(
+    //     node.lhs.position,
+    //     createPrimType(node.lhs.position, 'f32'),
+    //     createPrimType(node.lhs.position, 'f64'),
+    //     createPrimType(node.lhs.position, 'i32'),
+    //     createPrimType(node.lhs.position, 'i64'),
+    //     createPrimType(node.lhs.position, 'u32'),
+    //     createPrimType(node.lhs.position, 'u64'),
+    //     createPrimType(node.lhs.position, 'Number')
+    //   )
+    // );
     case NodeType.ComparisonExpression:
-      // Check Both Type A And B Are The Same
-      typeEqual(
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
-      );
-      // Check Individual
-      if (node.opeartor == ComparisonExpressionOperator.ComparisonAnd || node.opeartor == ComparisonExpressionOperator.ComparisonOr)
-        typeEqual(
-          rawProgram,
-          _types,
-          _typeStack,
-          _typeStacks,
-          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-          createPrimType(node.position, 'Boolean')
-        );
-      // Return Node
-      return node;
+      throw 'Unreachable';
+    // // Check Both Type A And B Are The Same
+    // typeEqual(
+    //   rawProgram,
+    //   _types,
+    //   _typeStack,
+    //   _typeStacks,
+    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
+    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
+    // );
+    // // Check Individual
+    // if (
+    //   node.operator == ComparisonExpressionOperator.ComparisonAnd ||
+    //   node.operator == ComparisonExpressionOperator.ComparisonOr
+    // )
+    //   typeEqual(
+    //     rawProgram,
+    //     _types,
+    //     _typeStack,
+    //     _typeStacks,
+    //     getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
+    //     createPrimType(node.position, 'Boolean')
+    //   );
+    // // Return Node
+    // return node;
     case NodeType.TypeCastExpression:
       // Analyze Properties
       node.typeLiteral = _typeCheckNode(node.typeLiteral);

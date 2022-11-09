@@ -2,7 +2,6 @@
 import { EmbeddedActionsParser, ILexingResult, TokenType } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
-import { LexerTokenType } from '../Types/LexerNodes';
 import * as Nodes from '../Types/ParseNodes';
 import { BriskCustomError } from '../Errors/Compiler';
 //@ts-ignore
@@ -39,7 +38,7 @@ class Parser extends EmbeddedActionsParser {
         _varStack: new Map(),
         _typeStack: new Map(),
         // Flags
-        loopDepth: undefined
+        loopDepth: undefined,
       },
       position: {
         offset: 0,
@@ -90,8 +89,24 @@ class Parser extends EmbeddedActionsParser {
   });
   private semiStatement = this.RULE('SemiStatement', (): Nodes.Statement => {
     const statement = this.SUBRULE(this._statement);
-    this.CONSUME(Tokens.TknSemiColon);
-    this.ACTION(() => (statement.position.length += 1));
+    this.OR([
+      {
+        // @ts-ignore
+        GATE: () => this.input[this.currIdx]?.image != '}',
+        ALT: () => {
+          this.CONSUME(Tokens.TknSemiColon);
+          this.ACTION(() => (statement.position.length += 1));
+        },
+      },
+      {
+        ALT: () => {
+          this.OPTION(() => {
+            this.CONSUME1(Tokens.TknSemiColon);
+            this.ACTION(() => (statement.position.length += 1));
+          });
+        },
+      },
+    ]);
     return statement;
   });
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
@@ -100,8 +115,6 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.typeAlias) },
       { ALT: () => this.SUBRULE(this.ifStatement) },
       { ALT: () => this.SUBRULE(this.whileStatement) },
-      { ALT: () => this.SUBRULE(this.breakStatement) },
-      { ALT: () => this.SUBRULE(this.breakIfStatement) },
       { ALT: () => this.SUBRULE(this.declarationStatement) },
       { ALT: () => this.SUBRULE(this.singleLineStatement) },
     ]);
@@ -110,20 +123,22 @@ class Parser extends EmbeddedActionsParser {
   private flag = this.RULE('Flag', (): Nodes.FlagNode => {
     const flag = this.CONSUME(Tokens.TknFlag);
     const args = this.SUBRULE(this.arguments);
-    return {
-      nodeType: Nodes.NodeType.FlagStatement,
-      category: Nodes.NodeCategory.Statement,
-      value: flag.image.slice(1),
-      args: args,
-      position: {
-        offset: flag.startOffset,
-        length: flag.endOffset! - flag.startOffset + 1,
-        line: flag.startLine || 0,
-        col: flag.startColumn || 0,
-        basePath: this.basePath,
-        file: this.file,
-      },
-    };
+    return this.ACTION((): Nodes.FlagNode => {
+      return {
+        nodeType: Nodes.NodeType.FlagStatement,
+        category: Nodes.NodeCategory.Statement,
+        value: flag.image.slice(1),
+        args: args.args,
+        position: {
+          offset: flag.startOffset,
+          length: args?.position.offset + args?.position.length - flag.startOffset,
+          line: flag.startLine || 0,
+          col: flag.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
   });
   // Statements
   private blockStatement = this.RULE('BlockStatement', (): Nodes.BlockStatementNode => {
@@ -168,6 +183,10 @@ class Parser extends EmbeddedActionsParser {
         GATE: this.BACKTRACK(this.postFixStatement),
         ALT: () => this.SUBRULE(this.postFixStatement),
       },
+      { ALT: () => this.SUBRULE(this.breakStatement) },
+      { ALT: () => this.SUBRULE(this.breakIfStatement) },
+      { ALT: () => this.SUBRULE(this.continueStatement) },
+      { ALT: () => this.SUBRULE(this.continueIfStatement) },
     ]);
   });
   private ifStatement = this.RULE('IfStatement', (): Nodes.IfStatementNode => {
@@ -237,20 +256,17 @@ class Parser extends EmbeddedActionsParser {
         condition: condition,
         body: body,
         data: {
-          pathReturns: false
+          pathReturns: false,
         },
         position: {
           offset: location.startOffset,
-          length: 
-            body?.position.offset +
-            body?.position.length -
-            location.startOffset,
+          length: body?.position.offset + body?.position.length - location.startOffset,
           line: location.startLine || 0,
           col: location.startColumn || 0,
           basePath: this.basePath,
           file: this.file,
         },
-      }
+      };
     });
   });
   private breakStatement = this.RULE('BreakStatement', (): Nodes.BreakStatementNode => {
@@ -293,7 +309,49 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  // TODO: BreakIf Statement
+  private continueStatement = this.RULE('ContinueStatement', (): Nodes.ContinueStatementNode => {
+    const location = this.CONSUME(Tokens.TknContinue);
+    return this.ACTION((): Nodes.ContinueStatementNode => {
+      return {
+        nodeType: Nodes.NodeType.ContinueStatement,
+        category: Nodes.NodeCategory.Statement,
+        depth: 0, // TODO: Allow you to input a depth
+        position: {
+          offset: location.startOffset,
+          length: location.endOffset! - location.startOffset + 1,
+          line: location.startLine || 0,
+          col: location.startColumn || 0,
+          basePath: this.basePath,
+          file: this.file,
+        },
+      };
+    });
+  });
+  private continueIfStatement = this.RULE(
+    'ContinueIfStatement',
+    (): Nodes.ContinueIfStatementNode => {
+      const location = this.CONSUME(Tokens.TknContinueIf);
+      this.CONSUME(Tokens.TknLParen);
+      const condition = this.SUBRULE(this.expression);
+      const close = this.CONSUME(Tokens.TknRParen);
+      return this.ACTION((): Nodes.ContinueIfStatementNode => {
+        return {
+          nodeType: Nodes.NodeType.ContinueIfStatement,
+          category: Nodes.NodeCategory.Statement,
+          condition: condition,
+          depth: 0, // TODO: Allow you to input a depth
+          position: {
+            offset: location.startOffset,
+            length: close.endOffset! - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            basePath: this.basePath,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
   private importStatement = this.RULE(
     'ImportStatement',
     (): Nodes.ImportStatementNode | Nodes.WasmImportStatementNode => {
@@ -412,6 +470,7 @@ class Parser extends EmbeddedActionsParser {
         name: name,
         varType: varType,
         value: value,
+        flags: [],
         position: {
           offset: location.startOffset,
           length: value.position.offset + value.position.length - location.startOffset,
@@ -595,24 +654,24 @@ class Parser extends EmbeddedActionsParser {
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-      const operators: Nodes.ComparisonExpressionOperator[] = [];
+      const operators: [Nodes.ComparisonExpressionOperator, string][] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this._comparisonExpression);
       this.MANY(() => {
         const operator = this.OR([
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonAnd);
-              return Nodes.ComparisonExpressionOperator.ComparisonAnd;
+              return [Nodes.ComparisonExpressionOperator.ComparisonAnd, '&&'];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonOr);
-              return Nodes.ComparisonExpressionOperator.ComparisonOr;
+              return [Nodes.ComparisonExpressionOperator.ComparisonOr, '||'];
             },
           },
-        ])
+        ]);
         operators.push(operator);
         expressions.push(this.SUBRULE1(this._comparisonExpression));
       });
@@ -626,7 +685,8 @@ class Parser extends EmbeddedActionsParser {
                 nodeType: Nodes.NodeType.ComparisonExpression,
                 category: Nodes.NodeCategory.Expression,
                 lhs: prevValue,
-                operator: operators[index],
+                operator: operators[index][0],
+                operatorImage: operators[index][1],
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
@@ -646,48 +706,48 @@ class Parser extends EmbeddedActionsParser {
   private _comparisonExpression = this.RULE(
     '_ComparisonExpression',
     (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-      const operators: Nodes.ComparisonExpressionOperator[] = [];
+      const operators: [Nodes.ComparisonExpressionOperator, string][] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticShiftingExpression);
       this.MANY(() => {
         const operator = this.OR([
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonEqual);
-              return Nodes.ComparisonExpressionOperator.ComparisonEqual;
+              return [Nodes.ComparisonExpressionOperator.ComparisonEqual, '=='];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonNotEqual);
-              return Nodes.ComparisonExpressionOperator.ComparisonNotEqual;
+              return [Nodes.ComparisonExpressionOperator.ComparisonNotEqual, '!='];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonLessThan);
-              return Nodes.ComparisonExpressionOperator.ComparisonLessThan;
+              return [Nodes.ComparisonExpressionOperator.ComparisonLessThan, '<'];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonGreaterThan);
-              return Nodes.ComparisonExpressionOperator.ComparisonGreaterThan;
+              return [Nodes.ComparisonExpressionOperator.ComparisonGreaterThan, '>'];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonLessThanEqual);
-              return Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual;
+              return [Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual, '<='];
             },
           },
           {
-            ALT: () => {
+            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
               this.CONSUME(Tokens.TknComparisonGreaterThanEqual);
-              return Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual;
+              return [Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual, '>='];
             },
           },
-        ])
+        ]);
         operators.push(operator);
         expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
       });
@@ -701,7 +761,8 @@ class Parser extends EmbeddedActionsParser {
                 nodeType: Nodes.NodeType.ComparisonExpression,
                 category: Nodes.NodeCategory.Expression,
                 lhs: prevValue,
-                operator: operators[index],
+                operator: operators[index][0],
+                operatorImage: operators[index][1],
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
@@ -722,22 +783,22 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticShiftingExpression = this.RULE(
     'ArithmeticShiftingExpression',
     (): Nodes.Expression => {
-      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticScalingExpression);
       this.MANY(() => {
         operators.push(
           this.OR([
             {
-              ALT: () => {
+              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
                 this.CONSUME(Tokens.TknAdd);
-                return Nodes.ArithmeticExpressionOperator.ArithmeticAdd;
+                return [Nodes.ArithmeticExpressionOperator.ArithmeticAdd, '+'];
               },
             },
             {
-              ALT: () => {
+              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
                 this.CONSUME(Tokens.TknSub);
-                return Nodes.ArithmeticExpressionOperator.ArithmeticSub;
+                return [Nodes.ArithmeticExpressionOperator.ArithmeticSub, '-'];
               },
             },
           ])
@@ -754,7 +815,8 @@ class Parser extends EmbeddedActionsParser {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
                 category: Nodes.NodeCategory.Expression,
                 lhs: prevValue,
-                operator: operators[index],
+                operator: operators[index][0],
+                operatorImage: operators[index][1],
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
@@ -774,22 +836,22 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticScalingExpression = this.RULE(
     'ArithmeticScalingExpression',
     (): Nodes.Expression => {
-      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticPowerExpression);
       this.MANY(() => {
         operators.push(
           this.OR([
             {
-              ALT: () => {
+              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
                 this.CONSUME(Tokens.TknDiv);
-                return Nodes.ArithmeticExpressionOperator.ArithmeticDiv;
+                return [Nodes.ArithmeticExpressionOperator.ArithmeticDiv, '/'];
               },
             },
             {
-              ALT: () => {
+              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
                 this.CONSUME(Tokens.TknMul);
-                return Nodes.ArithmeticExpressionOperator.ArithmeticMul;
+                return [Nodes.ArithmeticExpressionOperator.ArithmeticMul, '*'];
               },
             },
           ])
@@ -806,7 +868,8 @@ class Parser extends EmbeddedActionsParser {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
                 category: Nodes.NodeCategory.Expression,
                 lhs: prevValue,
-                operator: operators[index],
+                operator: operators[index][0],
+                operatorImage: operators[index][1],
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,
@@ -826,12 +889,12 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticPowerExpression = this.RULE(
     'ArithmeticPowerExpression',
     (): Nodes.Expression => {
-      const operators: Nodes.ArithmeticExpressionOperator[] = [];
+      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.simpleExpression);
       this.MANY(() => {
         this.CONSUME(Tokens.TknPow);
-        operators.push(Nodes.ArithmeticExpressionOperator.ArithmeticPow);
+        operators.push([Nodes.ArithmeticExpressionOperator.ArithmeticPow, '**']);
         expressions.push(this.SUBRULE1(this.simpleExpression));
       });
       if (expressions.length == 0) {
@@ -844,7 +907,8 @@ class Parser extends EmbeddedActionsParser {
                 nodeType: Nodes.NodeType.ArithmeticExpression,
                 category: Nodes.NodeCategory.Expression,
                 lhs: prevValue,
-                operator: operators[index],
+                operator: operators[index][0],
+                operatorImage: operators[index][1],
                 rhs: currentValue,
                 position: {
                   ...prevValue.position,

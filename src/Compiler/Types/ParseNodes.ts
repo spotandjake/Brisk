@@ -10,6 +10,8 @@ export const enum NodeType {
   WhileStatement,
   BreakStatement,
   BreakIfStatement,
+  ContinueStatement,
+  ContinueIfStatement,
   FlagStatement,
   BlockStatement,
   ImportStatement,
@@ -81,7 +83,7 @@ export interface ProgramNode {
   category: NodeCategory.General;
   name: string;
   body: Statement[];
-  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
+  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks' | 'operatorScope'>;
   position: Position;
 }
 // Statements
@@ -91,6 +93,8 @@ export type Statement =
   | WhileStatementNode
   | BreakStatementNode
   | BreakIfStatementNode
+  | ContinueStatementNode
+  | ContinueIfStatementNode
   | BlockStatementNode
   | ImportStatementNode
   | WasmImportStatementNode
@@ -101,7 +105,9 @@ export type Statement =
   | ReturnStatementNode
   | EnumDefinitionStatementNode
   | EnumVariantNode
-  | PostFixStatementNode;
+  | PostFixStatementNode
+  | CallExpressionNode
+  | WasmCallExpressionNode;
 export interface IfStatementNode {
   nodeType: NodeType.IfStatement;
   category: NodeCategory.Statement;
@@ -137,11 +143,24 @@ export interface BreakIfStatementNode {
   depth: number;
   position: Position;
 }
+export interface ContinueStatementNode {
+  nodeType: NodeType.ContinueStatement;
+  category: NodeCategory.Statement;
+  depth: number;
+  position: Position;
+}
+export interface ContinueIfStatementNode {
+  nodeType: NodeType.ContinueIfStatement;
+  category: NodeCategory.Statement;
+  condition: Expression;
+  depth: number;
+  position: Position;
+}
 export interface FlagNode {
   nodeType: NodeType.FlagStatement;
   category: NodeCategory.Statement;
   value: string;
-  args: ArgumentsNode;
+  args: Expression[];
   position: Position;
 }
 export interface BlockStatementNode {
@@ -196,6 +215,7 @@ export interface DeclarationStatementNode {
   name: VariableDefinition;
   varType: TypeLiteral;
   value: Expression;
+  flags: FlagNode[];
   position: Position;
 }
 export interface AssignmentStatementNode {
@@ -284,6 +304,7 @@ export interface ComparisonExpressionNode {
   category: NodeCategory.Expression;
   lhs: Expression;
   operator: ComparisonExpressionOperator;
+  operatorImage: string;
   rhs: Expression;
   position: Position;
 }
@@ -292,6 +313,7 @@ export interface ArithmeticExpressionNode {
   category: NodeCategory.Expression;
   lhs: Expression;
   operator: ArithmeticExpressionOperator;
+  operatorImage: string;
   rhs: Expression;
   position: Position;
 }
