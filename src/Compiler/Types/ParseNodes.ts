@@ -160,7 +160,7 @@ export interface FlagNode {
   nodeType: NodeType.FlagStatement;
   category: NodeCategory.Statement;
   value: string;
-  args: ArgumentsNode;
+  args: Expression[];
   position: Position;
 }
 export interface BlockStatementNode {
@@ -215,6 +215,7 @@ export interface DeclarationStatementNode {
   name: VariableDefinition;
   varType: TypeLiteral;
   value: Expression;
+  flags: FlagNode[];
   position: Position;
 }
 export interface AssignmentStatementNode {

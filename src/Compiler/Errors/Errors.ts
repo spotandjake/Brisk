@@ -5,6 +5,7 @@ export const enum BriskErrorType {
   FeatureNotYetImplemented,
   ImportNotSupported,
   InvalidBreakDepth,
+  InvalidOperator,
   // Syntax Error
   CannotUseReservedKeyword,
   ReturnStatementsOnlyValidInsideFunction,
@@ -35,6 +36,8 @@ export const enum BriskErrorType {
   ImportStatementExpectedAtTop,
   ExportStatementExpectedAtBottom,
   NoDeclarationInSingleLineStatement,
+  FlagStatementExpectedInBlockStatement,
+  FlagStatementExpectsFollowingDefinition,
 }
 // Error Strings
 export const BriskErrorMessage = {
@@ -42,7 +45,9 @@ export const BriskErrorMessage = {
   [BriskErrorType.CompilerError]: 'A compiler bug has occurred',
   [BriskErrorType.FeatureNotYetImplemented]: 'Feature not yet implemented',
   [BriskErrorType.ImportNotSupported]: 'Your environment does not support imports',
-  [BriskErrorType.InvalidBreakDepth]: 'You Cannot Break Deeper Then The Current Loop, Current Depth %2, Break Depth %1',
+  [BriskErrorType.InvalidBreakDepth]:
+    'You Cannot Break Deeper Then The Current Loop, Current Depth %2, Break Depth %1',
+  [BriskErrorType.InvalidOperator]: 'Operator %1 is invalid',
   // Syntax Error
   [BriskErrorType.CannotUseReservedKeyword]: 'Cannot use reserved keyword %1',
   [BriskErrorType.ReturnStatementsOnlyValidInsideFunction]:
@@ -76,4 +81,8 @@ export const BriskErrorMessage = {
   [BriskErrorType.ExportStatementExpectedAtBottom]:
     'Export statement must appear at bottom of file',
   [BriskErrorType.NoDeclarationInSingleLineStatement]: 'Declaration must appear in a scope',
+  [BriskErrorType.FlagStatementExpectedInBlockStatement]:
+    'Flag Statements Can Only Appear In Block Statements',
+  [BriskErrorType.FlagStatementExpectsFollowingDefinition]:
+    'Flag Statements Expect The Next Statement To Be A Definition',
 };

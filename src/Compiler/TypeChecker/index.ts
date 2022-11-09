@@ -118,35 +118,36 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
     case NodeType.FlagStatement:
       // We only allow arguments on the operator flag, we dont need to analyze these because they are only used in the compiler
       if (node.value == 'operator') {
+        if (node.args.length != 2) {
+          BriskTypeError(
+            rawProgram,
+            BriskErrorType.FlagExpectedArguments,
+            [node.value, '2', `${node.args.length}`],
+            node.position
+          );
+        }
         typeEqual(
           rawProgram,
           _types,
           _typeStack,
           _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[0]
-          ),
-          createPrimType(node.args.args[0].position, 'String')
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[0]),
+          createPrimType(node.args[0].position, 'String')
         );
         typeEqual(
           rawProgram,
           _types,
           _typeStack,
           _typeStacks,
-          getExpressionType(
-            rawProgram,
-            _variables,
-            _types,
-            _typeStack,
-            _typeStacks,
-            node.args.args[1]
-          ),
-          createPrimType(node.args.args[1].position, 'Number')
+          getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[1]),
+          createPrimType(node.args[1].position, 'String')
+        );
+      } else if (node.args.length != 0) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.FlagExpectedArguments,
+          [node.value, '0', `${node.args.length}`],
+          node.position
         );
       }
       return node;

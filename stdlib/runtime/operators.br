@@ -1,0 +1,22 @@
+@operator('+', 'INFIX');
+let add: Function = (a: i32, b: i32): i32 => @wasm.i32.add(a, b);
+
+let a: i32 = 1n + 1n; // translates into add(1n, 1n);
+
+// @operator('+', 'BINOP');
+// let add: Function = (a: i32 | i64, b: i32 | i64): i64 => {
+//   if (a typeof i64) {
+//     return(@wasm.i64.add(a, b)); 
+//   } else {
+//     return(a + b); // add(a, b); refers to the i32 variant above
+//   };
+// };
+
+// let a: i32 = 1n + 1n; // translates into add(1n, 1n);
+// let a: i64 = 1N + 1N; // translates into add(1N, 1N);
+let test: Function = (a: i32, b: i32): i32 => {
+  return(1n);
+}
+let test2: Function = (a: i32, b: i32): i32 => {
+  return(1n);
+};
