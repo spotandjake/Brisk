@@ -1,5 +1,5 @@
 import Node, {
-  ComparisonExpressionOperator,
+  // ComparisonExpressionOperator,
   EnumVariantNode,
   GenericTypeNode,
   NodeCategory,

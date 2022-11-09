@@ -16,7 +16,7 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
     external: ['commander', 'chevrotain', 'fs', '@jest/globals', 'wasi'],
     plugins: [
       wasm({
-        targetEnv: 'auto-inline'
+        targetEnv: 'auto-inline',
       }),
       swc({
         jsc: {
@@ -54,7 +54,6 @@ const compileTypeScriptFile = async (name, input, output, debug) => {
     name: name,
     compact: false,
     indent: '  ',
-    preferConst: true,
     generatedCode: {
       constBindings: true,
       objectShorthand: true,
