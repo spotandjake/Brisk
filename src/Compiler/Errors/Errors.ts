@@ -31,6 +31,7 @@ export const enum BriskErrorType {
   InvalidArgumentLength,
   WasmExpressionUnknown,
   DeadCode,
+  UnknownOperator,
   // Parser Error
   VariableHasAlreadyBeenDeclared,
   ImportStatementExpectedAtTop,
@@ -74,6 +75,7 @@ export const BriskErrorMessage = {
   [BriskErrorType.InvalidArgumentLength]: 'Function expects a maximum of %1 arguments, found %2',
   [BriskErrorType.WasmExpressionUnknown]: 'Wasm instruction %1 does not exist',
   [BriskErrorType.DeadCode]: 'Dead code found',
+  [BriskErrorType.UnknownOperator]: 'Unknown operator %1',
   // Parser Error
   [BriskErrorType.VariableHasAlreadyBeenDeclared]: 'Variable %1has already been declared',
   [BriskErrorType.VariableNotFound]: 'Variable %1 does not exist',

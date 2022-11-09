@@ -501,17 +501,17 @@ export const TknDiv = createToken({
   pattern: '/',
   longer_alt: TknComment,
 });
+export const TknPow = createToken({
+  label: 'Power Of',
+  name: LexerTokenType.TknPower,
+  categories: arithmeticOperators,
+  pattern: '**',
+});
 export const TknMul = createToken({
   label: 'Multiplication',
   name: LexerTokenType.TknMultiply,
   categories: arithmeticOperators,
   pattern: '*',
-});
-export const TknPow = createToken({
-  label: 'Power Of',
-  name: LexerTokenType.TknPower,
-  categories: arithmeticOperators,
-  pattern: '^',
 });
 export const TknUnion = createToken({
   label: 'Tkn Type Union',
@@ -660,8 +660,8 @@ export const Tokens = [
   TknAdd,
   TknSub,
   TknDiv,
-  TknMul,
   TknPow,
+  TknMul,
   TknUnion,
   TknQuestionMark,
   // Reserved Tokens
