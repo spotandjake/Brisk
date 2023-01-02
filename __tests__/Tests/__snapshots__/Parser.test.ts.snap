@@ -16,7 +16,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 15,
@@ -30,7 +30,7 @@ exports[`Parser: Literals Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "a",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 8,
@@ -54,7 +54,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 42,
@@ -71,12 +71,12 @@ exports[`Parser: Literals Pass 1`] = `
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 45,
+        "nodeType": 44,
         "params": [
           {
             "category": 5,
             "name": "String",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 21,
@@ -98,7 +98,7 @@ exports[`Parser: Literals Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "Void",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 32,
@@ -112,7 +112,7 @@ exports[`Parser: Literals Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "print",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -136,7 +136,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 32,
@@ -153,7 +153,7 @@ exports[`Parser: Literals Pass 1`] = `
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 45,
+        "nodeType": 44,
         "params": [],
         "position": {
           "basePath": "",
@@ -166,7 +166,7 @@ exports[`Parser: Literals Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "Void",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 22,
@@ -180,7 +180,7 @@ exports[`Parser: Literals Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "f",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -204,7 +204,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 25,
@@ -218,7 +218,7 @@ exports[`Parser: Literals Pass 1`] = `
       "typeSignature": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 16,
@@ -231,7 +231,7 @@ exports[`Parser: Literals Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "b",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -249,7 +249,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "A",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -261,7 +261,7 @@ exports[`Parser: Literals Pass 1`] = `
       "typeLiteral": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 10,
@@ -279,7 +279,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "B",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -290,7 +290,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -303,7 +303,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -316,7 +316,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "i64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 16,
@@ -329,7 +329,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "u32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 22,
@@ -342,7 +342,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "u64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 28,
@@ -355,7 +355,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "f32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 34,
@@ -368,7 +368,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "f64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 40,
@@ -388,7 +388,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "C",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -399,7 +399,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -412,7 +412,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -428,12 +428,12 @@ exports[`Parser: Literals Pass 1`] = `
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 45,
+            "nodeType": 44,
             "params": [
               {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 41,
+                "nodeType": 40,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -445,7 +445,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
               {
                 "category": 5,
-                "nodeType": 42,
+                "nodeType": 41,
                 "position": {
                   "basePath": "",
                   "col": 22,
@@ -458,7 +458,7 @@ exports[`Parser: Literals Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -471,7 +471,7 @@ exports[`Parser: Literals Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 28,
@@ -494,7 +494,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "returnType": {
               "category": 5,
-              "nodeType": 42,
+              "nodeType": 41,
               "position": {
                 "basePath": "",
                 "col": 36,
@@ -507,7 +507,7 @@ exports[`Parser: Literals Pass 1`] = `
                 {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 36,
@@ -520,7 +520,7 @@ exports[`Parser: Literals Pass 1`] = `
                 {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 42,
@@ -543,7 +543,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "D",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -554,7 +554,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -567,7 +567,7 @@ exports[`Parser: Literals Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -583,12 +583,12 @@ exports[`Parser: Literals Pass 1`] = `
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 45,
+            "nodeType": 44,
             "params": [
               {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 41,
+                "nodeType": 40,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -600,7 +600,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
               {
                 "category": 5,
-                "nodeType": 42,
+                "nodeType": 41,
                 "position": {
                   "basePath": "",
                   "col": 22,
@@ -613,7 +613,7 @@ exports[`Parser: Literals Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -626,7 +626,7 @@ exports[`Parser: Literals Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 28,
@@ -649,7 +649,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "returnType": {
               "category": 5,
-              "nodeType": 42,
+              "nodeType": 41,
               "position": {
                 "basePath": "",
                 "col": 36,
@@ -661,7 +661,7 @@ exports[`Parser: Literals Pass 1`] = `
               "types": [
                 {
                   "category": 5,
-                  "nodeType": 44,
+                  "nodeType": 43,
                   "position": {
                     "basePath": "",
                     "col": 36,
@@ -672,7 +672,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                   "value": {
                     "category": 5,
-                    "nodeType": 42,
+                    "nodeType": 41,
                     "position": {
                       "basePath": "",
                       "col": 37,
@@ -685,7 +685,7 @@ exports[`Parser: Literals Pass 1`] = `
                       {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 41,
+                        "nodeType": 40,
                         "position": {
                           "basePath": "",
                           "col": 37,
@@ -698,7 +698,7 @@ exports[`Parser: Literals Pass 1`] = `
                       {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 41,
+                        "nodeType": 40,
                         "position": {
                           "basePath": "",
                           "col": 43,
@@ -714,7 +714,7 @@ exports[`Parser: Literals Pass 1`] = `
                 {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 50,
@@ -737,7 +737,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "E",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -754,7 +754,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -766,7 +766,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "field1",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -782,7 +782,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 15,
@@ -794,7 +794,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": true,
             "name": "field2",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -810,7 +810,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 12,
@@ -822,7 +822,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "field3",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": true,
             "position": {
               "basePath": "",
@@ -843,7 +843,7 @@ exports[`Parser: Literals Pass 1`] = `
                   "fieldType": {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -855,7 +855,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                   "mutable": false,
                   "name": "field1",
-                  "nodeType": 47,
+                  "nodeType": 46,
                   "optional": false,
                   "position": {
                     "basePath": "",
@@ -867,7 +867,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 46,
+              "nodeType": 45,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -879,7 +879,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "field4",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -891,7 +891,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 13,
@@ -909,7 +909,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -936,7 +936,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -948,7 +948,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -963,7 +963,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -975,7 +975,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -990,7 +990,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1002,7 +1002,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1023,7 +1023,7 @@ exports[`Parser: Literals Pass 1`] = `
                   "fieldMutable": false,
                   "fieldValue": {
                     "category": 4,
-                    "nodeType": 26,
+                    "nodeType": 25,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -1035,7 +1035,7 @@ exports[`Parser: Literals Pass 1`] = `
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 37,
+                  "nodeType": 36,
                   "position": {
                     "basePath": "",
                     "col": 5,
@@ -1046,7 +1046,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 36,
+              "nodeType": 35,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1057,7 +1057,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "name": "field4",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1068,7 +1068,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 21,
@@ -1081,7 +1081,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 17,
@@ -1099,7 +1099,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest2",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -1126,7 +1126,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1138,7 +1138,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1153,7 +1153,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1165,7 +1165,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1186,7 +1186,7 @@ exports[`Parser: Literals Pass 1`] = `
                   "fieldMutable": false,
                   "fieldValue": {
                     "category": 4,
-                    "nodeType": 26,
+                    "nodeType": 25,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -1198,7 +1198,7 @@ exports[`Parser: Literals Pass 1`] = `
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 37,
+                  "nodeType": 36,
                   "position": {
                     "basePath": "",
                     "col": 5,
@@ -1209,7 +1209,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 36,
+              "nodeType": 35,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1220,7 +1220,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "name": "field4",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1231,7 +1231,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 22,
@@ -1244,7 +1244,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 18,
@@ -1262,7 +1262,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest3",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -1286,7 +1286,7 @@ exports[`Parser: Literals Pass 1`] = `
         "fields": [
           {
             "category": 4,
-            "nodeType": 38,
+            "nodeType": 37,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1298,7 +1298,7 @@ exports[`Parser: Literals Pass 1`] = `
             "value": {
               "category": 6,
               "name": "objectTest2",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 6,
@@ -1314,7 +1314,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -1326,7 +1326,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1337,7 +1337,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 22,
@@ -1350,7 +1350,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 18,
@@ -1365,11 +1365,11 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "name": {
         "category": 6,
-        "nodeType": 53,
+        "nodeType": 52,
         "parent": {
           "category": 6,
           "name": "objectTest",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 1,
@@ -1390,7 +1390,7 @@ exports[`Parser: Literals Pass 1`] = `
         "property": {
           "category": 6,
           "name": "field2",
-          "nodeType": 54,
+          "nodeType": 53,
           "position": {
             "basePath": "",
             "col": 11,
@@ -1413,7 +1413,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 26,
+        "nodeType": 25,
         "position": {
           "basePath": "",
           "col": 21,
@@ -1433,7 +1433,7 @@ exports[`Parser: Literals Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -1448,7 +1448,7 @@ exports[`Parser: Literals Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -1459,7 +1459,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -1493,7 +1493,7 @@ exports[`Parser: Literals Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -1508,7 +1508,7 @@ exports[`Parser: Literals Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -1519,7 +1519,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -1552,7 +1552,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 3,
           "lhs": {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -1564,7 +1564,6 @@ exports[`Parser: Literals Pass 1`] = `
             "value": "test",
           },
           "nodeType": 18,
-          "operator": 0,
           "operatorImage": "==",
           "position": {
             "basePath": "",
@@ -1576,7 +1575,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
           "rhs": {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 22,
@@ -1607,7 +1606,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -1622,7 +1621,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -1633,7 +1632,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1666,7 +1665,7 @@ exports[`Parser: Literals Pass 1`] = `
         "category": 3,
         "lhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 5,
@@ -1678,7 +1677,6 @@ exports[`Parser: Literals Pass 1`] = `
           "value": 1,
         },
         "nodeType": 18,
-        "operator": 0,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -1690,7 +1688,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 10,
@@ -1720,7 +1718,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -1735,7 +1733,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 6,
@@ -1746,7 +1744,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 6,
@@ -1761,7 +1759,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 19,
@@ -1776,7 +1774,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 13,
@@ -1787,7 +1785,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 13,
@@ -1803,7 +1801,7 @@ exports[`Parser: Literals Pass 1`] = `
         "category": 3,
         "lhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 5,
@@ -1815,7 +1813,6 @@ exports[`Parser: Literals Pass 1`] = `
           "value": 1,
         },
         "nodeType": 18,
-        "operator": 0,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -1827,7 +1824,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 10,
@@ -1860,7 +1857,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -1875,7 +1872,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -1886,7 +1883,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -1917,7 +1914,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -1947,7 +1944,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 17,
@@ -1962,7 +1959,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 11,
@@ -1973,7 +1970,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 11,
@@ -1987,7 +1984,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2016,7 +2013,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -2031,7 +2028,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 6,
@@ -2042,7 +2039,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 6,
@@ -2057,7 +2054,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 17,
@@ -2072,7 +2069,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 11,
@@ -2083,7 +2080,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 11,
@@ -2097,7 +2094,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2128,7 +2125,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -2143,7 +2140,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2154,7 +2151,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -2188,7 +2185,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -2203,7 +2200,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2214,7 +2211,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -2245,7 +2242,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2277,7 +2274,7 @@ exports[`Parser: Literals Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -2292,7 +2289,7 @@ exports[`Parser: Literals Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -2303,7 +2300,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2337,7 +2334,7 @@ exports[`Parser: Literals Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -2352,7 +2349,7 @@ exports[`Parser: Literals Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -2363,7 +2360,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2394,7 +2391,7 @@ exports[`Parser: Literals Pass 1`] = `
         "category": 1,
         "condition": {
           "category": 4,
-          "nodeType": 33,
+          "nodeType": 32,
           "position": {
             "basePath": "",
             "col": 12,
@@ -2424,7 +2421,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -2439,7 +2436,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2450,7 +2447,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -2481,7 +2478,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2510,7 +2507,7 @@ exports[`Parser: Literals Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 14,
@@ -2525,7 +2522,7 @@ exports[`Parser: Literals Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 8,
@@ -2536,7 +2533,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 8,
@@ -2553,7 +2550,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -2568,7 +2565,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2579,7 +2576,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -2610,7 +2607,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2642,7 +2639,7 @@ exports[`Parser: Literals Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -2657,7 +2654,7 @@ exports[`Parser: Literals Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -2668,7 +2665,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -2699,7 +2696,7 @@ exports[`Parser: Literals Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2727,7 +2724,7 @@ exports[`Parser: Literals Pass 1`] = `
       "args": [
         {
           "category": 4,
-          "nodeType": 25,
+          "nodeType": 24,
           "position": {
             "basePath": "",
             "col": 7,
@@ -2742,7 +2739,7 @@ exports[`Parser: Literals Pass 1`] = `
       "callee": {
         "category": 6,
         "name": "print",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -2753,7 +2750,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -2769,7 +2766,7 @@ exports[`Parser: Literals Pass 1`] = `
       "callee": {
         "category": 6,
         "name": "f",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -2780,7 +2777,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -2795,7 +2792,7 @@ exports[`Parser: Literals Pass 1`] = `
       "args": [
         {
           "category": 4,
-          "nodeType": 26,
+          "nodeType": 25,
           "position": {
             "basePath": "",
             "col": 15,
@@ -2808,7 +2805,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
         {
           "category": 4,
-          "nodeType": 26,
+          "nodeType": 25,
           "position": {
             "basePath": "",
             "col": 19,
@@ -2822,7 +2819,7 @@ exports[`Parser: Literals Pass 1`] = `
       ],
       "category": 3,
       "name": "@wasm.i32.add",
-      "nodeType": 24,
+      "nodeType": 23,
       "position": {
         "basePath": "",
         "col": 1,
@@ -2840,7 +2837,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "c",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -2869,7 +2866,7 @@ exports[`Parser: Literals Pass 1`] = `
               "category": 3,
               "lhs": {
                 "category": 4,
-                "nodeType": 32,
+                "nodeType": 31,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -2880,8 +2877,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
                 "value": 1,
               },
-              "nodeType": 19,
-              "operator": 0,
+              "nodeType": 18,
               "operatorImage": "+",
               "position": {
                 "basePath": "",
@@ -2893,7 +2889,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
               "rhs": {
                 "category": 3,
-                "nodeType": 21,
+                "nodeType": 20,
                 "position": {
                   "basePath": "",
                   "col": 21,
@@ -2906,7 +2902,7 @@ exports[`Parser: Literals Pass 1`] = `
                   "category": 3,
                   "lhs": {
                     "category": 4,
-                    "nodeType": 32,
+                    "nodeType": 31,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -2917,8 +2913,7 @@ exports[`Parser: Literals Pass 1`] = `
                     },
                     "value": 1,
                   },
-                  "nodeType": 19,
-                  "operator": 0,
+                  "nodeType": 18,
                   "operatorImage": "+",
                   "position": {
                     "basePath": "",
@@ -2930,7 +2925,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                   "rhs": {
                     "category": 4,
-                    "nodeType": 32,
+                    "nodeType": 31,
                     "position": {
                       "basePath": "",
                       "col": 26,
@@ -2944,8 +2939,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
             },
-            "nodeType": 19,
-            "operator": 0,
+            "nodeType": 18,
             "operatorImage": "+",
             "position": {
               "basePath": "",
@@ -2957,7 +2951,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "rhs": {
               "category": 4,
-              "nodeType": 32,
+              "nodeType": 31,
               "position": {
                 "basePath": "",
                 "col": 31,
@@ -2969,8 +2963,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
           },
-          "nodeType": 19,
-          "operator": 0,
+          "nodeType": 18,
           "operatorImage": "+",
           "position": {
             "basePath": "",
@@ -2982,7 +2975,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
           "rhs": {
             "category": 4,
-            "nodeType": 32,
+            "nodeType": 31,
             "position": {
               "basePath": "",
               "col": 35,
@@ -2994,8 +2987,7 @@ exports[`Parser: Literals Pass 1`] = `
             "value": 1,
           },
         },
-        "nodeType": 19,
-        "operator": 0,
+        "nodeType": 18,
         "operatorImage": "+",
         "position": {
           "basePath": "",
@@ -3007,7 +2999,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 39,
@@ -3022,7 +3014,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -3038,7 +3030,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "c",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -3059,7 +3051,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 32,
+        "nodeType": 31,
         "position": {
           "basePath": "",
           "col": 5,
@@ -3078,7 +3070,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "d",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -3100,7 +3092,7 @@ exports[`Parser: Literals Pass 1`] = `
       "value": {
         "category": 6,
         "name": "a",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 17,
@@ -3113,7 +3105,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -3131,7 +3123,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "e",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -3152,11 +3144,11 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "value": {
         "category": 6,
-        "nodeType": 53,
+        "nodeType": 52,
         "parent": {
           "category": 6,
           "name": "objectTest3",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 14,
@@ -3177,7 +3169,7 @@ exports[`Parser: Literals Pass 1`] = `
         "property": {
           "category": 6,
           "name": "field3",
-          "nodeType": 54,
+          "nodeType": 53,
           "position": {
             "basePath": "",
             "col": 25,
@@ -3192,7 +3184,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -3210,7 +3202,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "z",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -3249,7 +3241,7 @@ exports[`Parser: Literals Pass 1`] = `
               "returnValue": {
                 "category": 6,
                 "name": "g",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 10,
@@ -3285,7 +3277,7 @@ exports[`Parser: Literals Pass 1`] = `
           "pathReturns": false,
         },
         "genericTypes": undefined,
-        "nodeType": 34,
+        "nodeType": 33,
         "params": [
           {
             "category": 6,
@@ -3293,7 +3285,7 @@ exports[`Parser: Literals Pass 1`] = `
             "name": {
               "category": 6,
               "name": "g",
-              "nodeType": 51,
+              "nodeType": 50,
               "position": {
                 "basePath": "",
                 "col": 20,
@@ -3303,12 +3295,12 @@ exports[`Parser: Literals Pass 1`] = `
                 "offset": 1501,
               },
             },
-            "nodeType": 55,
+            "nodeType": 54,
             "optional": false,
             "paramType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 23,
@@ -3339,7 +3331,7 @@ exports[`Parser: Literals Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "i32",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 29,
@@ -3353,7 +3345,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Function",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -3371,7 +3363,7 @@ exports[`Parser: Literals Pass 1`] = `
       "name": {
         "category": 6,
         "name": "h",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 7,
@@ -3392,7 +3384,7 @@ exports[`Parser: Literals Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 32,
+        "nodeType": 31,
         "position": {
           "basePath": "",
           "col": 19,
@@ -3406,7 +3398,7 @@ exports[`Parser: Literals Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 10,
@@ -3421,7 +3413,7 @@ exports[`Parser: Literals Pass 1`] = `
       "args": [],
       "callee": {
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 20,
         "position": {
           "basePath": "",
           "col": 1,
@@ -3437,7 +3429,7 @@ exports[`Parser: Literals Pass 1`] = `
                 "args": [
                   {
                     "category": 4,
-                    "nodeType": 25,
+                    "nodeType": 24,
                     "position": {
                       "basePath": "",
                       "col": 9,
@@ -3452,7 +3444,7 @@ exports[`Parser: Literals Pass 1`] = `
                 "callee": {
                   "category": 6,
                   "name": "print",
-                  "nodeType": 52,
+                  "nodeType": 51,
                   "position": {
                     "basePath": "",
                     "col": 3,
@@ -3463,7 +3455,7 @@ exports[`Parser: Literals Pass 1`] = `
                   },
                 },
                 "category": 3,
-                "nodeType": 23,
+                "nodeType": 22,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -3490,7 +3482,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
                 "returnValue": {
                   "category": 4,
-                  "nodeType": 26,
+                  "nodeType": 25,
                   "position": {
                     "basePath": "",
                     "col": 10,
@@ -3527,7 +3519,7 @@ exports[`Parser: Literals Pass 1`] = `
             "pathReturns": false,
           },
           "genericTypes": undefined,
-          "nodeType": 34,
+          "nodeType": 33,
           "params": [],
           "position": {
             "basePath": "",
@@ -3540,7 +3532,7 @@ exports[`Parser: Literals Pass 1`] = `
           "returnType": {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 6,
@@ -3553,7 +3545,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3574,7 +3566,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 41,
@@ -3587,7 +3579,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3604,7 +3596,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -3616,7 +3608,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -3628,7 +3620,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 55,
@@ -3649,7 +3641,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 31,
@@ -3688,7 +3680,7 @@ exports[`Parser: Literals Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -3712,7 +3704,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 37,
@@ -3725,7 +3717,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3742,7 +3734,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -3754,7 +3746,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -3766,7 +3758,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 51,
@@ -3787,7 +3779,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 27,
@@ -3826,7 +3818,7 @@ exports[`Parser: Literals Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -3850,7 +3842,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -3865,7 +3857,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest1",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -3878,7 +3870,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "Generic_TypeTest",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3890,7 +3882,7 @@ exports[`Parser: Literals Pass 1`] = `
       "typeLiteral": {
         "category": 5,
         "name": "String",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 52,
@@ -3911,7 +3903,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 32,
@@ -3924,7 +3916,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "Generic_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3941,7 +3933,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -3953,7 +3945,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -3965,7 +3957,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 46,
@@ -3986,7 +3978,7 @@ exports[`Parser: Literals Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -4025,7 +4017,7 @@ exports[`Parser: Literals Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -4057,7 +4049,7 @@ exports[`Parser: Literals Pass 1`] = `
         "name": {
           "category": 6,
           "name": "y",
-          "nodeType": 51,
+          "nodeType": 50,
           "position": {
             "basePath": "",
             "col": 14,
@@ -4078,7 +4070,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
         "value": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 26,
@@ -4092,7 +4084,7 @@ exports[`Parser: Literals Pass 1`] = `
         "varType": {
           "category": 5,
           "name": "Number",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 17,
@@ -4118,7 +4110,7 @@ exports[`Parser: Literals Pass 1`] = `
       "value": {
         "category": 6,
         "name": "h",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 8,
@@ -4148,7 +4140,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "c",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -4159,7 +4151,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "name": "c",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -4174,7 +4166,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "d",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -4185,7 +4177,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "name": "d",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -4200,7 +4192,7 @@ exports[`Parser: Literals Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "z",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -4211,7 +4203,7 @@ exports[`Parser: Literals Pass 1`] = `
               },
             },
             "name": "z",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -4222,7 +4214,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 8,
@@ -4278,7 +4270,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 15,
@@ -4292,7 +4284,7 @@ exports[`Parser: Main Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "a",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 8,
@@ -4316,7 +4308,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 42,
@@ -4333,12 +4325,12 @@ exports[`Parser: Main Pass 1`] = `
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 45,
+        "nodeType": 44,
         "params": [
           {
             "category": 5,
             "name": "String",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 21,
@@ -4360,7 +4352,7 @@ exports[`Parser: Main Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "Void",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 32,
@@ -4374,7 +4366,7 @@ exports[`Parser: Main Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "print",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -4398,7 +4390,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 32,
@@ -4415,7 +4407,7 @@ exports[`Parser: Main Pass 1`] = `
           "_typeStack": Map {},
         },
         "genericTypes": undefined,
-        "nodeType": 45,
+        "nodeType": 44,
         "params": [],
         "position": {
           "basePath": "",
@@ -4428,7 +4420,7 @@ exports[`Parser: Main Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "Void",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 22,
@@ -4442,7 +4434,7 @@ exports[`Parser: Main Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "f",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -4466,7 +4458,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "source": {
         "category": 4,
-        "nodeType": 25,
+        "nodeType": 24,
         "position": {
           "basePath": "",
           "col": 25,
@@ -4480,7 +4472,7 @@ exports[`Parser: Main Pass 1`] = `
       "typeSignature": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 16,
@@ -4493,7 +4485,7 @@ exports[`Parser: Main Pass 1`] = `
       "variable": {
         "category": 6,
         "name": "b",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 13,
@@ -4511,7 +4503,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "A",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -4523,7 +4515,7 @@ exports[`Parser: Main Pass 1`] = `
       "typeLiteral": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 10,
@@ -4541,7 +4533,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "B",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -4552,7 +4544,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -4565,7 +4557,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -4578,7 +4570,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "i64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 16,
@@ -4591,7 +4583,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "u32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 22,
@@ -4604,7 +4596,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "u64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 28,
@@ -4617,7 +4609,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "f32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 34,
@@ -4630,7 +4622,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "f64",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 40,
@@ -4650,7 +4642,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "C",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -4661,7 +4653,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -4674,7 +4666,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -4690,12 +4682,12 @@ exports[`Parser: Main Pass 1`] = `
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 45,
+            "nodeType": 44,
             "params": [
               {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 41,
+                "nodeType": 40,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -4707,7 +4699,7 @@ exports[`Parser: Main Pass 1`] = `
               },
               {
                 "category": 5,
-                "nodeType": 42,
+                "nodeType": 41,
                 "position": {
                   "basePath": "",
                   "col": 22,
@@ -4720,7 +4712,7 @@ exports[`Parser: Main Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -4733,7 +4725,7 @@ exports[`Parser: Main Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 28,
@@ -4756,7 +4748,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "returnType": {
               "category": 5,
-              "nodeType": 42,
+              "nodeType": 41,
               "position": {
                 "basePath": "",
                 "col": 36,
@@ -4769,7 +4761,7 @@ exports[`Parser: Main Pass 1`] = `
                 {
                   "category": 5,
                   "name": "u32",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 36,
@@ -4782,7 +4774,7 @@ exports[`Parser: Main Pass 1`] = `
                 {
                   "category": 5,
                   "name": "i64",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 42,
@@ -4805,7 +4797,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "D",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -4816,7 +4808,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "typeLiteral": {
         "category": 5,
-        "nodeType": 42,
+        "nodeType": 41,
         "position": {
           "basePath": "",
           "col": 10,
@@ -4829,7 +4821,7 @@ exports[`Parser: Main Pass 1`] = `
           {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 10,
@@ -4845,12 +4837,12 @@ exports[`Parser: Main Pass 1`] = `
               "_typeStack": Map {},
             },
             "genericTypes": undefined,
-            "nodeType": 45,
+            "nodeType": 44,
             "params": [
               {
                 "category": 5,
                 "name": "i32",
-                "nodeType": 41,
+                "nodeType": 40,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -4862,7 +4854,7 @@ exports[`Parser: Main Pass 1`] = `
               },
               {
                 "category": 5,
-                "nodeType": 42,
+                "nodeType": 41,
                 "position": {
                   "basePath": "",
                   "col": 22,
@@ -4875,7 +4867,7 @@ exports[`Parser: Main Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -4888,7 +4880,7 @@ exports[`Parser: Main Pass 1`] = `
                   {
                     "category": 5,
                     "name": "i64",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 28,
@@ -4911,7 +4903,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "returnType": {
               "category": 5,
-              "nodeType": 42,
+              "nodeType": 41,
               "position": {
                 "basePath": "",
                 "col": 36,
@@ -4923,7 +4915,7 @@ exports[`Parser: Main Pass 1`] = `
               "types": [
                 {
                   "category": 5,
-                  "nodeType": 44,
+                  "nodeType": 43,
                   "position": {
                     "basePath": "",
                     "col": 36,
@@ -4934,7 +4926,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                   "value": {
                     "category": 5,
-                    "nodeType": 42,
+                    "nodeType": 41,
                     "position": {
                       "basePath": "",
                       "col": 37,
@@ -4947,7 +4939,7 @@ exports[`Parser: Main Pass 1`] = `
                       {
                         "category": 5,
                         "name": "u32",
-                        "nodeType": 41,
+                        "nodeType": 40,
                         "position": {
                           "basePath": "",
                           "col": 37,
@@ -4960,7 +4952,7 @@ exports[`Parser: Main Pass 1`] = `
                       {
                         "category": 5,
                         "name": "i64",
-                        "nodeType": 41,
+                        "nodeType": 40,
                         "position": {
                           "basePath": "",
                           "col": 43,
@@ -4976,7 +4968,7 @@ exports[`Parser: Main Pass 1`] = `
                 {
                   "category": 5,
                   "name": "f32",
-                  "nodeType": 41,
+                  "nodeType": 40,
                   "position": {
                     "basePath": "",
                     "col": 50,
@@ -4999,7 +4991,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "genericTypes": undefined,
       "name": "E",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -5016,7 +5008,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5028,7 +5020,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "field1",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -5044,7 +5036,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 15,
@@ -5056,7 +5048,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": true,
             "name": "field2",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -5072,7 +5064,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 12,
@@ -5084,7 +5076,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "field3",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": true,
             "position": {
               "basePath": "",
@@ -5105,7 +5097,7 @@ exports[`Parser: Main Pass 1`] = `
                   "fieldType": {
                     "category": 5,
                     "name": "i32",
-                    "nodeType": 41,
+                    "nodeType": 40,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -5117,7 +5109,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                   "mutable": false,
                   "name": "field1",
-                  "nodeType": 47,
+                  "nodeType": 46,
                   "optional": false,
                   "position": {
                     "basePath": "",
@@ -5129,7 +5121,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 46,
+              "nodeType": 45,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5141,7 +5133,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "field4",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -5153,7 +5145,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 13,
@@ -5171,7 +5163,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -5198,7 +5190,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5210,7 +5202,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5225,7 +5217,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5237,7 +5229,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5252,7 +5244,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5264,7 +5256,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5285,7 +5277,7 @@ exports[`Parser: Main Pass 1`] = `
                   "fieldMutable": false,
                   "fieldValue": {
                     "category": 4,
-                    "nodeType": 26,
+                    "nodeType": 25,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -5297,7 +5289,7 @@ exports[`Parser: Main Pass 1`] = `
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 37,
+                  "nodeType": 36,
                   "position": {
                     "basePath": "",
                     "col": 5,
@@ -5308,7 +5300,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 36,
+              "nodeType": 35,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5319,7 +5311,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "name": "field4",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5330,7 +5322,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 21,
@@ -5343,7 +5335,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 17,
@@ -5361,7 +5353,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest2",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -5388,7 +5380,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5400,7 +5392,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field1",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5415,7 +5407,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5427,7 +5419,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field2",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5448,7 +5440,7 @@ exports[`Parser: Main Pass 1`] = `
                   "fieldMutable": false,
                   "fieldValue": {
                     "category": 4,
-                    "nodeType": 26,
+                    "nodeType": 25,
                     "position": {
                       "basePath": "",
                       "col": 13,
@@ -5460,7 +5452,7 @@ exports[`Parser: Main Pass 1`] = `
                     "value": 1,
                   },
                   "name": "field1",
-                  "nodeType": 37,
+                  "nodeType": 36,
                   "position": {
                     "basePath": "",
                     "col": 5,
@@ -5471,7 +5463,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                 },
               ],
-              "nodeType": 36,
+              "nodeType": 35,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5482,7 +5474,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "name": "field4",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5493,7 +5485,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 22,
@@ -5506,7 +5498,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 18,
@@ -5524,7 +5516,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "objectTest3",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -5548,7 +5540,7 @@ exports[`Parser: Main Pass 1`] = `
         "fields": [
           {
             "category": 4,
-            "nodeType": 38,
+            "nodeType": 37,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5560,7 +5552,7 @@ exports[`Parser: Main Pass 1`] = `
             "value": {
               "category": 6,
               "name": "objectTest2",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 6,
@@ -5576,7 +5568,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldMutable": false,
             "fieldValue": {
               "category": 4,
-              "nodeType": 26,
+              "nodeType": 25,
               "position": {
                 "basePath": "",
                 "col": 11,
@@ -5588,7 +5580,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
             "name": "field3",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5599,7 +5591,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 22,
@@ -5612,7 +5604,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "E",
-        "nodeType": 48,
+        "nodeType": 47,
         "position": {
           "basePath": "",
           "col": 18,
@@ -5627,11 +5619,11 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "name": {
         "category": 6,
-        "nodeType": 53,
+        "nodeType": 52,
         "parent": {
           "category": 6,
           "name": "objectTest",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 1,
@@ -5652,7 +5644,7 @@ exports[`Parser: Main Pass 1`] = `
         "property": {
           "category": 6,
           "name": "field2",
-          "nodeType": 54,
+          "nodeType": 53,
           "position": {
             "basePath": "",
             "col": 11,
@@ -5675,7 +5667,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 26,
+        "nodeType": 25,
         "position": {
           "basePath": "",
           "col": 21,
@@ -5695,7 +5687,7 @@ exports[`Parser: Main Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -5710,7 +5702,7 @@ exports[`Parser: Main Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -5721,7 +5713,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -5755,7 +5747,7 @@ exports[`Parser: Main Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -5770,7 +5762,7 @@ exports[`Parser: Main Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -5781,7 +5773,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -5814,7 +5806,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 3,
           "lhs": {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -5826,7 +5818,6 @@ exports[`Parser: Main Pass 1`] = `
             "value": "test",
           },
           "nodeType": 18,
-          "operator": 0,
           "operatorImage": "==",
           "position": {
             "basePath": "",
@@ -5838,7 +5829,7 @@ exports[`Parser: Main Pass 1`] = `
           },
           "rhs": {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 22,
@@ -5869,7 +5860,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -5884,7 +5875,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -5895,7 +5886,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -5928,7 +5919,7 @@ exports[`Parser: Main Pass 1`] = `
         "category": 3,
         "lhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 5,
@@ -5940,7 +5931,6 @@ exports[`Parser: Main Pass 1`] = `
           "value": 1,
         },
         "nodeType": 18,
-        "operator": 0,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -5952,7 +5942,7 @@ exports[`Parser: Main Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 10,
@@ -5982,7 +5972,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -5997,7 +5987,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 6,
@@ -6008,7 +5998,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 6,
@@ -6023,7 +6013,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 19,
@@ -6038,7 +6028,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 13,
@@ -6049,7 +6039,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 13,
@@ -6065,7 +6055,7 @@ exports[`Parser: Main Pass 1`] = `
         "category": 3,
         "lhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 5,
@@ -6077,7 +6067,6 @@ exports[`Parser: Main Pass 1`] = `
           "value": 1,
         },
         "nodeType": 18,
-        "operator": 0,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -6089,7 +6078,7 @@ exports[`Parser: Main Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 10,
@@ -6122,7 +6111,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6137,7 +6126,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6148,7 +6137,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6179,7 +6168,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6209,7 +6198,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 17,
@@ -6224,7 +6213,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 11,
@@ -6235,7 +6224,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 11,
@@ -6249,7 +6238,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6278,7 +6267,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 12,
@@ -6293,7 +6282,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 6,
@@ -6304,7 +6293,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 6,
@@ -6319,7 +6308,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 17,
@@ -6334,7 +6323,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 11,
@@ -6345,7 +6334,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 11,
@@ -6359,7 +6348,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6390,7 +6379,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6405,7 +6394,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6416,7 +6405,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6450,7 +6439,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6465,7 +6454,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6476,7 +6465,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6507,7 +6496,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6539,7 +6528,7 @@ exports[`Parser: Main Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -6554,7 +6543,7 @@ exports[`Parser: Main Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -6565,7 +6554,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6599,7 +6588,7 @@ exports[`Parser: Main Pass 1`] = `
               "args": [
                 {
                   "category": 4,
-                  "nodeType": 25,
+                  "nodeType": 24,
                   "position": {
                     "basePath": "",
                     "col": 9,
@@ -6614,7 +6603,7 @@ exports[`Parser: Main Pass 1`] = `
               "callee": {
                 "category": 6,
                 "name": "print",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -6625,7 +6614,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
               "category": 3,
-              "nodeType": 23,
+              "nodeType": 22,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6656,7 +6645,7 @@ exports[`Parser: Main Pass 1`] = `
         "category": 1,
         "condition": {
           "category": 4,
-          "nodeType": 33,
+          "nodeType": 32,
           "position": {
             "basePath": "",
             "col": 12,
@@ -6686,7 +6675,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6701,7 +6690,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6712,7 +6701,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6743,7 +6732,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6772,7 +6761,7 @@ exports[`Parser: Main Pass 1`] = `
         "args": [
           {
             "category": 4,
-            "nodeType": 25,
+            "nodeType": 24,
             "position": {
               "basePath": "",
               "col": 14,
@@ -6787,7 +6776,7 @@ exports[`Parser: Main Pass 1`] = `
         "callee": {
           "category": 6,
           "name": "print",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 8,
@@ -6798,7 +6787,7 @@ exports[`Parser: Main Pass 1`] = `
           },
         },
         "category": 3,
-        "nodeType": 23,
+        "nodeType": 22,
         "position": {
           "basePath": "",
           "col": 8,
@@ -6815,7 +6804,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6830,7 +6819,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6841,7 +6830,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6872,7 +6861,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6904,7 +6893,7 @@ exports[`Parser: Main Pass 1`] = `
             "args": [
               {
                 "category": 4,
-                "nodeType": 25,
+                "nodeType": 24,
                 "position": {
                   "basePath": "",
                   "col": 9,
@@ -6919,7 +6908,7 @@ exports[`Parser: Main Pass 1`] = `
             "callee": {
               "category": 6,
               "name": "print",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -6930,7 +6919,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "category": 3,
-            "nodeType": 23,
+            "nodeType": 22,
             "position": {
               "basePath": "",
               "col": 3,
@@ -6961,7 +6950,7 @@ exports[`Parser: Main Pass 1`] = `
       "category": 1,
       "condition": {
         "category": 4,
-        "nodeType": 33,
+        "nodeType": 32,
         "position": {
           "basePath": "",
           "col": 5,
@@ -6989,7 +6978,7 @@ exports[`Parser: Main Pass 1`] = `
       "args": [
         {
           "category": 4,
-          "nodeType": 25,
+          "nodeType": 24,
           "position": {
             "basePath": "",
             "col": 7,
@@ -7004,7 +6993,7 @@ exports[`Parser: Main Pass 1`] = `
       "callee": {
         "category": 6,
         "name": "print",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -7015,7 +7004,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7031,7 +7020,7 @@ exports[`Parser: Main Pass 1`] = `
       "callee": {
         "category": 6,
         "name": "f",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -7042,7 +7031,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7057,7 +7046,7 @@ exports[`Parser: Main Pass 1`] = `
       "args": [
         {
           "category": 4,
-          "nodeType": 26,
+          "nodeType": 25,
           "position": {
             "basePath": "",
             "col": 15,
@@ -7070,7 +7059,7 @@ exports[`Parser: Main Pass 1`] = `
         },
         {
           "category": 4,
-          "nodeType": 26,
+          "nodeType": 25,
           "position": {
             "basePath": "",
             "col": 19,
@@ -7084,7 +7073,7 @@ exports[`Parser: Main Pass 1`] = `
       ],
       "category": 3,
       "name": "@wasm.i32.add",
-      "nodeType": 24,
+      "nodeType": 23,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7102,7 +7091,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "c",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -7131,7 +7120,7 @@ exports[`Parser: Main Pass 1`] = `
               "category": 3,
               "lhs": {
                 "category": 4,
-                "nodeType": 32,
+                "nodeType": 31,
                 "position": {
                   "basePath": "",
                   "col": 17,
@@ -7142,8 +7131,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
                 "value": 1,
               },
-              "nodeType": 19,
-              "operator": 0,
+              "nodeType": 18,
               "operatorImage": "+",
               "position": {
                 "basePath": "",
@@ -7155,7 +7143,7 @@ exports[`Parser: Main Pass 1`] = `
               },
               "rhs": {
                 "category": 3,
-                "nodeType": 21,
+                "nodeType": 20,
                 "position": {
                   "basePath": "",
                   "col": 21,
@@ -7168,7 +7156,7 @@ exports[`Parser: Main Pass 1`] = `
                   "category": 3,
                   "lhs": {
                     "category": 4,
-                    "nodeType": 32,
+                    "nodeType": 31,
                     "position": {
                       "basePath": "",
                       "col": 22,
@@ -7179,8 +7167,7 @@ exports[`Parser: Main Pass 1`] = `
                     },
                     "value": 1,
                   },
-                  "nodeType": 19,
-                  "operator": 0,
+                  "nodeType": 18,
                   "operatorImage": "+",
                   "position": {
                     "basePath": "",
@@ -7192,7 +7179,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                   "rhs": {
                     "category": 4,
-                    "nodeType": 32,
+                    "nodeType": 31,
                     "position": {
                       "basePath": "",
                       "col": 26,
@@ -7206,8 +7193,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
             },
-            "nodeType": 19,
-            "operator": 0,
+            "nodeType": 18,
             "operatorImage": "+",
             "position": {
               "basePath": "",
@@ -7219,7 +7205,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "rhs": {
               "category": 4,
-              "nodeType": 32,
+              "nodeType": 31,
               "position": {
                 "basePath": "",
                 "col": 31,
@@ -7231,8 +7217,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
           },
-          "nodeType": 19,
-          "operator": 0,
+          "nodeType": 18,
           "operatorImage": "+",
           "position": {
             "basePath": "",
@@ -7244,7 +7229,7 @@ exports[`Parser: Main Pass 1`] = `
           },
           "rhs": {
             "category": 4,
-            "nodeType": 32,
+            "nodeType": 31,
             "position": {
               "basePath": "",
               "col": 35,
@@ -7256,8 +7241,7 @@ exports[`Parser: Main Pass 1`] = `
             "value": 1,
           },
         },
-        "nodeType": 19,
-        "operator": 0,
+        "nodeType": 18,
         "operatorImage": "+",
         "position": {
           "basePath": "",
@@ -7269,7 +7253,7 @@ exports[`Parser: Main Pass 1`] = `
         },
         "rhs": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 39,
@@ -7284,7 +7268,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -7300,7 +7284,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "c",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 1,
@@ -7321,7 +7305,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 32,
+        "nodeType": 31,
         "position": {
           "basePath": "",
           "col": 5,
@@ -7340,7 +7324,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "d",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -7362,7 +7346,7 @@ exports[`Parser: Main Pass 1`] = `
       "value": {
         "category": 6,
         "name": "a",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 17,
@@ -7375,7 +7359,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -7393,7 +7377,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "e",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -7414,11 +7398,11 @@ exports[`Parser: Main Pass 1`] = `
       },
       "value": {
         "category": 6,
-        "nodeType": 53,
+        "nodeType": 52,
         "parent": {
           "category": 6,
           "name": "objectTest3",
-          "nodeType": 52,
+          "nodeType": 51,
           "position": {
             "basePath": "",
             "col": 14,
@@ -7439,7 +7423,7 @@ exports[`Parser: Main Pass 1`] = `
         "property": {
           "category": 6,
           "name": "field3",
-          "nodeType": 54,
+          "nodeType": 53,
           "position": {
             "basePath": "",
             "col": 25,
@@ -7454,7 +7438,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "i32",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -7472,7 +7456,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "z",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 5,
@@ -7511,7 +7495,7 @@ exports[`Parser: Main Pass 1`] = `
               "returnValue": {
                 "category": 6,
                 "name": "g",
-                "nodeType": 52,
+                "nodeType": 51,
                 "position": {
                   "basePath": "",
                   "col": 10,
@@ -7547,7 +7531,7 @@ exports[`Parser: Main Pass 1`] = `
           "pathReturns": false,
         },
         "genericTypes": undefined,
-        "nodeType": 34,
+        "nodeType": 33,
         "params": [
           {
             "category": 6,
@@ -7555,7 +7539,7 @@ exports[`Parser: Main Pass 1`] = `
             "name": {
               "category": 6,
               "name": "g",
-              "nodeType": 51,
+              "nodeType": 50,
               "position": {
                 "basePath": "",
                 "col": 20,
@@ -7565,12 +7549,12 @@ exports[`Parser: Main Pass 1`] = `
                 "offset": 1501,
               },
             },
-            "nodeType": 55,
+            "nodeType": 54,
             "optional": false,
             "paramType": {
               "category": 5,
               "name": "i32",
-              "nodeType": 41,
+              "nodeType": 40,
               "position": {
                 "basePath": "",
                 "col": 23,
@@ -7601,7 +7585,7 @@ exports[`Parser: Main Pass 1`] = `
         "returnType": {
           "category": 5,
           "name": "i32",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 29,
@@ -7615,7 +7599,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Function",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 8,
@@ -7633,7 +7617,7 @@ exports[`Parser: Main Pass 1`] = `
       "name": {
         "category": 6,
         "name": "h",
-        "nodeType": 51,
+        "nodeType": 50,
         "position": {
           "basePath": "",
           "col": 7,
@@ -7654,7 +7638,7 @@ exports[`Parser: Main Pass 1`] = `
       },
       "value": {
         "category": 4,
-        "nodeType": 32,
+        "nodeType": 31,
         "position": {
           "basePath": "",
           "col": 19,
@@ -7668,7 +7652,7 @@ exports[`Parser: Main Pass 1`] = `
       "varType": {
         "category": 5,
         "name": "Number",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 10,
@@ -7683,7 +7667,7 @@ exports[`Parser: Main Pass 1`] = `
       "args": [],
       "callee": {
         "category": 3,
-        "nodeType": 21,
+        "nodeType": 20,
         "position": {
           "basePath": "",
           "col": 1,
@@ -7699,7 +7683,7 @@ exports[`Parser: Main Pass 1`] = `
                 "args": [
                   {
                     "category": 4,
-                    "nodeType": 25,
+                    "nodeType": 24,
                     "position": {
                       "basePath": "",
                       "col": 9,
@@ -7714,7 +7698,7 @@ exports[`Parser: Main Pass 1`] = `
                 "callee": {
                   "category": 6,
                   "name": "print",
-                  "nodeType": 52,
+                  "nodeType": 51,
                   "position": {
                     "basePath": "",
                     "col": 3,
@@ -7725,7 +7709,7 @@ exports[`Parser: Main Pass 1`] = `
                   },
                 },
                 "category": 3,
-                "nodeType": 23,
+                "nodeType": 22,
                 "position": {
                   "basePath": "",
                   "col": 3,
@@ -7752,7 +7736,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
                 "returnValue": {
                   "category": 4,
-                  "nodeType": 26,
+                  "nodeType": 25,
                   "position": {
                     "basePath": "",
                     "col": 10,
@@ -7789,7 +7773,7 @@ exports[`Parser: Main Pass 1`] = `
             "pathReturns": false,
           },
           "genericTypes": undefined,
-          "nodeType": 34,
+          "nodeType": 33,
           "params": [],
           "position": {
             "basePath": "",
@@ -7802,7 +7786,7 @@ exports[`Parser: Main Pass 1`] = `
           "returnType": {
             "category": 5,
             "name": "i32",
-            "nodeType": 41,
+            "nodeType": 40,
             "position": {
               "basePath": "",
               "col": 6,
@@ -7815,7 +7799,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       },
       "category": 3,
-      "nodeType": 23,
+      "nodeType": 22,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7836,7 +7820,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 41,
@@ -7849,7 +7833,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_Has_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7866,7 +7850,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -7878,7 +7862,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -7890,7 +7874,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 55,
@@ -7911,7 +7895,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 31,
@@ -7950,7 +7934,7 @@ exports[`Parser: Main Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -7974,7 +7958,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 37,
@@ -7987,7 +7971,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -8004,7 +7988,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -8016,7 +8000,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -8028,7 +8012,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 51,
@@ -8049,7 +8033,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 27,
@@ -8088,7 +8072,7 @@ exports[`Parser: Main Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -8112,7 +8096,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -8127,7 +8111,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest1",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -8140,7 +8124,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "Generic_TypeTest",
-      "nodeType": 39,
+      "nodeType": 38,
       "position": {
         "basePath": "",
         "col": 1,
@@ -8152,7 +8136,7 @@ exports[`Parser: Main Pass 1`] = `
       "typeLiteral": {
         "category": 5,
         "name": "String",
-        "nodeType": 41,
+        "nodeType": 40,
         "position": {
           "basePath": "",
           "col": 52,
@@ -8173,7 +8157,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 32,
@@ -8186,7 +8170,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "Generic_TestInterface",
-      "nodeType": 40,
+      "nodeType": 39,
       "position": {
         "basePath": "",
         "col": 1,
@@ -8203,7 +8187,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldType": {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 9,
@@ -8215,7 +8199,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "mutable": false,
             "name": "test",
-            "nodeType": 47,
+            "nodeType": 46,
             "optional": false,
             "position": {
               "basePath": "",
@@ -8227,7 +8211,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 46,
+        "nodeType": 45,
         "position": {
           "basePath": "",
           "col": 46,
@@ -8248,7 +8232,7 @@ exports[`Parser: Main Pass 1`] = `
           "category": 5,
           "constraints": undefined,
           "name": "GenericTest",
-          "nodeType": 49,
+          "nodeType": 48,
           "position": {
             "basePath": "",
             "col": 22,
@@ -8287,7 +8271,7 @@ exports[`Parser: Main Pass 1`] = `
             {
               "category": 5,
               "name": "GenericTest",
-              "nodeType": 48,
+              "nodeType": 47,
               "position": {
                 "basePath": "",
                 "col": 8,
@@ -8319,7 +8303,7 @@ exports[`Parser: Main Pass 1`] = `
         "name": {
           "category": 6,
           "name": "y",
-          "nodeType": 51,
+          "nodeType": 50,
           "position": {
             "basePath": "",
             "col": 14,
@@ -8340,7 +8324,7 @@ exports[`Parser: Main Pass 1`] = `
         },
         "value": {
           "category": 4,
-          "nodeType": 32,
+          "nodeType": 31,
           "position": {
             "basePath": "",
             "col": 26,
@@ -8354,7 +8338,7 @@ exports[`Parser: Main Pass 1`] = `
         "varType": {
           "category": 5,
           "name": "Number",
-          "nodeType": 41,
+          "nodeType": 40,
           "position": {
             "basePath": "",
             "col": 17,
@@ -8380,7 +8364,7 @@ exports[`Parser: Main Pass 1`] = `
       "value": {
         "category": 6,
         "name": "h",
-        "nodeType": 52,
+        "nodeType": 51,
         "position": {
           "basePath": "",
           "col": 8,
@@ -8410,7 +8394,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "c",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -8421,7 +8405,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "name": "c",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -8436,7 +8420,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "d",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -8447,7 +8431,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "name": "d",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -8462,7 +8446,7 @@ exports[`Parser: Main Pass 1`] = `
             "fieldValue": {
               "category": 6,
               "name": "z",
-              "nodeType": 52,
+              "nodeType": 51,
               "position": {
                 "basePath": "",
                 "col": 3,
@@ -8473,7 +8457,7 @@ exports[`Parser: Main Pass 1`] = `
               },
             },
             "name": "z",
-            "nodeType": 37,
+            "nodeType": 36,
             "position": {
               "basePath": "",
               "col": 3,
@@ -8484,7 +8468,7 @@ exports[`Parser: Main Pass 1`] = `
             },
           },
         ],
-        "nodeType": 36,
+        "nodeType": 35,
         "position": {
           "basePath": "",
           "col": 8,
