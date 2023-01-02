@@ -591,9 +591,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
-    // TODO: Make A Generic INFIX Expression
-    case NodeType.ComparisonExpression:
-    case NodeType.ArithmeticExpression: {
+    case NodeType.InfixExpression: {
       node.lhs = _analyzeNode(node.lhs, 0);
       node.rhs = _analyzeNode(node.rhs, 0);
       // Match The Operator Expression

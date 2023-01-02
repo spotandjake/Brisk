@@ -342,6 +342,13 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       }
       // Analyze Type
       node.varType = _typeCheckNode(node.varType);
+      // Set Variable Type To Be More Accurate
+      setVariable(_variables, node.name, {
+        type: node.varType,
+        baseType: resolveType(rawProgram, _types, _typeStack, _typeStacks, node.varType),
+      });
+      // Analyze Value
+      node.value = _typeCheckNode(node.value);
       // Type Check
       typeEqual(
         rawProgram,
@@ -352,13 +359,6 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
         throwTypeError
       );
-      // Set Variable Type To Be More Accurate
-      setVariable(_variables, node.name, {
-        type: node.varType,
-        baseType: resolveType(rawProgram, _types, _typeStack, _typeStacks, node.varType),
-      });
-      // Analyze Value
-      node.value = _typeCheckNode(node.value);
       // Return Node
       return node;
     case NodeType.AssignmentStatement: {
@@ -495,8 +495,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
-    case NodeType.ComparisonExpression:
-    case NodeType.ArithmeticExpression: {
+    case NodeType.InfixExpression: {
       // Analyze The Inputs
       node.lhs = _typeCheckNode(node.lhs);
       node.rhs = _typeCheckNode(node.rhs);

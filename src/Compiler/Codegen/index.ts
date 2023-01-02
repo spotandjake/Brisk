@@ -329,8 +329,7 @@ const generateCode = (
     }
     // TODO: Handle EnumDefinitionStatement
     // TODO: Handle EnumVariant
-    case NodeType.ArithmeticExpression:
-    case NodeType.ComparisonExpression:
+    case NodeType.InfixExpression:
       // TODO: Make This TypeSafe
       throw 'Unreachable';
     // TODO: Handle UnaryExpression

@@ -657,24 +657,25 @@ class Parser extends EmbeddedActionsParser {
   private expression = this.RULE('Expression', (): Nodes.Expression => {
     return this.SUBRULE(this.comparisonExpression);
   });
+  // TODO: Custom Operators Merge With Arithmetic Expressions
   private comparisonExpression = this.RULE(
     'ComparisonExpression',
-    (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-      const operators: [Nodes.ComparisonExpressionOperator, string][] = [];
+    (): Nodes.Expression | Nodes.InfixExpressionNode => {
+      const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this._comparisonExpression);
       this.MANY(() => {
         const operator = this.OR([
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonAnd);
-              return [Nodes.ComparisonExpressionOperator.ComparisonAnd, '&&'];
+              return '&&';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonOr);
-              return [Nodes.ComparisonExpressionOperator.ComparisonOr, '||'];
+              return '||';
             },
           },
         ]);
@@ -685,72 +686,68 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce(
-            (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
-              return {
-                nodeType: Nodes.NodeType.ComparisonExpression,
-                category: Nodes.NodeCategory.Expression,
-                lhs: prevValue,
-                operator: operators[index][0],
-                operatorImage: operators[index][1],
-                rhs: currentValue,
-                position: {
-                  ...prevValue.position,
-                  length:
-                    currentValue.position.offset +
-                    currentValue.position.length -
-                    prevValue.position.offset,
-                },
-              };
-            },
-            lhs
-          );
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
         });
       }
     }
   );
   private _comparisonExpression = this.RULE(
     '_ComparisonExpression',
-    (): Nodes.Expression | Nodes.ComparisonExpressionNode => {
-      const operators: [Nodes.ComparisonExpressionOperator, string][] = [];
+    (): Nodes.Expression | Nodes.InfixExpressionNode => {
+      const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticShiftingExpression);
       this.MANY(() => {
         const operator = this.OR([
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonEqual);
-              return [Nodes.ComparisonExpressionOperator.ComparisonEqual, '=='];
+              return '==';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonNotEqual);
-              return [Nodes.ComparisonExpressionOperator.ComparisonNotEqual, '!='];
+              return '!=';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonLessThan);
-              return [Nodes.ComparisonExpressionOperator.ComparisonLessThan, '<'];
+              return '<';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonGreaterThan);
-              return [Nodes.ComparisonExpressionOperator.ComparisonGreaterThan, '>'];
+              return '>';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonLessThanEqual);
-              return [Nodes.ComparisonExpressionOperator.ComparisonLessThanOrEqual, '<='];
+              return '<=';
             },
           },
           {
-            ALT: (): [Nodes.ComparisonExpressionOperator, string] => {
+            ALT: (): string => {
               this.CONSUME(Tokens.TknComparisonGreaterThanEqual);
-              return [Nodes.ComparisonExpressionOperator.ComparisonGreaterThanOrEqual, '>='];
+              return '>=';
             },
           },
         ]);
@@ -761,50 +758,47 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce(
-            (prevValue, currentValue, index): Nodes.ComparisonExpressionNode => {
-              return {
-                nodeType: Nodes.NodeType.ComparisonExpression,
-                category: Nodes.NodeCategory.Expression,
-                lhs: prevValue,
-                operator: operators[index][0],
-                operatorImage: operators[index][1],
-                rhs: currentValue,
-                position: {
-                  ...prevValue.position,
-                  length:
-                    currentValue.position.offset +
-                    currentValue.position.length -
-                    prevValue.position.offset,
-                },
-              };
-            },
-            lhs
-          );
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
         });
       }
     }
   );
   // Arithmetic Expressions
+  // TODO: Custom Operators Merge With Arithmetic Expressions
   private arithmeticShiftingExpression = this.RULE(
     'ArithmeticShiftingExpression',
     (): Nodes.Expression => {
-      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
+      const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticScalingExpression);
       this.MANY(() => {
         operators.push(
           this.OR([
             {
-              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
+              ALT: (): string => {
                 this.CONSUME(Tokens.TknAdd);
-                return [Nodes.ArithmeticExpressionOperator.ArithmeticAdd, '+'];
+                return '+';
               },
             },
             {
-              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
+              ALT: (): string => {
                 this.CONSUME(Tokens.TknSub);
-                return [Nodes.ArithmeticExpressionOperator.ArithmeticSub, '-'];
+                return '-';
               },
             },
           ])
@@ -815,26 +809,22 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce(
-            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-              return {
-                nodeType: Nodes.NodeType.ArithmeticExpression,
-                category: Nodes.NodeCategory.Expression,
-                lhs: prevValue,
-                operator: operators[index][0],
-                operatorImage: operators[index][1],
-                rhs: currentValue,
-                position: {
-                  ...prevValue.position,
-                  length:
-                    currentValue.position.offset +
-                    currentValue.position.length -
-                    prevValue.position.offset,
-                },
-              };
-            },
-            lhs
-          );
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
         });
       }
     }
@@ -842,22 +832,22 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticScalingExpression = this.RULE(
     'ArithmeticScalingExpression',
     (): Nodes.Expression => {
-      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
+      const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.arithmeticPowerExpression);
       this.MANY(() => {
         operators.push(
           this.OR([
             {
-              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
+              ALT: (): string => {
                 this.CONSUME(Tokens.TknDiv);
-                return [Nodes.ArithmeticExpressionOperator.ArithmeticDiv, '/'];
+                return '/';
               },
             },
             {
-              ALT: (): [Nodes.ArithmeticExpressionOperator, string] => {
+              ALT: (): string => {
                 this.CONSUME(Tokens.TknMul);
-                return [Nodes.ArithmeticExpressionOperator.ArithmeticMul, '*'];
+                return '*';
               },
             },
           ])
@@ -868,26 +858,22 @@ class Parser extends EmbeddedActionsParser {
         return lhs;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce(
-            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-              return {
-                nodeType: Nodes.NodeType.ArithmeticExpression,
-                category: Nodes.NodeCategory.Expression,
-                lhs: prevValue,
-                operator: operators[index][0],
-                operatorImage: operators[index][1],
-                rhs: currentValue,
-                position: {
-                  ...prevValue.position,
-                  length:
-                    currentValue.position.offset +
-                    currentValue.position.length -
-                    prevValue.position.offset,
-                },
-              };
-            },
-            lhs
-          );
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
         });
       }
     }
@@ -895,38 +881,34 @@ class Parser extends EmbeddedActionsParser {
   private arithmeticPowerExpression = this.RULE(
     'ArithmeticPowerExpression',
     (): Nodes.Expression => {
-      const operators: [Nodes.ArithmeticExpressionOperator, string][] = [];
+      const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
       const lhs = this.SUBRULE(this.simpleExpression);
       this.MANY(() => {
         this.CONSUME(Tokens.TknPow);
-        operators.push([Nodes.ArithmeticExpressionOperator.ArithmeticPow, '**']);
+        operators.push('**');
         expressions.push(this.SUBRULE1(this.simpleExpression));
       });
       if (expressions.length == 0) {
         return lhs;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce(
-            (prevValue, currentValue, index): Nodes.ArithmeticExpressionNode => {
-              return {
-                nodeType: Nodes.NodeType.ArithmeticExpression,
-                category: Nodes.NodeCategory.Expression,
-                lhs: prevValue,
-                operator: operators[index][0],
-                operatorImage: operators[index][1],
-                rhs: currentValue,
-                position: {
-                  ...prevValue.position,
-                  length:
-                    currentValue.position.offset +
-                    currentValue.position.length -
-                    prevValue.position.offset,
-                },
-              };
-            },
-            lhs
-          );
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
         });
       }
     }

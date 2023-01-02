@@ -649,17 +649,9 @@ export const getExpressionType = (
   props?: { mutable?: boolean }
 ): TypeLiteral => {
   switch (expression.nodeType) {
-    case NodeType.ComparisonExpression:
-      return createPrimType(expression.position, 'Boolean');
-    case NodeType.ArithmeticExpression:
-      return getExpressionType(
-        rawProgram,
-        varPool,
-        typePool,
-        typeStack,
-        typeStacks,
-        expression.lhs
-      );
+    case NodeType.InfixExpression:
+      // TODO: Ensure we cannot get over here and are TypeSafe
+      throw 'Unreachable';
     case NodeType.UnaryExpression:
       if (expression.operator == UnaryExpressionOperator.UnaryNot) {
         return createPrimType(expression.position, 'Boolean');

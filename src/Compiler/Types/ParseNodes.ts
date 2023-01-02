@@ -25,8 +25,7 @@ export const enum NodeType {
   // Enums
   EnumVariant,
   // Expressions
-  ComparisonExpression,
-  ArithmeticExpression,
+  InfixExpression,
   UnaryExpression,
   ParenthesisExpression,
   TypeCastExpression,
@@ -266,23 +265,6 @@ export interface EnumVariantNode {
   position: Position;
 }
 // Expression Symbols
-export const enum ComparisonExpressionOperator {
-  ComparisonEqual,
-  ComparisonNotEqual,
-  ComparisonLessThan,
-  ComparisonGreaterThan,
-  ComparisonLessThanOrEqual,
-  ComparisonGreaterThanOrEqual,
-  ComparisonAnd,
-  ComparisonOr,
-}
-export const enum ArithmeticExpressionOperator {
-  ArithmeticAdd,
-  ArithmeticSub,
-  ArithmeticMul,
-  ArithmeticDiv,
-  ArithmeticPow,
-}
 export const enum UnaryExpressionOperator {
   UnaryNot,
   UnaryPositive,
@@ -290,29 +272,17 @@ export const enum UnaryExpressionOperator {
 }
 // Expressions
 export type Expression =
-  | ComparisonExpressionNode
-  | ArithmeticExpressionNode
+  | InfixExpressionNode
   | UnaryExpressionNode
   | ParenthesisExpressionNode
   | TypeCastExpression
   | CallExpressionNode
   | WasmCallExpressionNode
   | Atom;
-
-export interface ComparisonExpressionNode {
-  nodeType: NodeType.ComparisonExpression;
+export interface InfixExpressionNode {
+  nodeType: NodeType.InfixExpression;
   category: NodeCategory.Expression;
   lhs: Expression;
-  operator: ComparisonExpressionOperator;
-  operatorImage: string;
-  rhs: Expression;
-  position: Position;
-}
-export interface ArithmeticExpressionNode {
-  nodeType: NodeType.ArithmeticExpression;
-  category: NodeCategory.Expression;
-  lhs: Expression;
-  operator: ArithmeticExpressionOperator;
   operatorImage: string;
   rhs: Expression;
   position: Position;

@@ -9,6 +9,7 @@ export const enum LexerTokenType {
   PostFixOperators = 'PostFixOperators',
   ComparisonOperators = 'ComparisonOperators',
   AssignmentOperators = 'AssignmentOperators',
+  // TODO: Custom Operators Support By Lexer
   ArithmeticOperators = 'ArithmeticOperators',
   LogicalOperators = 'LogicalOperators',
   TypeOperators = 'TypeOperators',
