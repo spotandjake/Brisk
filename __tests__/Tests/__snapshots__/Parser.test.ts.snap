@@ -4243,6 +4243,11 @@ exports[`Parser: Literals Pass 1`] = `
     "_varStack": Map {},
     "_variables": Map {},
     "loopDepth": undefined,
+    "operatorScope": {
+      "INFIX": Map {},
+      "POSTFIX": Map {},
+      "PREFIX": Map {},
+    },
   },
   "name": "file",
   "nodeType": 0,
@@ -8500,6 +8505,11 @@ exports[`Parser: Main Pass 1`] = `
     "_varStack": Map {},
     "_variables": Map {},
     "loopDepth": undefined,
+    "operatorScope": {
+      "INFIX": Map {},
+      "POSTFIX": Map {},
+      "PREFIX": Map {},
+    },
   },
   "name": "file",
   "nodeType": 0,

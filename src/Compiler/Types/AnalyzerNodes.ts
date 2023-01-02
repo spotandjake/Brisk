@@ -22,9 +22,9 @@ export interface AnalyzerProperties {
   _typeStack: TypeStack;
   // Misc
   operatorScope: {
-    PREFIX: Map<string, string>;
-    INFIX: Map<string, string>;
-    POSTFIX: Map<string, string>;
+    PREFIX: Map<string, string[]>;
+    INFIX: Map<string, string[]>;
+    POSTFIX: Map<string, string[]>;
   };
   // Flags
   loopDepth: undefined | number;

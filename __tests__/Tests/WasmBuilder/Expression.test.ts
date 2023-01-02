@@ -2,8 +2,17 @@
 import { expect, test } from '@jest/globals';
 // Test Components
 import * as Expressions from '../../../src/wasmBuilder/Build/Expression';
-import { ieee754, signedLEB128, unsignedLEB128 } from '../../../src/wasmBuilder/Build/Utils';
-import { typeRefIdentifier, funcRefIdentifier, globalRefIdentifier } from '../../../src/wasmBuilder/Types/Nodes'
+import {
+  encodeFloat32,
+  encodeFloat64,
+  signedLEB128,
+  unsignedLEB128,
+} from '../../../src/wasmBuilder/Build/Utils';
+import {
+  funcRefIdentifier,
+  globalRefIdentifier,
+  typeRefIdentifier,
+} from '../../../src/wasmBuilder/Types/Nodes';
 // WasmBuilder Expressions Tests
 test('WasmBuilder-Expressions: unreachableExpression', () => {
   expect(Expressions.unreachableExpression()).toEqual([0x00]);
@@ -156,7 +165,7 @@ test('WasmBuilder-Expressions: global_SetExpression', () => {
 // TODO: i64_store16Expr,
 // TODO: i64_store32Expr,
 test('WasmBuilder-Expressions: memory_SizeExpression', () => {
-  expect(Expressions.memory_SizeExpression()).toEqual([0x3f,0x00]);
+  expect(Expressions.memory_SizeExpression()).toEqual([0x3f, 0x00]);
 });
 test('WasmBuilder-Expressions: memory_GrowExpression', () => {
   expect(Expressions.memory_GrowExpression(Expressions.nopExpression())).toEqual([
@@ -170,10 +179,10 @@ test('WasmBuilder-Expressions: i32_ConstExpression', () => {
 });
 // TODO: i64_Const
 test('WasmBuilder-Expressions: f32_ConstExpression', () => {
-  expect(Expressions.f32_ConstExpression(1)).toEqual([0x43, ...ieee754(1)]);
+  expect(Expressions.f32_ConstExpression(1)).toEqual([0x43, ...encodeFloat32(1)]);
 });
 test('WasmBuilder-Expressions: f64_ConstExpression', () => {
-  expect(Expressions.f64_ConstExpression(1)).toEqual([0x44, ...ieee754(1)]);
+  expect(Expressions.f64_ConstExpression(1)).toEqual([0x44, ...encodeFloat64(1)]);
 });
 // TODO: i32_eqzExpr,
 test('WasmBuilder-Expressions: i32_eqExpression', () => {
@@ -577,7 +586,13 @@ test('WasmBuilder-Expressions: br_IfExpression-label', () => {
 test('WasmBuilder-Expressions: callExpression-label', () => {
   expect(
     Expressions.callExpression('test', [Expressions.nopExpression(), Expressions.nopExpression()])
-  ).toEqual([...Expressions.nopExpression(), ...Expressions.nopExpression(), 0x10, funcRefIdentifier, 'test']);
+  ).toEqual([
+    ...Expressions.nopExpression(),
+    ...Expressions.nopExpression(),
+    0x10,
+    funcRefIdentifier,
+    'test',
+  ]);
 });
 test('WasmBuilder-Expressions: local_GetExpression-label', () => {
   expect(Expressions.local_GetExpression('test')).toEqual([0x20, 'test']);

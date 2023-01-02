@@ -37,6 +37,12 @@ class Parser extends EmbeddedActionsParser {
         // Stacks
         _varStack: new Map(),
         _typeStack: new Map(),
+        // Misc
+        operatorScope: {
+          PREFIX: new Map(),
+          INFIX: new Map(),
+          POSTFIX: new Map(),
+        },
         // Flags
         loopDepth: undefined,
       },

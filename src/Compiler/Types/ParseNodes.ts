@@ -83,7 +83,7 @@ export interface ProgramNode {
   category: NodeCategory.General;
   name: string;
   body: Statement[];
-  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks' | 'operatorScope'>;
+  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
   position: Position;
 }
 // Statements

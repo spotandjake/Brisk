@@ -1,5 +1,5 @@
 import Node, {
-  // ComparisonExpressionOperator,
+  CallExpressionNode,
   EnumVariantNode,
   GenericTypeNode,
   NodeCategory,
@@ -16,7 +16,7 @@ import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler
 import { BriskErrorType } from '../Errors/Errors';
 import { getExpressionType, nameType, resolveType, typeCompatible, typeEqual } from './Helpers';
 
-import { getVariable, setType, setVariable } from '../Helpers/Helpers';
+import { getVariable, getVariableReference, setType, setVariable } from '../Helpers/Helpers';
 // TODO: Implement Type Narrowing
 // TODO: Implement Values As Types
 // TODO: Support Wasm Interface Types
@@ -28,6 +28,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
   importData: Map<string, ExportMap>,
   // Stacks
   properties: TypeCheckProperties,
+  // Flag
+  throwTypeError: number,
   // Nodes
   node: T
 ): T => {
@@ -43,13 +45,17 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
     // Stacks
     _varStack,
     _typeStack,
+    // Misc
+    operatorScope,
     // TypeChecking Information
     _returnType,
   } = properties;
   const _typeCheckNode = <_T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
-    props: Partial<TypeCheckProperties> = properties
-  ): _T => typeCheckNode(rawProgram, importData, { ...properties, ...props }, childNode);
+    props: Partial<TypeCheckProperties> = properties,
+    throwTypeErr = throwTypeError
+  ): _T =>
+      typeCheckNode(rawProgram, importData, { ...properties, ...props }, throwTypeErr, childNode);
   // Match The Node For Analysis
   switch (node.nodeType) {
     // Statements
@@ -63,7 +69,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
-        createPrimType(node.condition.position, 'Boolean')
+        createPrimType(node.condition.position, 'Boolean'),
+        throwTypeError
       );
       // Analyze Body
       node.body = _typeCheckNode(node.body);
@@ -80,7 +87,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
-        createPrimType(node.condition.position, 'Boolean')
+        createPrimType(node.condition.position, 'Boolean'),
+        throwTypeError
       );
       // Analyze Body
       node.body = _typeCheckNode(node.body);
@@ -97,7 +105,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
-        createPrimType(node.condition.position, 'Boolean')
+        createPrimType(node.condition.position, 'Boolean'),
+        throwTypeError
       );
       return node;
     case NodeType.ContinueStatement:
@@ -112,7 +121,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.condition),
-        createPrimType(node.condition.position, 'Boolean')
+        createPrimType(node.condition.position, 'Boolean'),
+        throwTypeError
       );
       return node;
     case NodeType.FlagStatement:
@@ -132,7 +142,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           _typeStack,
           _typeStacks,
           getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[0]),
-          createPrimType(node.args[0].position, 'String')
+          createPrimType(node.args[0].position, 'String'),
+          throwTypeError
         );
         typeEqual(
           rawProgram,
@@ -140,7 +151,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           _typeStack,
           _typeStacks,
           getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.args[1]),
-          createPrimType(node.args[1].position, 'String')
+          createPrimType(node.args[1].position, 'String'),
+          throwTypeError
         );
       } else if (node.args.length != 0) {
         BriskTypeError(
@@ -337,7 +349,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         node.varType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
+        throwTypeError
       );
       // Set Variable Type To Be More Accurate
       setVariable(_variables, node.name, {
@@ -369,7 +382,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         varType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
+        throwTypeError
       );
       // Return Node
       return node;
@@ -434,7 +448,15 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         );
       }
       // Type Check Return
-      typeEqual(rawProgram, _types, _typeStack, _typeStacks, _returnType, returnValueType);
+      typeEqual(
+        rawProgram,
+        _types,
+        _typeStack,
+        _typeStacks,
+        _returnType,
+        returnValueType,
+        throwTypeError
+      );
       return node;
     }
     case NodeType.EnumDefinitionStatement:
@@ -473,53 +495,66 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
-    // TODO: Remove Operator TypeChecking
-    case NodeType.ArithmeticExpression:
-      throw 'Unreachable';
-    // // Check That Types Are Numeric
-    // typeEqual(
-    //   rawProgram,
-    //   _types,
-    //   _typeStack,
-    //   _typeStacks,
-    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-    //   createUnionType(
-    //     node.lhs.position,
-    //     createPrimType(node.lhs.position, 'f32'),
-    //     createPrimType(node.lhs.position, 'f64'),
-    //     createPrimType(node.lhs.position, 'i32'),
-    //     createPrimType(node.lhs.position, 'i64'),
-    //     createPrimType(node.lhs.position, 'u32'),
-    //     createPrimType(node.lhs.position, 'u64'),
-    //     createPrimType(node.lhs.position, 'Number')
-    //   )
-    // );
     case NodeType.ComparisonExpression:
-      throw 'Unreachable';
-    // // Check Both Type A And B Are The Same
-    // typeEqual(
-    //   rawProgram,
-    //   _types,
-    //   _typeStack,
-    //   _typeStacks,
-    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-    //   getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.rhs)
-    // );
-    // // Check Individual
-    // if (
-    //   node.operator == ComparisonExpressionOperator.ComparisonAnd ||
-    //   node.operator == ComparisonExpressionOperator.ComparisonOr
-    // )
-    //   typeEqual(
-    //     rawProgram,
-    //     _types,
-    //     _typeStack,
-    //     _typeStacks,
-    //     getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.lhs),
-    //     createPrimType(node.position, 'Boolean')
-    //   );
-    // // Return Node
-    // return node;
+    case NodeType.ArithmeticExpression: {
+      // Analyze The Inputs
+      node.lhs = _typeCheckNode(node.lhs);
+      node.rhs = _typeCheckNode(node.rhs);
+      // Find The Operator
+      const opFuncs = operatorScope.INFIX.get(node.operatorImage) ?? [];
+      const opFunc = opFuncs
+        .map((opFuncName) => {
+          // Get Callee Type
+          const funcCall: CallExpressionNode = {
+            nodeType: NodeType.CallExpression,
+            category: NodeCategory.Expression,
+            callee: {
+              nodeType: NodeType.VariableUsage,
+              category: NodeCategory.Variable,
+              name: opFuncName,
+              position: node.position,
+              reference: getVariableReference(
+                rawProgram,
+                {
+                  nodeType: NodeType.VariableUsage,
+                  category: NodeCategory.Variable,
+                  name: opFuncName,
+                  position: node.position,
+                },
+                {
+                  pool: _variables,
+                  stack: _varStack,
+                  stacks: _varStacks,
+                }
+              ),
+            },
+            args: [node.rhs, node.lhs],
+            statement: false,
+            position: node.position,
+          };
+          // Check If It Works
+          try {
+            _typeCheckNode(funcCall, {}, 2);
+            return funcCall;
+          } catch (e) {
+            return undefined;
+          }
+        })
+        .find((n) => n != undefined);
+      // Throw If We Did Not Find Anything
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      // Analyze The Function Call
+      // TODO: Make This Type Safe
+      //@ts-ignore
+      return opFunc;
+    }
     case NodeType.TypeCastExpression:
       // Analyze Properties
       node.typeLiteral = _typeCheckNode(node.typeLiteral);
@@ -559,7 +594,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         expectedType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value)
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
+        throwTypeError
       );
       return node;
     }
@@ -621,7 +657,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
               _typeStacks,
               createPrimType(param.position, 'Void'),
               param,
-              false
+              0
             )
           ) {
             break;
@@ -651,7 +687,15 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           if (!genericValues.has(param.name)) {
             // Ensure Generic Type Works
             if (param.constraints != undefined)
-              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);
+              typeEqual(
+                rawProgram,
+                _types,
+                _typeStack,
+                _typeStacks,
+                param.constraints,
+                argType,
+                throwTypeError
+              );
             // Set Generic Value
             genericValues.set(param.name, argType);
           }
@@ -659,7 +703,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           argType = genericValues.get(param.name)!;
         }
         // Check That Types Are Same
-        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);
+        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType, throwTypeError);
       }
       // Return Node
       return node;
@@ -696,7 +740,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
               _typeStacks,
               createPrimType(param.position, 'Void'),
               param,
-              false
+              0
             )
           ) {
             break;
@@ -726,7 +770,15 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           if (!genericValues.has(param.name)) {
             // Ensure Generic Type Works
             if (param.constraints != undefined)
-              typeEqual(rawProgram, _types, _typeStack, _typeStacks, param.constraints, argType);
+              typeEqual(
+                rawProgram,
+                _types,
+                _typeStack,
+                _typeStacks,
+                param.constraints,
+                argType,
+                throwTypeError
+              );
             // Set Generic Value
             genericValues.set(param.name, argType);
           }
@@ -734,7 +786,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           argType = genericValues.get(param.name)!;
         }
         // Check That Types Are Same
-        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType);
+        typeEqual(rawProgram, _types, _typeStack, _typeStacks, param, argType, throwTypeError);
       }
       // Return Node
       return node;
@@ -807,7 +859,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
             _typeStacks,
             node.returnType,
             createPrimType(node.position, 'Void'),
-            false
+            0
           )
         ) {
           // Type Check Return
@@ -817,7 +869,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
             _typeStack,
             _typeStacks,
             node.returnType,
-            getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.body)
+            getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.body),
+            throwTypeError
           );
         }
       }
@@ -830,7 +883,8 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
           _typeStack,
           _typeStacks,
           node.returnType,
-          createPrimType(node.position, 'Void')
+          createPrimType(node.position, 'Void'),
+          throwTypeError
         );
       }
       // Return Node
@@ -994,9 +1048,11 @@ const typeCheckProgram = (
           _varStack: program.data._varStack,
           _typeStack: program.data._typeStack,
           loopDepth: program.data.loopDepth,
+          operatorScope: program.data.operatorScope,
           // TypeChecking Information
           _returnType: undefined,
         },
+        1,
         childNode
       );
     }),

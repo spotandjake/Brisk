@@ -5,7 +5,7 @@ import {
   globalRefIdentifier,
   typeRefIdentifier,
 } from '../Types/Nodes';
-import { ieee754, signedLEB128, unsignedLEB128 } from './Utils';
+import { encodeFloat32, encodeFloat64, signedLEB128, unsignedLEB128 } from './Utils';
 // Expressions
 export const unreachableExpression = (): ResolvedBytes => [0x00]; // Wasm Unreachable Instruction
 export const nopExpression = (): ResolvedBytes => [0x01]; // Wasm nop Instruction
@@ -380,7 +380,7 @@ export const i64_Store32Expression = (
   0, // Don't Align
   ...unsignedLEB128(offset), // The Offset
 ];
-export const memory_SizeExpression = (): ResolvedBytes => [0x3f,0x00]; // Wasm memory.size Instruction
+export const memory_SizeExpression = (): ResolvedBytes => [0x3f, 0x00]; // Wasm memory.size Instruction
 export const memory_GrowExpression = (body: UnresolvedBytes): UnresolvedBytes => [
   ...body, // Body Content
   0x40, // Wasm Memory.Grow Instruction
@@ -403,11 +403,11 @@ export const i64_ConstExpression = (value: number | bigint): ResolvedBytes => {
 };
 export const f32_ConstExpression = (value: number): ResolvedBytes => [
   0x43, // Wasm f32.Const Instruction
-  ...ieee754(value),
+  ...encodeFloat32(value),
 ];
 export const f64_ConstExpression = (value: number): ResolvedBytes => [
   0x44, // Wasm f64.Const Instruction
-  ...ieee754(value),
+  ...encodeFloat64(value),
 ];
 export const i32_eqzExpression = (value: UnresolvedBytes): UnresolvedBytes => [
   ...value, // Value Content

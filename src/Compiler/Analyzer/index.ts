@@ -1,5 +1,4 @@
 import Node, {
-  CallExpressionNode,
   DeclarationTypes,
   Expression,
   NodeCategory,
@@ -458,12 +457,28 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
               flag.args[0].nodeType == NodeType.StringLiteral &&
               flag.args[1].nodeType == NodeType.StringLiteral
             ) {
+              // Set The Operator Information
               if (flag.args[1].value == 'PREFIX')
-                operatorScope.PREFIX.set(flag.args[0].value, node.name.name);
+                operatorScope.PREFIX.set(flag.args[0].value, [
+                  node.name.name,
+                  ...(operatorScope.PREFIX.has(flag.args[0].value)
+                    ? operatorScope.PREFIX.get(flag.args[0].value)!
+                    : []),
+                ]);
               else if (flag.args[1].value == 'INFIX')
-                operatorScope.INFIX.set(flag.args[0].value, node.name.name);
+                operatorScope.INFIX.set(flag.args[0].value, [
+                  node.name.name,
+                  ...(operatorScope.INFIX.has(flag.args[0].value)
+                    ? operatorScope.INFIX.get(flag.args[0].value)!
+                    : []),
+                ]);
               else if (flag.args[1].value == 'POSTFIX')
-                operatorScope.POSTFIX.set(flag.args[0].value, node.name.name);
+                operatorScope.POSTFIX.set(flag.args[0].value, [
+                  node.name.name,
+                  ...(operatorScope.POSTFIX.has(flag.args[0].value)
+                    ? operatorScope.POSTFIX.get(flag.args[0].value)!
+                    : []),
+                ]);
             }
           });
       }
@@ -579,7 +594,9 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
     // TODO: Make A Generic INFIX Expression
     case NodeType.ComparisonExpression:
     case NodeType.ArithmeticExpression: {
-      // Get Operator Function
+      node.lhs = _analyzeNode(node.lhs, 0);
+      node.rhs = _analyzeNode(node.rhs, 0);
+      // Match The Operator Expression
       const opFunc = operatorScope.INFIX.get(node.operatorImage);
       if (opFunc == undefined) {
         return BriskTypeError(
@@ -589,24 +606,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           node.position
         );
       }
-      node.lhs = _analyzeNode(node.lhs, 0);
-      node.rhs = _analyzeNode(node.rhs, 0);
-      // Build A Function Call
-      const funcCall: CallExpressionNode = {
-        nodeType: NodeType.CallExpression,
-        category: NodeCategory.Expression,
-        callee: {
-          nodeType: NodeType.VariableUsage,
-          category: NodeCategory.Variable,
-          name: opFunc,
-          position: node.position,
-        },
-        args: [node.rhs, node.lhs],
-        statement: false,
-        position: node.position,
-      };
-      // @ts-ignore
-      return _analyzeNode(funcCall, nodePosition);
+      return node;
     }
     case NodeType.TypeCastExpression:
       node.typeLiteral = _analyzeNode(node.typeLiteral, 0);
@@ -995,7 +995,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           loopDepth: undefined,
         },
         program,
-        0,
+        i,
         child
       );
     }),
@@ -1007,6 +1007,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
       _types: types,
       _varStack: varStack,
       _typeStack: typeStack,
+      operatorScope: operatorScope,
       loopDepth: undefined,
     },
   };
