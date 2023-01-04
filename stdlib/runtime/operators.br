@@ -1,17 +1,17 @@
-// @operator('+', 'INFIX');
-// let addI32: Function = (a: i32, b: i32): i32 => @wasm.i32.add(a, b);
+@operator('+', 'INFIX');
+let addI32: Function = (a: i32, b: i32): i32 => @wasm.i32.add(a, b);
 // @operator('+', 'INFIX');
 // let addF32: Function = (a: f32, b: f32): f32 => @wasm.f32.add(a, b);
 // @operator('+', 'INFIX');
 // let addF64: Function = (a: f64, b: f64): f64 => @wasm.f64.add(a, b);
 
-// let a: i32 = 1n + 1n; // translates into addI32(1n, 1n);
+let a: i32 = 1n + 1n; // translates into addI32(1n, 1n);
 // let b: f32 = 1f + 1f; // translates into addF32(1f, 1f);
 // let c: f64 = 1F + 1F; // translates into addF64(1F, 1F);
 // a++;
 
-let x: Function = @<T>(x: i32): i32 => {
-  return(x);
-};
+// let x: Function = @<T>(x: i32): i32 => {
+//   return(x);
+// };
 // let d: i64 = <i64>d;
 // let y: i32 = (x);
