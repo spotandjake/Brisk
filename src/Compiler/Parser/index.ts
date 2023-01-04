@@ -533,7 +533,7 @@ class Parser extends EmbeddedActionsParser {
     return this.OR([
       { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true, true] }) },
       { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) },
-      // TODO: Add The PostFix Statement
+      // { ALT: () => this.SUBRULE(this.postfixOperator, { ARGS: [true] }) },
     ]);
   });
   // Enums
@@ -735,13 +735,13 @@ class Parser extends EmbeddedActionsParser {
   // PostFix Operators
   private postfixOperator = this.RULE(
     'postfixOperator',
-    (): Nodes.PostfixExpressionNode | Nodes.Expression => {
+    (statement = false): Nodes.PostfixExpressionNode | Nodes.Expression => {
       // Match The Operator List
       const operators: IToken[] = [];
+      const expression = this.SUBRULE(this.prefixOperator);
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators));
       });
-      const expression = this.SUBRULE1(this.prefixOperator);
       if (operators.length == 0) {
         return expression;
       } else {
@@ -752,8 +752,7 @@ class Parser extends EmbeddedActionsParser {
               category: Nodes.NodeCategory.Expression,
               operatorImage: currentValue.image,
               value: prevValue,
-              // TODO: Support PostFix Statements
-              statement: false,
+              statement: statement,
               position: {
                 offset: currentValue.startOffset,
                 // TODO: Ensure this math is correct
@@ -782,7 +781,7 @@ class Parser extends EmbeddedActionsParser {
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators));
       });
-      const expression = this.SUBRULE1(this.simpleExpression);
+      const expression = this.SUBRULE(this.simpleExpression);
       if (operators.length == 0) {
         return expression;
       } else {
@@ -890,29 +889,6 @@ class Parser extends EmbeddedActionsParser {
       else return this.OPTION(FunctionHead) || callee;
     }
   );
-  private parenthesisExpression = this.RULE(
-    'ParenthesisExpression',
-    (): Nodes.ParenthesisExpressionNode => {
-      const location = this.CONSUME(Tokens.TknLParen);
-      const expression = this.SUBRULE(this.expression);
-      const close = this.CONSUME(Tokens.TknRParen);
-      return this.ACTION((): Nodes.ParenthesisExpressionNode => {
-        return {
-          nodeType: Nodes.NodeType.ParenthesisExpression,
-          category: Nodes.NodeCategory.Expression,
-          value: expression,
-          position: {
-            offset: location.startOffset,
-            length: close.endOffset! - location.startOffset + 1,
-            line: location.startLine || 0,
-            col: location.startColumn || 0,
-            basePath: this.basePath,
-            file: this.file,
-          },
-        };
-      });
-    }
-  );
   private wasmCallExpression = this.RULE(
     'wasmCallExpression',
     (statement = false): Nodes.WasmCallExpressionNode => {
@@ -960,6 +936,29 @@ class Parser extends EmbeddedActionsParser {
       },
     };
   });
+  private parenthesisExpression = this.RULE(
+    'ParenthesisExpression',
+    (): Nodes.ParenthesisExpressionNode => {
+      const location = this.CONSUME(Tokens.TknLParen);
+      const expression = this.SUBRULE(this.expression);
+      const close = this.CONSUME(Tokens.TknRParen);
+      return this.ACTION((): Nodes.ParenthesisExpressionNode => {
+        return {
+          nodeType: Nodes.NodeType.ParenthesisExpression,
+          category: Nodes.NodeCategory.Expression,
+          value: expression,
+          position: {
+            offset: location.startOffset,
+            length: close.endOffset! - location.startOffset + 1,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            basePath: this.basePath,
+            file: this.file,
+          },
+        };
+      });
+    }
+  );
   // Literals
   private literal = this.RULE('Literal', (): Nodes.Literal => {
     return this.OR([

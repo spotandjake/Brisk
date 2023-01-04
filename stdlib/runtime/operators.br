@@ -8,3 +8,4 @@ let addF64: Function = (a: f64, b: f64): f64 => @wasm.f64.add(a, b);
 let a: i32 = 1n + 1n; // translates into addI32(1n, 1n);
 let b: f32 = 1f + 1f; // translates into addF32(1f, 1f);
 let c: f64 = 1F + 1F; // translates into addF64(1F, 1F);
+a++;
