@@ -4236,6 +4236,7 @@ exports[`Parser: Literals Pass 1`] = `
     "_variables": Map {},
     "loopDepth": undefined,
     "operatorScope": {
+      "ASSIGNMENT": Map {},
       "INFIX": Map {},
       "POSTFIX": Map {},
       "PREFIX": Map {},
@@ -8490,6 +8491,7 @@ exports[`Parser: Main Pass 1`] = `
     "_variables": Map {},
     "loopDepth": undefined,
     "operatorScope": {
+      "ASSIGNMENT": Map {},
       "INFIX": Map {},
       "POSTFIX": Map {},
       "PREFIX": Map {},

@@ -15,3 +15,9 @@ let a: i32 = 1n + 1n; // translates into addI32(1n, 1n);
 // };
 // let d: i64 = <i64>d;
 // let y: i32 = (x);
+
+@operator('+=', 'ASSIGNMENT');
+let assingnmentAddI32: Function = (lhs: i32, rhs: i32): i32 => @wasm.i32.add(lhs, rhs);
+
+let x: i32 = 1n;
+x += 1n;

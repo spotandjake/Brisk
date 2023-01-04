@@ -1,4 +1,5 @@
 import Node, {
+  AssignmentStatementNode,
   CallExpressionNode,
   EnumVariantNode,
   GenericTypeNode,
@@ -368,10 +369,60 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Return Node
       return node;
     case NodeType.AssignmentStatement: {
-      // TODO: Support Custom Operators
-      // Analyze Node
+      // Analyze The Inputs
       node.value = _typeCheckNode(node.value);
       node.name = _typeCheckNode(node.name);
+      // Find The Operator
+      const opFuncs = operatorScope.ASSIGNMENT.get(node.operatorImage) ?? [];
+      const opFunc = opFuncs
+        .map((opFuncName) => {
+          // Get Callee Type
+          const funcCall: CallExpressionNode = {
+            nodeType: NodeType.CallExpression,
+            category: NodeCategory.Expression,
+            callee: {
+              nodeType: NodeType.VariableUsage,
+              category: NodeCategory.Variable,
+              name: opFuncName,
+              position: node.position,
+              reference: getVariableReference(
+                rawProgram,
+                {
+                  nodeType: NodeType.VariableUsage,
+                  category: NodeCategory.Variable,
+                  name: opFuncName,
+                  position: node.position,
+                },
+                {
+                  pool: _variables,
+                  stack: _varStack,
+                  stacks: _varStacks,
+                }
+              ),
+            },
+            args: [node.name, node.value],
+            statement: false,
+            position: node.position,
+          };
+          // Check If It Works
+          try {
+            _typeCheckNode(funcCall, {}, 2);
+            return funcCall;
+          } catch (e) {
+            return undefined;
+          }
+        })
+        .find((n) => n != undefined);
+      // Throw If We Did Not Find Anything
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      // Ensure The Function Returns The Correct Type
       // Get The Type Of The Variable
       const varType = getExpressionType(
         rawProgram,
@@ -389,10 +440,12 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         _typeStack,
         _typeStacks,
         varType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
+        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, opFunc),
         throwTypeError
       );
       // Return Node
+      node.operatorImage = '=';
+      node.value = opFunc;
       return node;
     }
     case NodeType.ReturnStatement: {
@@ -647,7 +700,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze Properties
       node.typeLiteral = _typeCheckNode(node.typeLiteral);
       node.value = _typeCheckNode(node.value);
-      // Check if type is compatible
+      // TODO: I want typeCasting in brisk to be unsafe and support casting between any types by just shoving the raw bits in place.
       typeCompatible(
         rawProgram,
         _types,

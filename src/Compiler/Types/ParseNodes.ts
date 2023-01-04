@@ -221,6 +221,7 @@ export interface AssignmentStatementNode {
   category: NodeCategory.Statement;
   name: VariableUsage;
   value: Expression;
+  operatorImage: string;
   position: Position;
 }
 export interface ReturnStatementNode {

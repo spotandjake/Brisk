@@ -42,6 +42,7 @@ class Parser extends EmbeddedActionsParser {
           PREFIX: new Map(),
           INFIX: new Map(),
           POSTFIX: new Map(),
+          ASSIGNMENT: new Map(),
         },
         // Flags
         loopDepth: undefined,
@@ -488,8 +489,7 @@ class Parser extends EmbeddedActionsParser {
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
       const name = this.SUBRULE(this.variableUsage);
-      // TODO: Store The Assignment Type And Hook Up The Custom Operator Setup
-      this.CONSUME(Tokens.assignmentOperators);
+      const operatorImage = this.CONSUME(Tokens.assignmentOperators).image;
       const value = this.SUBRULE(this.expression);
       return this.ACTION((): Nodes.AssignmentStatementNode => {
         return {
@@ -497,6 +497,7 @@ class Parser extends EmbeddedActionsParser {
           category: Nodes.NodeCategory.Statement,
           name: name,
           value: value,
+          operatorImage: operatorImage,
           position: {
             ...name.position,
             length: value.position.offset + value.position.length - name.position.offset - 1,

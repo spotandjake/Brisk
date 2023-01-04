@@ -169,7 +169,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
             node.position
           );
         }
-        if (!['PREFIX', 'INFIX', 'POSTFIX'].includes(node.args[1].value)) {
+        if (!['PREFIX', 'INFIX', 'POSTFIX', 'ASSIGNMENT'].includes(node.args[1].value)) {
           return BriskError(
             rawProgram,
             BriskErrorType.InvalidOperator,
@@ -479,6 +479,13 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
                     ? operatorScope.POSTFIX.get(flag.args[0].value)!
                     : []),
                 ]);
+              else if (flag.args[1].value == 'ASSIGNMENT')
+                operatorScope.ASSIGNMENT.set(flag.args[0].value, [
+                  node.name.name,
+                  ...(operatorScope.ASSIGNMENT.has(flag.args[0].value)
+                    ? operatorScope.ASSIGNMENT.get(flag.args[0].value)!
+                    : []),
+                ]);
             }
           });
       }
@@ -486,9 +493,18 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       return node;
     }
     case NodeType.AssignmentStatement: {
-      // TODO: Ensure The Operator Exists
-      // Analyze Value
+      // Ensure Operator Exists
       node.value = _analyzeNode(node.value, 0);
+      // Match The Operator Expression
+      const opFunc = operatorScope.ASSIGNMENT.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
       // Analyze Variable
       node.name = _analyzeNode(node.name, 0);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
@@ -978,6 +994,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
     PREFIX: new Map(),
     INFIX: new Map(),
     POSTFIX: new Map(),
+    ASSIGNMENT: new Map(),
   };
   // Return Our Node
   return {

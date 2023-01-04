@@ -25,6 +25,7 @@ export interface AnalyzerProperties {
     PREFIX: Map<string, string[]>;
     INFIX: Map<string, string[]>;
     POSTFIX: Map<string, string[]>;
+    ASSIGNMENT: Map<string, string[]>;
   };
   // Flags
   loopDepth: undefined | number;

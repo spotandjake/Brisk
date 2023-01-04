@@ -232,6 +232,7 @@ const generateCode = (
       }
     }
     case NodeType.AssignmentStatement: {
+      if (node.operatorImage != '=') throw 'Unreachable';
       // Get The Variable Information
       if (node.name.nodeType != NodeType.MemberAccess) {
         const varData = getVariable(_variables, node.name);
