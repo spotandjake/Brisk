@@ -1563,7 +1563,7 @@ exports[`Parser: Literals Pass 1`] = `
             },
             "value": "test",
           },
-          "nodeType": 18,
+          "nodeType": 17,
           "operatorImage": "==",
           "position": {
             "basePath": "",
@@ -1676,7 +1676,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
           "value": 1,
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -1812,7 +1812,7 @@ exports[`Parser: Literals Pass 1`] = `
           },
           "value": 1,
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -2877,7 +2877,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
                 "value": 1,
               },
-              "nodeType": 18,
+              "nodeType": 17,
               "operatorImage": "+",
               "position": {
                 "basePath": "",
@@ -2913,7 +2913,7 @@ exports[`Parser: Literals Pass 1`] = `
                     },
                     "value": 1,
                   },
-                  "nodeType": 18,
+                  "nodeType": 17,
                   "operatorImage": "+",
                   "position": {
                     "basePath": "",
@@ -2939,7 +2939,7 @@ exports[`Parser: Literals Pass 1`] = `
                 },
               },
             },
-            "nodeType": 18,
+            "nodeType": 17,
             "operatorImage": "+",
             "position": {
               "basePath": "",
@@ -2963,7 +2963,7 @@ exports[`Parser: Literals Pass 1`] = `
               "value": 1,
             },
           },
-          "nodeType": 18,
+          "nodeType": 17,
           "operatorImage": "+",
           "position": {
             "basePath": "",
@@ -2987,7 +2987,7 @@ exports[`Parser: Literals Pass 1`] = `
             "value": 1,
           },
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "+",
         "position": {
           "basePath": "",
@@ -3654,7 +3654,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3667,7 +3667,7 @@ exports[`Parser: Literals Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,
@@ -3792,7 +3792,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -3805,7 +3805,7 @@ exports[`Parser: Literals Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,
@@ -3991,7 +3991,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       ],
       "name": "Generic_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -4004,7 +4004,7 @@ exports[`Parser: Literals Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,
@@ -5817,7 +5817,7 @@ exports[`Parser: Main Pass 1`] = `
             },
             "value": "test",
           },
-          "nodeType": 18,
+          "nodeType": 17,
           "operatorImage": "==",
           "position": {
             "basePath": "",
@@ -5930,7 +5930,7 @@ exports[`Parser: Main Pass 1`] = `
           },
           "value": 1,
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -6066,7 +6066,7 @@ exports[`Parser: Main Pass 1`] = `
           },
           "value": 1,
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "==",
         "position": {
           "basePath": "",
@@ -7131,7 +7131,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
                 "value": 1,
               },
-              "nodeType": 18,
+              "nodeType": 17,
               "operatorImage": "+",
               "position": {
                 "basePath": "",
@@ -7167,7 +7167,7 @@ exports[`Parser: Main Pass 1`] = `
                     },
                     "value": 1,
                   },
-                  "nodeType": 18,
+                  "nodeType": 17,
                   "operatorImage": "+",
                   "position": {
                     "basePath": "",
@@ -7193,7 +7193,7 @@ exports[`Parser: Main Pass 1`] = `
                 },
               },
             },
-            "nodeType": 18,
+            "nodeType": 17,
             "operatorImage": "+",
             "position": {
               "basePath": "",
@@ -7217,7 +7217,7 @@ exports[`Parser: Main Pass 1`] = `
               "value": 1,
             },
           },
-          "nodeType": 18,
+          "nodeType": 17,
           "operatorImage": "+",
           "position": {
             "basePath": "",
@@ -7241,7 +7241,7 @@ exports[`Parser: Main Pass 1`] = `
             "value": 1,
           },
         },
-        "nodeType": 18,
+        "nodeType": 17,
         "operatorImage": "+",
         "position": {
           "basePath": "",
@@ -7908,7 +7908,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_Has_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -7921,7 +7921,7 @@ exports[`Parser: Main Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,
@@ -8046,7 +8046,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "OptionalSemi_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -8059,7 +8059,7 @@ exports[`Parser: Main Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,
@@ -8245,7 +8245,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       ],
       "name": "Generic_EnumTest",
-      "nodeType": 16,
+      "nodeType": 15,
       "position": {
         "basePath": "",
         "col": 1,
@@ -8258,7 +8258,7 @@ exports[`Parser: Main Pass 1`] = `
         {
           "category": 2,
           "identifier": "Test",
-          "nodeType": 17,
+          "nodeType": 16,
           "position": {
             "basePath": "",
             "col": 3,

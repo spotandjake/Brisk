@@ -27,7 +27,7 @@ exports[`Lexer: Export Pass 1`] = `
       "startColumn": 8,
       "startLine": 2,
       "startOffset": 38,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -71,7 +71,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 8,
       "startLine": 1,
       "startOffset": 7,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -137,7 +137,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 13,
       "startLine": 2,
       "startOffset": 34,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -159,7 +159,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 16,
       "startLine": 2,
       "startOffset": 37,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 23,
@@ -225,7 +225,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 13,
       "startLine": 3,
       "startOffset": 66,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -258,7 +258,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 17,
       "startLine": 3,
       "startOffset": 70,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -280,7 +280,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 22,
       "startLine": 3,
       "startOffset": 75,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 25,
@@ -302,7 +302,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 27,
       "startLine": 3,
       "startOffset": 80,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 32,
@@ -313,7 +313,7 @@ exports[`Lexer: Import Pass 1`] = `
       "startColumn": 30,
       "startLine": 3,
       "startOffset": 83,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 37,
@@ -379,7 +379,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 1,
       "startOffset": 6,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -401,7 +401,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 1,
       "startOffset": 9,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -412,7 +412,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 1,
       "startOffset": 13,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -456,7 +456,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 2,
       "startOffset": 25,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -478,7 +478,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 2,
       "startOffset": 28,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -489,7 +489,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 2,
       "startOffset": 32,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -533,7 +533,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 3,
       "startOffset": 44,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -555,7 +555,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 3,
       "startOffset": 47,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -566,7 +566,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 3,
       "startOffset": 51,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -577,7 +577,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 3,
       "startOffset": 53,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 18,
@@ -621,7 +621,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 4,
       "startOffset": 64,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -643,7 +643,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 4,
       "startOffset": 67,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -654,7 +654,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 4,
       "startOffset": 71,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -665,7 +665,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 4,
       "startOffset": 73,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 18,
@@ -709,7 +709,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 5,
       "startOffset": 84,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -731,7 +731,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 5,
       "startOffset": 87,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -742,7 +742,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 5,
       "startOffset": 91,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -786,7 +786,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 6,
       "startOffset": 103,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -808,7 +808,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 6,
       "startOffset": 106,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -819,7 +819,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 6,
       "startOffset": 110,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -863,7 +863,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 7,
       "startOffset": 122,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -885,7 +885,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 7,
       "startOffset": 125,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -896,7 +896,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 7,
       "startOffset": 129,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -907,7 +907,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 7,
       "startOffset": 131,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 18,
@@ -951,7 +951,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 8,
       "startOffset": 142,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -973,7 +973,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 8,
       "startOffset": 145,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -984,7 +984,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 8,
       "startOffset": 149,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -995,7 +995,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 8,
       "startOffset": 151,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 18,
@@ -1039,7 +1039,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 9,
       "startOffset": 162,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1061,7 +1061,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 9,
       "startOffset": 165,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1072,7 +1072,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 9,
       "startOffset": 169,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -1116,7 +1116,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 10,
       "startOffset": 183,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1138,7 +1138,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 10,
       "startOffset": 186,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1149,7 +1149,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 10,
       "startOffset": 190,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -1193,7 +1193,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 11,
       "startOffset": 204,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1215,7 +1215,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 11,
       "startOffset": 207,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1226,7 +1226,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 11,
       "startOffset": 211,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -1237,7 +1237,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 11,
       "startOffset": 213,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 20,
@@ -1281,7 +1281,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 12,
       "startOffset": 226,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1303,7 +1303,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 12,
       "startOffset": 229,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1314,7 +1314,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 12,
       "startOffset": 233,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -1325,7 +1325,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 12,
       "startOffset": 235,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 20,
@@ -1369,7 +1369,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 13,
       "startOffset": 248,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1391,7 +1391,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 13,
       "startOffset": 251,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1402,7 +1402,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 13,
       "startOffset": 255,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -1413,7 +1413,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 13,
       "startOffset": 257,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 20,
@@ -1457,7 +1457,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 14,
       "startOffset": 270,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1479,7 +1479,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 14,
       "startOffset": 273,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1490,7 +1490,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 14,
       "startOffset": 277,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 16,
@@ -1501,7 +1501,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 14,
       "startOffset": 279,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 20,
@@ -1545,7 +1545,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 15,
       "startOffset": 292,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1567,7 +1567,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 15,
       "startOffset": 295,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1578,7 +1578,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 15,
       "startOffset": 299,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -1622,7 +1622,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 16,
       "startOffset": 311,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1644,7 +1644,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 16,
       "startOffset": 314,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -1655,7 +1655,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 14,
       "startLine": 16,
       "startOffset": 318,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -1699,7 +1699,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 17,
       "startOffset": 330,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1721,7 +1721,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 17,
       "startOffset": 333,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 17,
@@ -1732,7 +1732,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 17,
       "startOffset": 340,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -1776,7 +1776,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 18,
       "startOffset": 356,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1798,7 +1798,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 18,
       "startOffset": 359,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -1809,7 +1809,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 18,
       "startOffset": 367,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 23,
@@ -1853,7 +1853,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 19,
       "startOffset": 381,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1875,7 +1875,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 19,
       "startOffset": 384,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -1886,7 +1886,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 19,
       "startOffset": 392,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -1930,7 +1930,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 20,
       "startOffset": 407,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -1952,7 +1952,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 20,
       "startOffset": 410,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -1963,7 +1963,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 20,
       "startOffset": 415,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -2007,7 +2007,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 21,
       "startOffset": 429,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -2029,7 +2029,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 21,
       "startOffset": 432,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -2040,7 +2040,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 19,
       "startLine": 21,
       "startOffset": 441,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -2062,7 +2062,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 22,
       "startLine": 21,
       "startOffset": 444,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 23,
@@ -2084,7 +2084,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 25,
       "startLine": 21,
       "startOffset": 447,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 31,
@@ -2117,7 +2117,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 34,
       "startLine": 21,
       "startOffset": 456,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 40,
@@ -2128,7 +2128,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 39,
       "startLine": 21,
       "startOffset": 461,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 42,
@@ -2183,7 +2183,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 22,
       "startOffset": 474,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -2216,7 +2216,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 12,
       "startLine": 22,
       "startOffset": 479,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -2238,7 +2238,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 20,
       "startLine": 22,
       "startOffset": 487,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 23,
@@ -2271,7 +2271,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 29,
       "startLine": 22,
       "startOffset": 496,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 35,
@@ -2293,7 +2293,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 37,
       "startLine": 22,
       "startOffset": 504,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 40,
@@ -2315,7 +2315,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 42,
       "startLine": 22,
       "startOffset": 509,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 48,
@@ -2326,7 +2326,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 48,
       "startLine": 22,
       "startOffset": 515,
-      "tokenTypeIdx": 73,
+      "tokenTypeIdx": 60,
     },
     {
       "endColumn": 49,
@@ -2348,7 +2348,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 51,
       "startLine": 22,
       "startOffset": 518,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 54,
@@ -2381,7 +2381,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 58,
       "startLine": 22,
       "startOffset": 525,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 60,
@@ -2403,7 +2403,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 3,
       "startLine": 23,
       "startOffset": 531,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -2447,7 +2447,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 3,
       "startLine": 24,
       "startOffset": 545,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -2491,7 +2491,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 3,
       "startLine": 25,
       "startOffset": 559,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -2557,7 +2557,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 27,
       "startOffset": 579,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -2579,7 +2579,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 27,
       "startOffset": 582,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -2612,7 +2612,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 16,
       "startLine": 27,
       "startOffset": 588,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 18,
@@ -2722,7 +2722,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 28,
       "startOffset": 612,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -2744,7 +2744,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 10,
       "startLine": 28,
       "startOffset": 615,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -2788,7 +2788,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 28,
       "startOffset": 622,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -2898,7 +2898,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 30,
       "startOffset": 664,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -2920,7 +2920,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 30,
       "startOffset": 668,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -2931,7 +2931,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 30,
       "startOffset": 675,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 29,
@@ -2975,7 +2975,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 31,
       "startOffset": 706,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -2997,7 +2997,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 31,
       "startOffset": 710,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3008,7 +3008,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 31,
       "startOffset": 717,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -3052,7 +3052,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 32,
       "startOffset": 740,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3074,7 +3074,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 32,
       "startOffset": 744,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3085,7 +3085,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 32,
       "startOffset": 751,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -3129,7 +3129,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 33,
       "startOffset": 777,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3151,7 +3151,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 33,
       "startOffset": 781,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3162,7 +3162,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 33,
       "startOffset": 788,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -3173,7 +3173,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 20,
       "startLine": 33,
       "startOffset": 790,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 25,
@@ -3217,7 +3217,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 34,
       "startOffset": 815,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3239,7 +3239,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 34,
       "startOffset": 819,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3250,7 +3250,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 34,
       "startOffset": 826,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -3261,7 +3261,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 20,
       "startLine": 34,
       "startOffset": 828,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 25,
@@ -3305,7 +3305,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 35,
       "startOffset": 853,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3327,7 +3327,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 35,
       "startOffset": 857,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3338,7 +3338,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 35,
       "startOffset": 864,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 53,
@@ -3382,7 +3382,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 36,
       "startOffset": 918,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3404,7 +3404,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 36,
       "startOffset": 922,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3415,7 +3415,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 36,
       "startOffset": 929,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -3426,7 +3426,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 20,
       "startLine": 36,
       "startOffset": 931,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 54,
@@ -3470,7 +3470,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 37,
       "startOffset": 984,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3492,7 +3492,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 37,
       "startOffset": 988,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3503,7 +3503,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 37,
       "startOffset": 995,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -3514,7 +3514,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 20,
       "startLine": 37,
       "startOffset": 997,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 54,
@@ -3558,7 +3558,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 38,
       "startOffset": 1050,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3580,7 +3580,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 38,
       "startOffset": 1054,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3591,7 +3591,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 38,
       "startOffset": 1061,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -3635,7 +3635,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 39,
       "startOffset": 1085,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3657,7 +3657,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 39,
       "startOffset": 1089,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3668,7 +3668,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 39,
       "startOffset": 1096,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -3712,7 +3712,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 40,
       "startOffset": 1120,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3734,7 +3734,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 40,
       "startOffset": 1124,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3745,7 +3745,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 40,
       "startOffset": 1131,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 23,
@@ -3789,7 +3789,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 41,
       "startOffset": 1154,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3811,7 +3811,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 41,
       "startOffset": 1158,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3822,7 +3822,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 41,
       "startOffset": 1165,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 23,
@@ -3866,7 +3866,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 42,
       "startOffset": 1188,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3888,7 +3888,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 42,
       "startOffset": 1192,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3899,7 +3899,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 42,
       "startOffset": 1199,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -3943,7 +3943,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 43,
       "startOffset": 1235,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -3965,7 +3965,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 43,
       "startOffset": 1239,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -3976,7 +3976,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 43,
       "startOffset": 1246,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -4020,7 +4020,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 44,
       "startOffset": 1280,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4042,7 +4042,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 44,
       "startOffset": 1284,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -4053,7 +4053,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 44,
       "startOffset": 1291,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -4097,7 +4097,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 46,
       "startOffset": 1333,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4119,7 +4119,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 46,
       "startOffset": 1337,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -4130,7 +4130,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 46,
       "startOffset": 1344,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -4174,7 +4174,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 47,
       "startOffset": 1382,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4196,7 +4196,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 47,
       "startOffset": 1386,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -4207,7 +4207,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 47,
       "startOffset": 1393,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 40,
@@ -4251,7 +4251,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 48,
       "startOffset": 1434,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4273,7 +4273,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 48,
       "startOffset": 1438,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -4284,7 +4284,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 48,
       "startOffset": 1445,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 28,
@@ -4328,7 +4328,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 49,
       "startOffset": 1473,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4350,7 +4350,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 49,
       "startOffset": 1477,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -4361,7 +4361,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 18,
       "startLine": 49,
       "startOffset": 1484,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 29,
@@ -4405,7 +4405,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 51,
       "startOffset": 1527,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4427,7 +4427,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 51,
       "startOffset": 1531,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4438,7 +4438,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 51,
       "startOffset": 1535,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -4482,7 +4482,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 52,
       "startOffset": 1567,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4504,7 +4504,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 52,
       "startOffset": 1571,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4515,7 +4515,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 52,
       "startOffset": 1575,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -4559,7 +4559,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 53,
       "startOffset": 1630,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4581,7 +4581,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 53,
       "startOffset": 1634,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4592,7 +4592,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 53,
       "startOffset": 1638,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -4603,7 +4603,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 53,
       "startOffset": 1640,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -4647,7 +4647,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 54,
       "startOffset": 1694,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4669,7 +4669,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 54,
       "startOffset": 1698,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4680,7 +4680,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 54,
       "startOffset": 1702,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -4691,7 +4691,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 54,
       "startOffset": 1704,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -4735,7 +4735,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 55,
       "startOffset": 1758,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4757,7 +4757,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 55,
       "startOffset": 1762,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4768,7 +4768,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 55,
       "startOffset": 1766,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -4812,7 +4812,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 56,
       "startOffset": 1791,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4834,7 +4834,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 56,
       "startOffset": 1795,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4845,7 +4845,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 56,
       "startOffset": 1799,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -4889,7 +4889,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 57,
       "startOffset": 1824,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4911,7 +4911,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 57,
       "startOffset": 1828,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4922,7 +4922,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 57,
       "startOffset": 1832,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -4966,7 +4966,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 58,
       "startOffset": 1856,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -4988,7 +4988,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 58,
       "startOffset": 1860,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -4999,7 +4999,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 58,
       "startOffset": 1864,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -5043,7 +5043,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 59,
       "startOffset": 1888,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5065,7 +5065,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 59,
       "startOffset": 1892,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5076,7 +5076,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 59,
       "startOffset": 1896,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -5120,7 +5120,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 60,
       "startOffset": 1933,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5142,7 +5142,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 60,
       "startOffset": 1937,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5153,7 +5153,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 60,
       "startOffset": 1941,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -5197,7 +5197,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 61,
       "startOffset": 1976,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5219,7 +5219,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 61,
       "startOffset": 1980,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5230,7 +5230,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 61,
       "startOffset": 1984,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -5274,7 +5274,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 63,
       "startOffset": 2027,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5296,7 +5296,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 63,
       "startOffset": 2031,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5307,7 +5307,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 63,
       "startOffset": 2035,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -5351,7 +5351,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 64,
       "startOffset": 2074,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5373,7 +5373,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 64,
       "startOffset": 2078,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5384,7 +5384,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 64,
       "startOffset": 2082,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -5428,7 +5428,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 65,
       "startOffset": 2124,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5450,7 +5450,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 65,
       "startOffset": 2128,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5461,7 +5461,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 65,
       "startOffset": 2132,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -5505,7 +5505,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 66,
       "startOffset": 2161,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5527,7 +5527,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 66,
       "startOffset": 2165,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5538,7 +5538,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 66,
       "startOffset": 2169,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -5582,7 +5582,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 68,
       "startOffset": 2213,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5604,7 +5604,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 68,
       "startOffset": 2217,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5615,7 +5615,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 68,
       "startOffset": 2221,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -5659,7 +5659,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 69,
       "startOffset": 2253,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5681,7 +5681,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 69,
       "startOffset": 2257,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5692,7 +5692,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 69,
       "startOffset": 2261,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -5736,7 +5736,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 70,
       "startOffset": 2316,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5758,7 +5758,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 70,
       "startOffset": 2320,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5769,7 +5769,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 70,
       "startOffset": 2324,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -5780,7 +5780,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 70,
       "startOffset": 2326,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -5824,7 +5824,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 71,
       "startOffset": 2380,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5846,7 +5846,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 71,
       "startOffset": 2384,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5857,7 +5857,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 71,
       "startOffset": 2388,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -5868,7 +5868,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 71,
       "startOffset": 2390,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -5912,7 +5912,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 72,
       "startOffset": 2444,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -5934,7 +5934,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 72,
       "startOffset": 2448,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -5945,7 +5945,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 72,
       "startOffset": 2452,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -5989,7 +5989,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 73,
       "startOffset": 2477,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6011,7 +6011,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 73,
       "startOffset": 2481,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6022,7 +6022,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 73,
       "startOffset": 2485,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -6066,7 +6066,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 74,
       "startOffset": 2510,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6088,7 +6088,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 74,
       "startOffset": 2514,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6099,7 +6099,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 74,
       "startOffset": 2518,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -6143,7 +6143,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 75,
       "startOffset": 2542,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6165,7 +6165,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 75,
       "startOffset": 2546,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6176,7 +6176,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 75,
       "startOffset": 2550,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -6220,7 +6220,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 76,
       "startOffset": 2574,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6242,7 +6242,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 76,
       "startOffset": 2578,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6253,7 +6253,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 76,
       "startOffset": 2582,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -6297,7 +6297,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 77,
       "startOffset": 2619,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6319,7 +6319,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 77,
       "startOffset": 2623,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6330,7 +6330,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 77,
       "startOffset": 2627,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -6374,7 +6374,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 78,
       "startOffset": 2662,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6396,7 +6396,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 78,
       "startOffset": 2666,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6407,7 +6407,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 78,
       "startOffset": 2670,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -6451,7 +6451,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 80,
       "startOffset": 2713,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6473,7 +6473,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 80,
       "startOffset": 2717,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6484,7 +6484,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 80,
       "startOffset": 2721,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -6528,7 +6528,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 81,
       "startOffset": 2760,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6550,7 +6550,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 81,
       "startOffset": 2764,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6561,7 +6561,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 81,
       "startOffset": 2768,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -6605,7 +6605,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 82,
       "startOffset": 2810,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6627,7 +6627,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 82,
       "startOffset": 2814,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6638,7 +6638,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 82,
       "startOffset": 2818,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -6682,7 +6682,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 83,
       "startOffset": 2847,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6704,7 +6704,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 83,
       "startOffset": 2851,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6715,7 +6715,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 83,
       "startOffset": 2855,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -6759,7 +6759,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 85,
       "startOffset": 2897,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6781,7 +6781,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 85,
       "startOffset": 2901,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6792,7 +6792,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 85,
       "startOffset": 2905,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -6836,7 +6836,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 86,
       "startOffset": 2937,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6858,7 +6858,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 86,
       "startOffset": 2941,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6869,7 +6869,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 86,
       "startOffset": 2945,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -6913,7 +6913,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 87,
       "startOffset": 2969,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -6935,7 +6935,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 87,
       "startOffset": 2973,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -6946,7 +6946,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 87,
       "startOffset": 2977,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -6990,7 +6990,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 88,
       "startOffset": 3002,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7012,7 +7012,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 88,
       "startOffset": 3006,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7023,7 +7023,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 88,
       "startOffset": 3010,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -7067,7 +7067,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 89,
       "startOffset": 3036,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7089,7 +7089,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 89,
       "startOffset": 3040,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7100,7 +7100,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 89,
       "startOffset": 3044,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -7144,7 +7144,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 90,
       "startOffset": 3069,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7166,7 +7166,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 90,
       "startOffset": 3073,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7177,7 +7177,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 90,
       "startOffset": 3077,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -7221,7 +7221,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 91,
       "startOffset": 3132,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7243,7 +7243,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 91,
       "startOffset": 3136,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7254,7 +7254,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 91,
       "startOffset": 3140,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -7298,7 +7298,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 92,
       "startOffset": 3195,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7320,7 +7320,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 92,
       "startOffset": 3199,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7331,7 +7331,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 92,
       "startOffset": 3203,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -7375,7 +7375,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 93,
       "startOffset": 3258,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7397,7 +7397,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 93,
       "startOffset": 3262,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7408,7 +7408,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 93,
       "startOffset": 3266,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -7452,7 +7452,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 94,
       "startOffset": 3291,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7474,7 +7474,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 94,
       "startOffset": 3295,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7485,7 +7485,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 94,
       "startOffset": 3299,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -7529,7 +7529,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 95,
       "startOffset": 3324,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7551,7 +7551,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 95,
       "startOffset": 3328,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7562,7 +7562,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 95,
       "startOffset": 3332,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -7606,7 +7606,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 96,
       "startOffset": 3356,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7628,7 +7628,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 96,
       "startOffset": 3360,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7639,7 +7639,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 96,
       "startOffset": 3364,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -7683,7 +7683,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 97,
       "startOffset": 3388,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7705,7 +7705,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 97,
       "startOffset": 3392,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7716,7 +7716,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 97,
       "startOffset": 3396,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -7760,7 +7760,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 98,
       "startOffset": 3433,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7782,7 +7782,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 98,
       "startOffset": 3437,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7793,7 +7793,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 98,
       "startOffset": 3441,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -7837,7 +7837,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 99,
       "startOffset": 3476,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7859,7 +7859,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 99,
       "startOffset": 3480,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7870,7 +7870,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 99,
       "startOffset": 3484,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -7914,7 +7914,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 101,
       "startOffset": 3527,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -7936,7 +7936,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 101,
       "startOffset": 3531,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -7947,7 +7947,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 101,
       "startOffset": 3535,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -7991,7 +7991,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 102,
       "startOffset": 3574,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8013,7 +8013,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 102,
       "startOffset": 3578,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8024,7 +8024,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 102,
       "startOffset": 3582,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -8068,7 +8068,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 103,
       "startOffset": 3624,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8090,7 +8090,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 103,
       "startOffset": 3628,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8101,7 +8101,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 103,
       "startOffset": 3632,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -8145,7 +8145,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 104,
       "startOffset": 3661,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8167,7 +8167,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 104,
       "startOffset": 3665,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8178,7 +8178,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 104,
       "startOffset": 3669,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -8222,7 +8222,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 106,
       "startOffset": 3711,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8244,7 +8244,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 106,
       "startOffset": 3715,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8255,7 +8255,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 106,
       "startOffset": 3719,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -8299,7 +8299,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 107,
       "startOffset": 3751,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8321,7 +8321,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 107,
       "startOffset": 3755,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8332,7 +8332,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 107,
       "startOffset": 3759,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -8376,7 +8376,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 108,
       "startOffset": 3783,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8398,7 +8398,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 108,
       "startOffset": 3787,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8409,7 +8409,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 108,
       "startOffset": 3791,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -8453,7 +8453,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 109,
       "startOffset": 3816,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8475,7 +8475,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 109,
       "startOffset": 3820,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8486,7 +8486,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 109,
       "startOffset": 3824,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -8530,7 +8530,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 110,
       "startOffset": 3850,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8552,7 +8552,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 110,
       "startOffset": 3854,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8563,7 +8563,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 110,
       "startOffset": 3858,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -8607,7 +8607,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 111,
       "startOffset": 3883,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8629,7 +8629,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 111,
       "startOffset": 3887,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8640,7 +8640,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 111,
       "startOffset": 3891,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -8684,7 +8684,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 112,
       "startOffset": 3946,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8706,7 +8706,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 112,
       "startOffset": 3950,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8717,7 +8717,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 112,
       "startOffset": 3954,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -8761,7 +8761,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 113,
       "startOffset": 4009,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8783,7 +8783,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 113,
       "startOffset": 4013,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8794,7 +8794,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 113,
       "startOffset": 4017,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -8838,7 +8838,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 114,
       "startOffset": 4072,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8860,7 +8860,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 114,
       "startOffset": 4076,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8871,7 +8871,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 114,
       "startOffset": 4080,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -8915,7 +8915,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 115,
       "startOffset": 4105,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -8937,7 +8937,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 115,
       "startOffset": 4109,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -8948,7 +8948,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 115,
       "startOffset": 4113,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -8992,7 +8992,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 116,
       "startOffset": 4138,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9014,7 +9014,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 116,
       "startOffset": 4142,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9025,7 +9025,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 116,
       "startOffset": 4146,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -9069,7 +9069,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 117,
       "startOffset": 4170,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9091,7 +9091,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 117,
       "startOffset": 4174,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9102,7 +9102,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 117,
       "startOffset": 4178,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -9146,7 +9146,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 118,
       "startOffset": 4202,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9168,7 +9168,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 118,
       "startOffset": 4206,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9179,7 +9179,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 118,
       "startOffset": 4210,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 36,
@@ -9223,7 +9223,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 119,
       "startOffset": 4247,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9245,7 +9245,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 119,
       "startOffset": 4251,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9256,7 +9256,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 119,
       "startOffset": 4255,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -9300,7 +9300,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 120,
       "startOffset": 4290,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9322,7 +9322,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 120,
       "startOffset": 4294,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9333,7 +9333,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 120,
       "startOffset": 4298,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 20,
@@ -9377,7 +9377,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 122,
       "startOffset": 4341,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9399,7 +9399,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 122,
       "startOffset": 4345,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9410,7 +9410,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 122,
       "startOffset": 4349,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -9454,7 +9454,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 123,
       "startOffset": 4388,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9476,7 +9476,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 123,
       "startOffset": 4392,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9487,7 +9487,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 123,
       "startOffset": 4396,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -9531,7 +9531,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 124,
       "startOffset": 4438,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9553,7 +9553,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 124,
       "startOffset": 4442,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9564,7 +9564,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 124,
       "startOffset": 4446,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -9608,7 +9608,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 125,
       "startOffset": 4475,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9630,7 +9630,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 125,
       "startOffset": 4479,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9641,7 +9641,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 125,
       "startOffset": 4483,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -9685,7 +9685,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 127,
       "startOffset": 4525,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9707,7 +9707,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 127,
       "startOffset": 4529,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9718,7 +9718,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 127,
       "startOffset": 4533,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -9762,7 +9762,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 128,
       "startOffset": 4565,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9784,7 +9784,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 128,
       "startOffset": 4569,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9795,7 +9795,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 128,
       "startOffset": 4573,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -9839,7 +9839,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 129,
       "startOffset": 4597,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9861,7 +9861,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 129,
       "startOffset": 4601,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9872,7 +9872,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 129,
       "startOffset": 4605,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -9916,7 +9916,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 130,
       "startOffset": 4632,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -9938,7 +9938,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 130,
       "startOffset": 4636,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -9949,7 +9949,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 130,
       "startOffset": 4640,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -9960,7 +9960,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 130,
       "startOffset": 4642,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 23,
@@ -10004,7 +10004,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 131,
       "startOffset": 4668,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10026,7 +10026,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 131,
       "startOffset": 4672,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10037,7 +10037,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 131,
       "startOffset": 4676,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -10048,7 +10048,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 131,
       "startOffset": 4678,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 23,
@@ -10092,7 +10092,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 132,
       "startOffset": 4704,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10114,7 +10114,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 132,
       "startOffset": 4708,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10125,7 +10125,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 132,
       "startOffset": 4712,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -10169,7 +10169,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 133,
       "startOffset": 4767,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10191,7 +10191,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 133,
       "startOffset": 4771,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10202,7 +10202,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 133,
       "startOffset": 4775,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -10213,7 +10213,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 133,
       "startOffset": 4777,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -10257,7 +10257,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 134,
       "startOffset": 4831,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10279,7 +10279,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 134,
       "startOffset": 4835,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10290,7 +10290,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 134,
       "startOffset": 4839,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -10301,7 +10301,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 134,
       "startOffset": 4841,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -10345,7 +10345,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 135,
       "startOffset": 4895,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10367,7 +10367,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 135,
       "startOffset": 4899,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10378,7 +10378,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 135,
       "startOffset": 4903,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -10422,7 +10422,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 136,
       "startOffset": 4928,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10444,7 +10444,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 136,
       "startOffset": 4932,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10455,7 +10455,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 136,
       "startOffset": 4936,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -10499,7 +10499,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 137,
       "startOffset": 4961,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10521,7 +10521,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 137,
       "startOffset": 4965,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10532,7 +10532,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 137,
       "startOffset": 4969,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -10576,7 +10576,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 138,
       "startOffset": 4993,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10598,7 +10598,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 138,
       "startOffset": 4997,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10609,7 +10609,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 138,
       "startOffset": 5001,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -10653,7 +10653,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 140,
       "startOffset": 5047,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10675,7 +10675,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 140,
       "startOffset": 5051,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10686,7 +10686,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 140,
       "startOffset": 5055,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -10730,7 +10730,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 141,
       "startOffset": 5094,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10752,7 +10752,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 141,
       "startOffset": 5098,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10763,7 +10763,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 141,
       "startOffset": 5102,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -10807,7 +10807,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 142,
       "startOffset": 5144,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10829,7 +10829,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 142,
       "startOffset": 5148,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10840,7 +10840,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 142,
       "startOffset": 5152,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -10884,7 +10884,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 144,
       "startOffset": 5195,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10906,7 +10906,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 144,
       "startOffset": 5199,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10917,7 +10917,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 144,
       "startOffset": 5203,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 27,
@@ -10961,7 +10961,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 145,
       "startOffset": 5235,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -10983,7 +10983,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 145,
       "startOffset": 5239,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -10994,7 +10994,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 145,
       "startOffset": 5243,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -11038,7 +11038,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 146,
       "startOffset": 5267,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11060,7 +11060,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 146,
       "startOffset": 5271,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11071,7 +11071,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 146,
       "startOffset": 5275,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -11115,7 +11115,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 147,
       "startOffset": 5302,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11137,7 +11137,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 147,
       "startOffset": 5306,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11148,7 +11148,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 147,
       "startOffset": 5310,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -11159,7 +11159,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 147,
       "startOffset": 5312,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 23,
@@ -11203,7 +11203,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 148,
       "startOffset": 5338,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11225,7 +11225,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 148,
       "startOffset": 5342,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11236,7 +11236,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 148,
       "startOffset": 5346,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -11247,7 +11247,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 148,
       "startOffset": 5348,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 23,
@@ -11291,7 +11291,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 149,
       "startOffset": 5374,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11313,7 +11313,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 149,
       "startOffset": 5378,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11324,7 +11324,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 149,
       "startOffset": 5382,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 51,
@@ -11368,7 +11368,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 150,
       "startOffset": 5437,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11390,7 +11390,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 150,
       "startOffset": 5441,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11401,7 +11401,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 150,
       "startOffset": 5445,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -11412,7 +11412,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 150,
       "startOffset": 5447,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -11456,7 +11456,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 151,
       "startOffset": 5501,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11478,7 +11478,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 151,
       "startOffset": 5505,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11489,7 +11489,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 151,
       "startOffset": 5509,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -11500,7 +11500,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 151,
       "startOffset": 5511,
-      "tokenTypeIdx": 68,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 52,
@@ -11544,7 +11544,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 152,
       "startOffset": 5565,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11566,7 +11566,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 152,
       "startOffset": 5569,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11577,7 +11577,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 152,
       "startOffset": 5573,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -11621,7 +11621,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 153,
       "startOffset": 5598,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11643,7 +11643,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 153,
       "startOffset": 5602,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11654,7 +11654,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 153,
       "startOffset": 5606,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -11698,7 +11698,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 154,
       "startOffset": 5631,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11720,7 +11720,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 154,
       "startOffset": 5635,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11731,7 +11731,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 154,
       "startOffset": 5639,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -11775,7 +11775,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 155,
       "startOffset": 5663,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11797,7 +11797,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 155,
       "startOffset": 5667,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11808,7 +11808,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 155,
       "startOffset": 5671,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -11852,7 +11852,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 157,
       "startOffset": 5717,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11874,7 +11874,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 157,
       "startOffset": 5721,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11885,7 +11885,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 157,
       "startOffset": 5725,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 34,
@@ -11929,7 +11929,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 158,
       "startOffset": 5764,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -11951,7 +11951,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 158,
       "startOffset": 5768,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -11962,7 +11962,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 158,
       "startOffset": 5772,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 38,
@@ -12006,7 +12006,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 159,
       "startOffset": 5814,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -12028,7 +12028,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 11,
       "startLine": 159,
       "startOffset": 5818,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -12039,7 +12039,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 15,
       "startLine": 159,
       "startOffset": 5822,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -12083,7 +12083,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 7,
       "startLine": 163,
       "startOffset": 5874,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -12105,7 +12105,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 17,
       "startLine": 163,
       "startOffset": 5884,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 24,
@@ -12116,7 +12116,7 @@ exports[`Lexer: Literals Pass 1`] = `
       "startColumn": 24,
       "startLine": 163,
       "startOffset": 5891,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 28,
@@ -12171,7 +12171,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 2,
       "startOffset": 25,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -12237,7 +12237,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 13,
       "startLine": 3,
       "startOffset": 52,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -12270,7 +12270,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 21,
       "startLine": 3,
       "startOffset": 60,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 27,
@@ -12292,7 +12292,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 29,
       "startLine": 3,
       "startOffset": 68,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 35,
@@ -12303,7 +12303,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 32,
       "startLine": 3,
       "startOffset": 71,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 40,
@@ -12369,7 +12369,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 13,
       "startLine": 4,
       "startOffset": 102,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -12413,7 +12413,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 19,
       "startLine": 4,
       "startOffset": 108,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 25,
@@ -12424,7 +12424,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 4,
       "startOffset": 111,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 30,
@@ -12490,7 +12490,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 13,
       "startLine": 5,
       "startOffset": 142,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -12512,7 +12512,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 16,
       "startLine": 5,
       "startOffset": 145,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 23,
@@ -12567,7 +12567,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 8,
       "startOffset": 204,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -12578,7 +12578,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 8,
       "startOffset": 206,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 12,
@@ -12589,7 +12589,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 8,
       "startOffset": 208,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -12622,7 +12622,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 9,
       "startOffset": 218,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -12633,7 +12633,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 9,
       "startOffset": 220,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 12,
@@ -12644,7 +12644,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 9,
       "startOffset": 222,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -12655,7 +12655,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 14,
       "startLine": 9,
       "startOffset": 226,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 18,
@@ -12666,7 +12666,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 16,
       "startLine": 9,
       "startOffset": 228,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -12677,7 +12677,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 20,
       "startLine": 9,
       "startOffset": 232,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 24,
@@ -12688,7 +12688,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 9,
       "startOffset": 234,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 26,
@@ -12699,7 +12699,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 26,
       "startLine": 9,
       "startOffset": 238,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 30,
@@ -12710,7 +12710,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 28,
       "startLine": 9,
       "startOffset": 240,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 32,
@@ -12721,7 +12721,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 32,
       "startLine": 9,
       "startOffset": 244,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 36,
@@ -12732,7 +12732,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 34,
       "startLine": 9,
       "startOffset": 246,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 38,
@@ -12743,7 +12743,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 38,
       "startLine": 9,
       "startOffset": 250,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 42,
@@ -12754,7 +12754,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 40,
       "startLine": 9,
       "startOffset": 252,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 43,
@@ -12787,7 +12787,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 10,
       "startOffset": 262,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -12798,7 +12798,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 10,
       "startOffset": 264,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 12,
@@ -12809,7 +12809,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 10,
       "startOffset": 266,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -12820,7 +12820,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 14,
       "startLine": 10,
       "startOffset": 270,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 16,
@@ -12842,7 +12842,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 10,
       "startOffset": 273,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -12864,7 +12864,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 10,
       "startOffset": 278,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 26,
@@ -12875,7 +12875,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 26,
       "startLine": 10,
       "startOffset": 282,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 30,
@@ -12886,7 +12886,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 28,
       "startLine": 10,
       "startOffset": 284,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 31,
@@ -12908,7 +12908,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 33,
       "startLine": 10,
       "startOffset": 289,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 38,
@@ -12919,7 +12919,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 36,
       "startLine": 10,
       "startOffset": 292,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 40,
@@ -12930,7 +12930,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 40,
       "startLine": 10,
       "startOffset": 296,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 44,
@@ -12941,7 +12941,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 42,
       "startLine": 10,
       "startOffset": 298,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 45,
@@ -12974,7 +12974,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 11,
       "startOffset": 308,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -12985,7 +12985,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 11,
       "startOffset": 310,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 12,
@@ -12996,7 +12996,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 11,
       "startOffset": 312,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -13007,7 +13007,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 14,
       "startLine": 11,
       "startOffset": 316,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 16,
@@ -13029,7 +13029,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 11,
       "startOffset": 319,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -13051,7 +13051,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 11,
       "startOffset": 324,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 26,
@@ -13062,7 +13062,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 26,
       "startLine": 11,
       "startOffset": 328,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 30,
@@ -13073,7 +13073,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 28,
       "startLine": 11,
       "startOffset": 330,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 31,
@@ -13095,7 +13095,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 33,
       "startLine": 11,
       "startOffset": 335,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 36,
@@ -13117,7 +13117,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 37,
       "startLine": 11,
       "startOffset": 339,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 41,
@@ -13128,7 +13128,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 41,
       "startLine": 11,
       "startOffset": 343,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 45,
@@ -13139,7 +13139,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 43,
       "startLine": 11,
       "startOffset": 345,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 46,
@@ -13161,7 +13161,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 48,
       "startLine": 11,
       "startOffset": 350,
-      "tokenTypeIdx": 72,
+      "tokenTypeIdx": 61,
     },
     {
       "endColumn": 52,
@@ -13172,7 +13172,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 50,
       "startLine": 11,
       "startOffset": 352,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 53,
@@ -13205,7 +13205,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 12,
       "startOffset": 367,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -13227,7 +13227,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 13,
       "startOffset": 373,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13249,7 +13249,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 13,
       "startOffset": 381,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 14,
@@ -13282,7 +13282,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 7,
       "startLine": 14,
       "startOffset": 392,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -13304,7 +13304,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 15,
       "startLine": 14,
       "startOffset": 400,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -13326,7 +13326,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 15,
       "startOffset": 407,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13337,7 +13337,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 9,
       "startLine": 15,
       "startOffset": 413,
-      "tokenTypeIdx": 73,
+      "tokenTypeIdx": 60,
     },
     {
       "endColumn": 10,
@@ -13359,7 +13359,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 12,
       "startLine": 15,
       "startOffset": 416,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -13381,7 +13381,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 16,
       "startOffset": 423,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13414,7 +13414,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 17,
       "startOffset": 437,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -13436,7 +13436,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 13,
       "startLine": 17,
       "startOffset": 445,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 16,
@@ -13513,7 +13513,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 21,
       "startOffset": 487,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -13535,7 +13535,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 21,
       "startOffset": 499,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -13546,7 +13546,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 19,
       "startLine": 21,
       "startOffset": 501,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 21,
@@ -13568,7 +13568,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 22,
       "startOffset": 507,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13612,7 +13612,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 23,
       "startOffset": 521,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13656,7 +13656,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 24,
       "startOffset": 535,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13700,7 +13700,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 25,
       "startOffset": 549,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13733,7 +13733,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 26,
       "startOffset": 563,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -13810,7 +13810,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 29,
       "startOffset": 585,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 16,
@@ -13832,7 +13832,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 18,
       "startLine": 29,
       "startOffset": 598,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -13843,7 +13843,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 20,
       "startLine": 29,
       "startOffset": 600,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -13865,7 +13865,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 30,
       "startOffset": 606,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13909,7 +13909,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 31,
       "startOffset": 620,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13953,7 +13953,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 32,
       "startOffset": 634,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -13986,7 +13986,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 33,
       "startOffset": 648,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -14063,7 +14063,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 36,
       "startOffset": 670,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 16,
@@ -14085,7 +14085,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 18,
       "startLine": 36,
       "startOffset": 683,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -14096,7 +14096,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 20,
       "startLine": 36,
       "startOffset": 685,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -14129,7 +14129,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 37,
       "startOffset": 694,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 17,
@@ -14151,7 +14151,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 38,
       "startOffset": 709,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -14206,7 +14206,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 1,
       "startLine": 40,
       "startOffset": 723,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -14228,7 +14228,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 12,
       "startLine": 40,
       "startOffset": 734,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -14239,7 +14239,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 19,
       "startLine": 40,
       "startOffset": 741,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 22,
@@ -14349,7 +14349,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 43,
       "startOffset": 787,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -14503,7 +14503,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 45,
       "startOffset": 838,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -14591,7 +14591,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 47,
       "startOffset": 872,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -14734,7 +14734,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 13,
       "startLine": 49,
       "startOffset": 907,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -14800,7 +14800,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 50,
       "startOffset": 927,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -14910,7 +14910,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 53,
       "startOffset": 957,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15031,7 +15031,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 56,
       "startOffset": 986,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 16,
@@ -15130,7 +15130,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 58,
       "startOffset": 1012,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 16,
@@ -15196,7 +15196,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 59,
       "startOffset": 1032,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -15306,7 +15306,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 62,
       "startOffset": 1062,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15394,7 +15394,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 64,
       "startOffset": 1088,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15526,7 +15526,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 68,
       "startOffset": 1121,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15658,7 +15658,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 70,
       "startOffset": 1157,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15746,7 +15746,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 72,
       "startOffset": 1183,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15878,7 +15878,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 76,
       "startOffset": 1216,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -15955,7 +15955,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 77,
       "startOffset": 1238,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 13,
@@ -16065,7 +16065,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 80,
       "startOffset": 1268,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -16142,7 +16142,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 1,
       "startLine": 83,
       "startOffset": 1309,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 6,
@@ -16197,7 +16197,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 1,
       "startLine": 84,
       "startOffset": 1324,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 2,
@@ -16329,7 +16329,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 87,
       "startOffset": 1386,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 6,
@@ -16351,7 +16351,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 87,
       "startOffset": 1389,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -16362,7 +16362,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 15,
       "startLine": 87,
       "startOffset": 1396,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -16384,7 +16384,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 19,
       "startLine": 87,
       "startOffset": 1400,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 21,
@@ -16417,7 +16417,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 24,
       "startLine": 87,
       "startOffset": 1405,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 26,
@@ -16450,7 +16450,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 29,
       "startLine": 87,
       "startOffset": 1410,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 31,
@@ -16472,7 +16472,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 33,
       "startLine": 87,
       "startOffset": 1414,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 35,
@@ -16494,7 +16494,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 37,
       "startLine": 87,
       "startOffset": 1418,
-      "tokenTypeIdx": 67,
+      "tokenTypeIdx": 57,
     },
     {
       "endColumn": 39,
@@ -16527,7 +16527,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 1,
       "startLine": 88,
       "startOffset": 1423,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 3,
@@ -16538,7 +16538,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 88,
       "startOffset": 1425,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 5,
@@ -16582,7 +16582,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 89,
       "startOffset": 1434,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 6,
@@ -16604,7 +16604,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 89,
       "startOffset": 1437,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -16615,7 +16615,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 15,
       "startLine": 89,
       "startOffset": 1444,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 17,
@@ -16626,7 +16626,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 89,
       "startOffset": 1446,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 18,
@@ -16659,7 +16659,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 90,
       "startOffset": 1453,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 6,
@@ -16681,7 +16681,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 90,
       "startOffset": 1456,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 12,
@@ -16692,7 +16692,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 12,
       "startLine": 90,
       "startOffset": 1460,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 24,
@@ -16703,7 +16703,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 14,
       "startLine": 90,
       "startOffset": 1462,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 25,
@@ -16725,7 +16725,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 26,
       "startLine": 90,
       "startOffset": 1474,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 32,
@@ -16758,7 +16758,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 5,
       "startLine": 91,
       "startOffset": 1486,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 6,
@@ -16780,7 +16780,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 91,
       "startOffset": 1489,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 17,
@@ -16791,7 +16791,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 91,
       "startOffset": 1498,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -16813,7 +16813,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 20,
       "startLine": 91,
       "startOffset": 1501,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 21,
@@ -16835,7 +16835,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 23,
       "startLine": 91,
       "startOffset": 1504,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 26,
@@ -16868,7 +16868,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 29,
       "startLine": 91,
       "startOffset": 1510,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 34,
@@ -16879,7 +16879,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 33,
       "startLine": 91,
       "startOffset": 1514,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 36,
@@ -16923,7 +16923,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 92,
       "startOffset": 1528,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -16989,7 +16989,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 7,
       "startLine": 94,
       "startOffset": 1541,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -17011,7 +17011,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 94,
       "startOffset": 1544,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 17,
@@ -17022,7 +17022,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 94,
       "startOffset": 1551,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 19,
@@ -17099,7 +17099,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 95,
       "startOffset": 1561,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 11,
@@ -17110,7 +17110,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 10,
       "startLine": 95,
       "startOffset": 1565,
-      "tokenTypeIdx": 64,
+      "tokenTypeIdx": 53,
     },
     {
       "endColumn": 13,
@@ -17132,7 +17132,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 96,
       "startOffset": 1572,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 8,
@@ -17308,7 +17308,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 100,
       "startOffset": 1635,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 41,
@@ -17319,7 +17319,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 41,
       "startLine": 100,
       "startOffset": 1665,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 52,
@@ -17330,7 +17330,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 42,
       "startLine": 100,
       "startOffset": 1666,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 53,
@@ -17341,7 +17341,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 53,
       "startLine": 100,
       "startOffset": 1677,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 55,
@@ -17363,7 +17363,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 101,
       "startOffset": 1683,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -17385,7 +17385,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 9,
       "startLine": 101,
       "startOffset": 1689,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -17440,7 +17440,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 103,
       "startOffset": 1710,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 31,
@@ -17451,7 +17451,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 31,
       "startLine": 103,
       "startOffset": 1735,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 42,
@@ -17462,7 +17462,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 32,
       "startLine": 103,
       "startOffset": 1736,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 43,
@@ -17473,7 +17473,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 43,
       "startLine": 103,
       "startOffset": 1747,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 45,
@@ -17495,7 +17495,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 104,
       "startOffset": 1753,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -17517,7 +17517,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 104,
       "startOffset": 1758,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -17572,7 +17572,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 106,
       "startOffset": 1784,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 37,
@@ -17583,7 +17583,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 37,
       "startLine": 106,
       "startOffset": 1810,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 48,
@@ -17594,7 +17594,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 38,
       "startLine": 106,
       "startOffset": 1811,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 49,
@@ -17605,7 +17605,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 49,
       "startLine": 106,
       "startOffset": 1822,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 51,
@@ -17627,7 +17627,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 107,
       "startOffset": 1828,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -17649,7 +17649,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 9,
       "startLine": 107,
       "startOffset": 1834,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -17693,7 +17693,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 109,
       "startOffset": 1854,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 27,
@@ -17704,7 +17704,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 27,
       "startLine": 109,
       "startOffset": 1875,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 38,
@@ -17715,7 +17715,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 28,
       "startLine": 109,
       "startOffset": 1876,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 39,
@@ -17726,7 +17726,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 39,
       "startLine": 109,
       "startOffset": 1887,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 41,
@@ -17748,7 +17748,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 110,
       "startOffset": 1893,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -17770,7 +17770,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 110,
       "startOffset": 1898,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -17814,7 +17814,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 113,
       "startOffset": 1936,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 22,
@@ -17825,7 +17825,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 113,
       "startOffset": 1952,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 33,
@@ -17836,7 +17836,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 23,
       "startLine": 113,
       "startOffset": 1953,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 34,
@@ -17858,7 +17858,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 36,
       "startLine": 113,
       "startOffset": 1966,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 48,
@@ -17869,7 +17869,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 48,
       "startLine": 113,
       "startOffset": 1978,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 50,
@@ -17880,7 +17880,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 50,
       "startLine": 113,
       "startOffset": 1980,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 57,
@@ -17891,7 +17891,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 52,
       "startLine": 113,
       "startOffset": 1982,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 58,
@@ -17924,7 +17924,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 11,
       "startLine": 114,
       "startOffset": 2000,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 32,
@@ -17935,7 +17935,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 32,
       "startLine": 114,
       "startOffset": 2021,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 43,
@@ -17946,7 +17946,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 33,
       "startLine": 114,
       "startOffset": 2022,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 44,
@@ -17957,7 +17957,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 44,
       "startLine": 114,
       "startOffset": 2033,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 46,
@@ -17979,7 +17979,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 115,
       "startOffset": 2039,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -18001,7 +18001,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 9,
       "startLine": 115,
       "startOffset": 2045,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 20,
@@ -18045,7 +18045,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 6,
       "startLine": 117,
       "startOffset": 2065,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 22,
@@ -18056,7 +18056,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 22,
       "startLine": 117,
       "startOffset": 2081,
-      "tokenTypeIdx": 61,
+      "tokenTypeIdx": 58,
     },
     {
       "endColumn": 33,
@@ -18067,7 +18067,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 23,
       "startLine": 117,
       "startOffset": 2082,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 34,
@@ -18078,7 +18078,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 34,
       "startLine": 117,
       "startOffset": 2093,
-      "tokenTypeIdx": 60,
+      "tokenTypeIdx": 59,
     },
     {
       "endColumn": 36,
@@ -18100,7 +18100,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 118,
       "startOffset": 2099,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 7,
@@ -18122,7 +18122,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 118,
       "startOffset": 2104,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 19,
@@ -18177,7 +18177,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 14,
       "startLine": 121,
       "startOffset": 2148,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 15,
@@ -18199,7 +18199,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 17,
       "startLine": 121,
       "startOffset": 2151,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 24,
@@ -18210,7 +18210,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 24,
       "startLine": 121,
       "startOffset": 2158,
-      "tokenTypeIdx": 66,
+      "tokenTypeIdx": 63,
     },
     {
       "endColumn": 26,
@@ -18254,7 +18254,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 8,
       "startLine": 122,
       "startOffset": 2170,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 9,
@@ -18298,7 +18298,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 124,
       "startOffset": 2184,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 4,
@@ -18320,7 +18320,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 125,
       "startOffset": 2189,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 4,
@@ -18342,7 +18342,7 @@ exports[`Lexer: Pass 1`] = `
       "startColumn": 3,
       "startLine": 126,
       "startOffset": 2194,
-      "tokenTypeIdx": 82,
+      "tokenTypeIdx": 72,
     },
     {
       "endColumn": 1,

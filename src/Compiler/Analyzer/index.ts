@@ -485,10 +485,10 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       // Return Node
       return node;
     }
-    case NodeType.AssignmentStatement:
+    case NodeType.AssignmentStatement: {
+      // TODO: Ensure The Operator Exists
       // Analyze Value
       node.value = _analyzeNode(node.value, 0);
-    case NodeType.PostFixStatement: {
       // Analyze Variable
       node.name = _analyzeNode(node.name, 0);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
@@ -606,9 +606,36 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     }
+    case NodeType.PostfixExpression: {
+      node.value = _analyzeNode(node.value, 0);
+      // Match The Operator Expression
+      const opFunc = operatorScope.POSTFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      return node;
+    }
+    case NodeType.PrefixExpression: {
+      node.value = _analyzeNode(node.value, 0);
+      // Match The Operator Expression
+      const opFunc = operatorScope.PREFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      return node;
+    }
     case NodeType.TypeCastExpression:
       node.typeLiteral = _analyzeNode(node.typeLiteral, 0);
-    case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
       node.value = _analyzeNode(node.value, 0);
       return node;

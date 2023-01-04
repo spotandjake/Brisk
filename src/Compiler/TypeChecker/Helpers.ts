@@ -9,7 +9,6 @@ import {
   ParameterNode,
   PropertyUsageNode,
   TypeLiteral,
-  UnaryExpressionOperator,
 } from '../Types/ParseNodes';
 import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { mapExpression } from './WasmTypes';
@@ -650,24 +649,10 @@ export const getExpressionType = (
 ): TypeLiteral => {
   switch (expression.nodeType) {
     case NodeType.InfixExpression:
+    case NodeType.PrefixExpression:
+    case NodeType.PostfixExpression:
       // TODO: Ensure we cannot get over here and are TypeSafe
       throw 'Unreachable';
-    case NodeType.UnaryExpression:
-      if (expression.operator == UnaryExpressionOperator.UnaryNot) {
-        return createPrimType(expression.position, 'Boolean');
-      } else if (
-        expression.operator == UnaryExpressionOperator.UnaryNegative ||
-        expression.operator == UnaryExpressionOperator.UnaryPositive
-      ) {
-        return getExpressionType(
-          rawProgram,
-          varPool,
-          typePool,
-          typeStack,
-          typeStacks,
-          expression.value
-        );
-      }
     case NodeType.ParenthesisExpression:
       return getExpressionType(
         rawProgram,

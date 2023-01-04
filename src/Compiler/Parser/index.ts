@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, ILexingResult, TokenType } from 'chevrotain';
+import { EmbeddedActionsParser, ILexingResult, IToken, TokenType } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import * as Nodes from '../Types/ParseNodes';
@@ -184,10 +184,6 @@ class Parser extends EmbeddedActionsParser {
       {
         GATE: this.BACKTRACK(this.assignmentStatement),
         ALT: () => this.SUBRULE(this.assignmentStatement),
-      },
-      {
-        GATE: this.BACKTRACK(this.postFixStatement),
-        ALT: () => this.SUBRULE(this.postFixStatement),
       },
       { ALT: () => this.SUBRULE(this.breakStatement) },
       { ALT: () => this.SUBRULE(this.breakIfStatement) },
@@ -466,7 +462,7 @@ class Parser extends EmbeddedActionsParser {
     const name = this.SUBRULE(this.variableDefinition);
     this.CONSUME(Tokens.TknColon);
     const varType = this.SUBRULE(this.typeLiteral);
-    this.CONSUME(Tokens.assignmentOperators);
+    this.CONSUME(Tokens.TknEqual);
     const value = this.SUBRULE(this.expression);
     return this.ACTION((): Nodes.DeclarationStatementNode => {
       return {
@@ -492,6 +488,7 @@ class Parser extends EmbeddedActionsParser {
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
       const name = this.SUBRULE(this.variableUsage);
+      // TODO: Store The Assignment Type And Hook Up The Custom Operator Setup
       this.CONSUME(Tokens.assignmentOperators);
       const value = this.SUBRULE(this.expression);
       return this.ACTION((): Nodes.AssignmentStatementNode => {
@@ -532,39 +529,11 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private postFixStatement = this.RULE('PostFixStatement', (): Nodes.PostFixStatementNode => {
-    const name = this.SUBRULE(this.variableUsage);
-    const { location, operator } = this.OR([
-      {
-        ALT: () => {
-          const location = this.CONSUME(Tokens.TknPostFixIncrement);
-          return { location: location, operator: Nodes.PostFixOperator.Increment };
-        },
-      },
-      {
-        ALT: () => {
-          const location = this.CONSUME(Tokens.TknPostFixDecrement);
-          return { location: location, operator: Nodes.PostFixOperator.Decrement };
-        },
-      },
-    ]);
-    return this.ACTION((): Nodes.PostFixStatementNode => {
-      return {
-        nodeType: Nodes.NodeType.PostFixStatement,
-        category: Nodes.NodeCategory.Statement,
-        operator: operator,
-        name: name,
-        position: {
-          ...name.position,
-          length: location.endOffset! - name.position.offset,
-        },
-      };
-    });
-  });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
       { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true, true] }) },
       { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) },
+      // TODO: Add The PostFix Statement
     ]);
   });
   // Enums
@@ -655,32 +624,19 @@ class Parser extends EmbeddedActionsParser {
   });
   // Expressions
   private expression = this.RULE('Expression', (): Nodes.Expression => {
-    return this.SUBRULE(this.comparisonExpression);
+    return this.SUBRULE(this.infix180Expression);
   });
-  // TODO: Custom Operators Merge With Arithmetic Expressions
-  private comparisonExpression = this.RULE(
-    'ComparisonExpression',
-    (): Nodes.Expression | Nodes.InfixExpressionNode => {
+  // Infix Expressions
+  private infix180Expression = this.RULE(
+    'Infix180Expression',
+    (): Nodes.InfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this._comparisonExpression);
+      const lhs = this.SUBRULE(this.infix170Expression);
       this.MANY(() => {
-        const operator = this.OR([
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonAnd);
-              return '&&';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonOr);
-              return '||';
-            },
-          },
-        ]);
-        operators.push(operator);
-        expressions.push(this.SUBRULE1(this._comparisonExpression));
+        operators.push(this.CONSUME(Tokens.operators180).image);
+        expressions.push(this.SUBRULE1(this.infix170Expression));
       });
       if (expressions.length == 0) {
         return lhs;
@@ -706,53 +662,16 @@ class Parser extends EmbeddedActionsParser {
       }
     }
   );
-  private _comparisonExpression = this.RULE(
-    '_ComparisonExpression',
-    (): Nodes.Expression | Nodes.InfixExpressionNode => {
+  private infix170Expression = this.RULE(
+    'Infix170Expression',
+    (): Nodes.InfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.arithmeticShiftingExpression);
+      const lhs = this.SUBRULE(this.infix160Expression);
       this.MANY(() => {
-        const operator = this.OR([
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonEqual);
-              return '==';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonNotEqual);
-              return '!=';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonLessThan);
-              return '<';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonGreaterThan);
-              return '>';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonLessThanEqual);
-              return '<=';
-            },
-          },
-          {
-            ALT: (): string => {
-              this.CONSUME(Tokens.TknComparisonGreaterThanEqual);
-              return '>=';
-            },
-          },
-        ]);
-        operators.push(operator);
-        expressions.push(this.SUBRULE1(this.arithmeticShiftingExpression));
+        operators.push(this.CONSUME(Tokens.operators170).image);
+        expressions.push(this.SUBRULE1(this.infix160Expression));
       });
       if (expressions.length == 0) {
         return lhs;
@@ -778,32 +697,16 @@ class Parser extends EmbeddedActionsParser {
       }
     }
   );
-  // Arithmetic Expressions
-  // TODO: Custom Operators Merge With Arithmetic Expressions
-  private arithmeticShiftingExpression = this.RULE(
-    'ArithmeticShiftingExpression',
-    (): Nodes.Expression => {
+  private infix160Expression = this.RULE(
+    'Infix160Expression',
+    (): Nodes.InfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.arithmeticScalingExpression);
+      const lhs = this.SUBRULE(this.postfixOperator);
       this.MANY(() => {
-        operators.push(
-          this.OR([
-            {
-              ALT: (): string => {
-                this.CONSUME(Tokens.TknAdd);
-                return '+';
-              },
-            },
-            {
-              ALT: (): string => {
-                this.CONSUME(Tokens.TknSub);
-                return '-';
-              },
-            },
-          ])
-        );
-        expressions.push(this.SUBRULE1(this.arithmeticScalingExpression));
+        operators.push(this.CONSUME(Tokens.operators160).image);
+        expressions.push(this.SUBRULE1(this.postfixOperator));
       });
       if (expressions.length == 0) {
         return lhs;
@@ -829,86 +732,82 @@ class Parser extends EmbeddedActionsParser {
       }
     }
   );
-  private arithmeticScalingExpression = this.RULE(
-    'ArithmeticScalingExpression',
-    (): Nodes.Expression => {
-      const operators: string[] = [];
-      const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.arithmeticPowerExpression);
+  // PostFix Operators
+  private postfixOperator = this.RULE(
+    'postfixOperator',
+    (): Nodes.PostfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
+      const operators: IToken[] = [];
       this.MANY(() => {
-        operators.push(
-          this.OR([
-            {
-              ALT: (): string => {
-                this.CONSUME(Tokens.TknDiv);
-                return '/';
-              },
-            },
-            {
-              ALT: (): string => {
-                this.CONSUME(Tokens.TknMul);
-                return '*';
-              },
-            },
-          ])
-        );
-        expressions.push(this.SUBRULE1(this.arithmeticPowerExpression));
+        operators.push(this.CONSUME(Tokens.operators));
       });
-      if (expressions.length == 0) {
-        return lhs;
+      const expression = this.SUBRULE1(this.prefixOperator);
+      if (operators.length == 0) {
+        return expression;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+          return operators.reduce((prevValue, currentValue): Nodes.PostfixExpressionNode => {
             return {
-              nodeType: Nodes.NodeType.InfixExpression,
+              nodeType: Nodes.NodeType.PostfixExpression,
               category: Nodes.NodeCategory.Expression,
-              lhs: prevValue,
-              operatorImage: operators[index],
-              rhs: currentValue,
+              operatorImage: currentValue.image,
+              value: prevValue,
+              // TODO: Support PostFix Statements
+              statement: false,
               position: {
-                ...prevValue.position,
+                offset: currentValue.startOffset,
+                // TODO: Ensure this math is correct
                 length:
-                  currentValue.position.offset +
-                  currentValue.position.length -
-                  prevValue.position.offset,
+                  prevValue.position.offset +
+                  prevValue.position.length -
+                  currentValue.startOffset +
+                  1,
+                line: currentValue.startLine || 0,
+                col: currentValue.startColumn || 0,
+                basePath: this.basePath,
+                file: this.file,
               },
             };
-          }, lhs);
+          }, expression);
         });
       }
     }
   );
-  private arithmeticPowerExpression = this.RULE(
-    'ArithmeticPowerExpression',
-    (): Nodes.Expression => {
-      const operators: string[] = [];
-      const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.simpleExpression);
+  // Prefix Operators
+  private prefixOperator = this.RULE(
+    'prefixOperator',
+    (): Nodes.PrefixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
+      const operators: IToken[] = [];
       this.MANY(() => {
-        this.CONSUME(Tokens.TknPow);
-        operators.push('**');
-        expressions.push(this.SUBRULE1(this.simpleExpression));
+        operators.push(this.CONSUME(Tokens.operators));
       });
-      if (expressions.length == 0) {
-        return lhs;
+      const expression = this.SUBRULE1(this.simpleExpression);
+      if (operators.length == 0) {
+        return expression;
       } else {
         return this.ACTION(() => {
-          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+          return operators.reduce((prevValue, currentValue): Nodes.PrefixExpressionNode => {
             return {
-              nodeType: Nodes.NodeType.InfixExpression,
+              nodeType: Nodes.NodeType.PrefixExpression,
               category: Nodes.NodeCategory.Expression,
-              lhs: prevValue,
-              operatorImage: operators[index],
-              rhs: currentValue,
+              operatorImage: currentValue.image,
+              value: prevValue,
               position: {
-                ...prevValue.position,
+                offset: currentValue.startOffset,
+                // TODO: Ensure this math is correct
                 length:
-                  currentValue.position.offset +
-                  currentValue.position.length -
-                  prevValue.position.offset,
+                  prevValue.position.offset +
+                  prevValue.position.length -
+                  currentValue.startOffset +
+                  1,
+                line: currentValue.startLine || 0,
+                col: currentValue.startColumn || 0,
+                basePath: this.basePath,
+                file: this.file,
               },
             };
-          }, lhs);
+          }, expression);
         });
       }
     }
@@ -928,17 +827,17 @@ class Parser extends EmbeddedActionsParser {
       MAX_LOOKAHEAD: 3,
       DEF: [
         { ALT: () => this.SUBRULE(this.typeCastExpression) },
-        { ALT: () => this.SUBRULE(this.unaryExpression) },
         { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false, false] }) },
         { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [false] }) },
         { ALT: () => this.SUBRULE(this._literal) },
       ],
     });
   });
+  // Simple Expressions
   private typeCastExpression = this.RULE('TypeCastExpression', (): Nodes.TypeCastExpression => {
-    const location = this.CONSUME(Tokens.TknComparisonLessThan);
+    const location = this.CONSUME(Tokens.TknLeftArrow);
     const typeLiteral = this.SUBRULE(this.typeLiteral);
-    this.CONSUME(Tokens.TknComparisonGreaterThan);
+    this.CONSUME(Tokens.TknRightArrow);
     const value = this.SUBRULE(this._simpleExpression);
     return this.ACTION((): Nodes.TypeCastExpression => {
       return {
@@ -991,51 +890,6 @@ class Parser extends EmbeddedActionsParser {
       else return this.OPTION(FunctionHead) || callee;
     }
   );
-  private unaryExpression = this.RULE('UnaryExpression', (): Nodes.UnaryExpressionNode => {
-    const { location, operator } = this.OR([
-      {
-        ALT: () => {
-          return {
-            location: this.CONSUME(Tokens.TknNot),
-            operator: Nodes.UnaryExpressionOperator.UnaryNot,
-          };
-        },
-      },
-      {
-        ALT: () => {
-          return {
-            location: this.CONSUME(Tokens.TknAdd),
-            operator: Nodes.UnaryExpressionOperator.UnaryPositive,
-          };
-        },
-      },
-      {
-        ALT: () => {
-          return {
-            location: this.CONSUME(Tokens.TknSub),
-            operator: Nodes.UnaryExpressionOperator.UnaryNegative,
-          };
-        },
-      },
-    ]);
-    const value = this.SUBRULE1(this.expression);
-    return this.ACTION((): Nodes.UnaryExpressionNode => {
-      return {
-        nodeType: Nodes.NodeType.UnaryExpression,
-        category: Nodes.NodeCategory.Expression,
-        operator: operator,
-        value: value,
-        position: {
-          offset: location.startOffset,
-          length: value.position.offset + value.position.length - location.startOffset,
-          line: location.startLine || 0,
-          col: location.startColumn || 0,
-          basePath: this.basePath,
-          file: this.file,
-        },
-      };
-    });
-  });
   private parenthesisExpression = this.RULE(
     'ParenthesisExpression',
     (): Nodes.ParenthesisExpressionNode => {
@@ -1841,7 +1695,7 @@ class Parser extends EmbeddedActionsParser {
       identifier: Nodes.TypeIdentifierNode;
       constraints: Nodes.TypeLiteral | undefined;
     }[] = [];
-    const location = this.CONSUME(Tokens.TknComparisonLessThan);
+    const location = this.CONSUME(Tokens.TknLeftArrow);
     const identifier = this.SUBRULE(this.typeIdentifier);
     const constraint = this.OPTION(() => {
       this.CONSUME(Tokens.TknEqual);
@@ -1863,7 +1717,7 @@ class Parser extends EmbeddedActionsParser {
         constraints: constraint,
       });
     });
-    const close = this.CONSUME(Tokens.TknComparisonGreaterThan);
+    const close = this.CONSUME(Tokens.TknRightArrow);
     return this.ACTION((): Nodes.GenericTypeNode[] => {
       return generics.map((generic): Nodes.GenericTypeNode => {
         return {

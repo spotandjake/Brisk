@@ -6,12 +6,11 @@ import Node, {
   NodeType,
   ProgramNode,
   TypeLiteral,
-  UnaryExpressionOperator,
 } from '../Types/ParseNodes';
 import { ExportMap, VariableData } from '../Types/AnalyzerNodes';
 import { TypeCheckProperties } from 'Compiler/Types/TypeNodes';
 import { mapExpression } from './WasmTypes';
-import { createPrimType, createUnionType } from '../Helpers/typeBuilders';
+import { createPrimType } from '../Helpers/typeBuilders';
 import { BriskError, BriskSyntaxError, BriskTypeError } from '../Errors/Compiler';
 import { BriskErrorType } from '../Errors/Errors';
 import { getExpressionType, nameType, resolveType, typeCompatible, typeEqual } from './Helpers';
@@ -54,8 +53,15 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
     childNode: _T,
     props: Partial<TypeCheckProperties> = properties,
     throwTypeErr = throwTypeError
-  ): _T =>
-      typeCheckNode(rawProgram, importData, { ...properties, ...props }, throwTypeErr, childNode);
+  ): _T => {
+    return typeCheckNode(
+      rawProgram,
+      importData,
+      { ...properties, ...props },
+      throwTypeErr,
+      childNode
+    );
+  };
   // Match The Node For Analysis
   switch (node.nodeType) {
     // Statements
@@ -362,6 +368,7 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Return Node
       return node;
     case NodeType.AssignmentStatement: {
+      // TODO: Support Custom Operators
       // Analyze Node
       node.value = _typeCheckNode(node.value);
       node.name = _typeCheckNode(node.name);
@@ -384,40 +391,6 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
         varType,
         getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
         throwTypeError
-      );
-      // Return Node
-      return node;
-    }
-    case NodeType.PostFixStatement: {
-      // Analyze Node
-      node.name = _typeCheckNode(node.name);
-      // Get The Type Of The Variable
-      const varType = getExpressionType(
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.name,
-        { mutable: true }
-      );
-      // Type Check Node
-      typeCompatible(
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        varType,
-        createUnionType(
-          node.position,
-          createPrimType(node.position, 'u32'),
-          createPrimType(node.position, 'u64'),
-          createPrimType(node.position, 'i32'),
-          createPrimType(node.position, 'i64'),
-          createPrimType(node.position, 'f32'),
-          createPrimType(node.position, 'f64'),
-          createPrimType(node.position, 'Number')
-        )
       );
       // Return Node
       return node;
@@ -552,7 +525,123 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze The Function Call
       // TODO: Make This Type Safe
       //@ts-ignore
-      return opFunc;
+      return _typeCheckNode(opFunc);
+    }
+    case NodeType.PostfixExpression: {
+      // Analyze The Inputs
+      node.value = _typeCheckNode(node.value);
+      // Find The Operator
+      const opFuncs = operatorScope.POSTFIX.get(node.operatorImage) ?? [];
+      const opFunc = opFuncs
+        .map((opFuncName) => {
+          // Get Callee Type
+          const funcCall: CallExpressionNode = {
+            nodeType: NodeType.CallExpression,
+            category: NodeCategory.Expression,
+            callee: {
+              nodeType: NodeType.VariableUsage,
+              category: NodeCategory.Variable,
+              name: opFuncName,
+              position: node.position,
+              reference: getVariableReference(
+                rawProgram,
+                {
+                  nodeType: NodeType.VariableUsage,
+                  category: NodeCategory.Variable,
+                  name: opFuncName,
+                  position: node.position,
+                },
+                {
+                  pool: _variables,
+                  stack: _varStack,
+                  stacks: _varStacks,
+                }
+              ),
+            },
+            args: [node.value],
+            statement: node.statement,
+            position: node.position,
+          };
+          // Check If It Works
+          try {
+            _typeCheckNode(funcCall, {}, 2);
+            return funcCall;
+          } catch (e) {
+            return undefined;
+          }
+        })
+        .find((n) => n != undefined);
+      // Throw If We Did Not Find Anything
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      // Analyze The Function Call
+      // TODO: Make This Type Safe
+      //@ts-ignore
+      return _typeCheckNode(opFunc);
+    }
+    case NodeType.PrefixExpression: {
+      // Analyze The Inputs
+      node.value = _typeCheckNode(node.value);
+      // Find The Operator
+      const opFuncs = operatorScope.PREFIX.get(node.operatorImage) ?? [];
+      const opFunc = opFuncs
+        .map((opFuncName) => {
+          // Get Callee Type
+          const funcCall: CallExpressionNode = {
+            nodeType: NodeType.CallExpression,
+            category: NodeCategory.Expression,
+            callee: {
+              nodeType: NodeType.VariableUsage,
+              category: NodeCategory.Variable,
+              name: opFuncName,
+              position: node.position,
+              reference: getVariableReference(
+                rawProgram,
+                {
+                  nodeType: NodeType.VariableUsage,
+                  category: NodeCategory.Variable,
+                  name: opFuncName,
+                  position: node.position,
+                },
+                {
+                  pool: _variables,
+                  stack: _varStack,
+                  stacks: _varStacks,
+                }
+              ),
+            },
+            args: [node.value],
+            statement: false,
+            position: node.position,
+          };
+          // Check If It Works
+          try {
+            _typeCheckNode(funcCall, {}, 2);
+            return funcCall;
+          } catch (e) {
+            return undefined;
+          }
+        })
+        .find((n) => n != undefined);
+      // Throw If We Did Not Find Anything
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      // Analyze The Function Call
+      // TODO: Make This Type Safe
+      //@ts-ignore
+      return _typeCheckNode(opFunc);
     }
     case NodeType.TypeCastExpression:
       // Analyze Properties
@@ -569,35 +658,6 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       );
       // Return Node
       return node;
-    case NodeType.UnaryExpression: {
-      // Check What Operator Is Being Used
-      let expectedType: TypeLiteral;
-      if (node.operator == UnaryExpressionOperator.UnaryNot) {
-        expectedType = createPrimType(node.position, 'Boolean');
-      } else {
-        // -, +
-        expectedType = createUnionType(
-          node.position,
-          createPrimType(node.position, 'f32'),
-          createPrimType(node.position, 'f64'),
-          createPrimType(node.position, 'i32'),
-          createPrimType(node.position, 'i64'),
-          createPrimType(node.position, 'u32'),
-          createPrimType(node.position, 'u64'),
-          createPrimType(node.position, 'Number')
-        );
-      }
-      typeEqual(
-        rawProgram,
-        _types,
-        _typeStack,
-        _typeStacks,
-        expectedType,
-        getExpressionType(rawProgram, _variables, _types, _typeStack, _typeStacks, node.value),
-        throwTypeError
-      );
-      return node;
-    }
     case NodeType.ParenthesisExpression:
       node.value = _typeCheckNode(node.value);
       return node;

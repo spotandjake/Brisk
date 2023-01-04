@@ -20,13 +20,13 @@ export const enum NodeType {
   DeclarationStatement,
   AssignmentStatement,
   ReturnStatement,
-  PostFixStatement,
   EnumDefinitionStatement,
   // Enums
   EnumVariant,
   // Expressions
   InfixExpression,
-  UnaryExpression,
+  PostfixExpression,
+  PrefixExpression,
   ParenthesisExpression,
   TypeCastExpression,
   CallExpression,
@@ -104,7 +104,6 @@ export type Statement =
   | ReturnStatementNode
   | EnumDefinitionStatementNode
   | EnumVariantNode
-  | PostFixStatementNode
   | CallExpressionNode
   | WasmCallExpressionNode;
 export interface IfStatementNode {
@@ -233,17 +232,6 @@ export interface ReturnStatementNode {
   };
   position: Position;
 }
-export const enum PostFixOperator {
-  Increment,
-  Decrement,
-}
-export interface PostFixStatementNode {
-  nodeType: NodeType.PostFixStatement;
-  category: NodeCategory.Statement;
-  operator: PostFixOperator;
-  name: VariableUsage;
-  position: Position;
-}
 // Enums
 export interface EnumDefinitionStatementNode {
   nodeType: NodeType.EnumDefinitionStatement;
@@ -264,16 +252,11 @@ export interface EnumVariantNode {
   value: undefined | Expression | TypeLiteral[];
   position: Position;
 }
-// Expression Symbols
-export const enum UnaryExpressionOperator {
-  UnaryNot,
-  UnaryPositive,
-  UnaryNegative,
-}
 // Expressions
 export type Expression =
   | InfixExpressionNode
-  | UnaryExpressionNode
+  | PostfixExpressionNode
+  | PrefixExpressionNode
   | ParenthesisExpressionNode
   | TypeCastExpression
   | CallExpressionNode
@@ -287,10 +270,18 @@ export interface InfixExpressionNode {
   rhs: Expression;
   position: Position;
 }
-export interface UnaryExpressionNode {
-  nodeType: NodeType.UnaryExpression;
+export interface PostfixExpressionNode {
+  nodeType: NodeType.PostfixExpression;
   category: NodeCategory.Expression;
-  operator: UnaryExpressionOperator;
+  operatorImage: string;
+  value: Expression;
+  statement: boolean;
+  position: Position;
+}
+export interface PrefixExpressionNode {
+  nodeType: NodeType.PrefixExpression;
+  category: NodeCategory.Expression;
+  operatorImage: string;
   value: Expression;
   position: Position;
 }
