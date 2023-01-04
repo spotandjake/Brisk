@@ -488,7 +488,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     Types.createNumericType(WasmTypes.WasmI32),
     Expressions.i32_ConstExpression(0)
   );
-  // TODO: Compile LinkingInfo Section
+  // Compile LinkingInfo Section
   wasmModule = createCustomSection(wasmModule, [
     // Custom Section Id
     ...encodeString('LinkingInfo'),

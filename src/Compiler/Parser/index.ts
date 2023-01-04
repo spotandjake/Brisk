@@ -179,12 +179,12 @@ class Parser extends EmbeddedActionsParser {
     return this.OR([
       { ALT: () => this.SUBRULE(this.returnStatement) },
       {
-        GATE: this.BACKTRACK(this.expressionStatement),
-        ALT: () => this.SUBRULE(this.expressionStatement),
-      },
-      {
         GATE: this.BACKTRACK(this.assignmentStatement),
         ALT: () => this.SUBRULE(this.assignmentStatement),
+      },
+      {
+        GATE: this.BACKTRACK(this.expressionStatement),
+        ALT: () => this.SUBRULE(this.expressionStatement),
       },
       { ALT: () => this.SUBRULE(this.breakStatement) },
       { ALT: () => this.SUBRULE(this.breakIfStatement) },
@@ -532,11 +532,53 @@ class Parser extends EmbeddedActionsParser {
   });
   private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
     return this.OR([
+      {
+        GATE: this.BACKTRACK(this.postfixOperatorStatement),
+        ALT: () => this.SUBRULE(this.postfixOperatorStatement),
+      },
       { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true, true] }) },
       { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) },
-      // { ALT: () => this.SUBRULE(this.postfixOperator, { ARGS: [true] }) },
     ]);
   });
+  // PostFix Operators
+  // TODO: Combine This With The Expression Rule
+  private postfixOperatorStatement = this.RULE(
+    'postfixOperatorStatement',
+    (): Nodes.PostfixExpressionNode => {
+      // Match The Operator List
+      const operators: IToken[] = [];
+      const expression = this.SUBRULE(this.variableUsage);
+      this.AT_LEAST_ONE(() => {
+        operators.push(this.CONSUME(Tokens.operators));
+      });
+      return this.ACTION((): Nodes.PostfixExpressionNode => {
+        // TODO: Make This Type Safe
+        //@ts-ignore
+        return operators.reduce((prevValue, currentValue): Nodes.PostfixExpressionNode => {
+          return {
+            nodeType: Nodes.NodeType.PostfixExpression,
+            category: Nodes.NodeCategory.Expression,
+            operatorImage: currentValue.image,
+            value: prevValue,
+            statement: true,
+            position: {
+              offset: currentValue.startOffset,
+              // TODO: Ensure this math is correct
+              length:
+                prevValue.position.offset +
+                prevValue.position.length -
+                currentValue.startOffset +
+                1,
+              line: currentValue.startLine || 0,
+              col: currentValue.startColumn || 0,
+              basePath: this.basePath,
+              file: this.file,
+            },
+          };
+        }, expression);
+      });
+    }
+  );
   // Enums
   private enumDefinitionStatement = this.RULE(
     'EnumDefinitionStatement',
@@ -670,7 +712,7 @@ class Parser extends EmbeddedActionsParser {
   // PostFix Operators
   private postfixOperator = this.RULE(
     'postfixOperator',
-    (statement = false): Nodes.PostfixExpressionNode | Nodes.Expression => {
+    (): Nodes.PostfixExpressionNode | Nodes.Expression => {
       // Match The Operator List
       const operators: IToken[] = [];
       const expression = this.SUBRULE(this.prefixOperator);
@@ -687,7 +729,7 @@ class Parser extends EmbeddedActionsParser {
               category: Nodes.NodeCategory.Expression,
               operatorImage: currentValue.image,
               value: prevValue,
-              statement: statement,
+              statement: false,
               position: {
                 offset: currentValue.startOffset,
                 // TODO: Ensure this math is correct

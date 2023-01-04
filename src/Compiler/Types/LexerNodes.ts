@@ -53,7 +53,6 @@ export const enum LexerTokenType {
   TknEqual = 'TknEqual',
   TknQuestionMark = 'TknQuestionMark',
   TknUnion = 'TknUnion',
-  // TODO: Merge This Into The Normal System Under A Precedence Level
   TknAssignmentOperator = 'TknAssignmentOperator',
   // Literals
   TknStringLiteral = 'String',
