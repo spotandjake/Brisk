@@ -10,7 +10,8 @@
 // let c: f64 = 1F + 1F; // translates into addF64(1F, 1F);
 // a++;
 
-let x: Function = <T>(x: i32): i32 => {
+let x: Function = @<T>(x: i32): i32 => {
   return(x);
 };
-let y: i32 = <i32>(x);
+// let d: i64 = <i64>d;
+// let y: i32 = (x);

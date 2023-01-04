@@ -703,10 +703,10 @@ class Parser extends EmbeddedActionsParser {
       // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.postfixOperator);
+      const lhs = this.SUBRULE(this.typeCastExpression);
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators160).image);
-        expressions.push(this.SUBRULE1(this.postfixOperator));
+        expressions.push(this.SUBRULE1(this.typeCastExpression));
       });
       if (expressions.length == 0) {
         return lhs;
@@ -728,6 +728,46 @@ class Parser extends EmbeddedActionsParser {
               },
             };
           }, lhs);
+        });
+      }
+    }
+  );
+  // Type Cast Expression
+  private typeCastExpression = this.RULE(
+    'TypeCastExpression',
+    (): Nodes.TypeCastExpression | Nodes.Expression => {
+      const typeCast: [IToken, Nodes.TypeLiteral][] = [];
+      this.MANY(() => {
+        const location = this.CONSUME(Tokens.TknLeftArrow);
+        const typeLiteral = this.SUBRULE(this.typeLiteral);
+        this.CONSUME(Tokens.TknRightArrow);
+        typeCast.push([location, typeLiteral]);
+      });
+      const value = this.SUBRULE(this.postfixOperator);
+      if (typeCast.length == 0) {
+        return value;
+      } else {
+        return this.ACTION((): Nodes.TypeCastExpression => {
+          return typeCast.reduce((prevValue, currValue): Nodes.TypeCastExpression => {
+            return {
+              nodeType: Nodes.NodeType.TypeCastExpression,
+              category: Nodes.NodeCategory.Expression,
+              value: prevValue,
+              typeLiteral: currValue[1],
+              position: {
+                offset: currValue[0].startOffset,
+                length:
+                  prevValue.position.offset +
+                  prevValue.position.length -
+                  currValue[0].startOffset +
+                  1,
+                line: currValue[0].startLine || 0,
+                col: currValue[0].startColumn || 0,
+                basePath: this.basePath,
+                file: this.file,
+              },
+            };
+          }, <Nodes.TypeCastExpression>value);
         });
       }
     }
@@ -781,7 +821,7 @@ class Parser extends EmbeddedActionsParser {
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators));
       });
-      const expression = this.SUBRULE(this.typeCastExpression);
+      const expression = this.SUBRULE(this.simpleExpression);
       if (operators.length == 0) {
         return expression;
       } else {
@@ -812,45 +852,6 @@ class Parser extends EmbeddedActionsParser {
     }
   );
   // Simple Expressions
-  private typeCastExpression = this.RULE(
-    'TypeCastExpression',
-    (): Nodes.TypeCastExpression | Nodes.Expression => {
-      const typeCast: [IToken, Nodes.TypeLiteral][] = [];
-      this.MANY(() => {
-        const location = this.CONSUME(Tokens.TknLeftArrow);
-        const typeLiteral = this.SUBRULE(this.typeLiteral);
-        this.CONSUME(Tokens.TknRightArrow);
-        typeCast.push([location, typeLiteral]);
-      });
-      const value = this.SUBRULE(this.simpleExpression);
-      if (typeCast.length == 0) {
-        return value;
-      } else {
-        return this.ACTION((): Nodes.TypeCastExpression => {
-          return typeCast.reduce((prevValue, currValue): Nodes.TypeCastExpression => {
-            return {
-              nodeType: Nodes.NodeType.TypeCastExpression,
-              category: Nodes.NodeCategory.Expression,
-              value: prevValue,
-              typeLiteral: currValue[1],
-              position: {
-                offset: currValue[0].startOffset,
-                length:
-                  prevValue.position.offset +
-                  prevValue.position.length -
-                  currValue[0].startOffset +
-                  1,
-                line: currValue[0].startLine || 0,
-                col: currValue[0].startColumn || 0,
-                basePath: this.basePath,
-                file: this.file,
-              },
-            };
-          }, <Nodes.TypeCastExpression>value);
-        });
-      }
-    }
-  );
   private simpleExpression = this.RULE('SimpleExpression', (): Nodes.Expression => {
     return this.OR({
       MAX_LOOKAHEAD: 4,
@@ -980,7 +981,7 @@ class Parser extends EmbeddedActionsParser {
       { ALT: () => this.SUBRULE(this.constantLiteral) },
       { ALT: () => this.SUBRULE(this.arrayLiteral) },
       { ALT: () => this.SUBRULE(this.objectLiteral) },
-      // { ALT: () => this.SUBRULE(this.genericFunctionDefinition) },
+      { ALT: () => this.SUBRULE(this.genericFunctionDefinition) },
       { ALT: () => this.SUBRULE(this.functionDefinition) },
     ]);
   });
@@ -1359,13 +1360,23 @@ class Parser extends EmbeddedActionsParser {
   private genericFunctionDefinition = this.RULE(
     'GenericFunctionDefinition',
     (): Nodes.FunctionLiteralNode => {
+      const location = this.CONSUME(Tokens.TknMarker);
       const genericTypes = this.SUBRULE(this.genericType);
-      this.CONSUME(Tokens.TknMarker);
       const functionDefinition = this.SUBRULE(this.functionDefinition);
       return this.ACTION((): Nodes.FunctionLiteralNode => {
-        // TODO: Set the correct start Position
-        functionDefinition.genericTypes = genericTypes;
-        return functionDefinition;
+        return {
+          ...functionDefinition,
+          genericTypes: genericTypes,
+          position: {
+            offset: location.startOffset,
+            length:
+              location.endOffset! - location.startOffset + 1 + functionDefinition.position.length,
+            line: location.startLine || 0,
+            col: location.startColumn || 0,
+            basePath: this.basePath,
+            file: this.file,
+          },
+        };
       });
     }
   );
