@@ -78,5 +78,6 @@ export const enum LexerTokenType {
 
   TknFlag = 'TknFlag',
   TknComment = 'TknComment',
+  TknMarker = 'TknMarker',
   TknIdentifier = 'TknIdentifier',
 }

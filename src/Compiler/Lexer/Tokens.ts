@@ -642,6 +642,12 @@ export const TknFlag = createToken({
   name: LexerTokenType.TknFlag,
   pattern: /@(operator|unsafe|inline)/,
 }); // Flag
+// Marker
+export const TknMarker = createToken({
+  label: 'TknMarker',
+  name: LexerTokenType.TknMarker,
+  pattern: '@',
+}); // Flag
 // Identifiers
 export const TknIdentifier = createToken({
   label: 'Identifier',
@@ -727,6 +733,8 @@ export const Tokens = [
   TknAsync,
   // Flags
   TknFlag,
+  // Marker
+  TknMarker,
   // Identifiers
   TknIdentifier,
 ];
