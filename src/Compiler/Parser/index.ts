@@ -865,9 +865,79 @@ class Parser extends EmbeddedActionsParser {
       // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.simpleExpression);
+      const lhs = this.SUBRULE(this.infix150Expression);
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators160).image);
+        expressions.push(this.SUBRULE1(this.infix150Expression));
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return this.ACTION(() => {
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
+        });
+      }
+    }
+  );
+  private infix150Expression = this.RULE(
+    'Infix150Expression',
+    (): Nodes.InfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
+      const operators: string[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.infix140Expression);
+      this.MANY(() => {
+        operators.push(this.CONSUME(Tokens.operators150).image);
+        expressions.push(this.SUBRULE1(this.infix140Expression));
+      });
+      if (expressions.length == 0) {
+        return lhs;
+      } else {
+        return this.ACTION(() => {
+          return expressions.reduce((prevValue, currentValue, index): Nodes.InfixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.InfixExpression,
+              category: Nodes.NodeCategory.Expression,
+              lhs: prevValue,
+              operatorImage: operators[index],
+              rhs: currentValue,
+              position: {
+                ...prevValue.position,
+                length:
+                  currentValue.position.offset +
+                  currentValue.position.length -
+                  prevValue.position.offset,
+              },
+            };
+          }, lhs);
+        });
+      }
+    }
+  );
+  private infix140Expression = this.RULE(
+    'Infix140Expression',
+    (): Nodes.InfixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
+      const operators: string[] = [];
+      const expressions: Nodes.Expression[] = [];
+      const lhs = this.SUBRULE(this.simpleExpression);
+      this.MANY(() => {
+        operators.push(this.CONSUME(Tokens.operators140).image);
         expressions.push(this.SUBRULE1(this.simpleExpression));
       });
       if (expressions.length == 0) {

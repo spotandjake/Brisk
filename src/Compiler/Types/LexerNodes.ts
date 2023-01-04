@@ -11,6 +11,8 @@ export const enum LexerTokenType {
   Operators180 = 'Operators180',
   Operators170 = 'Operators170',
   Operators160 = 'Operators160',
+  Operators150 = 'Operators150',
+  Operators140 = 'Operators140',
   Reserved = 'Reserved',
   // Keywords
   ImportToken = 'ImportToken',
@@ -48,6 +50,8 @@ export const enum LexerTokenType {
   TknOperator180 = 'TknOperator180',
   TknOperator170 = 'TknOperator170',
   TknOperator160 = 'TknOperator160',
+  TknOperator150 = 'TknOperator150',
+  TknOperator140 = 'TknOperator140',
   TknLeftArrow = 'TknLeftArrow',
   TknRightArrow = 'TknRightArrow',
   TknEqual = 'TknEqual',

@@ -37,6 +37,7 @@ let objectTest3: E = {
   ...objectTest2,
   field3: 1n
 };
+objectTest = 1n;
 objectTest.field2 = 2n;
 // if statement testing
 if (1 == 1) {
