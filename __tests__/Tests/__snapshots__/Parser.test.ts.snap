@@ -1403,6 +1403,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       },
       "nodeType": 13,
+      "operatorImage": "=",
       "position": {
         "basePath": "",
         "col": 1,
@@ -3041,6 +3042,7 @@ exports[`Parser: Literals Pass 1`] = `
         },
       },
       "nodeType": 13,
+      "operatorImage": "=",
       "position": {
         "basePath": "",
         "col": 1,
@@ -5658,6 +5660,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       },
       "nodeType": 13,
+      "operatorImage": "=",
       "position": {
         "basePath": "",
         "col": 1,
@@ -7296,6 +7299,7 @@ exports[`Parser: Main Pass 1`] = `
         },
       },
       "nodeType": 13,
+      "operatorImage": "=",
       "position": {
         "basePath": "",
         "col": 1,
