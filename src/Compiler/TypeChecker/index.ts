@@ -1,5 +1,4 @@
 import Node, {
-  AssignmentStatementNode,
   CallExpressionNode,
   EnumVariantNode,
   GenericTypeNode,

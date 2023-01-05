@@ -1,5 +1,5 @@
 // Imports
-import { EmbeddedActionsParser, ILexingResult, IToken, TokenType } from 'chevrotain';
+import { EmbeddedActionsParser, ILexingResult, IOrAlt, IToken, TokenType } from 'chevrotain';
 import * as Tokens from '../Lexer/Tokens';
 import ErrorProvider from './ErrorProvider';
 import * as Nodes from '../Types/ParseNodes';
@@ -10,6 +10,12 @@ import { __DEBUG__ } from '@brisk/config';
 class Parser extends EmbeddedActionsParser {
   private basePath: string;
   private file: string;
+  // Caches
+  private c2: IOrAlt<Nodes.Statement>[] | undefined;
+  private c6: IOrAlt<Nodes.Statement>[] | undefined;
+  private c10: IOrAlt<Nodes.ExportStatementValue>[] | undefined;
+  private c17: IOrAlt<Nodes.Literal>[] | undefined;
+  private c20: IOrAlt<Nodes.Expression>[] | undefined;
   constructor(tokens: TokenType[], basePath: string, file: string) {
     super(tokens, {
       maxLookahead: 2,
@@ -68,11 +74,14 @@ class Parser extends EmbeddedActionsParser {
     return body;
   });
   private topLevelStatement = this.RULE('TopLevelStatement', (): Nodes.Statement => {
-    const statement = this.OR([
-      { ALT: () => this.SUBRULE(this.importStatement) },
-      { ALT: () => this.SUBRULE(this.exportStatement) },
-      { ALT: () => this.SUBRULE(this.flag) },
-    ]);
+    const statement = this.OR(
+      this.c2 ||
+        (this.c2 = [
+          { ALT: () => this.SUBRULE(this.importStatement) },
+          { ALT: () => this.SUBRULE(this.exportStatement) },
+          { ALT: () => this.SUBRULE(this.flag) },
+        ])
+    );
     this.CONSUME(Tokens.TknSemiColon);
     this.ACTION(() => (statement.position.length += 1));
     return statement;
@@ -98,7 +107,7 @@ class Parser extends EmbeddedActionsParser {
     const statement = this.SUBRULE(this._statement);
     this.OR([
       {
-        // @ts-ignore
+        //@ts-ignore
         GATE: () => this.input[this.currIdx]?.image != '}',
         ALT: () => {
           this.CONSUME(Tokens.TknSemiColon);
@@ -117,14 +126,17 @@ class Parser extends EmbeddedActionsParser {
     return statement;
   });
   private _statement = this.RULE('_Statement', (): Nodes.Statement => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.blockStatement) },
-      { ALT: () => this.SUBRULE(this.typeAlias) },
-      { ALT: () => this.SUBRULE(this.ifStatement) },
-      { ALT: () => this.SUBRULE(this.whileStatement) },
-      { ALT: () => this.SUBRULE(this.declarationStatement) },
-      { ALT: () => this.SUBRULE(this.singleLineStatement) },
-    ]);
+    return this.OR(
+      this.c6 ||
+        (this.c6 = [
+          { ALT: () => this.SUBRULE(this.blockStatement) },
+          { ALT: () => this.SUBRULE(this.typeAlias) },
+          { ALT: () => this.SUBRULE(this.ifStatement) },
+          { ALT: () => this.SUBRULE(this.whileStatement) },
+          { ALT: () => this.SUBRULE(this.declarationStatement) },
+          { ALT: () => this.SUBRULE(this.singleLineStatement) },
+        ])
+    );
   });
   // Flags
   private flag = this.RULE('Flag', (): Nodes.FlagNode => {
@@ -417,14 +429,17 @@ class Parser extends EmbeddedActionsParser {
   );
   private exportStatement = this.RULE('ExportStatement', (): Nodes.ExportStatementNode => {
     const location = this.CONSUME(Tokens.TknExport);
-    const variable: Nodes.ExportStatementValue = this.OR([
-      { ALT: () => this.SUBRULE(this.variableUsageNode) },
-      { ALT: () => this.SUBRULE(this.declarationStatement) },
-      { ALT: () => this.SUBRULE(this.objectLiteral) },
-      { ALT: () => this.SUBRULE(this.interfaceDefinition) },
-      { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
-      { ALT: () => this.SUBRULE(this.typeAlias) },
-    ]);
+    const variable: Nodes.ExportStatementValue = this.OR(
+      this.c10 ||
+        (this.c10 = [
+          { ALT: () => this.SUBRULE(this.variableUsageNode) },
+          { ALT: () => this.SUBRULE(this.declarationStatement) },
+          { ALT: () => this.SUBRULE(this.objectLiteral) },
+          { ALT: () => this.SUBRULE(this.interfaceDefinition) },
+          { ALT: () => this.SUBRULE(this.enumDefinitionStatement) },
+          { ALT: () => this.SUBRULE(this.typeAlias) },
+        ])
+    );
     return this.ACTION((): Nodes.ExportStatementNode => {
       return {
         nodeType: Nodes.NodeType.ExportStatement,
@@ -530,13 +545,19 @@ class Parser extends EmbeddedActionsParser {
       };
     });
   });
-  private expressionStatement = this.RULE('expressionStatement', (): Nodes.Expression => {
+  private expressionStatement = this.RULE('expressionStatement', (): Nodes.Statement => {
     return this.OR([
       {
         GATE: this.BACKTRACK(this.postfixOperatorStatement),
         ALT: () => this.SUBRULE(this.postfixOperatorStatement),
       },
-      { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [true, true] }) },
+      {
+        ALT: () => {
+          return <Nodes.CallExpressionNode>(
+            this.SUBRULE(this.callExpression, { ARGS: [true, true] })
+          );
+        },
+      },
       { ALT: () => this.SUBRULE(this.wasmCallExpression, { ARGS: [true] }) },
     ]);
   });
@@ -641,8 +662,8 @@ class Parser extends EmbeddedActionsParser {
             });
             const location = this.CONSUME(Tokens.TknRParen);
             return {
-              value: values,
               endOffset: location?.endOffset || 0,
+              value: values,
             };
           },
         },
@@ -656,7 +677,7 @@ class Parser extends EmbeddedActionsParser {
         value: value?.value,
         position: {
           offset: identifier.startOffset,
-          length: (value?.endOffset ?? identifier.endOffset) - identifier.startOffset + 1,
+          length: (value?.endOffset ?? identifier.endOffset ?? 0) - identifier.startOffset + 1,
           line: identifier.startLine || 0,
           col: identifier.startColumn || 0,
           basePath: this.basePath,
@@ -1001,20 +1022,25 @@ class Parser extends EmbeddedActionsParser {
       const FunctionHead = () => {
         this.AT_LEAST_ONE(() => calls.push(this.SUBRULE(this.arguments)));
         return this.ACTION((): Nodes.CallExpressionNode => {
-          return calls.reduce((prevValue, currValue): Nodes.CallExpressionNode => {
-            return {
-              nodeType: Nodes.NodeType.CallExpression,
-              category: Nodes.NodeCategory.Expression,
-              callee: <Nodes.Expression>prevValue,
-              args: (<Nodes.ArgumentsNode>currValue).args,
-              statement: statement,
-              position: {
-                ...prevValue.position,
-                length:
-                  currValue.position.offset + currValue.position.length - prevValue.position.offset,
-              },
-            };
-          }, callee);
+          return <Nodes.CallExpressionNode>calls.reduce(
+            (prevValue, currValue): Nodes.CallExpressionNode => {
+              return {
+                nodeType: Nodes.NodeType.CallExpression,
+                category: Nodes.NodeCategory.Expression,
+                callee: <Nodes.Expression>prevValue,
+                args: (<Nodes.ArgumentsNode>currValue).args,
+                statement: statement,
+                position: {
+                  ...prevValue.position,
+                  length:
+                    currValue.position.offset +
+                    currValue.position.length -
+                    prevValue.position.offset,
+                },
+              };
+            },
+            <Nodes.CallExpressionNode>callee
+          );
         });
       };
       if (requireFunctionCall) return FunctionHead();
@@ -1093,21 +1119,24 @@ class Parser extends EmbeddedActionsParser {
   );
   // Literals
   private literal = this.RULE('Literal', (): Nodes.Literal => {
-    return this.OR([
-      { ALT: () => this.SUBRULE(this.stringLiteral) },
-      { ALT: () => this.SUBRULE(this.i32Literal) },
-      { ALT: () => this.SUBRULE(this.i64Literal) },
-      { ALT: () => this.SUBRULE(this.u32Literal) },
-      { ALT: () => this.SUBRULE(this.u64Literal) },
-      { ALT: () => this.SUBRULE(this.f32Literal) },
-      { ALT: () => this.SUBRULE(this.f64Literal) },
-      { ALT: () => this.SUBRULE(this.numberLiteral) },
-      { ALT: () => this.SUBRULE(this.constantLiteral) },
-      { ALT: () => this.SUBRULE(this.arrayLiteral) },
-      { ALT: () => this.SUBRULE(this.objectLiteral) },
-      { ALT: () => this.SUBRULE(this.genericFunctionDefinition) },
-      { ALT: () => this.SUBRULE(this.functionDefinition) },
-    ]);
+    return this.OR(
+      this.c17 ||
+        (this.c17 = [
+          { ALT: () => this.SUBRULE(this.stringLiteral) },
+          { ALT: () => this.SUBRULE(this.i32Literal) },
+          { ALT: () => this.SUBRULE(this.i64Literal) },
+          { ALT: () => this.SUBRULE(this.u32Literal) },
+          { ALT: () => this.SUBRULE(this.u64Literal) },
+          { ALT: () => this.SUBRULE(this.f32Literal) },
+          { ALT: () => this.SUBRULE(this.f64Literal) },
+          { ALT: () => this.SUBRULE(this.numberLiteral) },
+          { ALT: () => this.SUBRULE(this.constantLiteral) },
+          { ALT: () => this.SUBRULE(this.arrayLiteral) },
+          { ALT: () => this.SUBRULE(this.objectLiteral) },
+          { ALT: () => this.SUBRULE(this.genericFunctionDefinition) },
+          { ALT: () => this.SUBRULE(this.functionDefinition) },
+        ])
+    );
   });
   private stringLiteral = this.RULE('StringLiteral', (): Nodes.StringLiteralNode => {
     const value = this.CONSUME(Tokens.TknString);
@@ -1325,7 +1354,7 @@ class Parser extends EmbeddedActionsParser {
         {
           ALT: () => {
             const fieldValue = this.SUBRULE(this.variableUsageNode);
-            return {
+            return <Nodes.ObjectFieldNode>{
               nodeType: Nodes.NodeType.ObjectField,
               category: Nodes.NodeCategory.Literal,
               name: fieldValue.name,
@@ -1392,7 +1421,7 @@ class Parser extends EmbeddedActionsParser {
     });
   });
   private variableDefinition = this.RULE('VariableDefinition', (): Nodes.VariableDefinition => {
-    return this.OR([{ ALT: () => this.SUBRULE(this.variableDefinitionNode) }]);
+    return this.SUBRULE(this.variableDefinitionNode);
   });
   private variableDefinitionNode = this.RULE(
     'VariableDefinitionNode',
@@ -1432,12 +1461,15 @@ class Parser extends EmbeddedActionsParser {
   });
   private memberAccessNode = this.RULE('MemberAccess', (): Nodes.MemberAccessNode => {
     // TODO: Allow Member Access Nodes On Any Expression
-    const parent = this.OR([
-      { ALT: () => this.SUBRULE(this.variableUsageNode) },
-      // { ALT: () => this.SUBRULE(this.parenthesisExpression) },
-      // { ALT: () => this.SUBRULE(this.objectLiteral) },
-      // { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false, true]}) },
-    ]);
+    const parent = this.OR(
+      this.c20 ||
+        (this.c20 = [
+          { ALT: () => this.SUBRULE(this.variableUsageNode) },
+          // { ALT: () => this.SUBRULE(this.parenthesisExpression) },
+          // { ALT: () => this.SUBRULE(this.objectLiteral) },
+          // { ALT: () => this.SUBRULE(this.callExpression, { ARGS: [false, true]}) },
+        ])
+    );
     const property = this.SUBRULE(this.propertyUsageNode);
     return this.ACTION((): Nodes.MemberAccessNode => {
       return {

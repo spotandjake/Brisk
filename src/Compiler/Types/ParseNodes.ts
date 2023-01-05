@@ -104,6 +104,7 @@ export type Statement =
   | ReturnStatementNode
   | EnumDefinitionStatementNode
   | EnumVariantNode
+  | PostfixExpressionNode
   | CallExpressionNode
   | WasmCallExpressionNode;
 export interface IfStatementNode {
