@@ -680,7 +680,7 @@ class Parser extends EmbeddedActionsParser {
         this.CONSUME(Tokens.TknRightArrow);
         typeCast.push([location, typeLiteral]);
       });
-      const value = this.SUBRULE(this.postfixOperator);
+      const value = this.SUBRULE(this.subExpression);
       if (typeCast.length == 0) {
         return value;
       } else {
@@ -709,6 +709,17 @@ class Parser extends EmbeddedActionsParser {
       }
     }
   );
+  private subExpression = this.RULE('subExpression', (): Nodes.Expression => {
+    return this.OR([
+      {
+        GATE: this.BACKTRACK(this.infix180Expression),
+        ALT: () => this.SUBRULE(this.infix180Expression),
+      },
+      {
+        ALT: () => this.SUBRULE(this.postfixOperator),
+      },
+    ]);
+  });
   // PostFix Operators
   private postfixOperator = this.RULE(
     'postfixOperator',
@@ -730,45 +741,6 @@ class Parser extends EmbeddedActionsParser {
               operatorImage: currentValue.image,
               value: prevValue,
               statement: false,
-              position: {
-                offset: currentValue.startOffset,
-                // TODO: Ensure this math is correct
-                length:
-                  prevValue.position.offset +
-                  prevValue.position.length -
-                  currentValue.startOffset +
-                  1,
-                line: currentValue.startLine || 0,
-                col: currentValue.startColumn || 0,
-                basePath: this.basePath,
-                file: this.file,
-              },
-            };
-          }, expression);
-        });
-      }
-    }
-  );
-  // Prefix Operators
-  private prefixOperator = this.RULE(
-    'prefixOperator',
-    (): Nodes.PrefixExpressionNode | Nodes.Expression => {
-      // Match The Operator List
-      const operators: IToken[] = [];
-      this.MANY(() => {
-        operators.push(this.CONSUME(Tokens.operators));
-      });
-      const expression = this.SUBRULE(this.infix180Expression);
-      if (operators.length == 0) {
-        return expression;
-      } else {
-        return this.ACTION(() => {
-          return operators.reduce((prevValue, currentValue): Nodes.PrefixExpressionNode => {
-            return {
-              nodeType: Nodes.NodeType.PrefixExpression,
-              category: Nodes.NodeCategory.Expression,
-              operatorImage: currentValue.image,
-              value: prevValue,
               position: {
                 offset: currentValue.startOffset,
                 // TODO: Ensure this math is correct
@@ -935,10 +907,10 @@ class Parser extends EmbeddedActionsParser {
       // Match The Operator List
       const operators: string[] = [];
       const expressions: Nodes.Expression[] = [];
-      const lhs = this.SUBRULE(this.simpleExpression);
+      const lhs = this.SUBRULE(this.prefixOperator);
       this.MANY(() => {
         operators.push(this.CONSUME(Tokens.operators140).image);
-        expressions.push(this.SUBRULE1(this.simpleExpression));
+        expressions.push(this.SUBRULE1(this.prefixOperator));
       });
       if (expressions.length == 0) {
         return lhs;
@@ -960,6 +932,45 @@ class Parser extends EmbeddedActionsParser {
               },
             };
           }, lhs);
+        });
+      }
+    }
+  );
+  // Prefix Operators
+  private prefixOperator = this.RULE(
+    'prefixOperator',
+    (): Nodes.PrefixExpressionNode | Nodes.Expression => {
+      // Match The Operator List
+      const operators: IToken[] = [];
+      this.MANY(() => {
+        operators.push(this.CONSUME(Tokens.operators));
+      });
+      const expression = this.SUBRULE(this.simpleExpression);
+      if (operators.length == 0) {
+        return expression;
+      } else {
+        return this.ACTION(() => {
+          return operators.reduce((prevValue, currentValue): Nodes.PrefixExpressionNode => {
+            return {
+              nodeType: Nodes.NodeType.PrefixExpression,
+              category: Nodes.NodeCategory.Expression,
+              operatorImage: currentValue.image,
+              value: prevValue,
+              position: {
+                offset: currentValue.startOffset,
+                // TODO: Ensure this math is correct
+                length:
+                  prevValue.position.offset +
+                  prevValue.position.length -
+                  currentValue.startOffset +
+                  1,
+                line: currentValue.startLine || 0,
+                col: currentValue.startColumn || 0,
+                basePath: this.basePath,
+                file: this.file,
+              },
+            };
+          }, expression);
         });
       }
     }
@@ -1911,6 +1922,7 @@ const parse = (lexingResult: ILexingResult, code: string, basePath: string, file
       basePath: basePath,
       file: file,
     };
+    console.dir(parser.errors, { depth: null });
     BriskCustomError(code, 'ParseError', message, position);
   }
   if (parsed == undefined) {
