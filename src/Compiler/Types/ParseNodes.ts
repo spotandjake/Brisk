@@ -175,10 +175,14 @@ export interface BlockStatementNode {
   };
   position: Position;
 }
+export interface ImportLabelNode {
+  flag: FlagNode | undefined;
+  variable: VariableDefinitionNode;
+}
 export interface ImportStatementNode {
   nodeType: NodeType.ImportStatement;
   category: NodeCategory.Statement;
-  variable: VariableDefinition;
+  variable: VariableDefinition | ImportLabelNode[];
   source: StringLiteralNode;
   position: Position;
 }

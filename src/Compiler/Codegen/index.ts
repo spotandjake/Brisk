@@ -139,22 +139,36 @@ const generateCode = (
     }
     // TODO: Handle Import Statement
     case NodeType.ImportStatement: {
-      const importType = encodeBriskType(
-        rawProgram,
-        properties,
-        getVariable(_variables, node.variable).type
-      );
-      // Add The Import
-      addImport(
-        wasmModule,
-        createGlobalImport(
-          `${brisk_moduleIdentifier}${node.source.value}.wasm`,
-          `${brisk_moduleIdentifier}${node.variable.name}`,
-          generateVariableName(node.variable.name, node.variable.reference!),
-          importType,
-          false
-        )
-      );
+      // TODO: Allow Importing Types
+      // TODO: Handle Import Objects
+      if (!Array.isArray(node.variable)) {
+        return BriskError(
+          rawProgram,
+          BriskErrorType.FeatureNotYetImplemented,
+          [],
+          node.variable.position
+        );
+      } else {
+        node.variable = node.variable.map((label) => {
+          const importType = encodeBriskType(
+            rawProgram,
+            properties,
+            getVariable(_variables, label.variable).type
+          );
+          // Add The Import
+          addImport(
+            wasmModule,
+            createGlobalImport(
+              `${brisk_moduleIdentifier}${node.source.value}.wasm`,
+              `${brisk_moduleIdentifier}${label.variable.name}`,
+              generateVariableName(label.variable.name, label.variable.reference!),
+              importType,
+              false
+            )
+          );
+          return label;
+        });
+      }
       // Return A Reference To The Import
       return []; // Return A Blank Expression
     }

@@ -375,14 +375,33 @@ class Parser extends EmbeddedActionsParser {
       const variable = this.OR([
         {
           ALT: () => {
-            // TODO: Support Destructuring Imports
-            return this.SUBRULE(this.variableDefinition);
+            const importLabels: Nodes.ImportLabelNode[] = [];
+            // Support Destructuring Imports
+            this.CONSUME(Tokens.TknLBrace);
+            this.AT_LEAST_ONE_SEP({
+              SEP: Tokens.TknComma,
+              DEF: () => {
+                const flag = this.OPTION(() => this.SUBRULE(this.flag));
+                const variable = this.SUBRULE(this.variableDefinitionNode);
+                importLabels.push({
+                  flag: flag,
+                  variable: variable,
+                });
+              },
+            });
+            this.CONSUME(Tokens.TknRBrace);
+            return importLabels;
+          },
+        },
+        {
+          ALT: () => {
+            return this.SUBRULE1(this.variableDefinitionNode);
           },
         },
         {
           ALT: () => {
             this.CONSUME(Tokens.TknWasm);
-            const variable = this.SUBRULE1(this.variableDefinitionNode);
+            const variable = this.SUBRULE2(this.variableDefinitionNode);
             this.CONSUME(Tokens.TknColon);
             typeSignature = this.SUBRULE(this.typeLiteral);
             return variable;

@@ -182,21 +182,33 @@ const typeCheckNode = <T extends Exclude<Node, ProgramNode>>(
       });
       return node;
     case NodeType.ImportStatement: {
-      // TODO: Make it so a destructure imports everything and a name imports it as an object
-      // Get The Export Name
-      const moduleMap = importData.get(node.source.value);
-      if (moduleMap == undefined)
-        return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
-      const exportData = moduleMap.get(node.variable.name);
-      if (exportData == undefined)
-        return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
       // TODO: Allow Importing Types
-      // Set Variable Type
-      setVariable(_variables, node.variable, {
-        type: exportData.baseType,
-        baseType: exportData.baseType,
-        global: true,
-      });
+      // TODO: Handle Import Objects
+      if (!Array.isArray(node.variable)) {
+        return BriskError(
+          rawProgram,
+          BriskErrorType.FeatureNotYetImplemented,
+          [],
+          node.variable.position
+        );
+      } else {
+        node.variable = node.variable.map((label) => {
+          // Get The Export Name
+          const moduleMap = importData.get(node.source.value);
+          if (moduleMap == undefined)
+            return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
+          const exportData = moduleMap.get(label.variable.name);
+          if (exportData == undefined)
+            return BriskError(rawProgram, BriskErrorType.CompilerError, [], node.position);
+          // Set Variable Type
+          setVariable(_variables, label.variable, {
+            type: exportData.baseType,
+            baseType: exportData.baseType,
+            global: true,
+          });
+          return label;
+        });
+      }
       // Return Node
       return node;
     }
