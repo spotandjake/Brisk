@@ -1037,9 +1037,10 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
     // Analyze Body
     body: program.body.map((child: Statement, i: number) => {
       // Ensure Import and Export Statements is at the top and bottom of the file.
-      const { nodeType, position } = child;
       const prevNode = program.body[i - 1];
       if (prevNode != undefined) {
+        const { nodeType } = child;
+        const { position } = prevNode;
         if (
           (nodeType == NodeType.ImportStatement || nodeType == NodeType.WasmImportStatement) &&
           prevNode.category != NodeCategory.Type &&
@@ -1047,7 +1048,11 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           prevNode.nodeType != NodeType.WasmImportStatement
         )
           BriskParseError(rawProgram, BriskErrorType.ImportStatementExpectedAtTop, [], position);
-        if (prevNode.nodeType == NodeType.ExportStatement && nodeType != NodeType.ExportStatement)
+        if (
+          prevNode.nodeType == NodeType.ExportStatement &&
+          nodeType != NodeType.ExportStatement &&
+          nodeType != NodeType.FlagStatement
+        )
           BriskParseError(rawProgram, BriskErrorType.ExportStatementExpectedAtBottom, [], position);
       }
       // Compile The Node
