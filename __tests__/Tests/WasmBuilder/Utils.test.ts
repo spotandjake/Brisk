@@ -8,7 +8,7 @@ test('WasmBuilder-Utils: ieee754-negative-ints', () => {
   for (let i = 0; i >= -1000; i -= 250) {
     data.push(i);
   }
-  expect(data.map((n) => Utils.ieee754(n))).toEqual([
+  expect(data.map((n) => Utils.encodeFloat32(n))).toEqual([
     Uint8Array.from([0, 0, 0, 0]),
     Uint8Array.from([0, 0, 122, 195]),
     Uint8Array.from([0, 0, 250, 195]),
@@ -21,7 +21,7 @@ test('WasmBuilder-Utils: ieee754-positive-ints', () => {
   for (let i = 0; i <= 1000; i += 250) {
     data.push(i);
   }
-  expect(data.map((n) => Utils.ieee754(n))).toEqual([
+  expect(data.map((n) => Utils.encodeFloat32(n))).toEqual([
     Uint8Array.from([0, 0, 0, 0]),
     Uint8Array.from([0, 0, 122, 67]),
     Uint8Array.from([0, 0, 250, 67]),
@@ -34,7 +34,7 @@ test('WasmBuilder-Utils: ieee754-negative-float', () => {
   for (let i = 0; i >= -1; i -= 0.25) {
     data.push(i);
   }
-  expect(data.map((n) => Utils.ieee754(n))).toEqual([
+  expect(data.map((n) => Utils.encodeFloat32(n))).toEqual([
     Uint8Array.from([0, 0, 0, 0]),
     Uint8Array.from([0, 0, 128, 190]),
     Uint8Array.from([0, 0, 0, 191]),
@@ -47,7 +47,7 @@ test('WasmBuilder-Utils: ieee754-positive-float', () => {
   for (let i = 0; i <= 1; i += 0.25) {
     data.push(i);
   }
-  expect(data.map((n) => Utils.ieee754(n))).toEqual([
+  expect(data.map((n) => Utils.encodeFloat32(n))).toEqual([
     Uint8Array.from([0, 0, 0, 0]),
     Uint8Array.from([0, 0, 128, 62]),
     Uint8Array.from([0, 0, 0, 63]),
@@ -56,7 +56,7 @@ test('WasmBuilder-Utils: ieee754-positive-float', () => {
   ]);
 });
 test('WasmBuilder-Utils: ieee754-zero', () => {
-  expect(Utils.ieee754(0)).toEqual(new Uint8Array([0x00, 0x00, 0x00, 0x00]));
+  expect(Utils.encodeFloat32(0)).toEqual(new Uint8Array([0x00, 0x00, 0x00, 0x00]));
 });
 test('WasmBuilder-Utils: signedLEB128-negative-ints', () => {
   const data = [];

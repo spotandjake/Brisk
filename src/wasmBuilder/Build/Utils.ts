@@ -5,10 +5,19 @@ export const encodeString = (str: string): number[] => [
   ...unsignedLEB128(str.length),
   ..._encodeString(str),
 ];
-export const ieee754 = (n: number) => {
-  const buf = Buffer.allocUnsafe(4);
-  buf.writeFloatLE(n, 0);
-  return Uint8Array.from(buf);
+export const encodeFloat32 = (n: number) => {
+  // Create an ArrayBuffer with a size in bytes
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+  view.setFloat32(0, n, true);
+  return new Uint8Array(buffer);
+};
+export const encodeFloat64 = (n: number) => {
+  // Create an ArrayBuffer with a size in bytes
+  const buffer = new ArrayBuffer(8);
+  const view = new DataView(buffer);
+  view.setFloat64(0, n, true);
+  return new Uint8Array(buffer);
 };
 export const signedLEB128 = (n: number): number[] => {
   const bytes = [];

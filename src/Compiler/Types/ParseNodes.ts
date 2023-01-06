@@ -20,14 +20,13 @@ export const enum NodeType {
   DeclarationStatement,
   AssignmentStatement,
   ReturnStatement,
-  PostFixStatement,
   EnumDefinitionStatement,
   // Enums
   EnumVariant,
   // Expressions
-  ComparisonExpression,
-  ArithmeticExpression,
-  UnaryExpression,
+  InfixExpression,
+  PostfixExpression,
+  PrefixExpression,
   ParenthesisExpression,
   TypeCastExpression,
   CallExpression,
@@ -83,7 +82,7 @@ export interface ProgramNode {
   category: NodeCategory.General;
   name: string;
   body: Statement[];
-  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks' | 'operatorScope'>;
+  data: Omit<AnalyzerProperties, '_closure' | '_varStacks' | '_typeStacks'>;
   position: Position;
 }
 // Statements
@@ -105,7 +104,7 @@ export type Statement =
   | ReturnStatementNode
   | EnumDefinitionStatementNode
   | EnumVariantNode
-  | PostFixStatementNode
+  | PostfixExpressionNode
   | CallExpressionNode
   | WasmCallExpressionNode;
 export interface IfStatementNode {
@@ -176,10 +175,14 @@ export interface BlockStatementNode {
   };
   position: Position;
 }
+export interface ImportLabelNode {
+  flag: FlagNode | undefined;
+  variable: VariableDefinitionNode;
+}
 export interface ImportStatementNode {
   nodeType: NodeType.ImportStatement;
   category: NodeCategory.Statement;
-  variable: VariableDefinition;
+  variable: VariableDefinition | ImportLabelNode[];
   source: StringLiteralNode;
   position: Position;
 }
@@ -223,6 +226,7 @@ export interface AssignmentStatementNode {
   category: NodeCategory.Statement;
   name: VariableUsage;
   value: Expression;
+  operatorImage: string;
   position: Position;
 }
 export interface ReturnStatementNode {
@@ -232,17 +236,6 @@ export interface ReturnStatementNode {
   data: {
     pathReturns: boolean;
   };
-  position: Position;
-}
-export const enum PostFixOperator {
-  Increment,
-  Decrement,
-}
-export interface PostFixStatementNode {
-  nodeType: NodeType.PostFixStatement;
-  category: NodeCategory.Statement;
-  operator: PostFixOperator;
-  name: VariableUsage;
   position: Position;
 }
 // Enums
@@ -265,62 +258,36 @@ export interface EnumVariantNode {
   value: undefined | Expression | TypeLiteral[];
   position: Position;
 }
-// Expression Symbols
-export const enum ComparisonExpressionOperator {
-  ComparisonEqual,
-  ComparisonNotEqual,
-  ComparisonLessThan,
-  ComparisonGreaterThan,
-  ComparisonLessThanOrEqual,
-  ComparisonGreaterThanOrEqual,
-  ComparisonAnd,
-  ComparisonOr,
-}
-export const enum ArithmeticExpressionOperator {
-  ArithmeticAdd,
-  ArithmeticSub,
-  ArithmeticMul,
-  ArithmeticDiv,
-  ArithmeticPow,
-}
-export const enum UnaryExpressionOperator {
-  UnaryNot,
-  UnaryPositive,
-  UnaryNegative,
-}
 // Expressions
 export type Expression =
-  | ComparisonExpressionNode
-  | ArithmeticExpressionNode
-  | UnaryExpressionNode
+  | InfixExpressionNode
+  | PostfixExpressionNode
+  | PrefixExpressionNode
   | ParenthesisExpressionNode
   | TypeCastExpression
   | CallExpressionNode
   | WasmCallExpressionNode
   | Atom;
-
-export interface ComparisonExpressionNode {
-  nodeType: NodeType.ComparisonExpression;
+export interface InfixExpressionNode {
+  nodeType: NodeType.InfixExpression;
   category: NodeCategory.Expression;
   lhs: Expression;
-  operator: ComparisonExpressionOperator;
   operatorImage: string;
   rhs: Expression;
   position: Position;
 }
-export interface ArithmeticExpressionNode {
-  nodeType: NodeType.ArithmeticExpression;
+export interface PostfixExpressionNode {
+  nodeType: NodeType.PostfixExpression;
   category: NodeCategory.Expression;
-  lhs: Expression;
-  operator: ArithmeticExpressionOperator;
   operatorImage: string;
-  rhs: Expression;
+  value: Expression;
+  statement: boolean;
   position: Position;
 }
-export interface UnaryExpressionNode {
-  nodeType: NodeType.UnaryExpression;
+export interface PrefixExpressionNode {
+  nodeType: NodeType.PrefixExpression;
   category: NodeCategory.Expression;
-  operator: UnaryExpressionOperator;
+  operatorImage: string;
   value: Expression;
   position: Position;
 }

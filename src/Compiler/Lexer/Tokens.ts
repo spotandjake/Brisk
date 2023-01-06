@@ -112,39 +112,49 @@ export const operators = createToken({
   name: LexerTokenType.Operators,
   pattern: Lexer.NA,
 });
-export const reserved = createToken({
-  name: LexerTokenType.Reserved,
+export const expressionOperators = createToken({
+  name: LexerTokenType.ExpressionOperators,
+  categories: operators,
   pattern: Lexer.NA,
 });
-export const postFixOperators = createToken({
-  name: LexerTokenType.PostFixOperators,
-  pattern: Lexer.NA,
+export const statementOperators = createToken({
+  name: LexerTokenType.StatementOperators,
   categories: operators,
-});
-export const comparisonOperators = createToken({
-  name: LexerTokenType.ComparisonOperators,
   pattern: Lexer.NA,
-  categories: operators,
 });
 export const assignmentOperators = createToken({
   name: LexerTokenType.AssignmentOperators,
-  pattern: Lexer.NA,
   categories: operators,
+  pattern: Lexer.NA,
 });
-export const arithmeticOperators = createToken({
-  name: LexerTokenType.ArithmeticOperators,
-  pattern: Lexer.NA,
+export const operators180 = createToken({
+  name: LexerTokenType.Operators180,
   categories: operators,
+  pattern: Lexer.NA,
 });
-export const logicalOperators = createToken({
-  name: LexerTokenType.LogicalOperators,
-  pattern: Lexer.NA,
+export const operators170 = createToken({
+  name: LexerTokenType.Operators170,
   categories: operators,
+  pattern: Lexer.NA,
 });
-export const typeOperators = createToken({
-  name: LexerTokenType.TypeOperators,
-  pattern: Lexer.NA,
+export const operators160 = createToken({
+  name: LexerTokenType.Operators160,
   categories: operators,
+  pattern: Lexer.NA,
+});
+export const operators150 = createToken({
+  name: LexerTokenType.Operators150,
+  categories: operators,
+  pattern: Lexer.NA,
+});
+export const operators140 = createToken({
+  name: LexerTokenType.Operators140,
+  categories: operators,
+  pattern: Lexer.NA,
+});
+export const reserved = createToken({
+  name: LexerTokenType.Reserved,
+  pattern: Lexer.NA,
 });
 // Comments
 export const TknComment = createToken({
@@ -397,6 +407,12 @@ export const TknSemiColon = createToken({
   categories: separatorTokens,
   pattern: ';',
 });
+export const TknThickArrow = createToken({
+  label: 'ThickArrow',
+  name: LexerTokenType.ThickArrow,
+  categories: separatorTokens,
+  pattern: '=>',
+});
 export const TknWhitespace = createToken({
   label: 'Whitespace',
   name: LexerTokenType.WhiteSpace,
@@ -404,125 +420,73 @@ export const TknWhitespace = createToken({
   pattern: /[ \t\s\r\n]+/,
   line_breaks: true,
 }); // ws
-// Operators
-export const TknPostFixIncrement = createToken({
-  label: 'PostFix Increment',
-  name: LexerTokenType.TknPostFixIncrement,
-  categories: postFixOperators,
-  pattern: '++',
+// Expression Operators
+export const TknOperator180 = createToken({
+  label: 'TknInFix180',
+  name: LexerTokenType.TknOperator180,
+  categories: operators180,
+  pattern: /(\*\*)[~$&*/+\-=><^|!?%:.]*/,
 });
-export const TknPostFixDecrement = createToken({
-  label: 'PostFix Decrement',
-  name: LexerTokenType.TknPostFixDecrement,
-  categories: postFixOperators,
-  pattern: '--',
+export const TknOperator170 = createToken({
+  label: 'TknInFix170',
+  name: LexerTokenType.TknOperator170,
+  categories: operators170,
+  pattern: /(\*|\/|%)[~$&*/+\-=><^|!?%:.]*/,
 });
-export const TknComparisonEqual = createToken({
-  label: 'Comparison Equal',
-  name: LexerTokenType.TknComparisonEqual,
-  categories: comparisonOperators,
-  pattern: '==',
+export const TknOperator160 = createToken({
+  label: 'TknInFix160',
+  name: LexerTokenType.TknOperator160,
+  categories: operators160,
+  pattern: /(\+|-)[~$&*/+\-=><^|!?%:.]*/,
 });
-export const TknComparisonNotEqual = createToken({
-  label: 'Comparison Not Equal',
-  name: LexerTokenType.TknComparisonNotEqual,
-  categories: comparisonOperators,
-  pattern: '!=',
+export const TknOperator150 = createToken({
+  label: 'TknInFix150',
+  name: LexerTokenType.TknOperator150,
+  categories: operators150,
+  pattern: /(\^|==|!=|<=|>=)[~$&*/+\-=><^|!?%:.]*/,
 });
-export const TknComparisonLessThanEqual = createToken({
-  label: 'Comparison Less Than Or Equal To',
-  name: LexerTokenType.TknComparisonLessThanOrEqual,
-  categories: comparisonOperators,
-  pattern: '<=',
+export const TknOperator140 = createToken({
+  label: 'TknInFix140',
+  name: LexerTokenType.TknOperator140,
+  categories: operators140,
+  pattern: /(&|\$|\|\||!|#)[~$&*/+\-=><^|!?%:.]*/,
 });
-export const TknComparisonGreaterThanEqual = createToken({
-  label: 'Comparison Greater Than Or Equal To',
-  name: LexerTokenType.TknComparisonGreaterThanOrEqual,
-  categories: comparisonOperators,
-  pattern: '>=',
-});
-export const TknComparisonGreaterThan = createToken({
-  label: 'Comparison Greater Than',
-  name: LexerTokenType.TknComparisonGreaterThan,
-  categories: comparisonOperators,
-  pattern: '>',
-});
-export const TknComparisonLessThan = createToken({
-  label: 'Comparison Less Than',
-  name: LexerTokenType.TknComparisonLessThan,
-  categories: comparisonOperators,
+export const TknLeftArrow = createToken({
+  label: 'LeftArrow',
+  name: LexerTokenType.TknLeftArrow,
+  categories: operators140,
   pattern: '<',
 });
-export const TknComparisonAnd = createToken({
-  label: 'Comparison And',
-  name: LexerTokenType.TknComparisonAnd,
-  categories: comparisonOperators,
-  pattern: '&&',
-});
-export const TknComparisonOr = createToken({
-  label: 'Comparison Or',
-  name: LexerTokenType.TknComparisonOr,
-  categories: comparisonOperators,
-  pattern: '||',
-});
-export const TknThickArrow = createToken({
-  label: 'Arrow',
-  name: LexerTokenType.TknArrow,
-  pattern: '=>',
-});
-export const TknNot = createToken({
-  label: 'Not',
-  name: LexerTokenType.TknNot,
-  categories: logicalOperators,
-  pattern: '!',
-});
-export const TknEqual = createToken({
-  label: 'Equal',
-  name: LexerTokenType.TknEqual,
-  categories: assignmentOperators,
-  pattern: '=',
-});
-export const TknAdd = createToken({
-  label: 'Add',
-  name: LexerTokenType.TknAdd,
-  categories: arithmeticOperators,
-  pattern: '+',
-});
-export const TknSub = createToken({
-  label: 'Subtract',
-  name: LexerTokenType.TknSubtract,
-  categories: arithmeticOperators,
-  pattern: '-',
-});
-export const TknDiv = createToken({
-  label: 'Division',
-  name: LexerTokenType.TknDivision,
-  categories: arithmeticOperators,
-  pattern: '/',
-  longer_alt: TknComment,
-});
-export const TknPow = createToken({
-  label: 'Power Of',
-  name: LexerTokenType.TknPower,
-  categories: arithmeticOperators,
-  pattern: '**',
-});
-export const TknMul = createToken({
-  label: 'Multiplication',
-  name: LexerTokenType.TknMultiply,
-  categories: arithmeticOperators,
-  pattern: '*',
-});
-export const TknUnion = createToken({
-  label: 'Tkn Type Union',
-  name: LexerTokenType.TknUnion,
-  categories: typeOperators,
-  pattern: '|',
+export const TknRightArrow = createToken({
+  label: 'RightArrow',
+  name: LexerTokenType.TknRightArrow,
+  categories: operators140,
+  pattern: '>',
 });
 export const TknQuestionMark = createToken({
   label: 'Tkn Question Mark',
   name: LexerTokenType.TknQuestionMark,
+  categories: operators140,
   pattern: '?',
+});
+export const TknUnion = createToken({
+  label: 'Tkn Union',
+  name: LexerTokenType.TknUnion,
+  categories: operators,
+  pattern: '|',
+});
+// Statement Operators
+export const TknAssignmentOperator = createToken({
+  label: 'TknAssignmentOperator',
+  name: LexerTokenType.TknAssignmentOperator,
+  categories: assignmentOperators,
+  pattern: /(\+|-|\*|%)=/,
+});
+export const TknEqual = createToken({
+  label: 'Equal',
+  name: LexerTokenType.TknAssignmentOperator,
+  categories: assignmentOperators,
+  pattern: '=',
 });
 // Reserved Tokens
 export const TknMatch = createToken({
@@ -580,6 +544,12 @@ export const TknFlag = createToken({
   name: LexerTokenType.TknFlag,
   pattern: /@(operator|unsafe|inline)/,
 }); // Flag
+// Marker
+export const TknMarker = createToken({
+  label: 'TknMarker',
+  name: LexerTokenType.TknMarker,
+  pattern: '@',
+}); // Flag
 // Identifiers
 export const TknIdentifier = createToken({
   label: 'Identifier',
@@ -594,12 +564,14 @@ export const Tokens = [
   literalTokens,
   separatorTokens,
   operators,
+  expressionOperators,
+  statementOperators,
+  operators180,
+  operators170,
+  operators160,
+  operators150,
+  operators140,
   reserved,
-  postFixOperators,
-  comparisonOperators,
-  assignmentOperators,
-  arithmeticOperators,
-  logicalOperators,
   // Comments
   TknComment,
   // Literals
@@ -644,26 +616,19 @@ export const Tokens = [
   TknPeriod,
   TknColon,
   TknSemiColon,
-  TknPostFixIncrement,
-  TknPostFixDecrement,
-  TknComparisonEqual,
-  TknComparisonNotEqual,
-  TknComparisonLessThanEqual,
-  TknComparisonGreaterThanEqual,
-  TknComparisonGreaterThan,
-  TknComparisonLessThan,
-  TknComparisonAnd,
-  TknComparisonOr,
   TknThickArrow,
-  TknNot,
+  // Operators
+  TknAssignmentOperator,
+  TknOperator180,
+  TknOperator170,
+  TknOperator160,
+  TknOperator150,
+  TknOperator140,
+  TknLeftArrow,
+  TknRightArrow,
   TknEqual,
-  TknAdd,
-  TknSub,
-  TknDiv,
-  TknPow,
-  TknMul,
-  TknUnion,
   TknQuestionMark,
+  TknUnion,
   // Reserved Tokens
   TknMatch,
   TknClass,
@@ -674,6 +639,8 @@ export const Tokens = [
   TknAsync,
   // Flags
   TknFlag,
+  // Marker
+  TknMarker,
   // Identifiers
   TknIdentifier,
 ];

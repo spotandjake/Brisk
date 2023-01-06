@@ -45,7 +45,7 @@ export const encodeBriskType = (
             properties._typeStacks,
             expr,
             createPrimType(expr.position, _type),
-            false
+            0
           )
         )
       )

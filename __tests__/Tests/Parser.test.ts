@@ -33,3 +33,18 @@ test('Parser: Literals Pass', () => {
   };
   expect(parse(Parser_Main, '', '', 'file')).toMatchSnapshot();
 });
+test('Parser: Operator Precedence Pass', () => {
+  const data = JSON.parse(
+    fs.readFileSync('./__tests__/Data/Parser/Operator_Precedence_Pass.json', 'utf8')
+  );
+  const Parser_Main: ILexingResult = {
+    ...data,
+    tokens: data.tokens.map((tkn: any) => {
+      return {
+        ...tkn,
+        tokenType: Tokens.find((token) => token.name === tkn.tokenType),
+      };
+    }),
+  };
+  expect(parse(Parser_Main, '', '', 'file')).toMatchSnapshot();
+});

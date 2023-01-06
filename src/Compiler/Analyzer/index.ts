@@ -1,7 +1,7 @@
 import Node, {
-  CallExpressionNode,
   DeclarationTypes,
   Expression,
+  FlagNode,
   NodeCategory,
   NodeType,
   ObjectFieldNode,
@@ -9,11 +9,13 @@ import Node, {
   Statement,
   TypeUsageNode,
   ValueSpreadNode,
+  VariableDefinition,
 } from '../Types/ParseNodes';
 import {
   AnalyzerProperties,
   ExportMap,
   ImportMap,
+  OperatorStore,
   TypeMap,
   TypeStack,
   VariableClosure,
@@ -35,6 +37,54 @@ import {
   setVariable,
 } from '../Helpers/Helpers';
 import { operators } from '../Helpers/Operators';
+// Helper
+const addOperator = (
+  operatorScope: OperatorStore,
+  flags: FlagNode[],
+  variable: VariableDefinition
+) => {
+  if (flags.findIndex((flag) => flag.value == 'operator') != -1) {
+    flags
+      .filter((flag) => flag.value == 'operator')
+      .forEach((flag) => {
+        if (
+          flag.args.length == 2 &&
+          flag.args[0].nodeType == NodeType.StringLiteral &&
+          flag.args[1].nodeType == NodeType.StringLiteral
+        ) {
+          // Set The Operator Information
+          if (flag.args[1].value == 'PREFIX')
+            operatorScope.PREFIX.set(flag.args[0].value, [
+              variable.name,
+              ...(operatorScope.PREFIX.has(flag.args[0].value)
+                ? operatorScope.PREFIX.get(flag.args[0].value)!
+                : []),
+            ]);
+          else if (flag.args[1].value == 'INFIX')
+            operatorScope.INFIX.set(flag.args[0].value, [
+              variable.name,
+              ...(operatorScope.INFIX.has(flag.args[0].value)
+                ? operatorScope.INFIX.get(flag.args[0].value)!
+                : []),
+            ]);
+          else if (flag.args[1].value == 'POSTFIX')
+            operatorScope.POSTFIX.set(flag.args[0].value, [
+              variable.name,
+              ...(operatorScope.POSTFIX.has(flag.args[0].value)
+                ? operatorScope.POSTFIX.get(flag.args[0].value)!
+                : []),
+            ]);
+          else if (flag.args[1].value == 'ASSIGNMENT')
+            operatorScope.ASSIGNMENT.set(flag.args[0].value, [
+              variable.name,
+              ...(operatorScope.ASSIGNMENT.has(flag.args[0].value)
+                ? operatorScope.ASSIGNMENT.get(flag.args[0].value)!
+                : []),
+            ]);
+        }
+      });
+  }
+};
 // Analyze Node
 const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
   // Code
@@ -170,7 +220,7 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
             node.position
           );
         }
-        if (!['PREFIX', 'INFIX', 'POSTFIX'].includes(node.args[1].value)) {
+        if (!['PREFIX', 'INFIX', 'POSTFIX', 'ASSIGNMENT'].includes(node.args[1].value)) {
           return BriskError(
             rawProgram,
             BriskErrorType.InvalidOperator,
@@ -197,8 +247,11 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       ]);
       if (
         nextElement == undefined ||
-        nextElement.nodeType != NodeType.DeclarationStatement ||
-        nextElement.value.nodeType != NodeType.FunctionLiteral
+        ((nextElement.nodeType != NodeType.DeclarationStatement ||
+          nextElement.value.nodeType != NodeType.FunctionLiteral) &&
+          (nextElement.nodeType != NodeType.ExportStatement ||
+            nextElement.value.nodeType != NodeType.DeclarationStatement ||
+            nextElement.value.value.nodeType != NodeType.FunctionLiteral))
       ) {
         return BriskParseError(
           rawProgram,
@@ -208,7 +261,14 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
         );
       }
       // Attach The Flag
-      nextElement.flags.push(node);
+      switch (nextElement.nodeType) {
+        case NodeType.DeclarationStatement:
+          nextElement.flags.push(node);
+          break;
+        case NodeType.ExportStatement:
+          nextElement.value.flags.push(node);
+          break;
+      }
       // Return The Node
       return node;
     }
@@ -252,28 +312,42 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       };
     }
     case NodeType.ImportStatement: {
-      // TODO: Handle Operator Imports
-      // Add Import
-      _imports.set(node.variable.name, {
-        name: node.variable.name,
-        path: node.source.value,
-        position: node.position,
-      });
-      node.variable.reference = createVariable(
-        rawProgram,
-        _variables,
-        _varStack,
-        {
-          name: node.variable.name,
-          mainScope: true,
-          global: true,
-          constant: true,
-          import: true,
-          type: createPrimType(node.variable.position, 'Unknown'),
-          baseType: undefined,
-        },
-        node.position
-      );
+      // TODO: Handle Import Objects
+      if (!Array.isArray(node.variable)) {
+        return BriskError(
+          rawProgram,
+          BriskErrorType.FeatureNotYetImplemented,
+          [],
+          node.variable.position
+        );
+      } else {
+        node.variable = node.variable.map((label) => {
+          // TODO: Handle Operator
+          if (label.flag != undefined) addOperator(operatorScope, [label.flag], label.variable);
+          // Add Import To List
+          _imports.set(label.variable.name, {
+            name: label.variable.name,
+            path: node.source.value,
+            position: node.position,
+          });
+          label.variable.reference = createVariable(
+            rawProgram,
+            _variables,
+            _varStack,
+            {
+              name: label.variable.name,
+              mainScope: true,
+              global: true,
+              constant: true,
+              import: true,
+              type: createPrimType(label.variable.position, 'Unknown'),
+              baseType: undefined,
+            },
+            node.position
+          );
+          return label;
+        });
+      }
       return node;
     }
     case NodeType.WasmImportStatement: {
@@ -449,31 +523,23 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       // Analyze The Value
       node.value = _analyzeNode(node.value, 0);
       // Add Operator To List
-      if (node.flags.findIndex((flag) => flag.value == 'operator') != -1) {
-        node.flags
-          .filter((flag) => flag.value == 'operator')
-          .forEach((flag) => {
-            if (
-              flag.args.length == 2 &&
-              flag.args[0].nodeType == NodeType.StringLiteral &&
-              flag.args[1].nodeType == NodeType.StringLiteral
-            ) {
-              if (flag.args[1].value == 'PREFIX')
-                operatorScope.PREFIX.set(flag.args[0].value, node.name.name);
-              else if (flag.args[1].value == 'INFIX')
-                operatorScope.INFIX.set(flag.args[0].value, node.name.name);
-              else if (flag.args[1].value == 'POSTFIX')
-                operatorScope.POSTFIX.set(flag.args[0].value, node.name.name);
-            }
-          });
-      }
+      addOperator(operatorScope, node.flags, node.name);
       // Return Node
       return node;
     }
-    case NodeType.AssignmentStatement:
-      // Analyze Value
+    case NodeType.AssignmentStatement: {
+      // Ensure Operator Exists
       node.value = _analyzeNode(node.value, 0);
-    case NodeType.PostFixStatement: {
+      // Match The Operator Expression
+      const opFunc = operatorScope.ASSIGNMENT.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
       // Analyze Variable
       node.name = _analyzeNode(node.name, 0);
       if (node.name.nodeType == NodeType.MemberAccess) return node;
@@ -576,10 +642,10 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
       }
       return node;
     // Expressions
-    // TODO: Make A Generic INFIX Expression
-    case NodeType.ComparisonExpression:
-    case NodeType.ArithmeticExpression: {
-      // Get Operator Function
+    case NodeType.InfixExpression: {
+      node.lhs = _analyzeNode(node.lhs, 0);
+      node.rhs = _analyzeNode(node.rhs, 0);
+      // Match The Operator Expression
       const opFunc = operatorScope.INFIX.get(node.operatorImage);
       if (opFunc == undefined) {
         return BriskTypeError(
@@ -589,28 +655,38 @@ const analyzeNode = <T extends Exclude<Node, ProgramNode>>(
           node.position
         );
       }
-      node.lhs = _analyzeNode(node.lhs, 0);
-      node.rhs = _analyzeNode(node.rhs, 0);
-      // Build A Function Call
-      const funcCall: CallExpressionNode = {
-        nodeType: NodeType.CallExpression,
-        category: NodeCategory.Expression,
-        callee: {
-          nodeType: NodeType.VariableUsage,
-          category: NodeCategory.Variable,
-          name: opFunc,
-          position: node.position,
-        },
-        args: [node.rhs, node.lhs],
-        statement: false,
-        position: node.position,
-      };
-      // @ts-ignore
-      return _analyzeNode(funcCall, nodePosition);
+      return node;
+    }
+    case NodeType.PostfixExpression: {
+      node.value = _analyzeNode(node.value, 0);
+      // Match The Operator Expression
+      const opFunc = operatorScope.POSTFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      return node;
+    }
+    case NodeType.PrefixExpression: {
+      node.value = _analyzeNode(node.value, 0);
+      // Match The Operator Expression
+      const opFunc = operatorScope.PREFIX.get(node.operatorImage);
+      if (opFunc == undefined) {
+        return BriskTypeError(
+          rawProgram,
+          BriskErrorType.UnknownOperator,
+          [node.operatorImage],
+          node.position
+        );
+      }
+      return node;
     }
     case NodeType.TypeCastExpression:
       node.typeLiteral = _analyzeNode(node.typeLiteral, 0);
-    case NodeType.UnaryExpression:
     case NodeType.ParenthesisExpression:
       node.value = _analyzeNode(node.value, 0);
       return node;
@@ -953,6 +1029,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
     PREFIX: new Map(),
     INFIX: new Map(),
     POSTFIX: new Map(),
+    ASSIGNMENT: new Map(),
   };
   // Return Our Node
   return {
@@ -995,7 +1072,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
           loopDepth: undefined,
         },
         program,
-        0,
+        i,
         child
       );
     }),
@@ -1007,6 +1084,7 @@ const analyzeProgram = (rawProgram: string, program: ProgramNode): ProgramNode =
       _types: types,
       _varStack: varStack,
       _typeStack: typeStack,
+      operatorScope: operatorScope,
       loopDepth: undefined,
     },
   };

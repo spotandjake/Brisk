@@ -7,6 +7,12 @@ interface ImportItem {
   position: Position;
 }
 export type ExportMap = Map<string, VariableData>;
+export interface OperatorStore {
+  PREFIX: Map<string, string[]>;
+  INFIX: Map<string, string[]>;
+  POSTFIX: Map<string, string[]>;
+  ASSIGNMENT: Map<string, string[]>;
+}
 export interface AnalyzerProperties {
   // Pools
   _imports: ImportMap;
@@ -21,11 +27,7 @@ export interface AnalyzerProperties {
   _varStack: VariableStack;
   _typeStack: TypeStack;
   // Misc
-  operatorScope: {
-    PREFIX: Map<string, string>;
-    INFIX: Map<string, string>;
-    POSTFIX: Map<string, string>;
-  };
+  operatorScope: OperatorStore;
   // Flags
   loopDepth: undefined | number;
 }

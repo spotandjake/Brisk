@@ -6,15 +6,7 @@ import {
   encodeBriskType,
   initializeBriskType,
 } from './Helpers';
-import {
-  ArithmeticExpressionOperator,
-  ComparisonExpressionOperator,
-  FunctionSignatureLiteralNode,
-  NodeType,
-  PostFixOperator,
-  ProgramNode,
-  UnaryExpressionOperator,
-} from '../Types/ParseNodes';
+import { FunctionSignatureLiteralNode, NodeType, ProgramNode } from '../Types/ParseNodes';
 import { UnresolvedBytes, WasmModule } from '../../wasmBuilder/Types/Nodes';
 import { getExpressionType, typeEqual } from '../TypeChecker/Helpers';
 import { createPrimType } from '../Helpers/typeBuilders';
@@ -147,22 +139,36 @@ const generateCode = (
     }
     // TODO: Handle Import Statement
     case NodeType.ImportStatement: {
-      const importType = encodeBriskType(
-        rawProgram,
-        properties,
-        getVariable(_variables, node.variable).type
-      );
-      // Add The Import
-      addImport(
-        wasmModule,
-        createGlobalImport(
-          `${brisk_moduleIdentifier}${node.source.value}.wasm`,
-          `${brisk_moduleIdentifier}${node.variable.name}`,
-          generateVariableName(node.variable.name, node.variable.reference!),
-          importType,
-          false
-        )
-      );
+      // TODO: Allow Importing Types
+      // TODO: Handle Import Objects
+      if (!Array.isArray(node.variable)) {
+        return BriskError(
+          rawProgram,
+          BriskErrorType.FeatureNotYetImplemented,
+          [],
+          node.variable.position
+        );
+      } else {
+        node.variable = node.variable.map((label) => {
+          const importType = encodeBriskType(
+            rawProgram,
+            properties,
+            getVariable(_variables, label.variable).type
+          );
+          // Add The Import
+          addImport(
+            wasmModule,
+            createGlobalImport(
+              `${brisk_moduleIdentifier}${node.source.value}.wasm`,
+              `${brisk_moduleIdentifier}${label.variable.name}`,
+              generateVariableName(label.variable.name, label.variable.reference!),
+              importType,
+              false
+            )
+          );
+          return label;
+        });
+      }
       // Return A Reference To The Import
       return []; // Return A Blank Expression
     }
@@ -240,6 +246,7 @@ const generateCode = (
       }
     }
     case NodeType.AssignmentStatement: {
+      if (node.operatorImage != '=') throw 'Unreachable';
       // Get The Variable Information
       if (node.name.nodeType != NodeType.MemberAccess) {
         const varData = getVariable(_variables, node.name);
@@ -262,305 +269,13 @@ const generateCode = (
         return Expressions.returnExpression(_generateCode(node.returnValue));
       // Otherwise Return Void
       else return Expressions.returnExpression(Expressions.i32_ConstExpression(brisk_Void_Value));
-    case NodeType.PostFixStatement: {
-      // Get The Variable Information
-      if (node.name.nodeType != NodeType.MemberAccess) {
-        const varData = getVariable(_variables, node.name);
-        // Build Get Expression
-        const val: UnresolvedBytes = varData.global
-          ? Expressions.global_GetExpression(`${varData.name}${varData.reference}`)
-          : Expressions.local_GetExpression(`${varData.name}${varData.reference}`);
-        // Build Add Expression
-        let add: UnresolvedBytes;
-        // Handle Stack Types
-        const exprAType = varData.type;
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (node.operator == PostFixOperator.Increment) {
-            if (exprAType.name == 'i32' || exprAType.name == 'u32')
-              add = Expressions.i32_AddExpression(val, Expressions.i32_ConstExpression(1));
-            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-              add = Expressions.i64_AddExpression(val, Expressions.i64_ConstExpression(1));
-            else if (exprAType.name == 'f32')
-              add = Expressions.f32_AddExpression(val, Expressions.f32_ConstExpression(1));
-            else if (exprAType.name == 'f64')
-              add = Expressions.f64_AddExpression(val, Expressions.f64_ConstExpression(1));
-            else {
-              // TODO: Handle Heap Types
-              return BriskError(
-                rawProgram,
-                BriskErrorType.FeatureNotYetImplemented,
-                [],
-                node.position
-              );
-            }
-          } else {
-            if (exprAType.name == 'i32' || exprAType.name == 'u32')
-              add = Expressions.i32_SubExpression(val, Expressions.i32_ConstExpression(1));
-            else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-              add = Expressions.i64_SubExpression(val, Expressions.i64_ConstExpression(1));
-            else if (exprAType.name == 'f32')
-              add = Expressions.f32_SubExpression(val, Expressions.f32_ConstExpression(1));
-            else if (exprAType.name == 'f64')
-              add = Expressions.f64_SubExpression(val, Expressions.f64_ConstExpression(1));
-            else {
-              // TODO: Handle Heap Types
-              return BriskError(
-                rawProgram,
-                BriskErrorType.FeatureNotYetImplemented,
-                [],
-                node.position
-              );
-            }
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-        // Build Set Expression
-        if (varData.global) {
-          // Assign To A Wasm Global
-          return Expressions.global_SetExpression(`${varData.name}${varData.reference}`, add);
-        } else {
-          // Return The Set Expression
-          return Expressions.local_SetExpression(`${varData.name}${varData.reference}`, add);
-        }
-      } else {
-        // TODO: Handle Member Access
-        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      }
-    }
     // TODO: Handle EnumDefinitionStatement
     // TODO: Handle EnumVariant
-    case NodeType.ArithmeticExpression: {
-      // TODO: Move this into The Language
-      // Get The Expression Type For More Performant Equality
-      // The Left and Right Side are the same type so we only need one
-      const exprAType = getExpressionType(
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.lhs
-      );
-      // Compile Both Sides
-      const lhs = _generateCode(node.lhs);
-      const rhs = _generateCode(node.rhs);
-      // Equal Comparison
-      if (node.operator == ArithmeticExpressionOperator.ArithmeticAdd) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'i32' || exprAType.name == 'u32')
-            return Expressions.i32_AddExpression(lhs, rhs);
-          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-            return Expressions.i64_AddExpression(lhs, rhs);
-          else if (exprAType.name == 'f32') return Expressions.f32_AddExpression(lhs, rhs);
-          else if (exprAType.name == 'f64') return Expressions.f64_AddExpression(lhs, rhs);
-          else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticSub) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'i32' || exprAType.name == 'u32')
-            return Expressions.i32_SubExpression(lhs, rhs);
-          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-            return Expressions.i64_SubExpression(lhs, rhs);
-          else if (exprAType.name == 'f32') return Expressions.f32_SubExpression(lhs, rhs);
-          else if (exprAType.name == 'f64') return Expressions.f64_SubExpression(lhs, rhs);
-        } else {
-          // TODO: Handle Heap Types
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticDiv) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'i32' || exprAType.name == 'u32')
-            return Expressions.i32_Div_sExpression(lhs, rhs);
-          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-            return Expressions.i64_Div_sExpression(lhs, rhs);
-          else if (exprAType.name == 'f32') return Expressions.f32_DivExpression(lhs, rhs);
-          else if (exprAType.name == 'f64') return Expressions.f64_DivExpression(lhs, rhs);
-        } else {
-          // TODO: Handle Heap Types
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else if (node.operator == ArithmeticExpressionOperator.ArithmeticMul) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'i32' || exprAType.name == 'u32')
-            return Expressions.i32_MulExpression(lhs, rhs);
-          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-            return Expressions.i64_MulExpression(lhs, rhs);
-          else if (exprAType.name == 'f32') return Expressions.f32_MulExpression(lhs, rhs);
-          else if (exprAType.name == 'f64') return Expressions.f64_MulExpression(lhs, rhs);
-          else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else {
-        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      }
-    }
-    case NodeType.ComparisonExpression: {
-      // TODO: Move this into The Language
-      // Get The Expression Type For More Performant Equality
-      // The Left and Right Side are the same type so we only need one
-      const exprAType = getExpressionType(
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.lhs
-      );
-      // Compile Both Sides
-      const lhs = _generateCode(node.lhs);
-      const rhs = _generateCode(node.rhs);
-      // Equal Comparison
-      if (node.operator == ComparisonExpressionOperator.ComparisonEqual) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'i32' || exprAType.name == 'u32')
-            return Expressions.i32_eqExpression(lhs, rhs);
-          else if (exprAType.name == 'i64' || exprAType.name == 'u64')
-            return Expressions.i64_eqExpression(lhs, rhs);
-          else if (exprAType.name == 'f32') return Expressions.f32_eqExpression(lhs, rhs);
-          else if (exprAType.name == 'f64') return Expressions.f64_eqExpression(lhs, rhs);
-          else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else if (node.operator == ComparisonExpressionOperator.ComparisonAnd) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'Boolean') return Expressions.i32_AndExpression(lhs, rhs);
-          else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else if (node.operator == ComparisonExpressionOperator.ComparisonOr) {
-        // Comparison
-        if (exprAType.nodeType == NodeType.TypePrimLiteral) {
-          // Handle Stack Types
-          if (exprAType.name == 'Boolean') return Expressions.i32_orExpression(lhs, rhs);
-          else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        } else {
-          return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-        }
-      } else {
-        return BriskError(rawProgram, BriskErrorType.FeatureNotYetImplemented, [], node.position);
-      }
-    }
-    // TODO: Handle UnaryExpression
-    case NodeType.UnaryExpression: {
-      const valueType = getExpressionType(
-        rawProgram,
-        _variables,
-        _types,
-        _typeStack,
-        _typeStacks,
-        node.value
-      );
-      switch (node.operator) {
-        case UnaryExpressionOperator.UnaryNot:
-          // TODO: Verify this works
-          return Expressions.i32_xorExpression(
-            _generateCode(node.value),
-            Expressions.i32_ConstExpression(-1)
-          );
-        case UnaryExpressionOperator.UnaryNegative:
-          // Handle Stack Types
-          if (valueType.nodeType == NodeType.TypePrimLiteral) {
-            if (valueType.name == 'i32')
-              return Expressions.i32_MulExpression(
-                _generateCode(node.value),
-                Expressions.i32_ConstExpression(-1)
-              );
-            else if (valueType?.name == 'i64')
-              return Expressions.i64_MulExpression(
-                _generateCode(node.value),
-                Expressions.i64_ConstExpression(-1)
-              );
-            else if (valueType?.name == 'f32')
-              return Expressions.f32_MulExpression(
-                _generateCode(node.value),
-                Expressions.f32_ConstExpression(-1)
-              );
-            else if (valueType?.name == 'f64')
-              return Expressions.f64_MulExpression(
-                _generateCode(node.value),
-                Expressions.f64_ConstExpression(-1)
-              );
-            else {
-              // TODO: Handle Heap Types
-              return BriskError(
-                rawProgram,
-                BriskErrorType.FeatureNotYetImplemented,
-                [],
-                node.position
-              );
-            }
-          } else {
-            // TODO: Handle Heap Types
-            return BriskError(
-              rawProgram,
-              BriskErrorType.FeatureNotYetImplemented,
-              [],
-              node.position
-            );
-          }
-        case UnaryExpressionOperator.UnaryPositive:
-          return _generateCode(node.value);
-      }
-    }
+    case NodeType.InfixExpression:
+    case NodeType.PostfixExpression:
+    case NodeType.PrefixExpression:
+      // TODO: Make This TypeSafe
+      throw 'Unreachable';
     case NodeType.ParenthesisExpression:
       return _generateCode(node.value);
     // TODO: Handle TypeCastExpression
@@ -597,7 +312,7 @@ const generateCode = (
           _typeStacks,
           outType,
           createPrimType(node.position, 'Void'),
-          false
+          0
         )
       )
         return Expressions.dropExpression(expr);
@@ -615,7 +330,7 @@ const generateCode = (
     case NodeType.F32Literal:
       return Expressions.f32_ConstExpression(node.value);
     case NodeType.F64Literal:
-      return Expressions.i32_ConstExpression(node.value);
+      return Expressions.f64_ConstExpression(node.value);
     // TODO: Handle NumberLiteral
     case NodeType.ConstantLiteral:
       // 1 represents true
@@ -668,7 +383,7 @@ const generateCode = (
           _typeStacks,
           node.returnType,
           createPrimType(node.returnType.position, 'Void'),
-          false
+          0
         )
       ) {
         body.push(compiledBody);
@@ -787,7 +502,7 @@ const generateCodeProgram = (rawProgram: string, program: ProgramNode): Uint8Arr
     Types.createNumericType(WasmTypes.WasmI32),
     Expressions.i32_ConstExpression(0)
   );
-  // TODO: Compile LinkingInfo Section
+  // Compile LinkingInfo Section
   wasmModule = createCustomSection(wasmModule, [
     // Custom Section Id
     ...encodeString('LinkingInfo'),

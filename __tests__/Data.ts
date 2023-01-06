@@ -5,6 +5,10 @@ import { ILexingResult } from 'chevrotain';
 // Read Raw Data
 const Parser_Pass = fs.readFileSync('./__tests__/Data/Parser/Parser_Pass.br', 'utf8');
 const Literals_pass = fs.readFileSync('./__tests__/Data/Parser/Parser_Pass.br', 'utf8');
+const Operator_Precedence_Pass = fs.readFileSync(
+  './__tests__/Data/Parser/Operator_Precedence_Pass.br',
+  'utf8'
+);
 // Helpers
 const serializeInput = (lexStream: ILexingResult): string => {
   const tokens = lexStream.tokens.map((token) => {
@@ -23,4 +27,8 @@ fs.writeFileSync(
 fs.writeFileSync(
   './__tests__/Data/Parser/Literals_Pass.json',
   serializeInput(lex(Literals_pass, '', 'file'))
+);
+fs.writeFileSync(
+  './__tests__/Data/Parser/Operator_Precedence_Pass.json',
+  serializeInput(lex(Operator_Precedence_Pass, '', 'file'))
 );

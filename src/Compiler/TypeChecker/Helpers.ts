@@ -9,7 +9,6 @@ import {
   ParameterNode,
   PropertyUsageNode,
   TypeLiteral,
-  UnaryExpressionOperator,
 } from '../Types/ParseNodes';
 import { TypeMap, TypeStack, VariableMap } from '../Types/AnalyzerNodes';
 import { mapExpression } from './WasmTypes';
@@ -128,7 +127,7 @@ export const typeCompatible = (
   typeStacks: TypeStack[],
   typeA: TypeLiteral,
   typeB: TypeLiteral,
-  throwError = false
+  throwError = 0
 ): boolean => {
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
@@ -141,12 +140,12 @@ export const typeCompatible = (
     typeStacks,
     resolvedA,
     resolvedB,
-    false
+    0
   );
   if (typesEqual) return true;
   // TODO: Ensure Types Are Compatible
   // Throw Error Or Return False
-  if (throwError) {
+  if (throwError == 1) {
     BriskTypeError(
       rawProgram,
       BriskErrorType.IncompatibleTypes,
@@ -156,6 +155,8 @@ export const typeCompatible = (
       ],
       resolvedB.position
     );
+  } else if (throwError == 2) {
+    throw 'Type Mismatch';
   }
   return false;
 };
@@ -167,7 +168,7 @@ export const strictTypeEqual = (
   typeStacks: TypeStack[],
   typeA: TypeLiteral,
   typeB: TypeLiteral,
-  throwError = true
+  throwError = 1
 ) => {
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
@@ -178,15 +179,20 @@ export const strictTypeEqual = (
     resolvedB.nodeType == NodeType.TypePrimLiteral
   ) {
     // Throw An Error If The Types Are Not The Same And ThrowError Is True
-    if (resolvedA.name != resolvedB.name && throwError) {
-      BriskTypeError(
-        rawProgram,
-        BriskErrorType.TypeMisMatch,
-        [resolvedA.name, resolvedB.name],
-        resolvedA.position
-      );
+    if (resolvedA.name != resolvedB.name) {
+      if (throwError == 1) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [resolvedA.name, resolvedB.name],
+          resolvedB.position
+        );
+      } else if (throwError == 2) {
+        throw 'Type Mismatch';
+      }
+      return false;
     }
-    return resolvedA.name == resolvedB.name;
+    return true;
   }
   // Return False Normally
   return false;
@@ -199,7 +205,7 @@ export const typeEqual = (
   typeStacks: TypeStack[],
   typeA: TypeLiteral,
   typeB: TypeLiteral,
-  throwError = true
+  throwError = 1
 ): boolean => {
   // Resolve Both Types
   const resolvedA = resolveType(rawProgram, typePool, typeStack, typeStacks, typeA);
@@ -213,15 +219,20 @@ export const typeEqual = (
     resolvedB.nodeType == NodeType.TypePrimLiteral
   ) {
     // Throw An Error If The Types Are Not The Same And ThrowError Is True
-    if (resolvedA.name != resolvedB.name && throwError) {
-      BriskTypeError(
-        rawProgram,
-        BriskErrorType.TypeMisMatch,
-        [resolvedA.name, resolvedB.name],
-        typeA.position
-      );
+    if (resolvedA.name != resolvedB.name) {
+      if (throwError == 1) {
+        BriskTypeError(
+          rawProgram,
+          BriskErrorType.TypeMisMatch,
+          [resolvedA.name, resolvedB.name],
+          typeA.position
+        );
+      } else if (throwError == 2) {
+        throw 'Type mismatch';
+      }
+      return false;
     }
-    return resolvedA.name == resolvedB.name;
+    return true;
   }
   if (
     strictTypeEqual(rawProgram, typePool, typeStack, typeStacks, resolvedA, resolvedB, throwError)
@@ -317,7 +328,7 @@ export const typeEqual = (
     // Handle Lengths
     if (resolvedA.length != undefined && resolvedB.length != undefined) {
       // Check That If A Length Is Specified B Length Should Be Specified
-      if (throwError) {
+      if (throwError == 1) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
@@ -327,13 +338,15 @@ export const typeEqual = (
           ],
           typeA.position
         );
+      } else if (throwError == 2) {
+        throw 'Type Mismatch';
       }
       return false;
     }
     // If A Length Is Specified Then B Length Should Be Same
     if (resolvedA.length != undefined && resolvedA.length.value != resolvedB.length?.value) {
       // Check That If A Length Is Specified B Length Should Be Specified
-      if (throwError) {
+      if (throwError == 1) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
@@ -343,6 +356,8 @@ export const typeEqual = (
           ],
           typeA.position
         );
+      } else if (throwError == 2) {
+        throw 'Type Mismatch';
       }
       return false;
     }
@@ -393,18 +408,23 @@ export const typeEqual = (
         }
       }
       // Return Valid
-      if (!valid && throwError) {
-        BriskTypeError(
-          rawProgram,
-          BriskErrorType.TypeMisMatch,
-          [
-            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
-            nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
-          ],
-          resolvedB.position
-        );
+      if (!valid) {
+        if (throwError == 1) {
+          BriskTypeError(
+            rawProgram,
+            BriskErrorType.TypeMisMatch,
+            [
+              nameType(rawProgram, typePool, typeStack, typeStacks, resolvedA),
+              nameType(rawProgram, typePool, typeStack, typeStacks, resolvedB),
+            ],
+            resolvedB.position
+          );
+        } else if (throwError == 2) {
+          throw 'Type Mismatch';
+        }
+        return false;
       }
-      return valid;
+      return true;
     }
   }
   // Handle Union Types
@@ -412,15 +432,13 @@ export const typeEqual = (
     // If Type A Is Union
     // Check Each Type Value
     for (const type of resolvedA.types) {
-      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedB, false))
-        return true;
+      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedB, 0)) return true;
     }
   } else if (resolvedB.nodeType == NodeType.TypeUnionLiteral) {
     // If Type B Is Union
     // Check Each Type Value
     for (const type of resolvedB.types) {
-      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedA, false))
-        return true;
+      if (typeEqual(rawProgram, typePool, typeStack, typeStacks, type, resolvedA, 0)) return true;
     }
   }
   // Handle Function Types
@@ -433,7 +451,7 @@ export const typeEqual = (
       (resolvedA.genericTypes == undefined && resolvedB.genericTypes != undefined) ||
       (resolvedA.genericTypes != undefined && resolvedB.genericTypes == undefined)
     ) {
-      if (throwError) {
+      if (throwError == 1) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
@@ -443,6 +461,8 @@ export const typeEqual = (
           ],
           resolvedB.position
         );
+      } else if (throwError == 2) {
+        throw 'Type Mismatch';
       }
       return false;
     }
@@ -459,7 +479,7 @@ export const typeEqual = (
     }
     // Check That Params Are Same
     if (resolvedA.params.length != resolvedB.params.length) {
-      if (throwError) {
+      if (throwError == 1) {
         BriskTypeError(
           rawProgram,
           BriskErrorType.TypeMisMatch,
@@ -469,6 +489,8 @@ export const typeEqual = (
           ],
           resolvedB.position
         );
+      } else if (throwError == 2) {
+        throw 'Type Mismatch';
       }
       return false;
     }
@@ -491,7 +513,7 @@ export const typeEqual = (
     );
   }
   // Throw Error Or Return False
-  if (throwError) {
+  if (throwError == 1) {
     BriskTypeError(
       rawProgram,
       BriskErrorType.TypeMisMatch,
@@ -501,6 +523,8 @@ export const typeEqual = (
       ],
       resolvedB.position
     );
+  } else if (throwError == 2) {
+    throw 'Type Mismatch';
   }
   return false;
 };
@@ -538,7 +562,7 @@ export const resolveType = (
               typeStacks,
               resolvedType,
               checkType,
-              false
+              0
             );
           })
         ) {
@@ -624,33 +648,11 @@ export const getExpressionType = (
   props?: { mutable?: boolean }
 ): TypeLiteral => {
   switch (expression.nodeType) {
-    case NodeType.ComparisonExpression:
-      return createPrimType(expression.position, 'Boolean');
-    case NodeType.ArithmeticExpression:
-      return getExpressionType(
-        rawProgram,
-        varPool,
-        typePool,
-        typeStack,
-        typeStacks,
-        expression.lhs
-      );
-    case NodeType.UnaryExpression:
-      if (expression.operator == UnaryExpressionOperator.UnaryNot) {
-        return createPrimType(expression.position, 'Boolean');
-      } else if (
-        expression.operator == UnaryExpressionOperator.UnaryNegative ||
-        expression.operator == UnaryExpressionOperator.UnaryPositive
-      ) {
-        return getExpressionType(
-          rawProgram,
-          varPool,
-          typePool,
-          typeStack,
-          typeStacks,
-          expression.value
-        );
-      }
+    case NodeType.InfixExpression:
+    case NodeType.PrefixExpression:
+    case NodeType.PostfixExpression:
+      // TODO: Ensure we cannot get over here and are TypeSafe
+      throw 'Unreachable';
     case NodeType.ParenthesisExpression:
       return getExpressionType(
         rawProgram,
