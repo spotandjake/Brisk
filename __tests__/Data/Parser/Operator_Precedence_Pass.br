@@ -5,7 +5,7 @@ let cINFIX: i32 = 1n * 1n;
 let dINFIX: i32 = 1n / 1n;
 let eINFIX: i32 = 1n % 1n;
 let fINFIX: i32 = 1n ^ 1n;
-let fINFIX: i32 = 1n == 1n;
+let gINFIX: i32 = 1n == 1n;
 // Prefix Operators
 let aPREFIX: i32 = +1n;
 let bPREFIX: i32 = -1n;
@@ -20,6 +20,13 @@ let cPOSTFIX: i32 = 1n*;
 let dPOSTFIX: i32 = 1n/;
 let ePOSTFIX: i32 = 1n%;
 let fPOSTFIX: i32 = 1n^;
+// Assingment Operators
+aINFIX += 1n;
+bINFIX -= 1n;
+cINFIX *= 1n;
+dINFIX /= 1n;
+eINFIX %= 1n;
+fINFIX ^= 1n;
 
 // Precedence
 let aPrecedence: i32 = (1n!) + (1n!);

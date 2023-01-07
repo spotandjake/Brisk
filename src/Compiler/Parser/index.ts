@@ -523,7 +523,7 @@ class Parser extends EmbeddedActionsParser {
     'assignmentStatement',
     (): Nodes.AssignmentStatementNode => {
       const name = this.SUBRULE(this.variableUsage);
-      const operatorImage = this.CONSUME(Tokens.assignmentOperators).image;
+      const operatorImage = this.CONSUME(Tokens.operators).image;
       const value = this.SUBRULE(this.expression);
       return this.ACTION((): Nodes.AssignmentStatementNode => {
         return {

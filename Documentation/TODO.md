@@ -44,9 +44,6 @@
     + [x] Look into creating our own wasm ir using https://github.com/iden3/wasmbuilder/blob/master/src/codebuilder.js instead of using binaryen for raw codegen
 + [ ] Tasks For Day 2
   + [ ] Write New Tests Based On The Improvements To The Compiler
-    + [ ] Unary Operators
-    + [ ] Order Of Operations
-    + [ ] Post Fix Operator Testing
     + [ ] Tests For Type Definitions And TypeChecker
     + [ ] Tests For Object Spread Syntax
     + [x] Analyze Arrays
@@ -57,11 +54,6 @@
   + [ ] Implement wasm multivalue types and syntax
     + [ ] Look Into Complexity of using multivalue to allocate things like objects on the stack.
   + [ ] Determine Syntax For Wasm Reference Types
-+ [ ] Tasks for Day 4
-  + [ ] Look Into Writing Linker
-    + [ ] Find Way To Parse Without Binaryen
-    + [ ] Find Way To Compile Without Binaryen
-    + [ ] Find Way To Optimize Without Binaryen
 + [ ] Tasks For Day 5
   + [ ] Rewrite Grammar in ENBF
     + [ ] Consider Simplifying Grammar Based Off Of This new Optimal Form
@@ -177,34 +169,13 @@
           + [x] Implement Analysis For ADT Enums
           + [ ] Implement Type Checking For ADT Enums
       + [ ] Expressions
-        + [x] Fix Operator Precedence In Parsing
-        + [x] Comparisons
-          + [x] Equal
-          + [x] Not Equal
-          + [x] Less Then
-          + [x] Greater Then
-          + [x] Less Then Equal
-          + [x] Greater Then Equal
-        + [x] Arithmetic
-          + [x] Addition
-          + [x] Subtraction
-          + [x] Multiplication
-          + [x] Division
-        + [ ] Logical
-          + [x] Not
-          + [ ] And
-          + [ ] Or
+        + [x] Support Custom Operators
         + [x] Member Access
         + [x] Parenthesis Expression
         + [x] Function Call
       + [ ] Statements
         + [x] Declaration
-        + [ ] Assignment
-          + [x] Equal
-          + [ ] PlusEqual
-          + [ ] SubtractEqual
-          + [ ] MultiplyEqual
-          + [ ] DivideEqual
+        + [x] Custom Assignment Operator
         + [x] If Statement
           + [x] general Parsing
           + [x] Else
@@ -245,7 +216,7 @@
         + [ ] No Non Wasm Primitive's
   + [ ] Linker
     + [ ] Make Dependency Tree
-    + [ ] Link Program
+    + [x] Link Program
   + [ ] Runtime Globals
     + [ ] Malloc
     + [ ] GC
@@ -260,6 +231,7 @@
       + [ ] String
     + [ ] General
       + [ ] Print
+      + [ ] Default Operators
 
 
 Look Into https://istanbul.js.org/

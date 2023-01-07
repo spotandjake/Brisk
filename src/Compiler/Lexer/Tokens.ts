@@ -480,7 +480,7 @@ export const TknAssignmentOperator = createToken({
   label: 'TknAssignmentOperator',
   name: LexerTokenType.TknAssignmentOperator,
   categories: assignmentOperators,
-  pattern: /(\+|-|\*|%)=/,
+  pattern: /[~$&*/+\-^|?%:.]=/,
 });
 export const TknEqual = createToken({
   label: 'Equal',
