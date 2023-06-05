@@ -1,5 +1,0 @@
-// export const heapOffset: i32 = 0n;
-import wasm print: (f32) => i32 from 'env';
-const testFunction: Function = (t: i32): i32 => 1n;
-print(1f);
-export const True: i32 = 1n;

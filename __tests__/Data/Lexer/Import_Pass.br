@@ -1,3 +1,0 @@
-import a from 'test';
-import wasm a: i32 from 'test';
-import wasm a: (i32, i32) => i32 from 'test';

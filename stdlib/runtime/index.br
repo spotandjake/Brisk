@@ -1,6 +1,0 @@
-import { 
-  @operator('+', 'INFIX')
-  addI32
-} from './operators.br';
-let a: i32 = addI32(1n, 1n);
-let b: i32 = 1n + 1n;

@@ -1,6 +1,0 @@
-__tests__/dist/
-coverage/
-node_modules/
-dist/
-*.md
-*.json

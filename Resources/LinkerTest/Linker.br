@@ -1,6 +1,0 @@
-import True from './constants.br';
-import wasm print: (i32) => i32 from 'env';
-print(True);
-let test: Function = (): Void => {
-  print(True);
-};
