@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  doc:
+    desc: Generates GrainDoc for the IRs
+    cmds:
+      - grain doc ./ -o ./
+  format:
+    desc: Formats the IRs
+    cmds:
+      - grain format ./ -o ./
+  clean:
+    desc: Cleans the artifacts produced
+    cmds:
+      - rm -rf *.wasm
+      - rm -rf *.wat
+      - rm -rf *.md
+      - rm -rf *.gro
+      - rm -rf *.mashtree
+      - rm -rf *.modsig

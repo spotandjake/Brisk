@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  build:
+    desc: Builds the compiler
+    cmds:
+      - grain compile ./compiler.gr
+  doc:
+    desc: Generates GrainDoc for the compiler
+    cmds:
+      - grain doc ./ -o ./
+  format:
+    desc: Formats the compiler
+    cmds:
+      - grain format ./ -o ./
+  clean:
+    desc: Cleans the artifacts produced by the compiler
+    cmds:
+      - rm -rf *.wasm
+      - rm -rf *.wat
+      - rm -rf *.md
+      - rm -rf *.gro
+      - rm -rf *.mashtree
+      - rm -rf *.modsig

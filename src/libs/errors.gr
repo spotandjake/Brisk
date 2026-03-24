@@ -1,0 +1,80 @@
+/**
+ * Utilities and definitions for working with compiler errors in Brisk.
+ */
+module Errors
+
+from "exception" include Exception
+
+from "./position.gr" include Position
+from "./printing.gr" include Printing
+
+/**
+ * A list of all possible compiler errors in brisk.
+ */
+provide enum BriskError<a> {
+  // 0 - 999: Generic Errors
+  // 1000 - 1999: Parsing Errors
+  ParsingError(Position.Position<a>, String),
+  ParsingUnexpectedEndOfInput(Position.Position<a>),
+}
+// Error formatters
+let getPositionHeader = (
+  position: Position.Position<a>,
+  sourceToString: (source: a) => String,
+) => {
+  Printing.style(
+    "File `"
+      ++ sourceToString(position.source)
+      ++ "`, at line "
+      ++ toString(position.line)
+      ++ ", column "
+      ++ toString(position.column),
+    [Printing.Bold]
+  )
+}
+let getErrorCode = error => match (error) {
+  // 0 - 999: Generic Errors
+  // 1000 - 1999: Parsing Errors
+  ParsingError(_, _) => 1000,
+  ParsingUnexpectedEndOfInput(_) => 1001,
+}
+let getErrorPosition = error => match (error) {
+  // 0 - 999: Generic Errors
+  // 1000 - 1999: Parsing Errors
+  ParsingError(position, _) => position,
+  ParsingUnexpectedEndOfInput(position) => position,
+}
+let getErrorMessage = error => match (error) {
+  // 0 - 999: Generic Errors
+  // 1000 - 1999: Parsing Errors
+  ParsingError(_, message) => message,
+  ParsingUnexpectedEndOfInput(_) => "Unexpected end of input",
+}
+/**
+ * Formats an error into a human-readable string, including the error code, message, and position information.
+ *
+ * @param error: The error to format.
+ * @param sourceToString: A function that takes a source location and returns a human-readable string representation of that source.
+ *
+ * @returns A formatted error message string.
+ */
+provide let errorToString = (error, sourceToString) => {
+  let code = getErrorCode(error)
+  let position = getErrorPosition(error)
+  let message = getErrorMessage(error)
+  // Text Construction
+  let header = getPositionHeader(position, sourceToString)
+  let bodyPrefix = Printing.style(
+    "Error[" ++ toString(code) ++ "]: ",
+    [Printing.Bold, Printing.FgRed]
+  )
+  return header ++ "\n" ++ bodyPrefix ++ message
+}
+
+// Setup our error handler
+/** A custom exception for handling Brisk-specific errors. */
+provide exception BriskError(String)
+Exception.registerPrinter(exn => match (exn) {
+  BriskError(msg) => Some(msg),
+  _ => None,
+})

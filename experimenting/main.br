@@ -1,0 +1,10 @@
+component Program {
+  module Main {
+    print("Hello World")
+  }
+  component X {
+    module Two {
+      print("Hello There")
+    }
+  }
+}

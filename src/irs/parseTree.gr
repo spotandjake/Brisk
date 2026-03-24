@@ -1,0 +1,274 @@
+module ParseTree
+
+from "../libs/range.gr" include Range
+
+provide module Literal {
+  // General
+  provide record StringLiteral<a> {
+    position: Range.Range<a>,
+    value: String,
+  }
+  provide record CharLiteral<a> {
+    position: Range.Range<a>,
+    value: Char,
+  }
+  provide record BooleanLiteral<a> {
+    position: Range.Range<a>,
+    value: Bool,
+  }
+  // Numeric
+  provide record Int8Literal<a> {
+    position: Range.Range<a>,
+    value: Int8,
+  }
+  provide record Int16Literal<a> {
+    position: Range.Range<a>,
+    value: Int16,
+  }
+  provide record Int32Literal<a> {
+    position: Range.Range<a>,
+    value: Int32,
+  }
+  provide record Int64Literal<a> {
+    position: Range.Range<a>,
+    value: Int64,
+  }
+  provide record Uint8Literal<a> {
+    position: Range.Range<a>,
+    value: Uint8,
+  }
+  provide record Uint16Literal<a> {
+    position: Range.Range<a>,
+    value: Uint16,
+  }
+  provide record Uint32Literal<a> {
+    position: Range.Range<a>,
+    value: Uint32,
+  }
+  provide record Uint64Literal<a> {
+    position: Range.Range<a>,
+    value: Uint64,
+  }
+  provide record Float32Literal<a> {
+    position: Range.Range<a>,
+    value: Float32,
+  }
+  provide record Float64Literal<a> {
+    position: Range.Range<a>,
+    value: Float64,
+  }
+  provide enum Literal<a> {
+    // General
+    String(StringLiteral<a>),
+    Char(CharLiteral<a>),
+    Boolean(BooleanLiteral<a>),
+    // Numeric
+    Int8(Int8Literal<a>),
+    Int16(Int16Literal<a>),
+    Int32(Int32Literal<a>),
+    Int64(Int64Literal<a>),
+    Uint8(Uint8Literal<a>),
+    Uint16(Uint16Literal<a>),
+    Uint32(Uint32Literal<a>),
+    Uint64(Uint64Literal<a>),
+    Float32(Float32Literal<a>),
+    Float64(Float64Literal<a>),
+  }
+}
+
+provide module Expression {
+  // TODO: Properly define a pattern
+  provide type Pattern<a> = String
+  // TODO: Allow recursive binds / mutable variable in let expressions
+  // LetExpression -> 'let' wss (pattern wss '=' wss Expression)
+  //                  (wss 'and' wss pattern wss '=' wss Expression)*
+  provide record rec LetExpression<a> {
+    position: Range.Range<a>,
+    binds: List<(Pattern<a>, Expression<a>)>,
+  }
+  // IfExpression -> 'if' wss '(' wss Expression wss ')' wss Expression (wss 'else' wss Expression)?
+  and provide record IfExpression<a> {
+    position: Range.Range<a>,
+    condition: Expression<a>,
+    thenBranch: Expression<a>,
+    elseBranch: Option<Expression<a>>,
+  }
+  // MatchExpression -> 'match' wss '(' wss Expression wss ')' wss '{' wss (pattern wss '=>' wss Expression) (wss ',' wss pattern wss '=>' wss Expression)* wss '}'
+  and provide record MatchExpression<a> {
+    position: Range.Range<a>,
+    value: Expression<a>,
+    cases: List<(Pattern<a>, Expression<a>)>,
+  }
+  // WhileExpression -> 'while' wss '(' wss Expression wss ')' wss Expression
+  and provide record WhileExpression<a> {
+    position: Range.Range<a>,
+    condition: Expression<a>,
+    body: Expression<a>,
+  }
+  // ForExpression -> 'for' wss '(' wss Expression? wss ';' wss Expression? wss ';' wss Expression? wss ')' wss Expression
+  and provide record ForExpression<a> {
+    position: Range.Range<a>,
+    init: Option<Expression<a>>,
+    test: Option<Expression<a>>,
+    update: Option<Expression<a>>,
+    body: Expression<a>,
+  }
+  // BlockExpression -> '{' wss Expression* wss '}'
+  and provide record BlockExpression<a> {
+    position: Range.Range<a>,
+    body: List<Expression<a>>,
+  }
+  // LiteralExpression -> Literal
+  and provide record LiteralExpression<a> {
+    position: Range.Range<a>,
+    value: Literal.Literal<a>,
+  }
+  // BinaryOperationExpression -> Expression wss operator wss Expression
+  and provide record BinaryOperationExpression<a> {
+    position: Range.Range<a>,
+    operator: String, // TODO: Make this an identifier
+    left: Expression<a>,
+    right: Expression<a>,
+  }
+  // PrefixOperationExpression -> operator wss Expression
+  and provide record PrefixOperationExpression<a> {
+    position: Range.Range<a>,
+    operator: String, // TODO: Make this an identifier
+    operand: Expression<a>,
+  }
+  // PostfixOperationExpression -> Expression wss operator
+  and provide record PostfixOperationExpression<a> {
+    position: Range.Range<a>,
+    operator: String, // TODO: Make this an identifier
+    operand: Expression<a>,
+  }
+  // CallExpression -> Expression wss '(' wss (Expression (wss ',' wss Expression)*)? wss ')'
+  and provide record CallExpression<a> {
+    position: Range.Range<a>,
+    callee: Expression<a>,
+    arguments: List<Expression<a>>,
+  }
+  // ReturnExpression -> 'return' wss Expression?
+  and provide record ReturnExpression<a> {
+    position: Range.Range<a>,
+    value: Option<Expression<a>>,
+  }
+  // BreakExpression -> 'break'
+  and provide record BreakExpression<a> {
+    position: Range.Range<a>,
+  }
+  // ContinueExpression -> 'continue'
+  and provide record ContinueExpression<a> {
+    position: Range.Range<a>,
+  }
+  // CastExpression -> 'cast' wss '(' wss Expression wss 'as' wss Type wss ')'
+  and provide record CastExpression<a> {
+    position: Range.Range<a>,
+    value: Expression<a>,
+    targetType: String, // TODO: Make this a proper type representation
+  }
+  // ArrayIndexExpression -> Expression wss '[' wss Expression wss ']'
+  and provide record ArrayIndexExpression<a> {
+    position: Range.Range<a>,
+    array: Expression<a>,
+    index: Expression<a>,
+  }
+  // MemberAccessExpression -> Expression wss '.' wss Identifier
+  and provide record MemberAccessExpression<a> {
+    position: Range.Range<a>,
+    object: Expression<a>,
+    property: String, // TODO: Make this a proper identifier
+  }
+  // IdentifierExpression -> Identifier
+  and provide record IdentifierExpression<a> {
+    position: Range.Range<a>,
+    name: String, // TODO: Make this a proper identifier???
+  }
+  // Expression -> LetExpression | IfExpression | MatchExpression | WhileExpression | LiteralExpression | ArrayIndexExpression | LocationExpression | IdentifierExpression
+  and provide enum Expression<a> {
+    // Declaration
+    Let(LetExpression<a>),
+    // Control Flow
+    If(IfExpression<a>),
+    Match(MatchExpression<a>),
+    While(WhileExpression<a>),
+    For(ForExpression<a>),
+    Block(BlockExpression<a>),
+    // Operations
+    BinaryOperation(BinaryOperationExpression<a>),
+    PrefixOperation(PrefixOperationExpression<a>),
+    PostfixOperation(PostfixOperationExpression<a>),
+    // Instructions
+    Call(CallExpression<a>),
+    Return(ReturnExpression<a>),
+    Break(BreakExpression<a>),
+    Continue(ContinueExpression<a>),
+    Cast(CastExpression<a>),
+    // Data Definitions
+    Literal(LiteralExpression<a>),
+    // TODO: Function expression
+    // TODO: Array expression
+    // TODO: ADT expression
+    // TODO: Record expression
+    // TODO: Tuple expression
+    // Variable stuff
+    ArrayIndex(ArrayIndexExpression<a>),
+    MemberAccess(MemberAccessExpression<a>),
+    Identifier(IdentifierExpression<a>),
+  }
+}
+provide module Module {
+  // Include -> 'from' wss fileString wss 'include' wss structuralIdentifier wss
+  provide record Include<a> {
+    position: Range.Range<a>,
+    file: String,
+    identifier: String,
+  }
+  // provide -> 'provide' (declaration | provideBody)
+  provide record Provide<a> {
+    position: Range.Range<a>,
+    // TODO: This is a subset of Expression for declarations
+    // TODO: We should probably have some sort of way to provide multiple declarations at once
+    declaration: Expression.Expression<a>,
+  }
+  // ModuleStatement -> Include | Provide | Expression
+  provide enum ModuleStatement<a> {
+    Include(Include<a>),
+    Provide(Provide<a>),
+    // TODO: Additionally support type definitions
+    //       -> type
+    //       -> record
+    //       -> enum
+    Expression(Expression.Expression<a>),
+  }
+}
+provide module Structure {
+  // Module -> 'module' wss structuralIdentifier wss '{' wss ModuleContent* wss '}' wss
+  provide record rec Module<a> {
+    position: Range.Range<a>,
+    name: String,
+    body: List<ModuleContent<a>>,
+  }
+  and provide enum ModuleContent<a> {
+    SubModule(Module<a>),
+    // ModuleStatement -> Module | ModuleStatement
+    ModuleStatement(Module.ModuleStatement<a>),
+  }
+  // Component -> 'component' wss structuralIdentifier wss '{' wss ComponentContent* wss '}' wss
+  provide record rec Component<a> {
+    position: Range.Range<a>,
+    name: String,
+    body: List<ComponentContent<a>>,
+  }
+  // ComponentContent -> Module | Component
+  and provide enum ComponentContent<a> {
+    Module(Module<a>),
+    Component(Component<a>),
+  }
+}
+
+// Program -> Component | Module
+provide record Program<a> {
+  position: Range.Range<a>,
+  body: Structure.Component<a>,
+}

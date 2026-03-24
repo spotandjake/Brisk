@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+includes:
+  # Components
+  cli:
+    taskfile: ./cli/Taskfile.yml
+    dir: ./cli/
+  compiler:
+    taskfile: ./compiler/Taskfile.yml
+    dir: ./compiler/
+  # Generic
+  irs:
+    taskfile: ./irs/Taskfile.yml
+    dir: ./irs/
+  libs:
+    taskfile: ./libs/Taskfile.yml
+    dir: ./libs/
+
+tasks:
+  build:
+    desc: Builds everything in our project
+    cmds:
+      # Components
+      - task: cli:build
+      - task: compiler:build
+  doc:
+    desc: Generates GrainDoc for our project
+    cmds:
+      # Components
+      - task: cli:doc
+      - task: compiler:doc
+      # General
+      - task: irs:doc
+      - task: libs:doc
+  format:
+    desc: Formats our project
+    cmds:
+      # Components
+      - task: cli:format
+      - task: compiler:format
+      # General
+      - task: irs:format
+      - task: libs:format
+  clean:
+    desc: Cleans the artifacts produced
+    cmds:
+      # Components
+      - task: cli:clean
+      - task: compiler:clean
+      # General
+      - task: irs:clean
+      - task: libs:clean

@@ -1,0 +1,103 @@
+/**
+ * Helpers for parsing.
+ */
+module Helpers
+
+from "uint32" include Uint32
+from "char" include Char
+from "bytes" include Bytes
+
+from "../../libs/errors.gr" include Errors
+from "../../libs/position.gr" include Position
+from "../../libs/stream.gr" include Stream
+
+/**
+ * Constructs a position from the given stream.
+ *
+ * @param source: The source of the stream
+ * @param stream: The actual byte stream we are operating on
+ *
+ * @returns A position representing the current location in the stream
+ */
+provide let getStreamPosition = (source, stream) => {
+  Position.make(
+    source=source,
+    line=Uint32.fromNumber(Stream.getLine(stream)),
+    column=Uint32.fromNumber(Stream.getColumn(stream)),
+    offset=Uint32.fromNumber(Stream.getPosition(stream))
+  )
+}
+
+/**
+ * Skips whitespace characters in the stream until it encounters a non-whitespace character.
+ *
+ * WhiteSpace:
+ * - ' ' (space)
+ * - '\t' (tab)
+ * - '\n' (newline)
+ * - '\r' (carriage return)
+ * - ';' (semicolon)
+ *
+ * @param stream: The byte stream to operate on
+ */
+provide let rec skipWhiteSpace = stream => {
+  if (Stream.isEmpty(stream)) {
+    void
+  } else {
+    match (Stream.Get.char(stream)) {
+      ' ' | '\t' | '\n' | '\r' | ';' => {
+        Stream.Advance.char(stream)
+        skipWhiteSpace(stream)
+      },
+      // TODO: Handle comments here as well
+      _ => void,
+    }
+  }
+}
+
+/**
+ * Parses a structural identifier from the stream.
+ *
+ * StructuralIdentifier:
+ * - An identifier that can be used for modules and components.
+ * - [A-Z][a-zA-Z0-9_]*
+ *
+ * @param source: The source of the stream
+ * @param stream: The byte stream to operate on
+ *
+ * @returns `Ok(identifier)` if successful, or `Err(err)` if the stream is empty or the identifier is invalid
+ */
+provide let parseStructuralIdentifier = (source, stream) => {
+  use Char.{ (>=), (<=) }
+  if (Stream.isEmpty(stream)) {
+    return Err(
+      Errors.ParsingUnexpectedEndOfInput(getStreamPosition(source, stream)),
+    )
+  }
+  let startOffset = Stream.getPosition(stream)
+  match (Stream.Get.char(stream)) {
+    c when c >= 'A' && c <= 'Z' => void,
+    _ =>
+      return Err(
+        Errors.ParsingError(
+          getStreamPosition(source, stream),
+          "Expected an uppercase letter to start a structural identifier",
+        ),
+      ),
+  }
+  // NOTE: We never advance above because the loop will handle that for us
+  while (!Stream.isEmpty(stream)) {
+    match (Stream.Get.char(stream)) {
+      c when c >= 'a' && c <= 'z'
+        || c >= 'A' && c <= 'Z'
+        || c >= '0' && c <= '9'
+        || c == '_' => Stream.Advance.char(stream),
+      _ => break,
+    }
+  }
+  let endOffset = Stream.getPosition(stream)
+  // Get the bytes for the identifier and convert it to a string
+  let bytes = Stream.getBytes(stream)
+  let identifierBytes = Bytes.slice(startOffset, endOffset, bytes)
+  return Ok(Bytes.toString(identifierBytes))
+}

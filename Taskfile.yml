@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+includes:
+  src:
+    taskfile: ./src/Taskfile.yml
+    dir: ./src/
+
+tasks:
+  default:
+    cmds:
+      - task: clean
+      - task: format
+      - task: doc
+      - task: build
+  build:
+    desc: Builds everything in our project
+    cmds:
+      - task: src:build
+  doc:
+    desc: Generates GrainDoc for our project
+    cmds:
+      - task: src:doc
+  format:
+    desc: Formats our project
+    cmds:
+      - task: src:format
+  clean:
+    desc: Cleans our project
+    cmds:
+      - task: src:clean

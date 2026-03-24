@@ -1,0 +1,35 @@
+/**
+ * Utilities for working with source ranges.
+ */
+module Range
+
+from "exception" include Exception
+from "./position.gr" include Position
+
+provide record Range<a> {
+  /** The start position of the range. */
+  start: Position.Position<a>,
+  /** The end position of the range. */
+  end: Position.Position<a>,
+}
+
+/**
+ * Creates a brand new source range.
+ *
+ * NOTE: The start and end positions must have the same source.
+ *
+ * @param start: The start position of the range
+ * @param end: The end position of the range
+ * @returns A brand new source range
+ *
+ * @throws Failure(String): If the start and end positions have different sources
+ */
+provide let make = (start: Position.Position<a>, end: Position.Position<a>) => {
+  if (start.source != end.source) {
+    fail "Range start and end must have the same source"
+  }
+  { start, end }
+}
+
+// TODO: Add utilities such as merge.
+// TODO: Add utilities for comparing ranges

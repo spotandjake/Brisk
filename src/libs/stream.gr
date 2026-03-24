@@ -1,0 +1,765 @@
+/*
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2025 Spotandjake
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+// SOURCE: https://github.com/spotandjake/grain-libs/tree/main/grain-stream
+/**
+ * A module for working with streams of bytes.
+ *
+ * Streams are used to advance through and read data from a byte array.
+ *
+ * @example from "./stream.gr" include Stream
+ * @example
+ * let bytes = Stream.fromString("hello")
+ * assert Stream.Get.char(bytes) == "h"
+ * assert Stream.GetAndAdvance.char(bytes) == "h"
+ * assert Stream.Expect.char("h", bytes) == true
+ * assert Stream.ExpectAndAdvance.char("e", bytes) == true
+ */
+module Stream
+
+from "bytes" include Bytes
+from "uint8" include Uint8
+from "int64" include Int64
+from "string" include String
+from "char" include Char
+
+/**
+ * A stream of bytes.
+ */
+abstract record Stream {
+  bytes: Bytes,
+  size: Number,
+  mut pos: Number,
+  mut line: Number,
+  mut column: Number,
+}
+
+/**
+ * Create a stream from a byte object.
+ *
+ * @param bytes: The byte array to convert into a stream
+ * @returns: A stream object
+ *
+ * @example Stream.fromBytes(b"hello")
+ */
+provide let fromBytes = bytes => {
+  { bytes, size: Bytes.length(bytes), pos: 0, line: 1, column: 1 }
+}
+
+/**
+ * Create a stream from a string.
+ *
+ * @param string: The string to convert into a stream
+ * @returns: A stream object
+ *
+ * @example Stream.fromString("hello")
+ */
+provide let fromString = string => {
+  fromBytes(Bytes.fromString(string))
+}
+
+/**
+ * Checks if we have reached the end of the stream.
+ *
+ * @param stream: The stream to check
+ * @returns `true` if we are at the end of the stream, `false` otherwise
+ *
+ * @example
+ * let stream = Stream.fromString("hello")
+ * assert Stream.isEmpty(stream) == false
+ * Stream.advance(5, stream)
+ * assert Stream.isEmpty(stream) == true
+ */
+provide let isEmpty = stream => {
+  stream.size == stream.pos
+}
+
+/**
+ * Get the current position in the stream.
+ *
+ * @param stream: The stream to get the position of
+ *
+ * @example
+ * let stream = Stream.fromString("hello")
+ * assert Stream.getPosition(stream) == 0
+ * Stream.advance(1, stream)
+ * assert Stream.getPosition(stream) == 1
+ */
+provide let getPosition = stream => {
+  stream.pos
+}
+
+/**
+ * Get the current line in the stream.
+ *
+ * @param stream: The stream to get the line of
+ *
+ * @example
+ * let stream = Stream.fromString("hello\nworld")
+ * assert Stream.getLine(stream) == 1
+ * Stream.advanceLine(stream)
+ * assert Stream.getLine(stream) == 2
+ */
+provide let getLine = stream => {
+  stream.line
+}
+
+/**
+ * Get the current column in the stream.
+ *
+ * @param stream: The stream to get the column of
+ *
+ * @example
+ * let stream = Stream.fromString("hello\nworld")
+ * assert Stream.getColumn(stream) == 1
+ * Stream.advance(5, stream)
+ * assert Stream.getColumn(stream) == 6
+ * Stream.advanceLine(stream)
+ * assert Stream.getColumn(stream) == 1
+ */
+provide let getColumn = stream => {
+  stream.column
+}
+
+/**
+ * Get the size of the stream in bytes.
+ *
+ * @param stream: The stream to get the size of
+ * @returns: The size of the stream in bytes
+ *
+ * @example
+ * let stream = Stream.fromString("hello")
+ * assert Stream.getByteSize(stream) == 5
+ *
+ * @example
+ * let stream = Stream.fromString("Hello 🌍")
+ * assert Stream.getByteSize(stream) == 10
+ */
+provide let getByteSize = stream => stream.size
+
+/**
+ * Get the remaining bytes in the stream.
+ *
+ * @param stream: The stream to get the remaining bytes of
+ *
+ * @example Stream.getBytes(Stream.fromString("hello")) == b"hello"
+ */
+provide let getBytes = stream => {
+  stream.bytes
+}
+
+// Used to define variable length encodings
+module Internal {
+  // TODO: String, Encoding
+  provide let char = stream => {
+    let result = Bytes.getChar(stream.pos, stream.bytes)
+    (Char.encodedLength(Char.UTF8, result), result)
+  }
+}
+
+/**
+ * Utilities for advancing the stream.
+ */
+provide module Advance {
+  /**
+   * Advance the stream by a given number of bytes.
+   *
+   * @param byteCount: The number of bytes to advance the stream by
+   * @param stream: The stream to advance
+   *
+   * @example
+   * let stream = Stream.fromString("hello")
+   * Stream.advance(4, stream)
+   * assert Stream.Get.char(stream) == "0"
+   */
+  provide let advance = (byteCount, stream) => {
+    stream.pos += byteCount
+    stream.column += stream.column
+  }
+
+  /**
+   * Advance the stream by one line.
+   *
+   * The columns is reset to 0 and the line count is incremented.
+   * line and column positions do not affect the position in the stream.
+   *
+   * @param stream: The stream to advance
+   *
+   * @example
+   * let stream = Stream.fromString("helloworld")
+   * Stream.advanceLine(stream)
+   * Stream.advanceLine(stream)
+   * assert Stream.Get.char(stream) == "h"
+   * assert Stream.getLine(stream) == 2
+   */
+  provide let advanceLine = stream => {
+    stream.line += 1
+    stream.column = 1
+  }
+
+  /**
+   * Advance the stream by one byte.
+   *
+   * @param stream: The stream to advance
+   *
+   * @example
+   * let stream = Stream.fromString("hello")
+   * Stream.Advance.byte(stream)
+   * assert Stream.Get.char(stream) == "e"
+   */
+  provide let byte = stream => advance(1, stream)
+
+  /**
+   * Advance the stream by `byteCount` bytes.
+   *
+   * @param byteCount: The number of bytes to advance the stream by
+   * @param stream: The stream to advance
+   *
+   * @example
+   * let stream = Stream.fromString("hello")
+   * Stream.Advance.bytes(2, stream)
+   * assert Stream.Get.char(stream) == "l"
+   */
+  provide let bytes = (byteCount, stream) => advance(byteCount, stream)
+
+  /**
+   * Advance the stream by the size of an int64 (8 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let int64 = stream => advance(8, stream)
+
+  /**
+   * Advance the stream by the size of an int32 (4 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let int32 = stream => advance(4, stream)
+
+  /**
+   * Advance the stream by the size of an int16 (2 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let int16 = stream => advance(2, stream)
+
+  /**
+   * Advance the stream by the size of an int8 (1 byte).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let int8 = stream => advance(1, stream)
+
+  /**
+   * Advance the stream by the size of a uint64 (8 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let uint64 = stream => advance(8, stream)
+
+  /**
+   * Advance the stream by the size of a uint32 (4 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let uInt32 = stream => advance(4, stream)
+
+  /**
+   * Advance the stream by the size of a uint16 (2 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let uInt16 = stream => advance(2, stream)
+
+  /**
+   * Advance the stream by the size of a uint8 (1 byte).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let uInt8 = stream => advance(1, stream)
+
+  /**
+   * Advance the stream by the size of a float64 (8 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let float64 = stream => advance(8, stream)
+
+  /**
+   * Advance the stream by the size of a float32 (4 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let float32 = stream => advance(4, stream)
+
+  /**
+   * Advance the stream by the size of a char (1-4 bytes).
+   *
+   * @param stream: The stream to advance
+   */
+  provide let char = stream => {
+    let (byteCount, _) = Internal.char(stream)
+    advance(byteCount, stream)
+  }
+}
+
+/**
+ * Utilities for reading the next item in the stream.
+ *
+ * These functions read the next item in the stream, but do not advance the stream.
+ *
+ * @example
+ * let stream = Stream.fromString("hello")
+ * assert Stream.Get.char(stream) == "h"
+ */
+provide module Get {
+  /**
+   * Get the next byte in the stream.
+   *
+   * @param stream: The stream to get the byte from
+   * @returns: The next byte in the stream
+   *
+   * @example
+   * let stream = Stream.fromString("hello")
+   * assert Stream.Get.byte(stream) == 104
+   */
+  provide let byte = stream => {
+    Bytes.getUint8(stream.pos, stream.bytes)
+  }
+  /**
+   * Get the next `byteCount` bytes in the stream.
+   *
+   * @param byteCount: The number of bytes to get
+   * @param stream: The stream to get the bytes from
+   * @returns: The next `byteCount` bytes in the stream
+   *
+   * @example
+   * let stream = Stream.fromString("hello")
+   * assert Stream.Get.bytes(2, stream) == b"he"
+   */
+  provide let bytes = (byteCount, stream) => {
+    Bytes.slice(stream.pos, byteCount, stream.bytes)
+  }
+
+  /**
+   * Get the next int64 in the stream.
+   *
+   * @param stream: The stream to get the int64 from
+   * @returns: The next int64 in the stream
+   */
+  provide let int64 = stream => {
+    Bytes.getInt64(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next int32 in the stream.
+   *
+   * @param stream: The stream to get the int32 from
+   * @returns: The next int32 in the stream
+   */
+  provide let int32 = stream => {
+    Bytes.getInt32(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next int16 in the stream.
+   *
+   * @param stream: The stream to get the int16 from
+   * @returns: The next int16 in the stream
+   */
+  provide let int16 = stream => {
+    Bytes.getInt16(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next int8 in the stream.
+   *
+   * @param stream: The stream to get the int8 from
+   * @returns: The next int8 in the stream
+   */
+  provide let int8 = stream => {
+    Bytes.getInt8(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next uint64 in the stream.
+   *
+   * @param stream: The stream to get the uint64 from
+   * @returns: The next uint64 in the stream
+   */
+  provide let uInt64 = stream => {
+    Bytes.getUint64(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next uint32 in the stream.
+   *
+   * @param stream: The stream to get the uint32 from
+   * @returns: The next uint32 in the stream
+   */
+  provide let uInt32 = stream => {
+    Bytes.getUint32(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next uint16 in the stream.
+   *
+   * @param stream: The stream to get the uint16 from
+   * @returns: The next uint16 in the stream
+   */
+  provide let uInt16 = stream => {
+    Bytes.getUint16(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next uint8 in the stream.
+   *
+   * @param stream: The stream to get the uint8 from
+   * @returns: The next uint8 in the stream
+   */
+  provide let uInt8 = stream => {
+    Bytes.getUint8(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next float64 in the stream.
+   *
+   * @param stream: The stream to get the float64 from
+   * @returns: The next float64 in the stream
+   */
+  provide let float64 = stream => {
+    Bytes.getFloat64(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next float32 in the stream.
+   *
+   * @param stream: The stream to get the float32 from
+   * @returns: The next float32 in the stream
+   */
+  provide let float32 = stream => {
+    Bytes.getFloat32(stream.pos, stream.bytes)
+  }
+
+  /**
+   * Get the next char in the stream.
+   *
+   * @param stream: The stream to get the char from
+   * @returns: The next char in the stream
+   */
+  provide let char = stream => {
+    Bytes.getChar(stream.pos, stream.bytes)
+  }
+}
+
+/**
+ * Utilities for reading the next item in the stream and advancing the stream.
+ */
+provide module GetAndAdvance {
+  /**
+   * Get the next byte in the stream and advance the stream by one byte.
+   *
+   * @param stream: The stream to get the byte from
+   * @returns: The next byte in the stream
+   */
+  provide let byte = stream => {
+    let byte = Get.byte(stream)
+    Advance.byte(stream)
+    byte
+  }
+
+  /**
+   * Get the next `byteCount` bytes in the stream and advance the stream by `byteCount` bytes.
+   *
+   * @param byteCount: The number of bytes to get
+   * @param stream: The stream to get the bytes from
+   * @returns The next `byteCount` bytes in the stream
+   */
+  provide let bytes = (byteCount, stream) => {
+    let bytes = Get.bytes(byteCount, stream)
+    Advance.bytes(byteCount, stream)
+    bytes
+  }
+
+  /**
+   * Get the next int64 in the stream and advance the stream by the size of an int64 (8 bytes).
+   *
+   * @param stream: The stream to get the int64 from
+   * @returns: The next int64 in the stream
+   */
+  provide let int64 = stream => {
+    let value = Get.int64(stream)
+    Advance.int64(stream)
+    value
+  }
+
+  /**
+   * Get the next int32 in the stream and advance the stream by the size of an int32 (4 bytes).
+   *
+   * @param stream: The stream to get the int32 from
+   * @returns: The next int32 in the stream
+   */
+  provide let int32 = stream => {
+    let value = Get.int32(stream)
+    Advance.int32(stream)
+    value
+  }
+
+  /**
+   * Get the next int16 in the stream and advance the stream by the size of an int16 (2 bytes).
+   *
+   * @param stream: The stream to get the int16 from
+   * @returns: The next int16 in the stream
+   */
+  provide let int16 = stream => {
+    let value = Get.int16(stream)
+    Advance.int16(stream)
+    value
+  }
+
+  /**
+   * Get the next int8 in the stream and advance the stream by the size of an int8 (1 byte).
+   *
+   * @param stream: The stream to get the int8 from
+   * @returns: The next int8 in the stream
+   */
+  provide let int8 = stream => {
+    let value = Get.int8(stream)
+    Advance.int8(stream)
+    value
+  }
+
+  /**
+   * Get the next uint64 in the stream and advance the stream by the size of a uint64 (8 bytes).
+   *
+   * @param stream: The stream to get the uint64 from
+   * @returns: The next uint64 in the stream
+   */
+  provide let uint64 = stream => {
+    let value = Get.uInt64(stream)
+    Advance.uint64(stream)
+    value
+  }
+
+  /**
+   * Get the next uint32 in the stream and advance the stream by the size of a uint32 (4 bytes).
+   *
+   * @param stream: The stream to get the uint32 from
+   * @returns: The next uint32 in the stream
+   */
+  provide let uInt32 = stream => {
+    let value = Get.uInt32(stream)
+    Advance.uInt32(stream)
+    value
+  }
+
+  /**
+   * Get the next uint16 in the stream and advance the stream by the size of a uint16 (2 bytes).
+   *
+   * @param stream: The stream to get the uint16 from
+   * @returns: The next uint16 in the stream
+   */
+  provide let uInt16 = stream => {
+    let value = Get.uInt16(stream)
+    Advance.uInt16(stream)
+    value
+  }
+
+  /**
+   * Get the next uint8 in the stream and advance the stream by the size of a uint8 (1 byte).
+   *
+   * @param stream: The stream to get the uint8 from
+   * @returns: The next uint8 in the stream
+   */
+  provide let uInt8 = stream => {
+    let value = Get.uInt8(stream)
+    Advance.uInt8(stream)
+    value
+  }
+
+  /**
+   * Get the next float64 in the stream and advance the stream by the size of a float64 (8 bytes).
+   *
+   * @param stream: The stream to get the float64 from
+   * @returns: The next float64 in the stream
+   */
+  provide let float64 = stream => {
+    let value = Get.float64(stream)
+    Advance.float64(stream)
+    value
+  }
+
+  /**
+   * Get the next float32 in the stream and advance the stream by the size of a float32 (4 bytes).
+   *
+   * @param stream: The stream to get the float32 from
+   * @returns: The next float32 in the stream
+   */
+  provide let float32 = stream => {
+    let value = Get.float32(stream)
+    Advance.float32(stream)
+    value
+  }
+
+  /**
+   * Get the next char in the stream and advance the stream by the size of a char (1-4 bytes).
+   *
+   * @param stream: The stream to get the char from
+   * @returns: The next char in the stream
+   */
+  provide let char = stream => {
+    let (byteCount, value) = Internal.char(stream)
+    Advance.bytes(byteCount, stream)
+    value
+  }
+}
+
+/**
+ * Utilities for expecting the next item in the stream.
+ */
+module Expect {
+  /**
+   * Expect the next byte in the stream to be a given value.
+   *
+   * @param byte: The byte to expect
+   * @param stream: The stream to expect the byte from
+   * @returns: `true` if the next byte in the stream is the expected byte
+   */
+  provide let byte = (byte, stream) => {
+    Get.byte(stream) == byte
+  }
+
+  /**
+   * Expect the next `bytes` in the stream to be a given value.
+   *
+   * @param bytes: The bytes to expect
+   * @param stream: The stream to expect the bytes from
+   * @returns: `true` if the next `bytes` in the stream are the
+   */
+  provide let bytes = (bytes, stream) => {
+    Get.bytes(Bytes.length(bytes), stream) == bytes
+  }
+  provide let int64 = (value, stream) => {
+    Get.int64(stream) == value
+  }
+  provide let int32 = (value, stream) => {
+    Get.int32(stream) == value
+  }
+  provide let int16 = (value, stream) => {
+    Get.int16(stream) == value
+  }
+  provide let int8 = (value, stream) => {
+    Get.int8(stream) == value
+  }
+  provide let uInt64 = (value, stream) => {
+    Get.uInt64(stream) == value
+  }
+  provide let uInt32 = (value, stream) => {
+    Get.uInt32(stream) == value
+  }
+  provide let uInt16 = (value, stream) => {
+    Get.uInt16(stream) == value
+  }
+  provide let uInt8 = (value, stream) => {
+    Get.uInt8(stream) == value
+  }
+  provide let float64 = (value, stream) => {
+    Get.float64(stream) == value
+  }
+  provide let float32 = (value, stream) => {
+    Get.float32(stream) == value
+  }
+  provide let char = (char, stream) => {
+    Get.char(stream) == char
+  }
+}
+
+provide module ExpectAndAdvance {
+  provide let byte = (byte, stream) => {
+    let result = Expect.byte(byte, stream)
+    if (result) Advance.byte(stream)
+    result
+  }
+  provide let bytes = (bytes, stream) => {
+    let result = Expect.bytes(bytes, stream)
+    if (result) Advance.bytes(Bytes.length(bytes), stream)
+    result
+  }
+  provide let int64 = (value, stream) => {
+    let result = Expect.int64(value, stream)
+    if (result) Advance.int64(stream)
+    result
+  }
+  provide let int32 = (value, stream) => {
+    let result = Expect.int32(value, stream)
+    if (result) Advance.int32(stream)
+    result
+  }
+  provide let int16 = (value, stream) => {
+    let result = Expect.int16(value, stream)
+    if (result) Advance.int16(stream)
+    result
+  }
+  provide let int8 = (value, stream) => {
+    let result = Expect.int8(value, stream)
+    if (result) Advance.int8(stream)
+    result
+  }
+  provide let uInt64 = (value, stream) => {
+    let result = Expect.uInt64(value, stream)
+    if (result) Advance.uint64(stream)
+    result
+  }
+  provide let uInt32 = (value, stream) => {
+    let result = Expect.uInt32(value, stream)
+    if (result) Advance.uInt32(stream)
+    result
+  }
+  provide let uInt16 = (value, stream) => {
+    let result = Expect.uInt16(value, stream)
+    if (result) Advance.uInt16(stream)
+    result
+  }
+  provide let uInt8 = (value, stream) => {
+    let result = Expect.uInt8(value, stream)
+    if (result) Advance.uInt8(stream)
+    result
+  }
+  provide let float64 = (value, stream) => {
+    let result = Expect.float64(value, stream)
+    if (result) Advance.float64(stream)
+    result
+  }
+  provide let float32 = (value, stream) => {
+    let result = Expect.float32(value, stream)
+    if (result) Advance.float32(stream)
+    result
+  }
+  provide let char = (value, stream) => {
+    let (byteCount, result) = Internal.char(stream)
+    let result = value == result
+    if (result) Advance.char(stream)
+    result
+  }
+}

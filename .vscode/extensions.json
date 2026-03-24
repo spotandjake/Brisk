@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "bbenoist.nix",
+    "grain-lang.vscode-grain"
+  ]
+}

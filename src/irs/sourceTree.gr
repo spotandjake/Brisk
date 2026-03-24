@@ -1,0 +1,19 @@
+// This file contains brisks sourceTree, a sourceTree is a programmatic
+// representation of your entire program including all modules,
+// components and expressions. This is extracted directly from the parse
+// tree and is used for everything in the compiler allowing us to resolve
+// file paths and modules imports as quickly as possible.
+module SourceTree
+
+// The source tree itself is split up into two separate sets of trees
+// At the top level we have a structural tree which contains all the
+// modules and components in the program this defines the layout of the
+// program itself, and linking dynamics.
+// The second set of trees are the module bodies themselves which contains
+// code that will actually run.
+// Using this separation, we can think of it like this, the structural tree is
+// used by the compiler to orchestrate the compilation process.
+// The module bodies are used to represent the actual code that will be run by the
+// program. This allows us to have a clear separation of concerns, makes
+// linking dynamics easy to understand as they are syntactic in nature, and allows
+// us to have a clear split between modules and components.

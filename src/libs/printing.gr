@@ -1,0 +1,100 @@
+/**
+ * This modules defines utilities for printing styled text to an ascii console.
+ */
+module Printing
+
+// TODO: Greatly improve this module
+
+/**
+ * Styles that can be applied to a given text.
+ *
+ * These styles match the ANSI escape codes for styling text in a terminal.
+ */
+provide enum Styles {
+  // ForeGround Colors
+  FgBlack,
+  FgRed,
+  FgGreen,
+  FgYellow,
+  FgBlue,
+  FgMagenta,
+  FgCyan,
+  FgWhite,
+  FgRGB(Number, Number, Number),
+  // Background Colors
+  BgBlack,
+  BgRed,
+  BgGreen,
+  BgYellow,
+  BgBlue,
+  BgMagenta,
+  BgCyan,
+  BgWhite,
+  // Modifiers
+  Reset,
+  Bold,
+  Dim,
+  Underline,
+  Inverse,
+  Hidden,
+}
+
+/**
+ * Retrieves the ANSI escape code corresponding to the given style option.
+ *
+ * @param option: The style option for which to get the escape code.
+ * @returns A string containing the ANSI escape code for the given style option.
+ */
+provide let getEscapeCode = (option: Styles) => {
+  match (option) {
+    // ForeGround Colors
+    FgBlack => "\x1b[30m",
+    FgRed => "\x1b[31m",
+    FgGreen => "\x1b[32m",
+    FgYellow => "\x1b[33m",
+    FgBlue => "\x1b[34m",
+    FgMagenta => "\x1b[35m",
+    FgCyan => "\x1b[36m",
+    FgWhite => "\x1b[37m",
+    FgRGB(r, g, b) => {
+      "\x1b[38;"
+        ++ toString(r)
+        ++ ";"
+        ++ toString(g)
+        ++ ";"
+        ++ toString(b)
+        ++ ";0m"
+    },
+    // Background Colors
+    BgBlack => "\x1b[40m",
+    BgRed => "\x1b[41m",
+    BgGreen => "\x1b[42m",
+    BgYellow => "\x1b[43m",
+    BgBlue => "\x1b[44m",
+    BgMagenta => "\x1b[45m",
+    BgCyan => "\x1b[46m",
+    BgWhite => "\x1b[47m",
+    // Modifiers
+    Reset => "\x1b[0m",
+    Bold => "\x1b[1m",
+    Dim => "\x1b[2m",
+    Underline => "\x1b[4m",
+    Inverse => "\x1b[7m",
+    Hidden => "\x1b[8m",
+  }
+}
+
+/**
+ * Applies the given styles to the provided text.
+ *
+ * @param text: The text to style.
+ * @param options: A list of styles to apply to the text.
+ *
+ * @returns A string containing the original text with the styles applied.
+ */
+provide let rec style = (text, options) => {
+  match (options) {
+    [] => text ++ getEscapeCode(Reset),
+    [option, ...options] => style(getEscapeCode(option) ++ text, options),
+  }
+}

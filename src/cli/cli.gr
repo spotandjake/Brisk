@@ -1,0 +1,4 @@
+/**
+ * The brisk core command line interface.
+ */
+module Cli

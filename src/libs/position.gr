@@ -1,0 +1,48 @@
+/**
+ * Utilities for working with source positions.
+ *
+ * What is a source position? Throughout the compiler we want to be able to track
+ * the origin within the source of various constructs. This is important for error
+ * reporting, source maps and other features. Regularly this is done with a simple
+ * position { file: String, line: Int, column: Int, offset: Int } however,
+ * this model assumes that the source is always a file, which is not the
+ * case for us. In our case, we track source positions using a type,
+ * all code still has a string source, so we still track
+ * `{ line: Int, column: Int, offset: Int }`, but instead of a file
+ * we track the source which can be a file, url, module, or any other concept.
+ *
+ * What difference does this make? While this doesn't impact the user much,
+ * it does greatly improve our ability to run the compiler in different
+ * environments, such as the browser, where we may not have a file system, or
+ * we may want to compile code from a url or module.
+ */
+module Position
+
+/**
+ * A position in the source code.
+ *
+ * NOTE: The source does not have to be a file.
+ */
+provide record Position<a> {
+  /** The source of the position. */
+  source: a,
+  /** The line number of the position. */
+  line: Uint32,
+  /** The column number of the position. */
+  column: Uint32,
+  /** The offset of the position. */
+  offset: Uint32,
+}
+
+/**
+ * Creates a brand new position.
+ *
+ * @param source: The source of the position
+ * @param line: The line number of the position
+ * @param column: The column number of the position
+ * @param offset: The offset of the position
+ * @returns A brand new source position
+ */
+provide let make = (source, line, column, offset) => {
+  { source, line, column, offset }
+}

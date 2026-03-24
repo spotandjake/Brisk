@@ -1,0 +1,121 @@
+module ParseStructure
+
+from "list" include List
+
+from "./helpers.gr" include Helpers
+
+from "../../irs/parseTree.gr" include ParseTree
+from "../../libs/errors.gr" include Errors
+from "../../libs/range.gr" include Range
+from "../../libs/position.gr" include Position
+from "../../libs/stream.gr" include Stream
+
+// TODO: Implement this module
+// This module will be in charge of parsing the core structure of the program,
+// including, the outline of modules and components. Further parsing of expressions and statements will be handled by the `parseModule` function which is delegated to parsing the actual bodies.
+
+provide let parseModule = (source, stream) => {
+  let startPos = Helpers.getStreamPosition(source, stream)
+  if (!Stream.ExpectAndAdvance.bytes(b"module", stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing module declaration. Expected `module` keyword.",
+      ),
+    )
+  }
+  Helpers.skipWhiteSpace(stream)
+  let name = match (Helpers.parseStructuralIdentifier(source, stream)) {
+    Ok(id) => id,
+    Err(e) => return Err(e),
+  }
+  Helpers.skipWhiteSpace(stream)
+  if (!Stream.ExpectAndAdvance.char('{', stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing module declaration. Expected `{` to start module body.",
+      ),
+    )
+  }
+  Helpers.skipWhiteSpace(stream)
+  // TODO: We need to scan the string to find the matching '}'
+  // NOTE: We need to handle nested blocks
+  // NOTE: we need to handle strings and chars and anywhere else we ignore braces
+  if (!Stream.ExpectAndAdvance.char('}', stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing module declaration. Expected `}` to end module body.",
+      ),
+    )
+  }
+  let endPos = Helpers.getStreamPosition(source, stream)
+  return Ok(ParseTree.Structure.Module({
+    position: Range.make(startPos, endPos),
+    name,
+    body: [], // TODO: Figure this out properly
+  }))
+}
+
+// Component -> 'component' wss structuralIdentifier wss '{' wss ComponentStatement* wss '}' wss
+provide let rec parseComponent = (source, stream) => {
+  let startPos = Helpers.getStreamPosition(source, stream)
+  if (!Stream.ExpectAndAdvance.bytes(b"component", stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing component declaration. Expected `component` keyword.",
+      ),
+    )
+  }
+  Helpers.skipWhiteSpace(stream)
+  let name = match (Helpers.parseStructuralIdentifier(source, stream)) {
+    Ok(id) => id,
+    Err(e) => return Err(e),
+  }
+  Helpers.skipWhiteSpace(stream)
+  if (!Stream.ExpectAndAdvance.char('{', stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing component declaration. Expected `{` to start component body.",
+      ),
+    )
+  }
+  Helpers.skipWhiteSpace(stream)
+  // ComponentStatement -> (Module | Component) wss
+  let mut body = []
+  while (!Stream.isEmpty(stream) && Stream.Get.char(stream) != '}') {
+    let item = match (Stream.Get.char(stream)) {
+      'm' => parseModule(source, stream),
+      'c' => parseComponent(source, stream),
+      _ =>
+        Err(
+          ParsingError(
+            Helpers.getStreamPosition(source, stream),
+            "Unexpected character while parsing component body. Expected `module` or `component` declaration or end of block.",
+          ),
+        ),
+    }
+    match (item) {
+      Ok(item) => [item, ...body],
+      Err(e) => return Err(e),
+    }
+    Helpers.skipWhiteSpace(stream)
+  }
+  if (Stream.ExpectAndAdvance.char('}', stream)) {
+    return Err(
+      Errors.ParsingError(
+        Helpers.getStreamPosition(source, stream),
+        "Unexpected character while parsing component declaration. Expected `}` to end component body.",
+      ),
+    )
+  }
+  let endPos = Helpers.getStreamPosition(source, stream)
+  return Ok(
+    ParseTree.Structure.Component(
+      { position: Range.make(startPos, endPos), name, body: List.reverse(body) },
+    ),
+  )
+}

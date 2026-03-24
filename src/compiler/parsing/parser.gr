@@ -1,0 +1,54 @@
+/**
+ * This module exposes the main parser for brisk.
+ *
+ * This modules only responsibility is at the program level,
+ * actual parsing implementations are implemented in the other parsing modules focused
+ * on specific sections of the syntax.
+ */
+module Parser
+
+from "./parseStructure.gr" include ParseStructure
+from "./helpers.gr" include Helpers
+from "../../irs/parseTree.gr" include ParseTree
+from "../../libs/Errors.gr" include Errors
+from "../../libs/range.gr" include Range
+from "../../libs/position.gr" include Position
+from "../../libs/stream.gr" include Stream
+
+provide let parse = (source: a, content: String) => {
+  let stream = Stream.fromString(content)
+  Helpers.skipWhiteSpace(stream)
+  let startPos = Helpers.getStreamPosition(source, stream)
+  // Program -> Component | Module
+  if (Stream.isEmpty(stream)) {
+    return Err(
+      Errors.ParsingUnexpectedEndOfInput(
+        Helpers.getStreamPosition(source, stream),
+      ),
+    )
+  }
+  let body = match (Stream.Get.char(stream)) {
+    'c' => ParseStructure.parseComponent(source, stream),
+    'm' => ParseStructure.parseModule(source, stream),
+    _ =>
+      Err(
+        Errors.ParsingError(
+          Helpers.getStreamPosition(source, stream),
+          "Unexpected character `"
+            ++ toString(Stream.Get.char(stream))
+            ++ "` while parsing program. Expected `module` or `component` declaration.",
+        ),
+      ),
+  }
+  let body = match (body) {
+    Ok(b) => b,
+    Err(e) => return Err(e),
+  }
+  let endPos = Helpers.getStreamPosition(source, stream)
+  return Ok({ position: Range.make(startPos, endPos), body: {
+    position: Range.make(startPos, endPos),
+    // TODO: This name should probably come from a command line argument
+    name: "Program",
+    body: [body],
+  }: ParseTree.Structure.Component<a> }: ParseTree.Program<a>)
+}

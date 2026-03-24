@@ -1,0 +1,61 @@
+module Compiler
+
+from "bytes" include Bytes
+
+from "./parsing/parser.gr" include Parser
+
+from "../irs/parseTree.gr" include ParseTree
+from "../libs/errors.gr" include Errors
+
+provide module Pipeline {
+  /**
+   * Parses the source code into a raw parse tree.
+   *
+   * This is the first step in the compilation process, where the raw source code is transformed into
+   * a structured representation that captures the important syntactic elements of the program.
+   *
+   * @param source: The source location (e.g., filepath, url, etc.) of the code being parsed.
+   * @param content: The raw source code as a string.
+   *
+   * @returns `Ok(program)` if parsing is successful, or `Err(Error)` if there are syntax errors or other issues during parsing.
+   */
+  provide let parse = (source: a, content: String) => {
+    Parser.parse(source, content)
+  }
+
+  /**
+   * Constructs the source tree from the parse tree.
+   */
+  provide let source = (program: ParseTree.Program<a>) => {
+    void
+  }
+
+  // TODO: ConstructSourceTree
+  // TODO: Validation
+  // TODO: typeCheck
+  // TODO: Middleend
+  // TODO: codegen
+}
+
+/**
+ * Compiles the given source.
+ *
+ * @param source: The source location (e.g., filepath, url, etc.) of the code being compiled.
+ * @param openSource: A function that takes a source location and returns the corresponding source code as a string. This allows the compiler to read source code from various locations (e.g., filesystem, network, etc.) without being tightly coupled to a specific I/O mechanism.
+ * @param sourceToString: A function that takes a source location and returns a human-readable string representation of that source.
+ *
+ * @returns A compiled program.
+ */
+provide let compile = (
+  source: a,
+  openSource: (source: a) => String,
+  sourceToString: (source: a) => String,
+) => {
+  // TODO: In the future it would be best if we used a work graph here to allow for better parallelism and incremental compilation
+  // Parse the main file
+  let parseTree = match (Pipeline.parse(source, openSource(source))) {
+    Ok(tree) => tree,
+    Err(e) => throw Errors.BriskError(Errors.errorToString(e, sourceToString)),
+  }
+  Bytes.make(16)
+}
